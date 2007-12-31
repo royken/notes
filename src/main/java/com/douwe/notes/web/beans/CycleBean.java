@@ -1,73 +1,93 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Cycle;
-import com.douwe.notes.service.IInsfrastructureService;
+import com.douwe.notes.service.ICycleService;
+import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
+import javax.enterprise.context.RequestScoped; 
+import javax.faces.application.FacesMessage;  
+import javax.faces.context.FacesContext;  
+import javax.faces.event.ActionEvent; 
 
-/**
- *
- * @author root
- */
+
 @Named(value = "cycleBean")
 @RequestScoped
 public class CycleBean {
 
     @EJB
-    private IInsfrastructureService service;
+    private ICycleService service;
     private Cycle cycle = new Cycle();
-    private List<Cycle> cycles;
+    private List<Cycle> cycles; 
+    private String message;
 
-    public CycleBean() {
+    /**
+     * Creates a new instance of CycleBean
+     */
+    public CycleBean() {        
+        message="";
     }
 
-    public List<Cycle> findAll() {
-        return service.getAllCycles();
-    }
-    public void saveOrUpdateCycles() {
-        if (cycle != null) {
+
+    public String saveOrUpdateCycle() {
+        if (cycle != null) {            
             service.saveOrUpdateCycle(cycle);
-            cycle = new Cycle();
+            cycle = new Cycle();                      
         }
+        return "saveOrUpdateCycle";
     }
 
-    public void deleteCycle() {
-        if (cycle != null && cycle.getId() > 0) {
+    public String deleteCycle() {
+        if (cycle != null) {          
+            message = "Suppression reussi de "+cycle.getNom();
             service.deleteCycle(cycle.getId());
-            cycle = new Cycle();
+            cycle = new Cycle();            
         }
+        return "deleteCycle";
     }
-    public IInsfrastructureService getService() {
+
+    public String choix(int n) {
+        if (n == 1) {
+            cycle=new Cycle();
+            message="Enregistrement reussi ";
+            return "saveCycle";
+        }
+
+        else if (n == 2 && cycle!=null &&cycle.getVersion() >= 1) {
+            message="Mise à jour reussi ";
+            return "updateCycle";
+        }
+        cycle = new Cycle();        
+        return "cycle";
+    }
+    public void notification(ActionEvent actionEvent) {  
+        FacesContext context = FacesContext.getCurrentInstance();            
+        context.addMessage(null, new FacesMessage("Succes", message));          
+    }
+    public ICycleService getService() {
         return service;
     }
 
-    public void setService(IInsfrastructureService service) {
+    public void setService(ICycleService service) {
         this.service = service;
     }
+
 
     public Cycle getCycle() {
         return cycle;
     }
 
-    public void setCycle(Cycle cycle) {
+    public void setCycle(Cycle cycle) {        
         this.cycle = cycle;
     }
 
-    public List<Cycle> getCycles() {
-        cycles=findAll();
+    public List<Cycle> getCycles() {        
+        cycles = service.getAllCycles();
         return cycles;
     }
 
     public void setCycles(List<Cycle> cycles) {
         this.cycles = cycles;
     }
-    
-
 }

@@ -8,46 +8,30 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" style="margin-bottom:10px; text-align: center">                          
-                    <h:form id="eleveForm">
-                        <p:panel>
-                            <h:panelGroup >
-                                <h:panelGrid  id="display" columns="2">                                   
-                                    <h:outputText  value="Date de Debut: " style="margin-bottom:auto; margin-left: auto; "/>  
-                                    <h:outputText  value="Date de Fin : " style="margin-bottom:20px; margin-left: 20px;"/>
-                                    <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.debut}" id="cal" showButtonPanel="true" required="true" style="margin-bottom:auto; margin-left: auto; "/>
-                                    <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.fin}" id="cal2" showButtonPanel="true" required="true" style="margin-bottom:20px; margin-left: 20px;"/>
-                                </h:panelGrid>   
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{anneeAcademiqueBean.saveOrUpdateAnneeAcademiques()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
-                            </div>                    
-                        </p:panel>
-                    </h:form>  
-                    <h:form id="f" style="margin-bottom:10px; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucune année académique n'est enregistrée" var="anneeAcademique" value="#{anneeAcademiqueBean.anneeAcademiques}" rowKey="#{anneeAcademique.id}" paginator="true" rows="5"  
-                                     selection="#{anneeAcademiqueBean.anneeAcademique}" selectionMode="single" >            
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucunne année académique n'est enregistrée" var="anneeAcademique" value="#{anneeAcademiqueBean.anneeAcademiques}" rowKey="#{anneeAcademique.id}" paginator="true" rows="5"  
+                                     sortOrder="ascending" selection="#{anneeAcademiqueBean.anneeAcademique}" selectionMode="single" sortBy="#{anneeAcademique.id}">            
                             <f:facet name="header">
                                 LA LISTE DES ANNEES ACADEMIQUES
-                            </f:facet>
-                            <p:column headerText="ID " sortBy="#{anneeAcademique.id}" filterBy="#{anneeAcademique.id}" id="di">  
-                                #{anneeAcademique.id}  
-                            </p:column>                             
-                            <p:column headerText="Date de debut " sortBy="#{anneeAcademique.debut}" filterBy="#{anneeAcademique.debut}" id="debut">  
-                                #{anneeAcademique.debut}  
+                            </f:facet>                           
+                            <p:column headerText="Date de debut " >  
+                                #{anneeAcademique.debut.toString().subSequence(8,10)} / #{anneeAcademique.debut.toString().subSequence(3,7)} / #{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length() -5)}
                             </p:column>       
-                            <p:column headerText="Date de fin " sortBy="#{anneeAcademique.fin}" filterBy="#{anneeAcademique.fin}" id="fin">  
-                                #{anneeAcademique.fin}  
-                            </p:column>                             
-                            <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer" action="#{anneeAcademiqueBean.deleteAnneeAcademique()}" update=":f:d,:eleveForm:display"/>                                
+                            <p:column headerText="Date de fin " >  
+                            #{anneeAcademique.fin.toString().subSequence(8,10)} / #{anneeAcademique.fin.toString().subSequence(3,7)} / #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -5)}
+                            </p:column>                                                  
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouvelle Année Académique" action="#{anneeAcademiqueBean.choix(1)}" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" update=":eleveForm:display"/>  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{anneeAcademiqueBean.deleteAnneeAcademique()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{anneeAcademiqueBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
-                    </h:form>   
+                    </h:form>                                      
                 </p:panel> 
             </ui:define>            
         </ui:composition>

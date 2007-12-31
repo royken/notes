@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                                
+                 <p:growl id="growl" showDetail="true"/>
+                <h:form id="eleveForm">
+                    <p:panel header="MODIFIER LE TYPE DE COURS">                            
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2">                                                                                                                      
+                                <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:inputText value="#{typeCoursBean.typeCours.nom}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
+                                    <f:validateLength minimum="1" />  
+                                </p:inputText>
+                                <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                            </h:panelGrid>  
+                        </h:panelGroup>
+                        <p:separator/>
+                        <div>
+                            <p:commandButton value="Soumettre"  id="ajax" action="#{typeCoursBean.saveOrUpdateTypeCours()}" actionListener="#{typeCoursBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                        </div>                    
+                    </p:panel>
+                </h:form>  
+
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
+
+

@@ -8,34 +8,27 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" style="margin-bottom:10px; text-align: center">                      
-                    <h:form id="f" style="margin-bottom:10px; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rowKey="#{departement.id}" paginator="true" rows="5"  
-                                     selection="#{departementBean.departement}" selectionMode="single" >            
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rowKey="#{departement.code}" paginator="true" rows="5"  
+                                      sortOrder="ascending" selection="#{departementBean.departement}" selectionMode="single" sortBy="#{departement.code}">            
                             <f:facet name="header">
                                 LA LISTE DES DÉPARTEMENTS
-                            </f:facet>
-                            <p:column headerText="ID " id="di">  
-                                #{departement.id}  
-                            </p:column>                             
-                            <p:column headerText="Code "  id="code">  
+                            </f:facet>                           
+                            <p:column headerText="Code " id="code" >  
                                 #{departement.code}  
                             </p:column>  
                             <p:column headerText="Description "  id="description">  
                                 #{departement.description}  
-                            </p:column>                     
-                            <p:column headerText="Version "  id="version" >  
-                                #{departement.version}  
-                            </p:column>                             
-                            <f:facet name="footer">  
-                                <p:commandButton id="ajouter" value="Nouveau Departement" action="/faces/departement/ajouterDepartement.xhtml"/>
+                            </p:column>                                                  
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau Departement" action="#{departementBean.choix(1)}" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer" action="#{departementBean.deleteDepartement()}" update=":f:d"/>
-<!--                                                 action="/faces/departement/confirmeDelete.xhtml"/>-->
+                                <p:commandButton  id="delete" value="Supprimer" action="#{departementBean.deleteDepartement()}" update=":f:d"  icon="ui-icon-close"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="/faces/departement/modifierDepartement.xhtml"/>  
+                                <p:commandButton id="modifier" value="Modifier" action="#{departementBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
                     </h:form>                                      

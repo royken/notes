@@ -8,49 +8,27 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" style="margin-bottom:10px; text-align: center">                          
-                    <h:form id="eleveForm">
-                        <p:panel>
-                            <h:panelGroup >
-                                <h:panelGrid  id="display" columns="3"> 
-                                    <div>
-                                        <h:outputText  value="id: " />  
-                                        <p:inputText value="#{cycleBean.cycle.id}" />                                                       
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText  value="Nom: " />  
-                                        <p:inputText value="#{cycleBean.cycle.nom}" required="true" >  
-                                            <f:validateLength minimum="2" maximum="20"/>  
-                                        </p:inputText>
-                                    </div>                                    
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{cycleBean.saveOrUpdateCycles()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
-                            </div>                    
-                        </p:panel>
-                    </h:form>  
-                    <h:form id="f" style="margin-bottom:10px; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="cycle" value="#{cycleBean.cycles}" rowKey="#{cycle.id}" paginator="true" rows="5"  
-                                     selection="#{cycleBean.cycle}" selectionMode="single" >            
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun cycle n'est enregistré" var="cycle" value="#{cycleBean.cycles}" rowKey="#{cycle.nom}" paginator="true" rows="5"  
+                                      sortOrder="ascending" selection="#{cycleBean.cycle}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES CYCLES
-                            </f:facet>
-                            <p:column headerText="ID " sortBy="#{cycle.id}" filterBy="#{cycle.id}" id="di">  
-                                #{cycle.id}  
-                            </p:column>                             
-                            <p:column headerText="Code " sortBy="#{cycle.nom}" filterBy="#{cycle.nom}" id="code">  
+                            </f:facet>                           
+                            <p:column headerText="Nom du cycle" id="code" >  
                                 #{cycle.nom}  
-                            </p:column>                              
-                            <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer" action="#{cycleBean.deleteCycle()}" update=":f:d,:eleveForm:display"/>                                
+                            </p:column>                                                                                
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau Cycle" action="#{cycleBean.choix(1)}" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" update=":eleveForm:display"/>  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{cycleBean.deleteCycle()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{cycleBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
-                    </h:form>   
+                    </h:form>                                      
                 </p:panel> 
             </ui:define>            
         </ui:composition>

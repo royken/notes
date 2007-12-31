@@ -8,40 +8,31 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                                
-                   <h:form id="eleveForm">
-                        <p:panel>
-                            <h:panelGroup >
-                                <h:panelGrid  title="MODIFIER LE DEPARTEMENT" id="display" columns="3"> 
-                                    <div hidden="true">
-                                        <h:outputText  value="id: " />  
-                                        <p:inputText value="#{departementBean.departement.id}" />                                                       
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText  value="Code: " />  
-                                        <p:inputText value="#{departementBean.departement.code}" required="true" >  
-                                            <f:validateLength minimum="2" maximum="20"/>  
-                                        </p:inputText>
-                                    </div><br/><br/>
-                                    <div hidden="true">
-                                        <h:outputText  value="Version: " />  
-                                        <p:inputText value="#{departementBean.departement.version}" required="true" >                                              
-                                        </p:inputText>
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText value="Description: " />  
-                                        <p:inputText value="#{departementBean.departement.description}" required="true"/>
-                                    </div>
+                 <p:growl id="growl" showDetail="true"/>
+                <h:form id="eleveForm">
+                    <p:panel header="MODIFIER LE DEPARTEMENT">                            
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2">                                                                                                                      
+                                <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:inputText value="#{departementBean.departement.code}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
+                                    <f:validateLength minimum="2" maximum="20"/>  
+                                </p:inputText>
+                                <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                <p:inputText value="#{departementBean.departement.description}" required="true"  style="margin-left: 10px;margin-top: 10px;"/>                                                             
+                                <h:inputHidden value="#{departementBean.departement.id}"  />
+                                <h:inputHidden value="#{departementBean.departement.version}"  />
+                            </h:panelGrid>  
+                        </h:panelGroup>
+                        <p:separator/>
+                        <div>
+                            <p:commandButton value="Soumettre"  id="ajax" action="#{departementBean.saveOrUpdateDepartement()}" actionListener="#{departementBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                        </div>                    
+                    </p:panel>
+                </h:form>  
 
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax" action="#{departementBean.saveOrUpdateDepartement()}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
-                            </div>                    
-                        </p:panel>
-                    </h:form>  
-                  
             </ui:define>            
         </ui:composition>
     </body>
 </html>
+
+

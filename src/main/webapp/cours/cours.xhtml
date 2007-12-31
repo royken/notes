@@ -1,16 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
     <body>
-        <div>TODO write content</div>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun cours n'est enregistré" var="cours" value="#{coursBean.courss}" rowKey="#{cours.id}" paginator="true" rows="5"  
+                                     selection="#{coursBean.cours}" selectionMode="single" >            
+                            <f:facet name="header">
+                                LA LISTE DES COURS
+                            </f:facet>                            
+                            <p:column headerText="Intitulé ">  
+                                #{cours.intitule}  
+                            </p:column>            
+                            <p:column headerText="Credit">  
+                                #{cours.credit}  
+                            </p:column>
+                            <p:column headerText="Type de cours" >  
+                                #{cours.typeCours.nom}  
+                            </p:column>                                                  
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau Cours" action="#{coursBean.choix(1)}" icon="ui-icon-disk"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{coursBean.deleteCours()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{coursBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                             
+                        </p:dataTable>                                                              
+                    </h:form>                                      
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
     </body>
 </html>

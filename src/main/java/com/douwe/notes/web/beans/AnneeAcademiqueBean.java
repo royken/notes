@@ -1,67 +1,93 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
-import com.douwe.notes.service.IInsfrastructureService;
+import com.douwe.notes.service.IAnneeAcademiqueService;
+import static java.awt.SystemColor.text;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
+import javax.enterprise.context.RequestScoped; 
+import javax.faces.application.FacesMessage;  
+import javax.faces.context.FacesContext;  
+import javax.faces.event.ActionEvent; 
 
-/**
- *
- * @author root
- */
 @Named(value = "anneeAcademiqueBean")
 @RequestScoped
 public class AnneeAcademiqueBean {
+
     @EJB
-    private IInsfrastructureService service;    
-    private List<AnneeAcademique> anneeAcademiques;
-    private  AnneeAcademique anneeAcademique =  new AnneeAcademique();
+    private IAnneeAcademiqueService service;
+    private AnneeAcademique anneeAcademique = new AnneeAcademique();
+    private List<AnneeAcademique> anneeAcademiques;     
+    private String message;
 
-    public AnneeAcademiqueBean() {
+    /**
+     * Creates a new instance of AnneeAcademiqueBean
+     */
+    public AnneeAcademiqueBean() {        
+        message="";
     }
-    public void saveOrUpdateAnneeAcademiques() {
-        if (anneeAcademique != null) {
-            service.saveOrUpdateAnneeAcademique(anneeAcademique);
-            anneeAcademique = new AnneeAcademique();
+
+
+    public String saveOrUpdateAnneeAcademique() {
+        if (anneeAcademique != null) {            
+            service.saveOrUpdateAnnee(anneeAcademique);
+            anneeAcademique = new AnneeAcademique();                      
         }
+        return "saveOrUpdateAnneeAcademique";
     }
 
-    public void deleteAnneeAcademique() {
-        if (anneeAcademique != null) {
-            service.deleteAnneeAcademique(anneeAcademique.getId());
-            anneeAcademique = new AnneeAcademique();
+    public String deleteAnneeAcademique() {
+        if (anneeAcademique != null) {          
+            message = "Suppression reussi";
+            service.deleteAnnee(anneeAcademique.getId());
+            anneeAcademique = new AnneeAcademique();            
         }
+        return "deleteAnneeAcademique";
     }
 
-    public IInsfrastructureService getService() {
+    public String choix(int n) {
+        if (n == 1) {
+            anneeAcademique=new AnneeAcademique();
+            message="Enregistrement reussi ";
+            return "saveAnneeAcademique";
+        }
+
+        else if (n == 2 && anneeAcademique!=null &&anneeAcademique.getVersion() >= 1) {
+            message="Mise à jour reussi ";
+            return "updateAnneeAcademique";
+        }
+        anneeAcademique = new AnneeAcademique();        
+        return "anneeAcademique";
+    }
+    public void notification(ActionEvent actionEvent) {  
+        FacesContext context = FacesContext.getCurrentInstance();            
+        context.addMessage(null, new FacesMessage("Succes", message));          
+    }
+    public IAnneeAcademiqueService getService() {
         return service;
     }
 
-    public void setService(IInsfrastructureService service) {
+    public void setService(IAnneeAcademiqueService service) {
         this.service = service;
     }
 
-    public List<AnneeAcademique> getAnneeAcademiques() {
-        anneeAcademiques = service.getAllAnneeAcademiques();
-        return anneeAcademiques;
-    }
-
-    public void setAnneeAcademiques(List<AnneeAcademique> anneeAcademiques) {
-        this.anneeAcademiques = anneeAcademiques;
-    }
 
     public AnneeAcademique getAnneeAcademique() {
         return anneeAcademique;
     }
 
-    public void setAnneeAcademique(AnneeAcademique anneeAcademique) {
+    public void setAnneeAcademique(AnneeAcademique anneeAcademique) {        
         this.anneeAcademique = anneeAcademique;
+    }
+
+    public List<AnneeAcademique> getAnneeAcademiques() {        
+        anneeAcademiques = service.getAllAnnee();        
+        return anneeAcademiques;
+    }
+
+    public void setAnneeAcademiques(List<AnneeAcademique> anneeAcademiques) {
+        this.anneeAcademiques = anneeAcademiques;
     }
 }

@@ -11,9 +11,11 @@ import com.douwe.notes.service.IInsfrastructureService;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 
 /**
@@ -29,6 +31,7 @@ public class NiveauBean {
     private Niveau niveau = new Niveau();
     private List<Niveau> niveaux;
     private List<Cycle> cycles;
+    private String message;
     String id;
 
     public NiveauBean() {
@@ -39,22 +42,44 @@ public class NiveauBean {
         return service.getAllNiveaux();
     }
 
-    public void saveOrUpdateNiveau() {        
+    public String saveOrUpdateNiveau() {
         if (niveau != null) {            
-            niveau.setCycle(service.findCycleById(Integer.parseInt(id)));           
-            System.err.println("methodes saveOrUpdateNiveau  " + niveau);
+            niveau.setCycle(service.findCycleById(Integer.parseInt(id)));                       
             service.saveOrUpdateNiveau(niveau);
             niveau = new Niveau();
-            id = new String();
+            id = new String();                     
         }
+        return "saveOrUpdateNiveau";
     }
 
-    public void deleteNiveau() {
-        if (niveau != null && niveau.getId() > 0) {
+    public String deleteNiveau() {
+        if (niveau != null && niveau.getId() > 0) {          
+            message = "Suppression reussi de "+niveau.getCode();
             service.deleteNiveau(niveau.getId());
-            niveau = new Niveau();
+            niveau = new Niveau();            
         }
+        return "deleteNiveau";
     }
+
+    public String choix(int n) {
+        if (n == 1) {
+            niveau=new Niveau();
+            message="Enregistrement reussi ";
+            return "saveNiveau";
+        }
+
+        else if (n == 2 && niveau!=null &&niveau.getVersion() >= 1) {
+            message="Mise à jour reussi ";
+            return "updateNiveau";
+        }
+        niveau = new Niveau();        
+        return "niveau";
+    }
+    public void notification(ActionEvent actionEvent) {  
+        FacesContext context = FacesContext.getCurrentInstance();            
+        context.addMessage(null, new FacesMessage("Succes", message));          
+    }
+
 
     public Converter getCycleConverter() {
         return cycleConverter;
@@ -69,15 +94,13 @@ public class NiveauBean {
         @Override
         public Cycle getAsObject(FacesContext context, UIComponent component, String value) {
             int id = Integer.parseInt(value.trim().substring(0, value.trim().indexOf("-")));
-            Cycle c = service.findCycleById(id);
-            System.err.print(" 2 " + value + " --> " + c);
+            Cycle c = service.findCycleById(id);            
             return c;
         }
 
         @Override
         public String getAsString(FacesContext context, UIComponent component, Object value) {
-            Cycle c = (Cycle) value;
-            System.err.println(" 3 " + value + " --> " + c.getId() + "-" + c.getNom());
+            Cycle c = (Cycle) value;            
             return c.getId() + "-" + c.getNom();
 
         }
@@ -118,10 +141,8 @@ public class NiveauBean {
     }
 
     public String getId() {
-        if(niveau.getVersion() != 0){
-        System.err.println("methodes getId " + niveau);        
-        id = niveau.getCycle().getId().toString();        }
-        //id="2313";
+        if(niveau!=null && niveau.getVersion() != 0){        
+        id = niveau.getCycle().getId().toString();        }        
         return id;
     }
 
