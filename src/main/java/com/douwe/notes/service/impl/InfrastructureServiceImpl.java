@@ -1,9 +1,11 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICycleDao;
 import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Niveau;
@@ -30,14 +32,19 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
 
     @Inject
     private INiveauDao niveauDao;
+    
+    @Inject
+    private IAnneeAcademiqueDao anneeAcademiqueDao;
 
     public Departement saveOrUpdateDepartement(Departement departement) {
         System.out.println("Exécution de la methode saveOrUpdate");
         try {
             if (departement.getId() == null) {
+                System.out.println("Exécution de la methode save");
                 return departementDao.create(departement);
             } else {
-                return departementDao.update(departement);
+                System.out.println("Exécution de la methode update");
+                return departementDao.update(departement);                              
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
@@ -64,7 +71,46 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
             return null;
         }
     }
+        public AnneeAcademique saveOrUpdateAnneeAcademique(AnneeAcademique anneeAcademique) {        
+        try {
+            if (anneeAcademique.getId() == null) {                
+                return anneeAcademiqueDao.create(anneeAcademique);
+            } else {                
+                return anneeAcademiqueDao.update(anneeAcademique);                              
+            }
+        } catch (DataAccessException dae) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
+            return null;
+        }
+    }
 
+    public void deleteAnneeAcademique(Long id) {
+        try {
+            AnneeAcademique anneeAcademique = anneeAcademiqueDao.findById(id);            
+            if (anneeAcademique != null) {
+                anneeAcademiqueDao.delete(anneeAcademique);                
+            }
+        } catch (DataAccessException dae) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
+        }
+    }
+
+    public List<AnneeAcademique> getAllAnneeAcademiques() {
+        try {
+            return anneeAcademiqueDao.findAll();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    public AnneeAcademique findAnneeAcademiqueById(long id) {
+        try {
+            return anneeAcademiqueDao.findById(id);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     public IDepartementDao getDepartementDao() {
         return departementDao;
     }
@@ -180,4 +226,12 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
         }
         return Collections.EMPTY_LIST;
     }
+
+    public IAnneeAcademiqueDao getAnneeAcademiqueDao() {
+        return anneeAcademiqueDao;
+    }
+
+    public void setAnneeAcademiqueDao(IAnneeAcademiqueDao anneeAcademiqueDao) {
+        this.anneeAcademiqueDao = anneeAcademiqueDao;
+    }    
 }

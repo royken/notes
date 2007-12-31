@@ -3,6 +3,7 @@ package com.douwe.notes.dao.impl;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.entities.Departement;
+import javax.enterprise.inject.Default;
 import javax.inject.Named;
 
 /**

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1" style="margin-bottom:10px;">
+                    <h:form id="eleveForm">
+                        <p:panel>
+                            <h:panelGroup >
+                                <h:panelGrid  id="display" columns="3"> 
+                                    <div>
+                                        <h:outputText  value="id : " />  
+                                        <p:inputText value="#{niveauBean.niveau.id}" />                                                       
+                                    </div><br/><br/>
+                                    <div>
+                                        <h:outputText  value="Code : " />  
+                                        <p:inputText value="#{niveauBean.niveau.code}" />                                                       
+                                    </div>
+                                    <div>                                          
+                                        <h:outputText  value="Cycle : " /> 
+                                        <h:selectOneMenu value="#{niveauBean.niveau.cycle}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{niveauBean.cycles}" var="cycle" itemLabel="#{cycle.nom}" itemValue="#{cycle}" />                                             
+                                        </h:selectOneMenu>
+                                    </div>  
+                                </h:panelGrid>  
+                            </h:panelGroup>
+                            <p:separator/>
+                            <div>
+                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{niveauBean.saveOrUpdateNiveaux()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            </div>                    
+                        </p:panel>
+                    </h:form>  
+                    <h:form id="f" style="margin-bottom:10px; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun Niveau n'est enregistré" var="niveau" value="#{niveauBean.niveaux}" rowKey="#{niveau.id}" paginator="true" rows="5"  
+                                     selection="#{niveauBean.niveau}" selectionMode="single" >            
+                            <f:facet name="header">
+                                LA LISTE DES NIVEAUX
+                            </f:facet>
+                            <p:column headerText="ID " sortBy="#{niveau.id}" filterBy="#{niveau.id}" id="di">  
+                                #{niveau.id}  
+                            </p:column>                             
+                            <p:column headerText="Code " sortBy="#{niveau.code}" filterBy="#{niveau.code}" id="code">  
+                                #{niveau.code}  
+                            </p:column>                              
+                            <p:column headerText="Cycle " sortBy="#{niveau.cycle.nom}" filterBy="#{niveau.cycle.nom}" id="nomcycle">  
+                                #{niveau.cycle.nom}  
+                            </p:column>   
+                            <f:facet name="footer">  
+                                <p:commandButton id="delete" value="Supprimer" action="#{niveauBean.deleteNiveau()}" update=":f:d,:eleveForm:display"/>                                
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" update=":eleveForm:display"/>  
+                            </f:facet>                             
+                        </p:dataTable>                                                              
+                    </h:form>   
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
