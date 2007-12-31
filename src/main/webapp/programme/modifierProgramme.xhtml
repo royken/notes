@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                                
+                 <p:growl id="growl" showDetail="true"/>
+                <h:form id="eleveForm">
+                    <p:panel header="MODIFIER LE PROGRAMME">                            
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2"> 
+                                        <h:outputText  value="Parcours : " /> 
+                                        <h:selectOneMenu value="#{programmeBean.idP}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{programmeBean.parcourses}" var="parcours" itemLabel="#{parcours.niveau.code} - #{parcours.option.code}" itemValue="#{parcours.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:outputText  value="UE : " /> 
+                                        <h:selectOneMenu value="#{programmeBean.idUE}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{programmeBean.uniteEnseignements}" var="UE" itemLabel="#{UE.code}" itemValue="#{UE.id}" />
+                                        </h:selectOneMenu> 
+                                        <h:outputText  value="Année Académique : " /> 
+                                        <h:selectOneMenu value="#{programmeBean.idAca}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{programmeBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
+                                        </h:selectOneMenu>                                                                     
+                                <h:inputHidden value="#{programmeBean.programme.id}"  />
+                                <h:inputHidden value="#{programmeBean.programme.version}"  />
+                            </h:panelGrid>  
+                        </h:panelGroup>
+                        <p:separator/>
+                        <div>
+                            <p:commandButton value="Soumettre"  id="ajax" action="#{programmeBean.saveOrUpdateProgramme()}" actionListener="#{programmeBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/programme/programme.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                        </div>                    
+                    </p:panel>
+                </h:form>  
+
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
+
+

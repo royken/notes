@@ -24,6 +24,7 @@
                         <p:separator/>
                         <div>
                             <p:commandButton value="Soumettre"  id="ajax" action="#{semestreBean.saveOrUpdateSemestre()}" actionListener="#{semestreBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/semestre/semestre.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
                         </div>                    
                     </p:panel>
                 </h:form>  

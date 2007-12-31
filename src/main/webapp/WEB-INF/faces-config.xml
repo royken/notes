@@ -339,5 +339,79 @@
             <from-outcome>anneeAcademique</from-outcome>
             <to-view-id>anneeAcademique/anneeAcademique.xhtml</to-view-id>                       
         </navigation-case>
+    </navigation-rule> 
+     
+     <!-- programmes -->
+    <navigation-rule>       
+        <from-view-id>/programme/ajouterProgramme.xhtml</from-view-id>        
+        <navigation-case>
+            <from-outcome>saveOrUpdateProgramme</from-outcome>
+            <to-view-id>programme/programme.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>               
+        <from-view-id>/programme/modifierProgramme.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saveOrUpdateProgramme</from-outcome>
+            <to-view-id>programme/programme.xhtml</to-view-id>                       
+        </navigation-case>
     </navigation-rule>  
+    <navigation-rule>               
+        <from-view-id>/programme/programme.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saveProgramme</from-outcome>
+            <to-view-id>programme/ajouterProgramme.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule>   
+    <navigation-rule>               
+        <from-view-id>/programme/programme.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>updateProgramme</from-outcome>
+            <to-view-id>programme/modifierProgramme.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule> 
+    <navigation-rule>               
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>programme</from-outcome>
+            <to-view-id>programme/programme.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule> 
+    
+     <!-- parcours -->
+    <navigation-rule>       
+        <from-view-id>/parcours/ajouterParcours.xhtml</from-view-id>        
+        <navigation-case>
+            <from-outcome>saveOrUpdateParcours</from-outcome>
+            <to-view-id>parcours/parcours.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>               
+        <from-view-id>/parcours/modifierParcours.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saveOrUpdateParcours</from-outcome>
+            <to-view-id>parcours/parcours.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule>  
+    <navigation-rule>               
+        <from-view-id>/parcours/parcours.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>saveParcours</from-outcome>
+            <to-view-id>parcours/ajouterParcours.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule>   
+    <navigation-rule>               
+        <from-view-id>/parcours/parcours.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>updateParcours</from-outcome>
+            <to-view-id>parcours/modifierParcours.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule> 
+    <navigation-rule>               
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>parcours</from-outcome>
+            <to-view-id>parcours/parcours.xhtml</to-view-id>                       
+        </navigation-case>
+    </navigation-rule> 
 </faces-config>
