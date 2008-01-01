@@ -9,6 +9,7 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1">
+
                     <h:form id="f" style="text-align: center;">
                         <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rows="15" rowKey="#{departement.code}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
                                      sortOrder="ascending" selection="#{departementBean.departement}" selectionMode="single" sortBy="#{departement.code}">            
