@@ -9,3 +9,4 @@
 target/
 /.netbeans/
 /src/main/webapp/WEB-INF/
+/src/main/setup/glassfish-resources.xml

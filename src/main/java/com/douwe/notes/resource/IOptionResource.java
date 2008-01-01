@@ -15,10 +15,8 @@ import javax.ws.rs.Produces;
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-@Path("/options")
 public interface IOptionResource {
     @POST
-    @Consumes(value = "application/json")
     @Produces(value = "application/json") 
     Option createOption(Option option);
 
@@ -28,13 +26,11 @@ public interface IOptionResource {
 
     @GET
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Option getOption(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Option updateOption(@PathParam(value = "id")long id, Option option);
 
@@ -45,6 +41,5 @@ public interface IOptionResource {
     
     @GET
     @Path(value = "{id : \\d+}/departement")
-    @Produces(value = "application/json")
     Option getDepartement(@PathParam(value = "id")long id);
 }

@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,6 +29,7 @@ public class Option implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @Column
@@ -37,6 +40,10 @@ public class Option implements Serializable {
     
     @ManyToOne
     private Departement departement;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     public Option(){
         
@@ -74,11 +81,30 @@ public class Option implements Serializable {
         this.departement = departement;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "Option{" + "id=" + id + ", version=" + version + ", code=" + code + ", description=" + description + ", departement=" + departement + ", active=" + active + '}';
+    }
+    
+    
 }

@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -23,6 +25,7 @@ public class EvaluationDetails implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @ManyToOne
@@ -35,6 +38,10 @@ public class EvaluationDetails implements Serializable {
     @Min(0)
     @Max(100)
     private Integer pourcentage;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     public EvaluationDetails(){
         
@@ -72,11 +79,32 @@ public class EvaluationDetails implements Serializable {
         this.pourcentage = pourcentage;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "EvaluationDetails{" + "id=" + id + ", version=" + version + ", evaluation=" + evaluation + ", typeCours=" + typeCours + ", pourcentage=" + pourcentage + ", active=" + active + '}';
+    }
+    
+    
+    
+    
 }

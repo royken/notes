@@ -99,4 +99,11 @@ public class Departement implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "Departement{" + "id=" + id + ", version=" + version + ", code=" + code + ", description=" + description + ", active=" + active + '}';
+    }
+    
+    
 }

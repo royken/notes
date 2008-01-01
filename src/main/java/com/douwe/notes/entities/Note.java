@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -24,6 +26,7 @@ public class Note implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @Column
@@ -45,6 +48,10 @@ public class Note implements Serializable {
     
     @Column(name = "sessions")
     private Session session = Session.normale;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     
     public Note(){
@@ -111,7 +118,26 @@ public class Note implements Serializable {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    @JsonIgnore
+    @Override
+    public String toString() {
+        return "Note{" + "id=" + id + ", version=" + version + ", valeur=" + valeur + ", etudiant=" + etudiant + ", evaluation=" + evaluation + ", cours=" + cours + ", anneeAcademique=" + anneeAcademique + ", session=" + session + ", active=" + active + '}';
+    }
+    
+    
 }

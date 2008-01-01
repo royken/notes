@@ -21,7 +21,6 @@ public class DepartementServiceImpl implements IDepartementService{
     private IDepartementDao departementDao;
     
     public Departement saveOrUpdateDepartement(Departement departement) {
-        System.out.println("Exécution de la methode saveOrUpdate");
         try {
             if (departement.getId() == null) {
                 return departementDao.create(departement);

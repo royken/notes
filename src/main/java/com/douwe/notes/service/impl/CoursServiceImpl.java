@@ -28,7 +28,7 @@ public class CoursServiceImpl implements ICoursService{
     }
 
     public Cours saveOrUpdateCours(Cours cours) {
-        System.out.println("Exécution de la methode saveOrUpdate");
+        
         try {
             if (cours.getId() == null) {
                 return coursDao.create(cours);

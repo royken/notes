@@ -31,7 +31,6 @@ public class OptionServiceImpl implements IOptionService{
     
     
     public Option saveOrUpdateOption(Option option) {
-        System.out.println("Exécution de la methode saveOrUpdate");
         try {
             if (option.getId() == null) {
                 return optionDao.create(option);

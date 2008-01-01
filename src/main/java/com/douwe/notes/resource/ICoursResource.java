@@ -16,10 +16,8 @@ import javax.ws.rs.Produces;
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-@Path("/cours")
 public interface ICoursResource {
     @POST
-    @Consumes(value = "application/json")
     @Produces(value = "application/json") 
     Cours createCours(Cours cours);
 
@@ -29,13 +27,11 @@ public interface ICoursResource {
 
     @GET
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Cours getCours(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Cours updateCours(@PathParam(value = "id")long id, Cours cours);
 
