@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                                
+                   <h:form id="eleveForm">
+                        <p:panel>
+                            <h:panelGroup >
+                                <h:panelGrid  title="MODIFIER LE DEPARTEMENT" id="display" columns="3"> 
+                                    <div hidden="true">
+                                        <h:outputText  value="id: " />  
+                                        <p:inputText value="#{departementBean.departement.id}" />                                                       
+                                    </div><br/><br/>
+                                    <div>
+                                        <h:outputText  value="Code: " />  
+                                        <p:inputText value="#{departementBean.departement.code}" required="true" >  
+                                            <f:validateLength minimum="2" maximum="20"/>  
+                                        </p:inputText>
+                                    </div><br/><br/>
+                                    <div hidden="true">
+                                        <h:outputText  value="Version: " />  
+                                        <p:inputText value="#{departementBean.departement.version}" required="true" >                                              
+                                        </p:inputText>
+                                    </div><br/><br/>
+                                    <div>
+                                        <h:outputText value="Description: " />  
+                                        <p:inputText value="#{departementBean.departement.description}" required="true"/>
+                                    </div>
+
+                                </h:panelGrid>  
+                            </h:panelGroup>
+                            <p:separator/>
+                            <div>
+                                <p:commandButton value="Soumettre"  id="ajax" action="#{departementBean.saveOrUpdateDepartement()}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            </div>                    
+                        </p:panel>
+                    </h:form>  
+                  
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

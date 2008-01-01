@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,10 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
+
+
 @Entity
 public class Cours implements Serializable {
     
@@ -68,6 +72,7 @@ public class Cours implements Serializable {
         this.credit = credit;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }

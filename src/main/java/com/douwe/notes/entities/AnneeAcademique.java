@@ -32,6 +32,7 @@ public class AnneeAcademique implements Serializable {
     @Column
     @Temporal(TemporalType.DATE)
     private Date fin;
+   
     
     public AnneeAcademique(){
         

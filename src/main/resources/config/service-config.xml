@@ -11,5 +11,6 @@
     <bean id="IEnseignantService" class="cm.maroua.iss.service.impl.EnseignantServiceImpl"/>
     <bean id="ICoursService" class="cm.maroua.iss.service.impl.CoursServiceImpl"/>
     <bean id="INoteService" class="cm.maroua.iss.service.impl.NoteServiceImpl"/>
+    <bean id="ICycleService" class="cm.maroua.iss.service.impl.CycleServiceImpl"/>
 
 </beans>

@@ -2,10 +2,12 @@ package com.douwe.notes.resource.impl;
 
 import com.douwe.notes.resource.IDepartementResource;
 import com.douwe.notes.entities.Departement;
+import com.douwe.notes.entities.Option;
+import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IInsfrastructureService;
-import java.net.URI;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -14,20 +16,24 @@ import javax.ws.rs.core.Response;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
+@Path("/departements")
 public class DepartementResource implements IDepartementResource {
 
     @EJB
     private IInsfrastructureService insfrastructureService;
+    
+    @EJB
+    private IDepartementService departementService;
 
     @Override
     public Departement createDepartement(Departement dep) {
-        return insfrastructureService.saveOrUpdateDepartement(dep);
+        return departementService.saveOrUpdateDepartement(dep);
         //return Response.created(URI.create("/notes/api/departements/" + ret.getId())).build();
     }
 
     @Override
-    public Departement getDepartement(@PathParam("id") long id) {
-        final Departement depart = insfrastructureService.findDepartementById(id);
+    public Departement getDepartement( long id) {
+         Departement depart = departementService.findDepartementById(id);
         if (depart == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -35,15 +41,15 @@ public class DepartementResource implements IDepartementResource {
     }
 
     @Override
-    public Departement updateDepartement(@PathParam("id") long id, Departement current) {
-        Departement depart = insfrastructureService.findDepartementById(id);
+    public Departement updateDepartement( long id, Departement current) {
+        Departement depart = departementService.findDepartementById(id);
         if (depart == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         //Departement current = readDepartement(in);
         depart.setCode(current.getCode());
         depart.setDescription(current.getDescription());
-        return insfrastructureService.saveOrUpdateDepartement(depart);
+        return departementService.saveOrUpdateDepartement(depart);
     }
 
 //    private Departement readDepartement(InputStream in) {
@@ -99,13 +105,25 @@ public class DepartementResource implements IDepartementResource {
 //    }
 
     public List<Departement> getAllDepartement() {
-        List<Departement> deps = insfrastructureService.getAllDepartements();
+        List<Departement> deps = departementService.getAllDepartements();
         return deps;
     }
 
-    public void deleteDepartement(@PathParam(value = "id")long id) {
-        insfrastructureService.deleteDepartement(id);
+    public void deleteDepartement(long id) {
+        departementService.deleteDepartement(id);
         
     }
 
+    public List<Option> getAllOptions(long id) {
+        Departement dep = departementService.findDepartementById(id);
+        return departementService.getAllOptions(dep);
+    }
+
+    public IDepartementService getDepartementService() {
+        return departementService;
+    }
+
+    public void setDepartementService(IDepartementService departementService) {
+        this.departementService = departementService;
+    }
 }

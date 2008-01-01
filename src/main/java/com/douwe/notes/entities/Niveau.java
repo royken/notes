@@ -64,4 +64,10 @@ public class Niveau implements Serializable {
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "Niveau{" + "id=" + id + ", version=" + version + ", code=" + code + ", cycle=" + cycle + '}';
+    }
+    
 }

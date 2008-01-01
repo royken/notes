@@ -14,7 +14,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.inject.Named;
 
 /**
@@ -27,10 +26,10 @@ public class NiveauBean {
 
     @EJB
     private IInsfrastructureService service;
-    private Niveau niveau = new Niveau();    
+    private Niveau niveau = new Niveau();
     private List<Niveau> niveaux;
     private List<Cycle> cycles;
-    private Cycle cycle;
+    String id;
 
     public NiveauBean() {
         niveau.setCycle(new Cycle());
@@ -40,14 +39,13 @@ public class NiveauBean {
         return service.getAllNiveaux();
     }
 
-    public void saveOrUpdateNiveaux() {        
-        System.err.println(" 4 "+niveau);
-        if (niveau != null) {
-//            niveau.setCycle(new Cycle());
-//            niveau.setCycle(cycle);
-            System.err.println("1 " + niveau.getCycle());
+    public void saveOrUpdateNiveau() {        
+        if (niveau != null) {            
+            niveau.setCycle(service.findCycleById(Integer.parseInt(id)));           
+            System.err.println("methodes saveOrUpdateNiveau  " + niveau);
             service.saveOrUpdateNiveau(niveau);
-            niveau=new Niveau();
+            niveau = new Niveau();
+            id = new String();
         }
     }
 
@@ -69,17 +67,17 @@ public class NiveauBean {
     private Converter cycleConverter = new Converter() {
 
         @Override
-        public  Cycle getAsObject(FacesContext context, UIComponent component, String value) {            
-            int id = Integer.parseInt(value.trim().substring(0,value.trim().indexOf("-")));
+        public Cycle getAsObject(FacesContext context, UIComponent component, String value) {
+            int id = Integer.parseInt(value.trim().substring(0, value.trim().indexOf("-")));
             Cycle c = service.findCycleById(id);
-            System.err.print(" 2 "+value + " --> "+c);
+            System.err.print(" 2 " + value + " --> " + c);
             return c;
         }
 
         @Override
         public String getAsString(FacesContext context, UIComponent component, Object value) {
             Cycle c = (Cycle) value;
-            System.err.println(" 3 "+value +" --> "+c.getId() + "-" + c.getNom());
+            System.err.println(" 3 " + value + " --> " + c.getId() + "-" + c.getNom());
             return c.getId() + "-" + c.getNom();
 
         }
@@ -119,15 +117,16 @@ public class NiveauBean {
         this.cycles = cycles;
     }
 
-    public Cycle getCycle() {
-        cycle = niveau.getCycle();
-        return cycle;
+    public String getId() {
+        if(niveau.getVersion() != 0){
+        System.err.println("methodes getId " + niveau);        
+        id = niveau.getCycle().getId().toString();        }
+        //id="2313";
+        return id;
     }
 
-    public void setCycle(Cycle cycle) {
-        System.err.println(" 6 "+ cycle);
-        this.cycle = cycle;
+    public void setId(String id) {
+        this.id = id;
     }
-    
 
 }

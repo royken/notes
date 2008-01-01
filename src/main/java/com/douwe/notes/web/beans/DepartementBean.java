@@ -34,19 +34,22 @@ public class DepartementBean {
         return service.getAllDepartements();
     }
 
-    public void saveOrUpdateDepartement() {
+    public String saveOrUpdateDepartement() {
         if (departement != null) {
             System.err.println("Le departement "+departement.getCode()+" et la version "+departement.getVersion());
             service.saveOrUpdateDepartement(departement);            
             departement = new Departement();
         }
+        return "saveOrUpdateDepartement";               
     }
 
-    public void deleteDepartement() {
-        if (departement != null && departement.getId() > 0) {
+    public String deleteDepartement() {
+        if (departement != null) {
+             System.err.println("Le departement "+departement.getId() +" code "+departement.getCode()+" et la version "+departement.getVersion());
             service.deleteDepartement(departement.getId());
             departement = new Departement();
         }
+        return "deleteDepartement";
     }
 
     public IInsfrastructureService getService() {

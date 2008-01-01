@@ -8,80 +8,37 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" style="margin-bottom:10px; text-align: center">                          
-                    <h:form id="eleveForm">
-                        <!--                        <p:accordionPanel  dynamic="true">
-                                                    <p:tab title="AJOUTER OU MODIFIER UN DEPARTEMENT">                             -->
-                        <p:panel>
-                            <h:panelGroup >
-                                <h:panelGrid  id="display" columns="3"> 
-                                    <div>
-                                        <h:outputText  value="id: " />  
-                                        <p:inputText value="#{departementBean.departement.id}" />                                                       
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText  value="Code: " />  
-                                        <p:inputText value="#{departementBean.departement.code}" required="true" >  
-                                            <f:validateLength minimum="2" maximum="20"/>  
-                                        </p:inputText>
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText  value="Version: " />  
-                                        <p:inputText value="#{departementBean.departement.version}" required="true" >                                              
-                                        </p:inputText>
-                                    </div><br/><br/>
-                                    <div>
-                                        <h:outputText value="Description: " />  
-                                        <p:inputText value="#{departementBean.departement.description}" required="true"/>
-                                    </div>
-
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{departementBean.saveOrUpdateDepartement()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
-                            </div>                    
-                        </p:panel>
-
-                        <!--                            </p:tab>
-                                                </p:accordionPanel>-->
-                    </h:form>  
+                <p:panel  id="p1" style="margin-bottom:10px; text-align: center">                      
                     <h:form id="f" style="margin-bottom:10px; text-align: center;margin-left: auto;margin-right: auto;">                                             
                         <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rowKey="#{departement.id}" paginator="true" rows="5"  
                                      selection="#{departementBean.departement}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES DÉPARTEMENTS
                             </f:facet>
-                            <p:column headerText="ID " sortBy="#{departement.id}" filterBy="#{departement.id}" id="di">  
+                            <p:column headerText="ID " id="di">  
                                 #{departement.id}  
                             </p:column>                             
-                            <p:column headerText="Code " sortBy="#{departement.code}" filterBy="#{departement.code}" id="code">  
+                            <p:column headerText="Code "  id="code">  
                                 #{departement.code}  
                             </p:column>  
-                            <p:column headerText="Description " sortBy="#{departement.description}" filterBy="#{departement.description}" id="description">  
+                            <p:column headerText="Description "  id="description">  
                                 #{departement.description}  
                             </p:column>                     
-                            <p:column headerText="Version " sortBy="#{departement.version}" filterBy="#{departement.version}" id="version">  
+                            <p:column headerText="Version "  id="version" >  
                                 #{departement.version}  
                             </p:column>                             
                             <f:facet name="footer">  
-                                                                <p:commandButton id="delete" value="Supprimer" action="#{departementBean.deleteDepartement()}" update=":f:d,:eleveForm:display"/>
-<!--                                <p:commandButton id="showDialogButton" value="Supprimer" onclick="confirmation.show()" type="button"/>-->
+                                <p:commandButton id="ajouter" value="Nouveau Departement" action="/faces/departement/ajouterDepartement.xhtml"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" update=":eleveForm:display"/>  
+                                <p:commandButton id="delete" value="Supprimer" action="#{departementBean.deleteDepartement()}" update=":f:d"/>
+<!--                                                 action="/faces/departement/confirmeDelete.xhtml"/>-->
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="/faces/departement/modifierDepartement.xhtml"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
-                    </h:form>                    
-
-                    <p:confirmDialog id="confirmDialog" message="Are you sure about destroying the world?"  
-                                     header="Initiating destroy process" severity="alert" widgetVar="confirmation">  
-                        <h:form>
-                            <p:commandButton id="confirm" value="oui" actionListener="#{departementBean.deleteDepartement()}" update=":f:d,:eleveForm:display" oncomplete="confirmation.hide()"/>
-                            <p:commandButton id="decline" value="non" onclick="confirmation.hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog> 
-
+                    </h:form>                                      
                 </p:panel> 
             </ui:define>            
         </ui:composition>

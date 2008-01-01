@@ -1,7 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Departement;
-import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.TypeCours;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,37 +14,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-@Path("/departements")
-public interface IDepartementResource {
-
+@Path("/typeCours")
+public interface ITypeCoursResource {
     @POST
     @Consumes(value = "application/json")
-    Departement createDepartement(Departement dep);
+    TypeCours createTypeCours(TypeCours typeCours);
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Departement getDepartement(@PathParam(value = "id") long id);
+    TypeCours getTypeCours(@PathParam(value = "id") long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Consumes(value = "application/json")
-    Departement updateDepartement(@PathParam(value = "id") long id, Departement depart);
+    TypeCours updateTypeCours(@PathParam(value = "id") long id, TypeCours typeCours);
 
     @GET
     @Produces(value = "application/json")
-    List<Departement> getAllDepartement();
+    List<TypeCours> getAllTypeCours();
     
     @DELETE
     @Path(value = "{id : \\d+}")
     @Consumes(value = "application/json")
-    void deleteDepartement(@PathParam(value = "id")long id);
+    void deleteTypeCours(@PathParam(value = "id")long id);
     
-    @GET
-    @Path(value = "{id : \\d+}/options")
-    @Produces(value = "application/json")
-    List<Option> getAllOptions(@PathParam(value = "id") long id);
-
 }

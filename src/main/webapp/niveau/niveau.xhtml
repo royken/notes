@@ -18,20 +18,24 @@
                                         <p:inputText value="#{niveauBean.niveau.id}" />                                                       
                                     </div><br/><br/>
                                     <div>
+                                        <h:outputText  value="version : " />  
+                                        <p:inputText value="#{niveauBean.niveau.version}"  />                                                       
+                                    </div><br/><br/>                                    
+                                    <div>
                                         <h:outputText  value="Code : " />  
                                         <p:inputText value="#{niveauBean.niveau.code}" />                                                       
                                     </div>
                                     <div>                                          
                                         <h:outputText  value="Cycle : " /> 
-                                        <h:selectOneMenu value="#{niveauBean.niveau.cycle}" style="margin-top:10px; height: 30px; width: 200px;"  >
-                                            <f:selectItems value="#{niveauBean.cycles}" var="cycle" itemLabel="#{cycle.nom}" itemValue="#{cycle}" />                                             
+                                        <h:selectOneMenu value="#{niveauBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{niveauBean.cycles}" var="cycle" itemLabel="#{cycle.nom}" itemValue="#{cycle.id}" />
                                         </h:selectOneMenu>
                                     </div>  
                                 </h:panelGrid>  
                             </h:panelGroup>
                             <p:separator/>
                             <div>
-                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{niveauBean.saveOrUpdateNiveaux()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                                <p:commandButton value="Soumettre"  id="ajax" actionListener="#{niveauBean.saveOrUpdateNiveau()}" update=":eleveForm,:f:d" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
                             </div>                    
                         </p:panel>
                     </h:form>  
@@ -41,13 +45,13 @@
                             <f:facet name="header">
                                 LA LISTE DES NIVEAUX
                             </f:facet>
-                            <p:column headerText="ID " sortBy="#{niveau.id}" filterBy="#{niveau.id}" id="di">  
+                            <p:column headerText="ID "  id="di">  
                                 #{niveau.id}  
                             </p:column>                             
-                            <p:column headerText="Code " sortBy="#{niveau.code}" filterBy="#{niveau.code}" id="code">  
+                            <p:column headerText="Code "  id="code">  
                                 #{niveau.code}  
                             </p:column>                              
-                            <p:column headerText="Cycle " sortBy="#{niveau.cycle.nom}" filterBy="#{niveau.cycle.nom}" id="nomcycle">  
+                            <p:column headerText="Cycle "  id="nomcycle">  
                                 #{niveau.cycle.nom}  
                             </p:column>   
                             <f:facet name="footer">  

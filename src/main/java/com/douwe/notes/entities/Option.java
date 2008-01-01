@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 
 /**
@@ -14,6 +16,10 @@ import javax.persistence.Version;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity(name = "options")
+@NamedQueries(
+
+        @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam")
+)
 public class Option implements Serializable {
     
     @Id
