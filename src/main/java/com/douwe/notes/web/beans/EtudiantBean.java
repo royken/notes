@@ -8,17 +8,19 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
+import javax.inject.Named;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-@ManagedBean
+@Named(value = "etudiantBean")
 @RequestScoped
 public class EtudiantBean {
     
@@ -97,10 +99,11 @@ public class EtudiantBean {
         this.etudiantService = etudiantService;
     }
 
-    public List<Etudiant> getEtudiants() {
+    public List<Etudiant> getEtudiants() throws ServiceException {
         //niveau = niveauService.findNiveauById(851);
         //etudiants = etudiantService.findByCritiria(null, null, niveau, null);
         //System.err.println("Le nombre d'etudiants "+ etudiants.size());
+        etudiants = etudiantService.getAllEtudiant();
         return etudiants;
     }
     

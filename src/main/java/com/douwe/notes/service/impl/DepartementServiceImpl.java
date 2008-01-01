@@ -23,6 +23,7 @@ public class DepartementServiceImpl implements IDepartementService{
     @Inject
     private IDepartementDao departementDao;
     
+    @Override
     public Departement saveOrUpdateDepartement(Departement departement) throws ServiceException{
         try {
             if (departement.getId() == null) {
@@ -36,6 +37,7 @@ public class DepartementServiceImpl implements IDepartementService{
         }
     }
 
+    @Override
     public void deleteDepartement(Long id) throws ServiceException{
         try {
             Departement departement = departementDao.findById(id);
@@ -48,6 +50,7 @@ public class DepartementServiceImpl implements IDepartementService{
         }
     }
 
+    @Override
     public List<Departement> getAllDepartements() throws ServiceException{
         try {
             return departementDao.findAllActive();
@@ -65,6 +68,7 @@ public class DepartementServiceImpl implements IDepartementService{
         this.departementDao = departementDao;
     }
 
+    @Override
     public Departement findDepartementById(long id) throws ServiceException{
         try {
             return departementDao.findById(id);
@@ -75,6 +79,7 @@ public class DepartementServiceImpl implements IDepartementService{
         
     }
 
+    @Override
     public List<Option> getAllOptions(Departement departement) throws ServiceException{
         try {
             return departementDao.getAllOptions(departement);
