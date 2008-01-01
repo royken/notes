@@ -1,6 +1,7 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Evaluation;
+import com.douwe.notes.entities.Niveau;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +13,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/evaluations")
+public interface IEvaluationResource {
+    
     @POST
     @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    Evaluation createEvaluation(Evaluation evaluation);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<Evaluation> getAllEvaluations();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    Evaluation getEvaluation(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    Evaluation updateEvaluation(@PathParam(value = "id")long id, Evaluation evaluation);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteEvaluation(@PathParam(value = "id")long id);
+    
 }

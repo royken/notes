@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Note;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/notes")
+public interface INoteResource {
+    
     @POST
-    @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    @Produces(value = "application/json") 
+    Note createNote(Note note);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<Note> getAllNotes();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    Note getNote(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    Note updateNote(@PathParam(value = "id")long id, Note note);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteNote(@PathParam(value = "id")long id);
+    
 }

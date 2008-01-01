@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.EvaluationDetails;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/evalDetail")
+public interface IEvaluationDetailResource {
+    
     @POST
     @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    EvaluationDetails createEvalDetail(EvaluationDetails evaluationDetails);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<EvaluationDetails> getAllEvalDetails();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    EvaluationDetails getEvalDetail(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    EvaluationDetails updateEvalDetail(@PathParam(value = "id")long id, EvaluationDetails evaluationDetails);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteEvalDetail(@PathParam(value = "id")long id);
+    
 }

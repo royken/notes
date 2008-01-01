@@ -33,7 +33,7 @@ public interface INiveauResource {
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Niveau updateNiveau(@PathParam(value = "id")long id, Niveau cycle);
+    Niveau updateNiveau(@PathParam(value = "id")long id, Niveau niveau);
 
     @DELETE
     @Path(value = "{id : \\d+}")

@@ -10,4 +10,8 @@ target/
 /.netbeans/
 /src/main/webapp/WEB-INF/
 /src/main/setup/glassfish-resources.xml
+<<<<<<< HEAD
 /src/main/resources/META-INF/persistence.xml
+=======
+/src/main/resources/META-INF/persistence.xml
+>>>>>>> 936d9d0311fd9f6172698463de6b7a3001d7d411
