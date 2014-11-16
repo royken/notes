@@ -1,0 +1,11 @@
+*.class
+*~
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Directories
+target/
+/.netbeans/
+/src/main/webapp/WEB-INF/

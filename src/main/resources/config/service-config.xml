@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Configuration de la couche service -->
+   
+    <bean id="IEtudiantService" class="cm.maroua.iss.service.impl.EtudiantServiceImpl"/>
+    <bean id="IUtilisateurService" class="cm.maroua.iss.service.impl.UtilisateurServiceImpl"/>
+    <bean id="IDepartementService" class="cm.maroua.iss.service.impl.DepartementServiceImpl"/>
+    <bean id="IEnseignantService" class="cm.maroua.iss.service.impl.EnseignantServiceImpl"/>
+    <bean id="ICoursService" class="cm.maroua.iss.service.impl.CoursServiceImpl"/>
+    <bean id="INoteService" class="cm.maroua.iss.service.impl.NoteServiceImpl"/>
+
+</beans>

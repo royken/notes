@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <!-- Configuration des parametres de la BD --> 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:bd.properties"/>
+    </bean>
+
+  
+    <!-- Configuration de la couche DAO -->
+    
+    <bean id="IAnneeAcademiqueDao" class="com.douwe.notes.dao.impl.AnneeAcademiqueDaoImpl"/>
+    <bean id="ICoursDao" class="com.douwe.notes.dao.impl.CoursDaoImpl"/>
+    <bean id="ICycleDao" class="com.douwe.notes.dao.impl.CycleDaoImpl"/>
+    <bean id="IDepartementDao" class="com.douwe.notes.dao.impl.DepartementDaoImpl"/>
+    <bean id="IEnseignantDao" class="com.douwe.notes.dao.impl.EnseignantDaoImpl"/>
+    <bean id="IEnseignementDao" class="com.douwe.notes.dao.impl.EnseignementDaoImpl"/>
+    <bean id="IEtudiantDao" class="com.douwe.notes.dao.impl.EtudiantDaoImpl"/>
+    <bean id="IEvaluationDao" class="com.douwe.notes.dao.impl.EvaluationDaoImpl"/>
+    <bean id="IEvaluationDetailsDao" class="com.douwe.notes.dao.impl.EvaluationDetailsDaoImpl"/>
+    <bean id="IInscriptionDao" class="com.douwe.notes.dao.impl.InscriptionDaoImpl"/>
+    <bean id="IProgrammeDao" class="com.douwe.notes.dao.impl.ProgrammeDaoImpl"/>
+    <bean id="INiveauDao" class="com.douwe.notes.dao.impl.NiveauDaoImpl"/>
+    <bean id="INoteDao" class="com.douwe.notes.dao.impl.NoteDaoImpl"/>
+    <bean id="IOptionDao" class="com.douwe.notes.dao.impl.OptionDaoImpl"/>
+    <bean id="IParcoursDao" class="com.douwe.notes.dao.impl.ParcoursDaoImpl"/>
+    <bean id="ISemestreDao" class="com.douwe.notes.dao.impl.SemestreDaoImpl"/>
+    <bean id="ITypeCoursDao" class="com.douwe.notes.dao.impl.TypeCoursDaoImpl"/>
+    <bean id="IUniteEnseignementDao" class="com.douwe.notes.dao.impl.UniteEnseignementDaoImpl"/>
+    
+ 
+    <!-- Configuring JPA layer -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="true" />
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+                <property name="generateDdl" value="true" />
+            </bean>
+        </property>
+        <property name="loadTimeWeaver">
+            <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+        </property>
+    </bean>
+
+    <!-- DBCP datasource -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="${bd.url}" />
+        <property name="username" value="${bd.username}" />
+        <property name="password" value="${bd.password}" />
+        <property name="testOnBorrow" value="true" />
+    </bean>
+
+    <!-- transaction manager -->
+    <tx:annotation-driven transaction-manager="txManager" />
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+</beans>
