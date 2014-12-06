@@ -7,7 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 /**
  *
@@ -20,10 +21,13 @@ public class Parcours implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
+    @Version
+    private int version;
+    
+    @ManyToOne
     private Niveau niveau;
     
-    @OneToMany
+    @ManyToOne
     private Option option;
     
     @ManyToMany
@@ -64,5 +68,13 @@ public class Parcours implements Serializable {
 
     public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
         this.uniteEnseignements = uniteEnseignements;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

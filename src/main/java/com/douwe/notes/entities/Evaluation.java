@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  *
@@ -17,6 +18,9 @@ public class Evaluation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Version
+    private int version;
     
     @Column
     private String code;
@@ -50,5 +54,13 @@ public class Evaluation implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

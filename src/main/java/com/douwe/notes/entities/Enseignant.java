@@ -4,7 +4,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  *
@@ -14,8 +16,11 @@ import javax.persistence.Id;
 public class Enseignant implements Serializable {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Version
+    private int version;
     
     @Column
     private String nom;
@@ -38,5 +43,13 @@ public class Enseignant implements Serializable {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

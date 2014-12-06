@@ -6,7 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 /**
  *
@@ -19,13 +20,16 @@ public class Cours implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Version
+    private int version;
+    
     @Column
     private String intitule;
     
     @Column
     private Integer credit;
     
-    @OneToMany
+    @ManyToOne
     private TypeCours typeCours;
     
     public Cours(){
@@ -62,5 +66,13 @@ public class Cours implements Serializable {
 
     public void setCredit(Integer credit) {
         this.credit = credit;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

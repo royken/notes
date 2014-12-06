@@ -5,7 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 /**
  *
@@ -18,13 +19,16 @@ public class Inscription implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
+    @Version
+    private int version;
+    
+    @ManyToOne
     private Etudiant etudiant;
     
-    @OneToMany
+    @ManyToOne
     private AnneeAcademique anneeAcademique;
     
-    @OneToMany
+    @ManyToOne
     private Parcours parcours;
     
     public Inscription(){
@@ -61,5 +65,13 @@ public class Inscription implements Serializable {
 
     public void setParcours(Parcours parcours) {
         this.parcours = parcours;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

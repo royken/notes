@@ -7,7 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 /**
  *
@@ -20,13 +21,16 @@ public class Enseignement implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
+    @Version
+    private int version;
+    
+    @ManyToOne
     private AnneeAcademique anneeAcademique;
     
     @ManyToMany
     private List<Enseignant> enseignants;
     
-    @OneToMany
+    @ManyToOne
     private Cours cours;
     
     public Enseignement(){
@@ -63,5 +67,13 @@ public class Enseignement implements Serializable {
 
     public void setCours(Cours cours) {
         this.cours = cours;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

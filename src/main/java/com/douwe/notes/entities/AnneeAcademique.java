@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  *
@@ -20,6 +21,9 @@ public class AnneeAcademique implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Version
+    private int version;
     
     @Column
     @Temporal(TemporalType.DATE)
@@ -55,5 +59,13 @@ public class AnneeAcademique implements Serializable {
 
     public void setFin(Date fin) {
         this.fin = fin;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

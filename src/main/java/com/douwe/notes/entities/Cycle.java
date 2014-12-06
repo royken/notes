@@ -8,17 +8,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-@Entity
+@Entity(name="cycles")
 public class Cycle implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Version
+    private int version;
     
     @Column
     private String nom;
@@ -53,5 +57,12 @@ public class Cycle implements Serializable {
     public void setNiveaux(List<Niveau> niveaux) {
         this.niveaux = niveaux;
     }
-    
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 }

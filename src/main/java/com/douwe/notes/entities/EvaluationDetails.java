@@ -1,11 +1,13 @@
 package com.douwe.notes.entities;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -14,16 +16,19 @@ import javax.validation.constraints.Min;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
-public class EvaluationDetails {
+public class EvaluationDetails implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
+    @Version
+    private int version;
+    
+    @ManyToOne
     private Evaluation evaluation;
     
-    @OneToMany
+    @ManyToOne
     private TypeCours typeCours;
     
     @Column
@@ -65,5 +70,13 @@ public class EvaluationDetails {
 
     public void setPourcentage(Integer pourcentage) {
         this.pourcentage = pourcentage;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

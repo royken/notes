@@ -9,13 +9,11 @@
     <url>http://notes.douwe.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vaadin.version>7.0.5</vaadin.version>
         <slf4j.version>1.6.1</slf4j.version>
         <log4j.version>1.2.16</log4j.version>        
         <mysql.version>5.1.2</mysql.version>
         <hibernate-core-version>4.2.2.Final</hibernate-core-version>
         <hibernate-validator-version>4.1.0.Final</hibernate-validator-version>
-        <org.springframework.version>3.2.3.RELEASE</org.springframework.version>
     </properties>
     <dependencies>
         <dependency>
@@ -92,26 +90,22 @@
             <version>${slf4j.version}</version>
         </dependency>        
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${org.springframework.version}</version>
-            <!--            <scope>runtime</scope>-->
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

@@ -6,7 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -21,21 +22,24 @@ public class Note implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Version
+    private int version;
+    
     @Column
     @Min(0)
     @Max(20)
     private double valeur;
 
-    @OneToMany
+    @ManyToOne
     private Etudiant etudiant;
     
-    @OneToMany
+    @ManyToOne
     private Evaluation evaluation;
     
-    @OneToMany
+    @ManyToOne
     private Cours cours;
     
-    @OneToMany
+    @ManyToOne
     private AnneeAcademique anneeAcademique;
     
     @Column(name = "sessions")
@@ -101,5 +105,12 @@ public class Note implements Serializable {
     public void setSession(Session session) {
         this.session = session;
     }
-    
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 }

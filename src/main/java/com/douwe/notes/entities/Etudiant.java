@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,17 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
-public class Etudiant {
+public class Etudiant implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Version
+    private int version;
     
     @Column
     private String matricule;
@@ -108,5 +113,13 @@ public class Etudiant {
 
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
