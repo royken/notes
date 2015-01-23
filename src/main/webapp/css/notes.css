@@ -1,0 +1,20 @@
+body{
+    background-color: #f7f0c6;
+}
+.page-header{
+    background-image: url("../img/logo.png");
+    background-repeat: no-repeat;
+    height: 130px;
+    margin-bottom: 10px;
+    background-position: center;
+}
+
+.page-header .text-center{
+    padding-top: 95px;
+}
+
+footer{
+    margin-top: 20px;
+    font-size: small;
+    text-align: center;
+}

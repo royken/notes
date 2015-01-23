@@ -7,14 +7,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@XmlRootElement(name="departement")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Departement implements Serializable {
     
+    @XmlAttribute
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,9 +30,11 @@ public class Departement implements Serializable {
     @Version
     private int version;
     
+    @XmlElement
     @Column
     private String code;
     
+    @XmlElement
     @Column
     private String description;
     
