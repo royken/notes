@@ -28,11 +28,16 @@ public class CycleResource implements ICycleResource{
     }
 
     public Cycle updateCycle(long id, Cycle cycle) {
-        return infranstructureService.saveOrUpdateCycle(cycle);
+        Cycle c = infranstructureService.findCycleById(id);
+        if(c != null){
+            c.setNom(cycle.getNom());
+            return infranstructureService.saveOrUpdateCycle(c);
+        }
+        return null;
     }
 
     public void deleteCycle(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        infranstructureService.deleteCycle(id);
     }
 
     public IInsfrastructureService getInfranstructureService() {

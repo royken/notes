@@ -3,8 +3,10 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.ICycleDao;
 import com.douwe.notes.dao.IDepartementDao;
+import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.entities.Departement;
+import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.service.IInsfrastructureService;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +27,9 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
 
     @Inject
     private ICycleDao cycleDao;
+
+    @Inject
+    private INiveauDao niveauDao;
 
     public Departement saveOrUpdateDepartement(Departement departement) {
         System.out.println("Exécution de la methode saveOrUpdate");
@@ -75,7 +80,15 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
     public void setCycleDao(ICycleDao cycleDao) {
         this.cycleDao = cycleDao;
     }
-    
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
     public Departement findDepartementById(long id) {
         try {
             return departementDao.findById(id);
@@ -86,12 +99,13 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
     }
 
     public Cycle saveOrUpdateCycle(Cycle cycle) {
-        try{
-        if(cycle.getId() == null)
-            return cycleDao.create(cycle);
-        else
-            return cycleDao.update(cycle);
-        }catch(DataAccessException dae){
+        try {
+            if (cycle.getId() == null) {
+                return cycleDao.create(cycle);
+            } else {
+                return cycleDao.update(cycle);
+            }
+        } catch (DataAccessException dae) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
             return null;
         }
@@ -100,8 +114,9 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
     public void deleteCycle(long id) {
         try {
             Cycle c = cycleDao.findById(id);
-            if (c != null)
+            if (c != null) {
                 cycleDao.delete(c);
+            }
         } catch (DataAccessException ex) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,5 +138,46 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return Collections.EMPTY_LIST;
         }
+    }
+
+    public Niveau saveOrUpdateNiveau(Niveau niveau) {
+        try {
+            if (niveau.getId() == null) {
+                return niveauDao.create(niveau);
+            } else {
+                return niveauDao.update(niveau);
+            }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void deleteNiveau(long id) {
+        try {
+            Niveau n = niveauDao.findById(id);
+            if (n != null)
+                niveauDao.delete(n);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Niveau findNiveauById(long id) {
+        try {
+            return niveauDao.findById(id);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public List<Niveau> getAllNiveaux() {
+        try {
+            return niveauDao.findAll();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Collections.EMPTY_LIST;
     }
 }

@@ -65,4 +65,11 @@ public class Cycle implements Serializable {
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return nom;
+    }
+    
+    
 }

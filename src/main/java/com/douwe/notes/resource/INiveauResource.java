@@ -1,6 +1,5 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.entities.Niveau;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -26,7 +25,7 @@ public interface INiveauResource {
 
     @GET
     @Produces(value = "application/json")
-    List<Niveau> getAllNiveau();
+    List<Niveau> getAllNiveaux();
 
     @GET
     @Path(value = "{id : \\d+}")

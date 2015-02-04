@@ -2,6 +2,7 @@ package com.douwe.notes.service;
 
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.entities.Departement;
+import com.douwe.notes.entities.Niveau;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -29,5 +30,14 @@ public interface IInsfrastructureService {
     public Cycle findCycleById(long id);
     
     public List<Cycle> getAllCycles();
+    
+    // Les opérations en relation avec les niveaux
+    public Niveau saveOrUpdateNiveau(Niveau niveau);
+    
+    public void deleteNiveau(long id);
+    
+    public Niveau findNiveauById(long id);
+    
+    public List<Niveau> getAllNiveaux();
     
 }
