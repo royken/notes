@@ -5,11 +5,13 @@ import com.douwe.notes.resource.INiveauResource;
 import com.douwe.notes.service.IInsfrastructureService;
 import java.util.List;
 import javax.inject.Inject;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
+@Path("/niveaux")
 public class NiveauResource implements INiveauResource{
     
     @Inject

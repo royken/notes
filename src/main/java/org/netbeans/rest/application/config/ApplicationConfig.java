@@ -24,6 +24,12 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.douwe.notes.resource.impl.CoursResource.class);
+        resources.add(com.douwe.notes.resource.impl.CycleResource.class);
+        resources.add(com.douwe.notes.resource.impl.DepartementResource.class);
+        resources.add(com.douwe.notes.resource.impl.EtudiantResource.class);
+        resources.add(com.douwe.notes.resource.impl.NiveauResource.class);
+        resources.add(com.douwe.notes.resource.impl.OptionResource.class);
     }
     
 }

@@ -13,6 +13,8 @@ import javax.persistence.Version;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
+
+
 @Entity
 public class Cours implements Serializable {
     
