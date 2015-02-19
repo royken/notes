@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,7 +36,7 @@ public class Departement implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @JsonIgnore
+    @XmlTransient
     @Version
     private int version;
     
@@ -47,6 +48,7 @@ public class Departement implements Serializable {
     @Column
     private String description;
     
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
     
@@ -83,6 +85,7 @@ public class Departement implements Serializable {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
