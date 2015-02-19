@@ -27,9 +27,11 @@ public class ApplicationConfig extends Application {
         resources.add(com.douwe.notes.resource.impl.CoursResource.class);
         resources.add(com.douwe.notes.resource.impl.CycleResource.class);
         resources.add(com.douwe.notes.resource.impl.DepartementResource.class);
+        resources.add(com.douwe.notes.resource.impl.EnseignantResource.class);
         resources.add(com.douwe.notes.resource.impl.EtudiantResource.class);
         resources.add(com.douwe.notes.resource.impl.NiveauResource.class);
         resources.add(com.douwe.notes.resource.impl.OptionResource.class);
+        resources.add(com.douwe.notes.resource.impl.TypeCoursResource.class);
     }
     
 }

@@ -1,5 +1,8 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+//import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries(
         @NamedQuery(name = "Departement.getAllOptions", query = "select o from options o where o.departement.id = :idParam")
-
 )
 public class Departement implements Serializable {
     
@@ -33,6 +35,7 @@ public class Departement implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @JsonIgnore
     @Version
     private int version;
     
@@ -43,6 +46,9 @@ public class Departement implements Serializable {
     @XmlElement
     @Column
     private String description;
+    
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     public Departement(){
         
@@ -72,11 +78,22 @@ public class Departement implements Serializable {
         this.description = description;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
     }
 }

@@ -71,7 +71,6 @@ public class EtudiantServiceImpl implements IEtudiantService{
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
     }
     
 }

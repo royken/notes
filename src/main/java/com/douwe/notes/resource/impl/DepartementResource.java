@@ -41,7 +41,7 @@ public class DepartementResource implements IDepartementResource {
     }
 
     @Override
-    public Departement updateDepartement(@PathParam("id") long id, Departement current) {
+    public Departement updateDepartement( long id, Departement current) {
         Departement depart = departementService.findDepartementById(id);
         if (depart == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
@@ -109,12 +109,12 @@ public class DepartementResource implements IDepartementResource {
         return deps;
     }
 
-    public void deleteDepartement(@PathParam(value = "id")long id) {
+    public void deleteDepartement(long id) {
         departementService.deleteDepartement(id);
         
     }
 
-    public List<Option> getAllOptions(@PathParam(value = "id")long id) {
+    public List<Option> getAllOptions(long id) {
         Departement dep = departementService.findDepartementById(id);
         return departementService.getAllOptions(dep);
     }
