@@ -32,9 +32,13 @@ public class TypeCourServiceImpl implements ITypeCoursService{
 
     public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) {
         try {
-            return typeCoursDao.create(typeCours);
-        } catch (DataAccessException ex) {
-            Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            if (typeCours.getId() == null) {
+                return typeCoursDao.create(typeCours);
+            } else {
+                return typeCoursDao.update(typeCours);
+            }
+        } catch (DataAccessException dae) {
+            Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
             return null;
         }
     }

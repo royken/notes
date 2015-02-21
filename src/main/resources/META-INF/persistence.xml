@@ -5,8 +5,8 @@
         <jta-data-source>jdbc/notesDatasource</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
-            <!--        <property name="eclipselink.ddl-generation" value="create-tables" />-->
-            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+            <property name="eclipselink.logging.level" value="SEVERE"/>
         </properties>
     </persistence-unit>
 </persistence>

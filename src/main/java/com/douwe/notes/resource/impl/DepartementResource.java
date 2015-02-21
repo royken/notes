@@ -4,11 +4,9 @@ import com.douwe.notes.resource.IDepartementResource;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IDepartementService;
-import com.douwe.notes.service.IInsfrastructureService;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
@@ -19,9 +17,6 @@ import javax.ws.rs.core.Response;
 @Path("/departements")
 public class DepartementResource implements IDepartementResource {
 
-    @EJB
-    private IInsfrastructureService insfrastructureService;
-    
     @EJB
     private IDepartementService departementService;
 

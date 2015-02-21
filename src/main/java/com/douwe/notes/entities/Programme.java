@@ -1,12 +1,15 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -20,6 +23,7 @@ public class Programme implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @ManyToOne
@@ -30,6 +34,12 @@ public class Programme implements Serializable {
     
     @ManyToOne
     private Parcours parcours;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
+    
+    
     
     
     public Programme(){
@@ -68,11 +78,30 @@ public class Programme implements Serializable {
         this.parcours = parcours;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "Programme{" + "id=" + id + ", version=" + version + ", anneeAcademique=" + anneeAcademique + ", uniteEnseignement=" + uniteEnseignement + ", parcours=" + parcours + ", active=" + active + '}';
+    }
+    
+    
 }

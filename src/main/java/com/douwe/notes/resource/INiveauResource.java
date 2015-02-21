@@ -15,11 +15,9 @@ import javax.ws.rs.Produces;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-@Path("/niveaux")
 public interface INiveauResource {
     
     @POST
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Niveau createNiveau(Niveau niveau);
 
@@ -29,18 +27,15 @@ public interface INiveauResource {
 
     @GET
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Niveau getNiveau(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Niveau updateNiveau(@PathParam(value = "id")long id, Niveau cycle);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     void deleteNiveau(@PathParam(value = "id")long id);
 }

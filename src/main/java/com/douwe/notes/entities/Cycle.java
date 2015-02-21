@@ -1,5 +1,6 @@
 package com.douwe.notes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -22,6 +24,7 @@ public class Cycle implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @Column
@@ -29,6 +32,10 @@ public class Cycle implements Serializable {
     
     @OneToMany(mappedBy = "cycle")
     private List<Niveau> niveaux;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     public Cycle(){
         
@@ -58,17 +65,30 @@ public class Cycle implements Serializable {
         this.niveaux = niveaux;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
 
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
-        return nom;
+        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom + ", niveaux=" + niveaux + ", active=" + active + '}';
     }
     
     

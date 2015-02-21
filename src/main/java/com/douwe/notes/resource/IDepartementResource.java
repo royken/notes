@@ -3,7 +3,6 @@ package com.douwe.notes.resource;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Option;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,11 +15,10 @@ import javax.ws.rs.Produces;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-@Path("/departements")
 public interface IDepartementResource {
 
     @POST
-    @Consumes(value = "application/json")
+    @Produces(value = "application/json")
     Departement createDepartement(Departement dep);
 
     @GET
@@ -30,7 +28,7 @@ public interface IDepartementResource {
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
+    @Produces(value = "application/json")
     Departement updateDepartement(@PathParam(value = "id") long id, Departement depart);
 
     @GET
@@ -39,7 +37,6 @@ public interface IDepartementResource {
     
     @DELETE
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     void deleteDepartement(@PathParam(value = "id")long id);
     
     @GET

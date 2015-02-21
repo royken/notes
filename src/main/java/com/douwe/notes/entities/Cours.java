@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
@@ -25,6 +26,7 @@ public class Cours implements Serializable {
     private Long id;
     
     @Version
+    @XmlTransient
     private int version;
     
     @Column
@@ -35,6 +37,10 @@ public class Cours implements Serializable {
     
     @ManyToOne
     private TypeCours typeCours;
+    
+     @XmlTransient
+    @Column(columnDefinition = "int default 1")
+    private int active;
     
     public Cours(){
         
@@ -77,7 +83,25 @@ public class Cours implements Serializable {
         return version;
     }
 
+    @JsonIgnore
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @JsonIgnore
+    public int getActive() {
+        return active;
+    }
+
+    @JsonIgnore
+    public void setActive(int active) {
+        this.active = active;
+    }   
+
+    @Override
+    public String toString() {
+        return "Cours{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", credit=" + credit + ", typeCours=" + typeCours + ", active=" + active + '}';
+    }
+    
+    
 }

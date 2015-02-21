@@ -15,11 +15,9 @@ import javax.ws.rs.Produces;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-@Path("/cycles")
 public interface ICycleResource {
 
     @POST
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Cycle createCycle(Cycle cycle);
 
@@ -29,19 +27,16 @@ public interface ICycleResource {
 
     @GET
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Cycle getCycle(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     void deleteCycle(@PathParam(value = "id")long id);
 
 }

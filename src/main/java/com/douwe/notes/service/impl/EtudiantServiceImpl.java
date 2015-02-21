@@ -31,7 +31,6 @@ public class EtudiantServiceImpl implements IEtudiantService{
     
 
     public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) {
-        System.out.println("Exécution de la methode saveOrUpdate");
         try {
             if (etudiant.getId() == null) {
                 return etudiantDao.create(etudiant);

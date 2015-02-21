@@ -15,11 +15,9 @@ import javax.ws.rs.Produces;
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-@Path("/enseignants")
 public interface IEnseignantResource {
  
     @POST
-    @Consumes(value = "application/json")
     @Produces(value = "application/json") 
     Enseignant createEnseignant(Enseignant enseignant);
 
@@ -29,13 +27,12 @@ public interface IEnseignantResource {
 
     @GET
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
     @Produces(value = "application/json")
     Enseignant getEnseignant(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
-    @Consumes(value = "application/json")
+    
     @Produces(value = "application/json")
     Enseignant updateEnseignant(@PathParam(value = "id")long id, Enseignant enseignant);
 
