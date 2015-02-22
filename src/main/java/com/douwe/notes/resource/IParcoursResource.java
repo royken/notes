@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Parcours;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/parcours")
+public interface IParcoursResource {
+    
     @POST
     @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    Parcours createParcours(Parcours parcours);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<Parcours> getAllParcours();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    Parcours getParcours(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    Parcours updateParcours(@PathParam(value = "id")long id, Parcours parcours);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteParcours(@PathParam(value = "id")long id);
+    
 }

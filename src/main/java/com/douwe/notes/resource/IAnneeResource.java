@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.AnneeAcademique;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,31 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/annees")
+public interface IAnneeResource {
+    
     @POST
-    @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    @Produces(value = "application/json") 
+    AnneeAcademique createAnnee(AnneeAcademique anneeAcademique);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<AnneeAcademique> getAllAnnees();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    AnneeAcademique getAnnee(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    AnneeAcademique updateAnnee(@PathParam(value = "id")long id, AnneeAcademique anneeAcademique);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteAnnee(@PathParam(value = "id")long id);
+    
 }

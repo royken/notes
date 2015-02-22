@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Enseignement;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,30 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+public interface IEnseignementResource {
+    
     @POST
-    @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    @Produces(value = "application/json") 
+    Enseignement createEnseignement(Enseignement enseignement);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<Enseignement> getAllEnseignements();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    Enseignement getEnseignement(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    Enseignement updateEnseignement(@PathParam(value = "id")long id, Enseignement enseignement);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteEnseignement(@PathParam(value = "id")long id);
+    
 }

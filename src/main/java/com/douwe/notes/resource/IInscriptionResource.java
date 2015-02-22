@@ -1,6 +1,6 @@
 package com.douwe.notes.resource;
 
-import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Inscription;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,30 +12,30 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author Vincent Douwe <douwevincent@yahoo.fr>
+ * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
-public interface ICycleResource {
-
+@Path("/inscriptions")
+public interface IInscriptionResource {
+    
     @POST
-    @Produces(value = "application/json")
-    Cycle createCycle(Cycle cycle);
+    @Produces(value = "application/json") 
+    Inscription createSemestre(Inscription inscription);
 
     @GET
     @Produces(value = "application/json")
-    List<Cycle> getAllCycle();
+    List<Inscription> getAllInscriptions();
 
     @GET
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle getCycle(@PathParam(value = "id")long id);
+    Inscription getInscription(@PathParam(value = "id")long id);
 
     @PUT
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
-    Cycle updateCycle(@PathParam(value = "id")long id, Cycle cycle);
+    Inscription updateInscription(@PathParam(value = "id")long id, Inscription inscription);
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCycle(@PathParam(value = "id")long id);
-
+    void deleteInscription(@PathParam(value = "id")long id);
 }

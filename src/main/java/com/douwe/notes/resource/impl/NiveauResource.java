@@ -30,11 +30,11 @@ public class NiveauResource implements INiveauResource{
         return insfrastructureService.findNiveauById(id);
     }
 
-    public Niveau updateNiveau(long id, Niveau cycle) {
+    public Niveau updateNiveau(long id, Niveau niveau) {
         Niveau n = insfrastructureService.findNiveauById(id);
         if(n != null){
-            n.setCode(cycle.getCode());
-            n.setCycle(cycle.getCycle());
+            n.setCode(niveau.getCode());
+            n.setCycle(niveau.getCycle());
             return insfrastructureService.saveOrUpdateNiveau(n);
         }
         return null;
