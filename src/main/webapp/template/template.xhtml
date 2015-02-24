@@ -18,22 +18,22 @@
             </div>
             <ui:insert name="menu">
                 <nav class="navbar navbar-default clearfix" role="navigation">               
-                    <h:form>
+<h:form>
                         <p:menubar>
                             <p:submenu label="Données">
-                                <p:menuitem value="Cycle" url="http://www.google.com" />
-                                <p:menuitem value="Niveau" url="http://www.google.com" />
-                                <p:menuitem value="Département" action="departement/Liste.xhtml" />
-                                <p:menuitem value="Option" url="http://www.hotmail.com" />
-                                <p:menuitem value="Semestre" url="http://mail.yahoo.com" />
-                                <p:menuitem value="Année Académique" url="http://mail.yahoo.com" />
+                                <p:menuitem value="Cycle" action="/faces/cycle/cycle.xhtml" />
+                                <p:menuitem value="Niveau" action="/faces/niveau/niveau.xhtml" />
+                                <p:menuitem value="Département" action="/faces/departement/departement.xhtml" />                
+                                <p:menuitem value="Option" action="/faces/option/option.xhtml" />
+                                <p:menuitem value="Semestre" action="/faces/semestre/semestre.xhtml" />
+                                <p:menuitem value="Année Académique" action="/faces/anneeAcademique/anneeAcademique.xhtml" />
                             </p:submenu>
                             <p:submenu label="Enseignement">
-                                <p:menuitem value="Cours" url="http://www.youtube.com" />
-                                <p:menuitem value="Type Cours" url="http://www.youtube.com" />
-                                <p:menuitem value="Unité Enseignement" url="http://www.break.com" />
-                                <p:menuitem value="Programme Enseignement" url="http://www.break.com" />
-                                <p:menuitem value="Enseignant" url="http://www.break.com" />
+                                <p:menuitem value="Cours" action="/faces/cours/cours.xhtml" />
+                                <p:menuitem value="Type Cours" action="/faces/typeCours/typeCours.xhtml" />
+                                <p:menuitem value="Unité Enseignement" action="/faces/UE/UE.xhtml" />
+                                <p:menuitem value="Programme Enseignement" action="/faces/programmeenseignement/programmeenseignement.xhtml" />
+                                <p:menuitem value="Enseignant" action="/faces/enseignant/enseignant.xhtml" />
                             </p:submenu>
                             <p:submenu label="Etudiant">
                                 <p:menuitem value="Importation" url="http://www.youtube.com" />

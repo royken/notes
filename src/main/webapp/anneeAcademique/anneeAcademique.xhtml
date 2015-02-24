@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucunne année académique n'est enregistrée" var="anneeAcademique" value="#{anneeAcademiqueBean.anneeAcademiques}" rowKey="#{anneeAcademique.id}" paginator="true" rows="5"  
+                                     sortOrder="ascending" selection="#{anneeAcademiqueBean.anneeAcademique}" selectionMode="single" sortBy="#{anneeAcademique.id}">            
+                            <f:facet name="header">
+                                LA LISTE DES ANNEES ACADEMIQUES
+                            </f:facet>                           
+                            <p:column headerText="Date de debut " >  
+                                #{anneeAcademique.debut.toString().subSequence(8,10)} / #{anneeAcademique.debut.toString().subSequence(3,7)} / #{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length() -5)}
+                            </p:column>       
+                            <p:column headerText="Date de fin " >  
+                            #{anneeAcademique.fin.toString().subSequence(8,10)} / #{anneeAcademique.fin.toString().subSequence(3,7)} / #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -5)}
+                            </p:column>                                                  
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouvelle Année Académique" action="#{anneeAcademiqueBean.choix(1)}" icon="ui-icon-disk"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{anneeAcademiqueBean.deleteAnneeAcademique()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{anneeAcademiqueBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                             
+                        </p:dataTable>                                                              
+                    </h:form>                                      
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

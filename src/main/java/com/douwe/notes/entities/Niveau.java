@@ -73,7 +73,6 @@ public class Niveau implements Serializable {
     public void setVersion(int version) {
         this.version = version;
     }
-
     @JsonIgnore
     public int getActive() {
         return active;
@@ -82,12 +81,6 @@ public class Niveau implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
-    }
-
-    @Override
-    public String toString() {
-        return "Niveau{" + "id=" + id + ", version=" + version + ", code=" + code + ", cycle=" + cycle + ", active=" + active + '}';
-    }
-    
-    
+    }    
+   
 }

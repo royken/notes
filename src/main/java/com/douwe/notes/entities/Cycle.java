@@ -88,8 +88,7 @@ public class Cycle implements Serializable {
 
     @Override
     public String toString() {
-        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom + ", niveaux=" + niveaux + ", active=" + active + '}';
+        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom + ", niveaux=" + niveaux + '}';
     }
-    
-    
+ 
 }
