@@ -62,7 +62,7 @@ public class NiveauServiceImpl implements INiveauService{
         }
     }
 
-    public List<Niveau> getAllNiveaus() {
+    public List<Niveau> getAllNiveaux() {
         try {
             return niveauDao.findAll();
         } catch (DataAccessException ex) {
