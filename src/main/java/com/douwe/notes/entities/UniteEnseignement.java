@@ -3,6 +3,7 @@ package com.douwe.notes.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,6 +40,9 @@ public class UniteEnseignement implements Serializable {
     
     @ManyToMany(mappedBy = "uniteEnseignements")
     private List<Parcours> parcours;
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Cours> courses;
     
     
     
@@ -98,6 +102,16 @@ public class UniteEnseignement implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    public List<Cours> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Cours> courses) {
+        this.courses = courses;
+    }
+    
+    
 
     @Override
     public String toString() {
