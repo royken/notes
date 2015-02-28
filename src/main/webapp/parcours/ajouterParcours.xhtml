@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content"> 
+                <p:growl id="growl" showDetail="true" />
+                <h:form id="eleveForm">
+                    <p:panel header="AJOUTER UN PARCOURS">                            
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2"> 
+                                <h:outputText  value="Niveau : " /> 
+                                <h:selectOneMenu value="#{parcoursBean.idN}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                    <f:selectItems value="#{parcoursBean.niveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                </h:selectOneMenu>                                   
+                                <h:outputText  value="Option : " /> 
+                                <h:selectOneMenu value="#{parcoursBean.idO}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                    <f:selectItems value="#{parcoursBean.options}" var="option" itemLabel="#{option.code}-#{option.departement.code}" itemValue="#{option.id}" />
+                                </h:selectOneMenu> 
+                            </h:panelGrid>  
+                            <p:commandButton value="cliquez pour selectionner la liste des UE" action="/faces/parcours/listeUE.xhtml" icon ="ui-icon-extlink" style="margin-top: 10px;"/> 
+
+                        </h:panelGroup>
+                        <p:separator/>
+                        <div>
+                            <p:commandButton value="Soumettre"  id="ajax" action="#{parcoursBean.saveOrUpdateParcours()}" actionListener="#{parcoursBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/parcours/parcours.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                        </div>                    
+                    </p:panel>
+                </h:form>  
+
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

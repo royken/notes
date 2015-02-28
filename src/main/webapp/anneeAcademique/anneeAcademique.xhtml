@@ -10,16 +10,16 @@
             <ui:define name="content">                
                 <p:panel  id="p1">
                     <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucunne année académique n'est enregistrée" var="anneeAcademique" value="#{anneeAcademiqueBean.anneeAcademiques}" rowKey="#{anneeAcademique.id}" paginator="true" rows="5"  
+                        <p:dataTable id="d"  emptyMessage="Aucunne année académique n'est enregistrée" var="anneeAcademique" value="#{anneeAcademiqueBean.anneeAcademiques}" rowKey="#{anneeAcademique.id}" paginator="true" rows="15"  paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"  
                                      sortOrder="ascending" selection="#{anneeAcademiqueBean.anneeAcademique}" selectionMode="single" sortBy="#{anneeAcademique.id}">            
                             <f:facet name="header">
                                 LA LISTE DES ANNEES ACADEMIQUES
                             </f:facet>                           
                             <p:column headerText="Date de debut " >  
-                                #{anneeAcademique.debut.toString().subSequence(8,10)} / #{anneeAcademique.debut.toString().subSequence(3,7)} / #{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length() -5)}
+                                #{anneeAcademique.debut.toString().subSequence(8,10)}/#{anneeAcademiqueBean.inc(anneeAcademique.debut.month)}/#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length() -4)}
                             </p:column>       
                             <p:column headerText="Date de fin " >  
-                            #{anneeAcademique.fin.toString().subSequence(8,10)} / #{anneeAcademique.fin.toString().subSequence(3,7)} / #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -5)}
+                            #{anneeAcademique.fin.toString().subSequence(8,10)}/#{anneeAcademiqueBean.inc(anneeAcademique.fin.month)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -4)}
                             </p:column>                                                  
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouvelle Année Académique" action="#{anneeAcademiqueBean.choix(1)}" icon="ui-icon-disk"/>

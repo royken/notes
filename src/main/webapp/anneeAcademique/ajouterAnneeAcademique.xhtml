@@ -14,18 +14,15 @@
                         <h:panelGroup >
                             <h:panelGrid id="display" columns="2">                                                                                                                      
                                 <h:outputText  value="Debut: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.debut}" id="cal" required="true"  style="margin-left: 10px;margin-top: 20px;" >  
-                                    <f:validateLength minimum="2"/>  
-                                </p:calendar>
+                                <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.debut}" id="cal"  style="margin-left: 10px;margin-top: 20px;" />                                 
                                 <h:outputText value="Fin: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.fin}" id="cal2"  required="true"  style="margin-left: 10px;margin-top: 20px;" >  
-                                    <f:validateLength minimum="2"/>  
-                                </p:calendar>
+                                <p:calendar value="#{anneeAcademiqueBean.anneeAcademique.fin}" id="cal2"  style="margin-left: 10px;margin-top: 20px;" />                                
                             </h:panelGrid>  
                         </h:panelGroup>
                         <p:separator/>
                         <div>
                             <p:commandButton value="Soumettre"  id="ajax" action="#{anneeAcademiqueBean.saveOrUpdateAnneeAcademique()}" actionListener="#{anneeAcademiqueBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action ="/faces/anneeAcademique/anneeAcademique.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
                         </div>                    
                     </p:panel>
                 </h:form>  
