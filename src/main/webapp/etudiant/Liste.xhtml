@@ -13,7 +13,7 @@
                 <f:view>
                     <h:form id="form">
                         <p:growl id="growl" showDetail="true" />
-<!--                        <p:outputLabel value="Departement" for="departement" />
+                        <p:outputLabel value="Departement" for="departement" />
                         <h:selectOneMenu value="#{etudiantBean.departement}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
                             <f:selectItems value="#{departementServiceImpl.allDepartements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement}" />
                         </h:selectOneMenu>
@@ -28,9 +28,9 @@
                         <p:outputLabel value="Option" for="option" />
                         <h:selectOneMenu value="#{etudiantBean.option}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
                             <f:selectItems value="#{optionServiceImpl.allOptions}" var="option" itemLabel="#{option.code}" itemValue="#{option}" />
-                        </h:selectOneMenu>-->
+                        </h:selectOneMenu>
                         <p:commandButton type="button" action="#{etudiantBean.filtrer()}"  update=":table"  value="Filtrer"/>
-<!--                        <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="10">                            
+                        <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="10">                            
                             <p:column>
                                 <f:facet name="header">
                                     <h:outputText value="Matricule"/>
@@ -75,7 +75,7 @@
                                 </f:facet>
                                 <h:outputText value="#{item.genre}"/>
                             </p:column>                            
-                        </p:dataTable>-->
+                        </p:dataTable>
                     </h:form>
                 </f:view>
 
