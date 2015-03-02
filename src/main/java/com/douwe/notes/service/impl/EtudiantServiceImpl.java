@@ -2,8 +2,13 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IEtudiantDao;
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +35,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
     
     
 
+    @Override
     public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) {
         try {
             if (etudiant.getId() == null) {
@@ -43,6 +49,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
         }
     }
 
+    @Override
     public void deleteEtudiant(Long id) {
         try {
             Etudiant etudiant = etudiantDao.findById(id);
@@ -54,6 +61,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
         }
     }
 
+    @Override
     public Etudiant findEtudiantById(long id) {
         try {
             return etudiantDao.findById(id);
@@ -63,6 +71,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
         }
     }
 
+    @Override
     public List<Etudiant> getAllEtudiant() {
         try {
             return etudiantDao.findAll();
@@ -70,6 +79,16 @@ public class EtudiantServiceImpl implements IEtudiantService{
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public List<Etudiant> findByCritiria(Departement departement, AnneeAcademique annee, Niveau niveau, Option option) {
+        try {
+            return etudiantDao.listeEtudiantParDepartementEtNiveau(departement, annee, niveau, option);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Collections.EMPTY_LIST;
     }
     
 }

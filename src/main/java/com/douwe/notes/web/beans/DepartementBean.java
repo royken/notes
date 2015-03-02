@@ -2,7 +2,6 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.service.IDepartementService;
-import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;

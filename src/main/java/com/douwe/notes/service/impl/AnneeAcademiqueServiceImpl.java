@@ -9,12 +9,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
+@Named
 public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     
     @Inject
@@ -30,6 +32,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     
     
 
+    @Override
     public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique) {
         try {
             if (anneeAcademique.getId() == null) {
@@ -43,6 +46,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
+    @Override
     public void deleteAnnee(Long id) {
         try {
             AnneeAcademique anneeAcademique = academiqueDao.findById(id);
@@ -54,6 +58,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
+    @Override
     public AnneeAcademique findAnneeById(long id) {
         try {
             return academiqueDao.findById(id);
@@ -63,6 +68,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
+    @Override
     public List<AnneeAcademique> getAllAnnee() {
         try {
             return academiqueDao.findAll();

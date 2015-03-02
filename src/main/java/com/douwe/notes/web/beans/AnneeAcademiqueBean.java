@@ -31,7 +31,7 @@ public class AnneeAcademiqueBean {
     }
 
     public String saveOrUpdateAnneeAcademique() {
-        if (anneeAcademique != null&& anneeAcademique.getDebut().getYear()<= anneeAcademique.getFin().getYear()&& anneeAcademique.getDebut().getMonth()<=anneeAcademique.getFin().getMonth() && anneeAcademique.getDebut().getDay()<anneeAcademique.getFin().getDay()) {
+        if (anneeAcademique != null&& anneeAcademique.getDebut().before(anneeAcademique.getFin())) {
             service.saveOrUpdateAnnee(anneeAcademique);
             anneeAcademique = new AnneeAcademique();
         }        
