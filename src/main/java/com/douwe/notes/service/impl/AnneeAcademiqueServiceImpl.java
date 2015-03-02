@@ -10,12 +10,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
+@Named
 public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     
     @Inject
@@ -31,6 +33,8 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     
     
 
+
+    @Override
     public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique) throws ServiceException{
         try {
             if (anneeAcademique.getId() == null) {
@@ -44,7 +48,9 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
-    public void deleteAnnee(Long id) throws ServiceException{
+
+    @Override
+    public void deleteAnnee(Long id) throws ServiceException {
         try {
             AnneeAcademique anneeAcademique = academiqueDao.findById(id);
             if(anneeAcademique != null){
@@ -56,6 +62,8 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
+
+    @Override
     public AnneeAcademique findAnneeById(long id) throws ServiceException{
         try {
             return academiqueDao.findById(id);
@@ -65,7 +73,9 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
-    public List<AnneeAcademique> getAllAnnee() throws ServiceException{
+
+    @Override
+    public List<AnneeAcademique> getAllAnnee() throws ServiceException {
         try {
             return academiqueDao.findAll();
         } catch (DataAccessException ex) {

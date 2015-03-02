@@ -2,6 +2,8 @@ package com.douwe.notes.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -19,6 +22,9 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 public class AnneeAcademique implements Serializable {
+    
+    @Transient
+    private DateFormat df;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +48,7 @@ public class AnneeAcademique implements Serializable {
    
     
     public AnneeAcademique(){
-        
+        df = new SimpleDateFormat("yyyy");
     }
 
     public Long getId() {
@@ -91,7 +97,7 @@ public class AnneeAcademique implements Serializable {
 
     @Override
     public String toString() {
-        return "AnneeAcademique{" + "id=" + id + ", version=" + version + ", debut=" + debut + ", fin=" + fin + ", active=" + active + '}';
+        return String.format("%s - %s",df.format(debut), df.format(fin));
     }
     
     

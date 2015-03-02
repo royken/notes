@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content"> 
+                <h1>LA LISTE DES ETUDIANTS</h1>
+
+                <f:view>
+                    <h:form id="form">
+                        <p:growl id="growl" showDetail="true" />
+                        <p:outputLabel value="Departement" for="departement" />
+                        <h:selectOneMenu value="#{etudiantBean.departement}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
+                            <f:selectItems value="#{departementServiceImpl.allDepartements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement}" />
+                        </h:selectOneMenu>
+                        <p:outputLabel value="Année" for="annee" />
+                        <h:selectOneMenu value="#{etudiantBean.annee}" style="margin-top:10px; height: 30px; width: 200px;"  id="annee">
+                            <f:selectItems value="#{anneeAcademiqueServiceImpl.allAnnee}" var="annee" itemLabel="#{annee}" itemValue="#{annee}" />
+                        </h:selectOneMenu>
+                        <p:outputLabel value="Niveau" for="niveau" />
+                        <h:selectOneMenu value="#{etudiantBean.niveau}" style="margin-top:10px; height: 30px; width: 200px;"  id="niveau">
+                            <f:selectItems value="#{niveauServiceImpl.allNiveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau}" />
+                        </h:selectOneMenu>
+                        <p:outputLabel value="Option" for="option" />
+                        <h:selectOneMenu value="#{etudiantBean.option}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
+                            <f:selectItems value="#{optionServiceImpl.allOptions}" var="option" itemLabel="#{option.code}" itemValue="#{option}" />
+                        </h:selectOneMenu>
+                        <p:commandButton type="button" action="#{etudiantBean.filtrer()}"  update=":table"  value="Filtrer"/>
+                        <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="10">                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Matricule"/>
+                                </f:facet>
+                                <h:outputText value="#{item.matricule}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Nom"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nom}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="DateDeNaissance"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateDeNaissance}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="LieuDeNaissance"/>
+                                </f:facet>
+                                <h:outputText value="#{item.lieuDeNaissance}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Email"/>
+                                </f:facet>
+                                <h:outputText value="#{item.email}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="NumeroTelephone"/>
+                                </f:facet>
+                                <h:outputText value="#{item.numeroTelephone}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Genre"/>
+                                </f:facet>
+                                <h:outputText value="#{item.genre}"/>
+                            </p:column>                            
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
