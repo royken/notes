@@ -11,12 +11,12 @@ import javax.ejb.Local;
 @Local
 public interface IParcoursService {
 
-    public Parcours saveOrUpdateParcours(Parcours parcours);
+    public Parcours saveOrUpdateParcours(Parcours parcours) throws ServiceException;
 
-    public void deleteParcours(Long id);
+    public void deleteParcours(Long id) throws ServiceException;
 
-    public Parcours findParcoursById(long id);
+    public Parcours findParcoursById(long id) throws ServiceException;
 
-    public List<Parcours> getAllParcours();
+    public List<Parcours> getAllParcours() throws ServiceException;
 
 }

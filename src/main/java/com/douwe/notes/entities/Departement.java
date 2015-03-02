@@ -26,9 +26,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement(name="departement")
 @XmlAccessorType(XmlAccessType.FIELD)
-@NamedQueries(
-        @NamedQuery(name = "Departement.getAllOptions", query = "select o from options o where o.departement.id = :idParam")
-)
+@NamedQueries({
+    @NamedQuery(name = "Departement.deleteActive",query = "update Departement d set d.active = 0 where d.id = :idParam"),
+    @NamedQuery(name = "Departement.findAllActive", query = "select d from Departement d where d.active = 1"),
+    @NamedQuery(name = "Departement.getAllOptions", query = "select o from options o where o.departement.id = :idParam")
+})
 public class Departement implements Serializable {
     
     @XmlAttribute

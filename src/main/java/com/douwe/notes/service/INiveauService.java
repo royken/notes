@@ -11,11 +11,11 @@ import javax.ejb.Local;
 @Local
 public interface INiveauService {
     
-    public Niveau saveOrUpdateNiveau(Niveau niveau);
+    public Niveau saveOrUpdateNiveau(Niveau niveau) throws ServiceException;
     
-    public void deleteNiveau(Long id);
+    public void deleteNiveau(Long id) throws ServiceException;
     
-    public Niveau findNiveauById(long id);
+    public Niveau findNiveauById(long id) throws ServiceException;
     
-    public List<Niveau> getAllNiveaux();
+    public List<Niveau> getAllNiveaux() throws ServiceException;
 }

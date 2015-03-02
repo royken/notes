@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -22,6 +24,12 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 @Entity
+@NamedQueries({
+
+@NamedQuery(name = "Cours.deleteActive",query = "update Cours c set c.active = 0 where c.id = :idParam"),
+@NamedQuery(name = "Cours.findAllActive",query = "select c from Cours c WHERE c.active=1")
+        
+})
 public class Cours implements Serializable {
     
     @Id

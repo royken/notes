@@ -14,4 +14,8 @@ public interface IDepartementDao extends IDao<Departement, Long>{
     
     public List<Option> getAllOptions(Departement departement) throws DataAccessException;
     
+    public void deleteActive(Departement departement) throws DataAccessException;
+    
+    public List<Departement> findAllActive()throws DataAccessException;
+    
 }

@@ -1,5 +1,6 @@
 package com.douwe.notes.dao.impl;
 
+import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IEtudiantDao;
 import com.douwe.notes.entities.AnneeAcademique;
@@ -30,6 +31,14 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
 
     public List<Etudiant> listDepartementParcours(Departement departement, AnneeAcademique academique, Parcours parcours) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void deleteActive(Etudiant etudiant) throws DataAccessException {
+        getManager().createNamedQuery("Etudiant.deleteActive").setParameter("idParam", etudiant.getId());
+    }
+
+    public List<Etudiant> findAllActive() throws DataAccessException {
+        return getManager().createNamedQuery("Etudiant.findAllActive").getResultList();
     }
     
 }

@@ -15,6 +15,7 @@ import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.IProgrammeService;
 import com.douwe.notes.service.IUniteEnseignementService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -53,7 +54,7 @@ public class ProgrammeBean {
     public ProgrammeBean() {
     }
 
-    public String saveOrUpdateProgramme() {
+    public String saveOrUpdateProgramme() throws ServiceException {
         if (programme != null) {
 
             programme.setAnneeAcademique(anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca)));
@@ -68,7 +69,7 @@ public class ProgrammeBean {
         return "saveOrUpdateProgramme";
     }
 
-    public String deleteProgramme() {
+    public String deleteProgramme() throws ServiceException {
         if (programme != null && programme.getId() > 0) {
             message = "Suppression reussi ";
             programmeService.deleteProgramme(programme.getId());
@@ -135,7 +136,7 @@ public class ProgrammeBean {
         this.programme = programme;
     }
 
-    public List<Programme> getProgrammes() {
+    public List<Programme> getProgrammes() throws ServiceException {
         programmes = programmeService.getAllProgrammes();
         return programmes;
     }
@@ -144,7 +145,7 @@ public class ProgrammeBean {
         this.programmes = programmes;
     }
 
-    public List<AnneeAcademique> getAnneeAcademiques() {
+    public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
         anneeAcademiques = anneeAcademiqueService.getAllAnnee();
         return anneeAcademiques;
     }
@@ -153,7 +154,7 @@ public class ProgrammeBean {
         this.anneeAcademiques = anneeAcademiques;
     }
 
-    public List<UniteEnseignement> getUniteEnseignements() {
+    public List<UniteEnseignement> getUniteEnseignements() throws ServiceException {
         uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
         return uniteEnseignements;
     }
@@ -162,7 +163,7 @@ public class ProgrammeBean {
         this.uniteEnseignements = uniteEnseignements;
     }
 
-    public List<Parcours> getParcourses() {
+    public List<Parcours> getParcourses() throws ServiceException {
         parcourses = parcoursService.getAllParcours();
         return parcourses;
     }

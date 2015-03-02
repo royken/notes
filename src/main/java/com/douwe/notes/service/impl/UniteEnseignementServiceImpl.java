@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.service.IUniteEnseignementService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
         this.uniteEnseignementDao = uniteEnseignementDao;
     }
 
-    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) {
+    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) throws ServiceException{
         try {
             if (uniteEnseignement.getId() == null) {
                 return uniteEnseignementDao.create(uniteEnseignement);
@@ -37,34 +38,35 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(UniteEnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteUniteEnseignement(Long id) {
+    public void deleteUniteEnseignement(Long id) throws ServiceException{
         try {
             UniteEnseignement uniteEnseignement = uniteEnseignementDao.findById(id);
-            uniteEnseignementDao.delete(uniteEnseignement);
+            uniteEnseignementDao.deleteActive(uniteEnseignement);
         } catch (DataAccessException ex) {
             Logger.getLogger(UniteEnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public UniteEnseignement findUniteEnseignementById(long id) {
+    public UniteEnseignement findUniteEnseignementById(long id) throws ServiceException{
         try {
             return uniteEnseignementDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(UniteEnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<UniteEnseignement> getAllUniteEnseignements() {
+    public List<UniteEnseignement> getAllUniteEnseignements() throws ServiceException{
         try {
-            return uniteEnseignementDao.findAll();
+            return uniteEnseignementDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(UniteEnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 

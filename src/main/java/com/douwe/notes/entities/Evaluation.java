@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+
 public class Evaluation implements Serializable {
     
     @Id

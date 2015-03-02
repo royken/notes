@@ -11,12 +11,12 @@ import javax.ejb.Local;
 @Local
 public interface ICycleService {
     
-    public Cycle saveOrUpdateCycle(Cycle cycle);
+    public Cycle saveOrUpdateCycle(Cycle cycle) throws ServiceException;
     
-    public void deleteCycle(long id);
+    public void deleteCycle(long id) throws ServiceException;
     
-    public Cycle findCycleById(long id);
+    public Cycle findCycleById(long id) throws ServiceException;
     
-    public List<Cycle> getAllCycles();
+    public List<Cycle> getAllCycles() throws ServiceException;
     
 }

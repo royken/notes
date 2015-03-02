@@ -12,12 +12,12 @@ import javax.ejb.Local;
 @Local
 public interface ITypeCoursService {
     
-    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours);
+    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException;
     
-    public void deleteTypeCours(Long id);
+    public void deleteTypeCours(Long id) throws ServiceException;
     
-    public TypeCours findTypeCoursById(long id);
+    public TypeCours findTypeCoursById(long id) throws ServiceException;
     
-    public List<TypeCours> getAllTypeCours();
+    public List<TypeCours> getAllTypeCours() throws ServiceException;
     
 }

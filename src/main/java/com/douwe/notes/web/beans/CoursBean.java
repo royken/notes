@@ -10,6 +10,7 @@ import com.douwe.notes.entities.Cours;
 import com.douwe.notes.service.ITypeCoursService;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -42,11 +43,11 @@ public class CoursBean {
         cours.setTypeCours(new TypeCours());
     }
 
-    public List<Cours> findAll() {
+    public List<Cours> findAll() throws ServiceException {
         return coursService.getAllCours();
     }
 
-    public String saveOrUpdateCours() {
+    public String saveOrUpdateCours() throws ServiceException {
         if (cours != null) { 
             cours.setTypeCours(typeCoursService.findTypeCoursById(Integer.parseInt(id)));                        
             coursService.saveOrUpdateCours(cours);
@@ -56,7 +57,7 @@ public class CoursBean {
         return "saveOrUpdateCours";
     }
 
-    public String deleteCours() {
+    public String deleteCours() throws ServiceException {
         if (cours != null && cours.getId() > 0) {          
             message = "Suppression reussi de "+cours.getIntitule();
             coursService.deleteCours(cours.getId());
@@ -108,7 +109,7 @@ public class CoursBean {
         this.typeCoursService = typeCoursService;
     }
 
-    public List<Cours> getCourss() {
+    public List<Cours> getCourss() throws ServiceException {
         courss = coursService.getAllCours();
         return courss;
     }
@@ -118,7 +119,7 @@ public class CoursBean {
     }
     
 
-    public List<TypeCours> getTypeCourss() {
+    public List<TypeCours> getTypeCourss() throws ServiceException {
         typeCourss = typeCoursService.getAllTypeCours();
         return typeCourss;
     }

@@ -4,7 +4,10 @@ import com.douwe.notes.resource.IDepartementResource;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IDepartementService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -22,29 +25,44 @@ public class DepartementResource implements IDepartementResource {
 
     @Override
     public Departement createDepartement(Departement dep) {
-        return departementService.saveOrUpdateDepartement(dep);
-        //return Response.created(URI.create("/notes/api/departements/" + ret.getId())).build();
+        try {
+            return departementService.saveOrUpdateDepartement(dep);
+            //return Response.created(URI.create("/notes/api/departements/" + ret.getId())).build();
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public Departement getDepartement( long id) {
-         Departement depart = departementService.findDepartementById(id);
-        if (depart == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            Departement depart = departementService.findDepartementById(id);
+            if (depart == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return depart;
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return depart;
     }
 
     @Override
     public Departement updateDepartement( long id, Departement current) {
-        Departement depart = departementService.findDepartementById(id);
-        if (depart == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            Departement depart = departementService.findDepartementById(id);
+            if (depart == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            //Departement current = readDepartement(in);
+            depart.setCode(current.getCode());
+            depart.setDescription(current.getDescription());
+            return departementService.saveOrUpdateDepartement(depart);
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        //Departement current = readDepartement(in);
-        depart.setCode(current.getCode());
-        depart.setDescription(current.getDescription());
-        return departementService.saveOrUpdateDepartement(depart);
     }
 
 //    private Departement readDepartement(InputStream in) {
@@ -100,18 +118,32 @@ public class DepartementResource implements IDepartementResource {
 //    }
 
     public List<Departement> getAllDepartement() {
-        List<Departement> deps = departementService.getAllDepartements();
-        return deps;
+        try {
+            List<Departement> deps = departementService.getAllDepartements();
+            return deps;
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public void deleteDepartement(long id) {
-        departementService.deleteDepartement(id);
+        try {
+            departementService.deleteDepartement(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
     public List<Option> getAllOptions(long id) {
-        Departement dep = departementService.findDepartementById(id);
-        return departementService.getAllOptions(dep);
+        try {
+            Departement dep = departementService.findDepartementById(id);
+            return departementService.getAllOptions(dep);
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public IDepartementService getDepartementService() {

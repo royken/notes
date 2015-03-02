@@ -19,6 +19,7 @@ import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.IUniteEnseignementService;
+import com.douwe.notes.service.ServiceException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -58,13 +59,13 @@ public class ParcoursBean {
     String idN, idO;
     UEDataModel dataModel;
 
-    public ParcoursBean() {
+    public ParcoursBean() throws ServiceException {
         uniteEnseignementChoisis = new LinkedList<UniteEnseignement>();
         uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
         dataModel = new UEDataModel(uniteEnseignements);
     }
 
-    public String saveOrUpdateParcours() {
+    public String saveOrUpdateParcours() throws ServiceException {
         if (parcours != null) {
 
             //parcours.setUniteEnseignements(uniteEnseignementService.findUniteEnseignementById(Integer.parseInt(id)));
@@ -85,7 +86,7 @@ public class ParcoursBean {
         return "saveOrUpdateParcours";
     }
 
-    public String deleteParcours() {
+    public String deleteParcours() throws ServiceException {
         if (parcours != null && parcours.getId() > 0) {
             message = "Suppression reussi ";
             parcoursService.deleteParcours(parcours.getId());
@@ -152,7 +153,7 @@ public class ParcoursBean {
         this.uniteEnseignementService = uniteEnseignementService;
     }
 
-    public List<UniteEnseignement> getUniteEnseignements() {
+    public List<UniteEnseignement> getUniteEnseignements() throws ServiceException {
         uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
         return uniteEnseignements;
     }
@@ -161,7 +162,7 @@ public class ParcoursBean {
         this.uniteEnseignements = uniteEnseignements;
     }
 
-    public List<Niveau> getNiveaux() {
+    public List<Niveau> getNiveaux() throws ServiceException {
         niveaux = niveauService.getAllNiveaux();
         return niveaux;
     }
@@ -170,7 +171,7 @@ public class ParcoursBean {
         this.niveaux = niveaux;
     }
 
-    public List<Option> getOptions() {
+    public List<Option> getOptions() throws ServiceException {
         Options = optionService.getAllOptions();
         return Options;
     }
@@ -201,7 +202,7 @@ public class ParcoursBean {
         this.idO = idO;
     }
 
-    public List<Parcours> getParcourses() {
+    public List<Parcours> getParcourses() throws ServiceException {
         parcourses = parcoursService.getAllParcours();
         return parcourses;
     }

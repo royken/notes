@@ -18,11 +18,11 @@ import javax.ejb.Local;
 @Local
 public interface IInsfrastructureService {
 
-    public Departement saveOrUpdateDepartement(Departement departement);
+    public Departement saveOrUpdateDepartement(Departement departement) throws ServiceException;
 
-    public void deleteDepartement(Long id);
+    public void deleteDepartement(Long id) throws ServiceException;
 
-    public Departement findDepartementById(long id);
+    public Departement findDepartementById(long id) throws ServiceException;
 
     public List<Departement> getAllDepartements();
 

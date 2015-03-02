@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IInscriptionDao;
 import com.douwe.notes.entities.Inscription;
 import com.douwe.notes.service.IInscriptionService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class InscriptionServiceImpl implements IInscriptionService{
     
     
 
-    public Inscription saveOrUpdateInscription(Inscription inscription) {
+    public Inscription saveOrUpdateInscription(Inscription inscription) throws ServiceException{
         try {
         if(inscription.getId() != null){
                 return inscriptionDao.create(inscription);  
@@ -40,36 +41,37 @@ public class InscriptionServiceImpl implements IInscriptionService{
         }
         } catch (DataAccessException ex) {
                 Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+                throw  new ServiceException("La ressource demandée est introuvable");
             }
     }
 
-    public void deleteInscription(long id) {
+    public void deleteInscription(long id) throws ServiceException{
         try {
             Inscription inscription = inscriptionDao.findById(id);
             if(inscription != null){
-                inscriptionDao.delete(inscription);
+                inscriptionDao.deleteActive(inscription);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Inscription findInscriptionById(long id) {
+    public Inscription findInscriptionById(long id) throws ServiceException{
         try {
             return inscriptionDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Inscription> getAllInscriptions() {
+    public List<Inscription> getAllInscriptions() throws ServiceException{
         try {
-            return inscriptionDao.findAll();
+            return inscriptionDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
     

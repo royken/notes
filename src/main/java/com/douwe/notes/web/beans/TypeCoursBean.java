@@ -2,6 +2,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.service.ITypeCoursService;
+import com.douwe.notes.service.ServiceException;
 import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
@@ -30,7 +31,7 @@ public class TypeCoursBean {
     }
 
 
-    public String saveOrUpdateTypeCours() {
+    public String saveOrUpdateTypeCours() throws ServiceException {
         if (typeCours != null) {            
             service.saveOrUpdateTpyeCours(typeCours);
             typeCours = new TypeCours();                      
@@ -38,7 +39,7 @@ public class TypeCoursBean {
         return "saveOrUpdateTypeCours";
     }
 
-    public String deleteTypeCours() {
+    public String deleteTypeCours() throws ServiceException {
         if (typeCours != null) {          
             message = "Suppression reussi de "+typeCours.getNom();
             service.deleteTypeCours(typeCours.getId());
@@ -82,7 +83,7 @@ public class TypeCoursBean {
         this.typeCours = typeCours;
     }
 
-    public List<TypeCours> getTypeCourss() {        
+    public List<TypeCours> getTypeCourss() throws ServiceException {        
         typeCourss = service.getAllTypeCours();
         return typeCourss;
     }

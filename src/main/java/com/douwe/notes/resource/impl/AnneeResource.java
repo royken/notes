@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.resource.IAnneeResource;
 import com.douwe.notes.service.IAnneeAcademiqueService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -31,33 +34,58 @@ public class AnneeResource implements IAnneeResource{
     
 
     public AnneeAcademique createAnnee(AnneeAcademique anneeAcademique) {
-        return academiqueService.saveOrUpdateAnnee(anneeAcademique);
+        try {
+            return academiqueService.saveOrUpdateAnnee(anneeAcademique);
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public List<AnneeAcademique> getAllAnnees() {
-        return academiqueService.getAllAnnee();
+        try {
+            return academiqueService.getAllAnnee();
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public AnneeAcademique getAnnee(long id) {
-        AnneeAcademique anneeAcademique = academiqueService.findAnneeById(id);
-        if(anneeAcademique == null){
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            AnneeAcademique anneeAcademique = academiqueService.findAnneeById(id);
+            if(anneeAcademique == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return anneeAcademique;
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return anneeAcademique;
     }
 
     public AnneeAcademique updateAnnee(long id, AnneeAcademique anneeAcademique) {
-        AnneeAcademique academique = academiqueService.findAnneeById(id);
-        if(academique != null){
-            academique.setDebut(anneeAcademique.getDebut());
-            academique.setFin(anneeAcademique.getFin());
-            return academiqueService.saveOrUpdateAnnee(academique);
+        try {
+            AnneeAcademique academique = academiqueService.findAnneeById(id);
+            if(academique != null){
+                academique.setDebut(anneeAcademique.getDebut());
+                academique.setFin(anneeAcademique.getFin());
+                return academiqueService.saveOrUpdateAnnee(academique);
+            }
+            
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         return null;
     }
 
     public void deleteAnnee(long id) {
-        academiqueService.deleteAnnee(id);
+        try {
+            academiqueService.deleteAnnee(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

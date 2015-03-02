@@ -11,13 +11,13 @@ import javax.ejb.Local;
 @Local
 public interface IUniteEnseignementService {
     
-    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement);
+    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) throws ServiceException;
     
-    public void deleteUniteEnseignement(Long id);
+    public void deleteUniteEnseignement(Long id) throws ServiceException;
     
-    public UniteEnseignement findUniteEnseignementById(long id);
+    public UniteEnseignement findUniteEnseignementById(long id) throws ServiceException;
     
-    public List<UniteEnseignement> getAllUniteEnseignements();
+    public List<UniteEnseignement> getAllUniteEnseignements() throws ServiceException;
     
     
 }

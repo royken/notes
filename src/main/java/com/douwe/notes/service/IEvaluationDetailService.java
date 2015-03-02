@@ -11,11 +11,11 @@ import javax.ejb.Local;
 @Local
 public interface IEvaluationDetailService {
     
-    public EvaluationDetails saveOrUpdateEvaluationDetails(EvaluationDetails evaluationDetails);
+    public EvaluationDetails saveOrUpdateEvaluationDetails(EvaluationDetails evaluationDetails) throws ServiceException;
     
-    public void deleteEvaluationDetails(Long id);
+    public void deleteEvaluationDetails(Long id) throws ServiceException;
     
-    public EvaluationDetails findEvaluationDetailsById(long id);
+    public EvaluationDetails findEvaluationDetailsById(long id) throws ServiceException;
     
-    public List<EvaluationDetails> getAllEvaluationDetails();
+    public List<EvaluationDetails> getAllEvaluationDetails() throws ServiceException;
 }

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,6 +19,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity(name="cycles")
+@NamedQueries({
+@NamedQuery(name = "Cycle.deleteActive",query ="update cycles c set c.active = 0 where c.id = :idParam"),
+@NamedQuery(name = "Cycle.findAllActive",query = "select c from cycles c where c.active = 1")
+
+})
 public class Cycle implements Serializable {
     
     @Id

@@ -11,12 +11,12 @@ import javax.ejb.Local;
 @Local
 public interface IEnseignantService {
     
-    public Enseignant saveOrUpdateEnseignant(Enseignant enseignant);
+    public Enseignant saveOrUpdateEnseignant(Enseignant enseignant) throws ServiceException;
     
-    public void deleteEnseignant(Long id);
+    public void deleteEnseignant(Long id) throws ServiceException;
     
-    public Enseignant findEnseignantById(long id);
+    public Enseignant findEnseignantById(long id) throws ServiceException;
     
-    public List<Enseignant> getAllEnseignants();
+    public List<Enseignant> getAllEnseignants() throws ServiceException;
     
 }

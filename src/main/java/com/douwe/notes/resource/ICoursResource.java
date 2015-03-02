@@ -37,6 +37,5 @@ public interface ICoursResource {
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCours(@PathParam(value = "id")long id);
-    
+    void deleteCours(@PathParam(value = "id")long id);    
 }

@@ -10,11 +10,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface IAnneeAcademiqueService {
-    public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique);
+    public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique) throws ServiceException;
     
-    public void deleteAnnee(Long id);
+    public void deleteAnnee(Long id) throws ServiceException;;
     
-    public AnneeAcademique findAnneeById(long id);
+    public AnneeAcademique findAnneeById(long id) throws ServiceException;;
     
-    public List<AnneeAcademique> getAllAnnee();
+    public List<AnneeAcademique> getAllAnnee() throws ServiceException;;
 }

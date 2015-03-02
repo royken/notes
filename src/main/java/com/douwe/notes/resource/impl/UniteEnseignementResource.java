@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.resource.IUniteEnseignementResource;
 import com.douwe.notes.service.IUniteEnseignementService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -30,34 +33,58 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     
 
     public UniteEnseignement createUniteEnseignement(UniteEnseignement ue) {
-        return service.saveOrUpdateCours(ue);
+        try {
+            return service.saveOrUpdateCours(ue);
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public List<UniteEnseignement> getAllUniteEnseignements() {
-        return service.getAllUniteEnseignements();
+        try {
+            return service.getAllUniteEnseignements();
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public UniteEnseignement getUniteEnseignement(long id) {
-        UniteEnseignement enseignement = service.findUniteEnseignementById(id);
-        if(enseignement == null){
-            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            UniteEnseignement enseignement = service.findUniteEnseignementById(id);
+            if(enseignement == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return enseignement;
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return enseignement;
     }
 
     public UniteEnseignement updateSemestre(long id, UniteEnseignement ue) {
-        UniteEnseignement enseignement = service.findUniteEnseignementById(id);
-        if(enseignement != null){
-            enseignement.setCode(ue.getCode());
-            enseignement.setIntitule(ue.getIntitule());
-            enseignement.setParcours(ue.getParcours());
-            return service.saveOrUpdateCours(enseignement);
+        try {
+            UniteEnseignement enseignement = service.findUniteEnseignementById(id);
+            if(enseignement != null){
+                enseignement.setCode(ue.getCode());
+                enseignement.setIntitule(ue.getIntitule());
+                enseignement.setParcours(ue.getParcours());
+                return service.saveOrUpdateCours(enseignement);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public void deleteUniteEns(long id) {
-        service.deleteUniteEnseignement(id);
+        try {
+            service.deleteUniteEnseignement(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

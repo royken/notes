@@ -10,6 +10,7 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.IOptionService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -42,11 +43,11 @@ public class OptionBean {
         option.setDepartement(new Departement());
     }
 
-    public List<Option> findAll() {
+    public List<Option> findAll() throws ServiceException {
         return optionService.getAllOptions();
     }
 
-    public String saveOrUpdateOption() {
+    public String saveOrUpdateOption() throws ServiceException {
         if (option != null) { 
             option.setDepartement(departementService.findDepartementById(Integer.parseInt(id)));                        
             optionService.saveOrUpdateOption(option);
@@ -56,7 +57,7 @@ public class OptionBean {
         return "saveOrUpdateOption";
     }
 
-    public String deleteOption() {
+    public String deleteOption() throws ServiceException {
         if (option != null && option.getId() > 0) {          
             message = "Suppression reussi de "+option.getCode();
             optionService.deleteOption(option.getId());
@@ -108,7 +109,7 @@ public class OptionBean {
         this.departementService = departementService;
     }
 
-    public List<Option> getOptions() {
+    public List<Option> getOptions() throws ServiceException {
         options = optionService.getAllOptions();
         return options;
     }
@@ -118,7 +119,7 @@ public class OptionBean {
     }
     
 
-    public List<Departement> getDepartements() {
+    public List<Departement> getDepartements() throws ServiceException {
         departements = departementService.getAllDepartements();
         return departements;
     }

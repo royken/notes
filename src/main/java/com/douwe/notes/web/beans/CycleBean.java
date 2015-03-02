@@ -2,6 +2,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.service.ICycleService;
+import com.douwe.notes.service.ServiceException;
 import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
@@ -30,7 +31,7 @@ public class CycleBean {
     }
 
 
-    public String saveOrUpdateCycle() {
+    public String saveOrUpdateCycle() throws ServiceException {
         if (cycle != null) {            
             service.saveOrUpdateCycle(cycle);
             cycle = new Cycle();                      
@@ -38,7 +39,7 @@ public class CycleBean {
         return "saveOrUpdateCycle";
     }
 
-    public String deleteCycle() {
+    public String deleteCycle() throws ServiceException {
         if (cycle != null) {          
             message = "Suppression reussi de "+cycle.getNom();
             service.deleteCycle(cycle.getId());
@@ -82,7 +83,7 @@ public class CycleBean {
         this.cycle = cycle;
     }
 
-    public List<Cycle> getCycles() {        
+    public List<Cycle> getCycles() throws ServiceException {        
         cycles = service.getAllCycles();
         return cycles;
     }

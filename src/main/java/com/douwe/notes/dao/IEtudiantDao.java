@@ -1,5 +1,6 @@
 package com.douwe.notes.dao;
 
+import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.IDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Departement;
@@ -14,6 +15,10 @@ import java.util.List;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 public interface IEtudiantDao extends IDao<Etudiant, Long>{
+    
+    public void deleteActive(Etudiant etudiant) throws DataAccessException;
+    
+    public List<Etudiant> findAllActive()throws DataAccessException;
     
     // List des étudiants d'un département pour une année académique
     public List<Etudiant> listDepartement(Departement departement, AnneeAcademique academique);

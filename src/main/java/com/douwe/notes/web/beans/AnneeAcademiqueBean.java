@@ -2,6 +2,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.service.IAnneeAcademiqueService;
+import com.douwe.notes.service.ServiceException;
 import static java.awt.SystemColor.text;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -30,7 +31,7 @@ public class AnneeAcademiqueBean {
         message = "";
     }
 
-    public String saveOrUpdateAnneeAcademique() {
+    public String saveOrUpdateAnneeAcademique() throws ServiceException {
         if (anneeAcademique != null&& anneeAcademique.getDebut().getYear()<= anneeAcademique.getFin().getYear()&& anneeAcademique.getDebut().getMonth()<=anneeAcademique.getFin().getMonth() && anneeAcademique.getDebut().getDay()<anneeAcademique.getFin().getDay()) {
             service.saveOrUpdateAnnee(anneeAcademique);
             anneeAcademique = new AnneeAcademique();
@@ -38,7 +39,7 @@ public class AnneeAcademiqueBean {
         return "saveOrUpdateAnneeAcademique";
     }
 
-    public String deleteAnneeAcademique() {
+    public String deleteAnneeAcademique() throws ServiceException {
         if (anneeAcademique != null&& anneeAcademique.getDebut().getYear()<= anneeAcademique.getFin().getYear()&& anneeAcademique.getDebut().getMonth()<=anneeAcademique.getFin().getMonth() && anneeAcademique.getDebut().getDay()<anneeAcademique.getFin().getDay()) {
             message = "Suppression reussi";
             service.deleteAnnee(anneeAcademique.getId());
@@ -81,7 +82,7 @@ public class AnneeAcademiqueBean {
         this.anneeAcademique = anneeAcademique;
     }
 
-    public List<AnneeAcademique> getAnneeAcademiques() {
+    public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
         anneeAcademiques = service.getAllAnnee();
         return anneeAcademiques;
     }

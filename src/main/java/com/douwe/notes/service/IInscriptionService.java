@@ -11,12 +11,12 @@ import javax.ejb.Local;
 @Local
 public interface IInscriptionService {
     
-    public Inscription saveOrUpdateInscription(Inscription inscription);
+    public Inscription saveOrUpdateInscription(Inscription inscription) throws ServiceException;
     
-    public void deleteInscription(long id);
+    public void deleteInscription(long id) throws ServiceException;
     
-    public Inscription findInscriptionById(long id);
+    public Inscription findInscriptionById(long id) throws ServiceException;
     
-    public List<Inscription> getAllInscriptions();
+    public List<Inscription> getAllInscriptions() throws ServiceException;
     
 }

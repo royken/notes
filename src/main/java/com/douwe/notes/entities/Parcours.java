@@ -20,11 +20,14 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
-@NamedQueries(
+@NamedQueries({
+    
+    @NamedQuery(name = "Parcours.deleteActive",query = "update Parcours p set p.active = 0 where p.id = :idParam"),
+@NamedQuery(name = "Parcours.findAllActive",query = "select p from Parcours p where p.active=1"),    
 
         @NamedQuery(name = "Parcours.findUniteEnseignements",query = "select ue from UniteEnseignement ue , Parcours p JOIN p.uniteEnseignements pue where p.id = :idParam and pue.id = ue.id")
 
-)
+})
 public class Parcours implements Serializable {
     
     @Id

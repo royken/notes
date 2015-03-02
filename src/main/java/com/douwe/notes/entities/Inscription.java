@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -16,6 +18,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "Inscription.deleteActive",query = "update Inscription i set i.active = 0 where i.id = :idParam"),
+@NamedQuery(name = "Inscription.findAllActive",query = "select i from Inscription i where i.active=1")    
+
+})
 public class Inscription implements Serializable {
     
     @Id

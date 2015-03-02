@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IEvaluationDetailsDao;
 import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.service.IEvaluationDetailService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
     
     
 
-    public EvaluationDetails saveOrUpdateEvaluationDetails(EvaluationDetails evaluationDetails) {
+    public EvaluationDetails saveOrUpdateEvaluationDetails(EvaluationDetails evaluationDetails) throws ServiceException{
         try {
             if (evaluationDetails.getId() == null) {
                 return detailsDao.create(evaluationDetails);
@@ -39,35 +40,36 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteEvaluationDetails(Long id) {
+    public void deleteEvaluationDetails(Long id) throws ServiceException{
         try {
             EvaluationDetails details = detailsDao.findById(id);
             if(details != null)
                 detailsDao.delete(details);
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public EvaluationDetails findEvaluationDetailsById(long id) {
+    public EvaluationDetails findEvaluationDetailsById(long id) throws ServiceException{
         try {
             return detailsDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<EvaluationDetails> getAllEvaluationDetails() {
+    public List<EvaluationDetails> getAllEvaluationDetails() throws ServiceException{
         try {
             return detailsDao.findAll();
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 

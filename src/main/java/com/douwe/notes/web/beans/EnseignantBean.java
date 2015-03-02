@@ -2,6 +2,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.service.IEnseignantService;
+import com.douwe.notes.service.ServiceException;
 import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
@@ -29,7 +30,7 @@ public class EnseignantBean {
     }
 
 
-    public String saveOrUpdateEnseignant() {
+    public String saveOrUpdateEnseignant() throws ServiceException {
         if (enseignant != null) {            
             service.saveOrUpdateEnseignant(enseignant);
             enseignant = new Enseignant();                      
@@ -37,7 +38,7 @@ public class EnseignantBean {
         return "saveOrUpdateEnseignant";
     }
 
-    public String deleteEnseignant() {
+    public String deleteEnseignant() throws ServiceException {
         if (enseignant != null) {          
             message = "Suppression reussi de "+enseignant.getNom();
             service.deleteEnseignant(enseignant.getId());
@@ -81,7 +82,7 @@ public class EnseignantBean {
         this.enseignant = enseignant;
     }
 
-    public List<Enseignant> getEnseignants() {        
+    public List<Enseignant> getEnseignants() throws ServiceException {        
         enseignants = service.getAllEnseignants();
         return enseignants;
     }

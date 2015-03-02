@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,7 @@ public class CoursServiceImpl implements ICoursService{
         this.coursDao = coursDao;
     }
 
-    public Cours saveOrUpdateCours(Cours cours) {
+    public Cours saveOrUpdateCours(Cours cours) throws ServiceException{
         
         try {
             if (cours.getId() == null) {
@@ -37,36 +38,37 @@ public class CoursServiceImpl implements ICoursService{
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteCours(Long id) {
+    public void deleteCours(Long id) throws ServiceException{
         try {
             Cours cours = coursDao.findById(id);
             if (cours != null) {
-                coursDao.delete(cours);
+                coursDao.deleteActive(cours);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Cours findCoursById(long id) {
+    public Cours findCoursById(long id) throws ServiceException{
         try {
             return coursDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Cours> getAllCours() {
+    public List<Cours> getAllCours() throws ServiceException{
         try {
-            return coursDao.findAll();
+            return coursDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 }

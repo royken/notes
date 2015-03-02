@@ -12,12 +12,12 @@ import javax.ejb.Local;
 @Local
 public interface IEvaluationService {
     
-    public Evaluation saveOrUpdateEvaluation(Evaluation evaluation);
+    public Evaluation saveOrUpdateEvaluation(Evaluation evaluation) throws ServiceException;
     
-    public void deleteEvaluation(long id);
+    public void deleteEvaluation(long id) throws ServiceException;
     
-    public Evaluation findEvaluationById(long id);
+    public Evaluation findEvaluationById(long id) throws ServiceException;
     
-    public List<Evaluation> getAllEvaluations();
+    public List<Evaluation> getAllEvaluations() throws ServiceException;
     
 }
