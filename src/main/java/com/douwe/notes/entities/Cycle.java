@@ -100,5 +100,4 @@ public class Cycle implements Serializable {
     public String toString() {
         return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom +  '}';
     }
- 
 }

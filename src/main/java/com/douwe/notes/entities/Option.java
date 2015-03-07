@@ -39,6 +39,7 @@ public class Option implements Serializable {
     private String description;
 
     @ManyToOne
+    @XmlTransient
     private Departement departement;
 
     @XmlTransient
@@ -73,10 +74,12 @@ public class Option implements Serializable {
         this.description = description;
     }
 
+    @JsonIgnore
     public Departement getDepartement() {
         return departement;
     }
 
+    @JsonIgnore
     public void setDepartement(Departement departement) {
         this.departement = departement;
     }

@@ -18,4 +18,6 @@ public interface INiveauService {
     public Niveau findNiveauById(long id) throws ServiceException;
     
     public List<Niveau> getAllNiveaux() throws ServiceException;
+    
+    public Niveau findByCode(String code) throws ServiceException;
 }
