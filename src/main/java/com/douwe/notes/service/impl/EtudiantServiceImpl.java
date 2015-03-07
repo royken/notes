@@ -41,6 +41,7 @@ public class EtudiantServiceImpl implements IEtudiantService{
     public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) throws ServiceException{
         try {
             if (etudiant.getId() == null) {
+                etudiant.setActive(1);
                 return etudiantDao.create(etudiant);
             } else {
                 return etudiantDao.update(etudiant);
@@ -57,7 +58,8 @@ public class EtudiantServiceImpl implements IEtudiantService{
         try {
             Etudiant etudiant = etudiantDao.findById(id);
             if (etudiant != null) {
-                etudiantDao.deleteActive(etudiant);
+                etudiant.setActive(0);
+                etudiantDao.update(etudiant);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
@@ -95,6 +97,16 @@ public class EtudiantServiceImpl implements IEtudiantService{
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public Etudiant findByMatricule(String matricule) throws ServiceException {
+        try {
+            return etudiantDao.findByMatricule(matricule);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
     }
     
 }

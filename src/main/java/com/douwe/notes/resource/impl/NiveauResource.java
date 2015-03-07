@@ -35,6 +35,7 @@ public class NiveauResource implements INiveauResource{
     
     
 
+    @Override
     public Niveau createNiveau(Niveau niveau) {
         try {
             System.out.println("Le cycle "+niveau.getCycle());
@@ -45,15 +46,19 @@ public class NiveauResource implements INiveauResource{
         }
     }
 
-    public List<Niveau> getAllNiveaux() {
-        try {
-            return service.getAllNiveaux();
-        } catch (ServiceException ex) {
-            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    @Override
+    public List<Niveau> getAllNiveaux() throws ServiceException{
+        
+            //return service.getAllNiveaux();
+            List<Niveau> list = service.getAllNiveaux();
+            for (Niveau list1 : list) {
+                System.out.println(list1);
+            }
+            return list;
+        
     }
 
+    @Override
     public Niveau getNiveau(long id) {
         try {
             return service.findNiveauById(id);
@@ -63,6 +68,7 @@ public class NiveauResource implements INiveauResource{
         }
     }
 
+    @Override
     public Niveau updateNiveau(long id, Niveau niveau) {
         try {
             Niveau n = service.findNiveauById(id);
@@ -78,6 +84,7 @@ public class NiveauResource implements INiveauResource{
         }
     }
 
+    @Override
     public void deleteNiveau(long id) {
         try {
             service.deleteNiveau(id);

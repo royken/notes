@@ -33,9 +33,11 @@ public class OptionServiceImpl implements IOptionService{
     }
     
     
+    @Override
     public Option saveOrUpdateOption(Option option) throws ServiceException{
         try {
             if (option.getId() == null) {
+                option.setActive(1);
                 return optionDao.create(option);
             } else {
                 return optionDao.update(option);
@@ -46,11 +48,13 @@ public class OptionServiceImpl implements IOptionService{
         }
     }
 
+    @Override
     public void deleteOption(Long id) throws ServiceException{
         try {
             Option option = optionDao.findById(id);
             if (option != null) {
-                optionDao.delete(option);
+                option.setActive(0);
+                optionDao.update(option);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
@@ -58,6 +62,7 @@ public class OptionServiceImpl implements IOptionService{
         }
     }
 
+    @Override
     public Option findOptionById(long id) throws ServiceException{
         try {
             return optionDao.findById(id);
@@ -67,6 +72,7 @@ public class OptionServiceImpl implements IOptionService{
         }
     }
 
+    @Override
     public List<Option> getAllOptions() throws ServiceException{
         try {
             return optionDao.findAll();
@@ -76,9 +82,20 @@ public class OptionServiceImpl implements IOptionService{
         }
     }
 
+    @Override
     public Departement getDepartement(Option option) throws ServiceException{
         try {
             return optionDao.findDepartement(option);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public Option findByCode(String code) throws ServiceException {
+        try {
+            return optionDao.findByCode(code);
         } catch (DataAccessException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");

@@ -18,35 +18,35 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity(name = "options")
-@NamedQueries(
-
-        @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam")
-)
+@NamedQueries({
+        @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam"),
+        @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code = :param")
+})
 public class Option implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Version
     @XmlTransient
     private int version;
-    
-    @Column
+
+    @Column(unique = true)
     private String code;
-    
+
     @Column
     private String description;
-    
+
     @ManyToOne
     private Departement departement;
-    
-     @XmlTransient
+
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    
-    public Option(){
-        
+
+    public Option() {
+
     }
 
     public Long getId() {
@@ -105,6 +105,5 @@ public class Option implements Serializable {
     public String toString() {
         return "Option{" + "id=" + id + ", version=" + version + ", code=" + code + ", description=" + description + ", departement=" + departement + ", active=" + active + '}';
     }
-    
-    
+
 }

@@ -16,7 +16,8 @@ import javax.inject.Inject;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
-public class CoursServiceImpl implements ICoursService{
+public class CoursServiceImpl implements ICoursService {
+
     @Inject
     private ICoursDao coursDao;
 
@@ -28,47 +29,65 @@ public class CoursServiceImpl implements ICoursService{
         this.coursDao = coursDao;
     }
 
-    public Cours saveOrUpdateCours(Cours cours) throws ServiceException{
-        
+    @Override
+    public Cours saveOrUpdateCours(Cours cours) throws ServiceException {
+
         try {
             if (cours.getId() == null) {
+                cours.setActive(1);
                 return coursDao.create(cours);
             } else {
                 return coursDao.update(cours);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteCours(Long id) throws ServiceException{
+    @Override
+    public void deleteCours(Long id) throws ServiceException {
         try {
             Cours cours = coursDao.findById(id);
             if (cours != null) {
-                coursDao.deleteActive(cours);
+                cours.setActive(0);
+                coursDao.update(cours);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Cours findCoursById(long id) throws ServiceException{
+    @Override
+    public Cours findCoursById(long id) throws ServiceException {
         try {
             return coursDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Cours> getAllCours() throws ServiceException{
+    @Override
+    public List<Cours> getAllCours() throws ServiceException {
         try {
             return coursDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public Cours findByIntitule(String intitule) throws ServiceException {
+        try {
+            Cours cours = coursDao.findByIntitule(intitule);
+            return cours;
+
+        } catch (DataAccessException ex) {
+            Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 }

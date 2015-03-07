@@ -38,6 +38,7 @@ public class Cycle implements Serializable {
     private String nom;
     
     @OneToMany(mappedBy = "cycle")
+    @XmlTransient
     private List<Niveau> niveaux;
     
      @XmlTransient
@@ -64,10 +65,12 @@ public class Cycle implements Serializable {
         this.nom = nom;
     }
 
+    @JsonIgnore
     public List<Niveau> getNiveaux() {
         return niveaux;
     }
 
+    @JsonIgnore
     public void setNiveaux(List<Niveau> niveaux) {
         this.niveaux = niveaux;
     }
@@ -95,7 +98,7 @@ public class Cycle implements Serializable {
 
     @Override
     public String toString() {
-        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom + ", niveaux=" + niveaux + '}';
+        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom +  '}';
     }
  
 }

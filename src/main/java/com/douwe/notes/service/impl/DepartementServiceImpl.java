@@ -27,6 +27,7 @@ public class DepartementServiceImpl implements IDepartementService{
     public Departement saveOrUpdateDepartement(Departement departement) throws ServiceException{
         try {
             if (departement.getId() == null) {
+                departement.setActive(1);
                 return departementDao.create(departement);
             } else {
                 return departementDao.update(departement);
@@ -42,7 +43,8 @@ public class DepartementServiceImpl implements IDepartementService{
         try {
             Departement departement = departementDao.findById(id);
             if (departement != null) {
-                departementDao.deleteActive(departement);
+                departement.setActive(0);
+                departementDao.update(departement);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
@@ -83,6 +85,16 @@ public class DepartementServiceImpl implements IDepartementService{
     public List<Option> getAllOptions(Departement departement) throws ServiceException{
         try {
             return departementDao.getAllOptions(departement);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public Departement findByCode(String code) throws ServiceException {
+        try {
+            return departementDao.findByCode(code);
         } catch (DataAccessException ex) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");

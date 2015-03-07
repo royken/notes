@@ -30,6 +30,7 @@ public class EtudiantResource implements IEtudiantResource{
         this.etudiantService = etudiantService;
     }
 
+    @Override
     public Etudiant createEtudiant(Etudiant etudiant) {
         try {
             return etudiantService.saveOrUpdateEtudiant(etudiant);
@@ -39,6 +40,7 @@ public class EtudiantResource implements IEtudiantResource{
         }
     }
 
+    @Override
     public List<Etudiant> getAllEtudiants() {
         try {
             return etudiantService.getAllEtudiant();
@@ -48,6 +50,7 @@ public class EtudiantResource implements IEtudiantResource{
         }
     }
 
+    @Override
     public Etudiant getEtudiant(long id) {
         try {
             Etudiant etudiant = etudiantService.findEtudiantById(id);
@@ -61,6 +64,7 @@ public class EtudiantResource implements IEtudiantResource{
         }
     }
 
+    @Override
     public Etudiant updateEtudiant(long id, Etudiant etudiant) {
         try {
             Etudiant etud = etudiantService.findEtudiantById(etudiant.getId());
@@ -81,11 +85,27 @@ public class EtudiantResource implements IEtudiantResource{
         }
     }
 
+    @Override
     public void deleteEtudiant(long id) {
         try {
             etudiantService.deleteEtudiant(id);
         } catch (ServiceException ex) {
             Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Etudiant findByMatricule(String matricule) {
+        try {
+            Etudiant etudiant = etudiantService.findByMatricule(matricule);
+            
+            if(etudiant == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return etudiant;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 }

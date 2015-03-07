@@ -22,8 +22,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @NamedQueries({
 @NamedQuery(name = "Etudiant.deleteActive",query = "update Etudiant e set e.active = 0 where e.id = :idParam"),
-@NamedQuery(name = "Etudiant.findAllActive",query = "select e from Etudiant e where e.active=1")    
-
+@NamedQuery(name = "Etudiant.findAllActive",query = "select e from Etudiant e where e.active=1"),    
+@NamedQuery(name = "Etudiant.findByMatricule",query = "SELECT e from Etudiant e WHERE e.matricule = :param")
 })
 public class Etudiant implements Serializable {
     
@@ -35,7 +35,7 @@ public class Etudiant implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column(unique = true)
     private String matricule;
     
     @Column

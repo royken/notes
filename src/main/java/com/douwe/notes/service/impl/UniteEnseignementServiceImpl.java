@@ -29,9 +29,11 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
         this.uniteEnseignementDao = uniteEnseignementDao;
     }
 
+    @Override
     public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) throws ServiceException{
         try {
             if (uniteEnseignement.getId() == null) {
+                uniteEnseignement.setActive(1);
                 return uniteEnseignementDao.create(uniteEnseignement);
             } else {
                 return uniteEnseignementDao.update(uniteEnseignement);
@@ -42,16 +44,22 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
         }
     }
 
+    @Override
     public void deleteUniteEnseignement(Long id) throws ServiceException{
         try {
             UniteEnseignement uniteEnseignement = uniteEnseignementDao.findById(id);
-            uniteEnseignementDao.deleteActive(uniteEnseignement);
+            if(uniteEnseignement != null){
+                uniteEnseignement.setActive(0);
+                uniteEnseignementDao.update(uniteEnseignement);
+            }
+           
         } catch (DataAccessException ex) {
             Logger.getLogger(UniteEnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
+    @Override
     public UniteEnseignement findUniteEnseignementById(long id) throws ServiceException{
         try {
             return uniteEnseignementDao.findById(id);
@@ -61,6 +69,7 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
         }
     }
 
+    @Override
     public List<UniteEnseignement> getAllUniteEnseignements() throws ServiceException{
         try {
             return uniteEnseignementDao.findAllActive();

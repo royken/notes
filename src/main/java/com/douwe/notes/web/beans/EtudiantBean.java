@@ -51,7 +51,7 @@ public class EtudiantBean {
         
     }
     
-    public String filtrer(){
+    public String filtrer() throws ServiceException{
         System.err.println("Douwe est un vrai idiot");
         etudiants = etudiantService.findByCritiria(departement, annee, niveau, option);       
         //etudiants = etudiantService.findByCritiria(null, null, niveau, null);

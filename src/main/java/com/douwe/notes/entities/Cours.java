@@ -3,7 +3,6 @@ package com.douwe.notes.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,8 +26,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 
 @NamedQuery(name = "Cours.deleteActive",query = "update Cours c set c.active = 0 where c.id = :idParam"),
-@NamedQuery(name = "Cours.findAllActive",query = "select c from Cours c WHERE c.active=1")
-        
+@NamedQuery(name = "Cours.findAllActive",query = "select c from Cours c WHERE c.active=1"),
+@NamedQuery(name = "Cours.findByIntitule",query = "SELECT c FROM Cours c WHERE c.intitule = :param")        
 })
 public class Cours implements Serializable {
     
@@ -40,7 +39,7 @@ public class Cours implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column(unique = true)
     private String intitule;
     
     @Column

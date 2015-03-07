@@ -1,8 +1,12 @@
 package com.douwe.notes.resource.impl;
 
 
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.resource.IParcoursResource;
+import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -22,6 +26,12 @@ public class ParcoursResource implements IParcoursResource{
     
     @EJB
     private IParcoursService parcoursService;
+    
+    @EJB
+    private INiveauService niveauService;
+    
+    @EJB
+    private IOptionService optionService;
 
     public IParcoursService getParcoursService() {
         return parcoursService;
@@ -30,9 +40,28 @@ public class ParcoursResource implements IParcoursResource{
     public void setParcoursService(IParcoursService parcoursService) {
         this.parcoursService = parcoursService;
     }
+
+    public INiveauService getNiveauService() {
+        return niveauService;
+    }
+
+    public void setNiveauService(INiveauService niveauService) {
+        this.niveauService = niveauService;
+    }
+
+    public IOptionService getOptionService() {
+        return optionService;
+    }
+
+    public void setOptionService(IOptionService optionService) {
+        this.optionService = optionService;
+    }
+    
+    
     
     
 
+    @Override
     public Parcours createParcours(Parcours parcours) {
         try {
             return parcoursService.saveOrUpdateParcours(parcours);
@@ -42,6 +71,7 @@ public class ParcoursResource implements IParcoursResource{
         }
     }
 
+    @Override
     public List<Parcours> getAllParcours() {
         try {
             return parcoursService.getAllParcours();
@@ -51,6 +81,7 @@ public class ParcoursResource implements IParcoursResource{
         }
     }
 
+    @Override
     public Parcours getParcours(long id) {
         try {
             Parcours parcours = parcoursService.findParcoursById(id);
@@ -64,6 +95,7 @@ public class ParcoursResource implements IParcoursResource{
         }
     }
 
+    @Override
     public Parcours updateParcours(long id, Parcours parcours) {
         try {
             Parcours parcours1 = parcoursService.findParcoursById(id);
@@ -80,11 +112,35 @@ public class ParcoursResource implements IParcoursResource{
         }
     }
 
+    @Override
     public void deleteParcours(long id) {
         try {
             parcoursService.deleteParcours(id);
         } catch (ServiceException ex) {
             Logger.getLogger(ParcoursResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Parcours findByNiveauOption(long idNveau, long idOption) {
+        try {
+            Niveau niveau = niveauService.findNiveauById(idNveau);
+            if(niveau == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            Option option = optionService.findOptionById(idOption);
+            if(option == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            
+            Parcours parcours = parcoursService.findByNiveauOption(niveau, option);
+            if(parcours == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return parcours;
+        } catch (ServiceException ex) {
+            Logger.getLogger(ParcoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
     

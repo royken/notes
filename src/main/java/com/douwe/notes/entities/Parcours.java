@@ -21,39 +21,37 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @NamedQueries({
-    
-    @NamedQuery(name = "Parcours.deleteActive",query = "update Parcours p set p.active = 0 where p.id = :idParam"),
-@NamedQuery(name = "Parcours.findAllActive",query = "select p from Parcours p where p.active=1"),    
-
-        @NamedQuery(name = "Parcours.findUniteEnseignements",query = "select ue from UniteEnseignement ue , Parcours p JOIN p.uniteEnseignements pue where p.id = :idParam and pue.id = ue.id")
+    @NamedQuery(name = "Parcours.deleteActive", query = "update Parcours p set p.active = 0 where p.id = :idParam"),
+    @NamedQuery(name = "Parcours.findAllActive", query = "select p from Parcours p where p.active=1"),
+    @NamedQuery(name = "Parcours.findByNiveauOption", query = "SELECT p from Parcours p WHERE p.niveau.id = :param1 and p.option.id = :param2"),
+    @NamedQuery(name = "Parcours.findUniteEnseignements", query = "select ue from UniteEnseignement ue , Parcours p JOIN p.uniteEnseignements pue where p.id = :idParam and pue.id = ue.id")
 
 })
 public class Parcours implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Version
     @XmlTransient
     private int version;
-    
+
     @ManyToOne
     private Niveau niveau;
-    
+
     @ManyToOne
     private Option option;
-    
+
     @ManyToMany
     private List<UniteEnseignement> uniteEnseignements;
-    
-     @XmlTransient
+
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    
-    
-    public Parcours(){
-        
+
+    public Parcours() {
+
     }
 
     public Long getId() {
@@ -110,8 +108,7 @@ public class Parcours implements Serializable {
 
     @Override
     public String toString() {
-        return "Parcours{" + "id=" + id + ", version=" + version + ", niveau=" + niveau + ", option=" + option + ", uniteEnseignements=" + uniteEnseignements + ", active=" + active + '}';
+        return "Parcours{" + "id=" + id + ", version=" + version +  ", option=" + option + ", uniteEnseignements=" + uniteEnseignements + ", active=" + active + '}';
     }
-    
-    
+
 }

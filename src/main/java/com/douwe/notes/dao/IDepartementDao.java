@@ -18,4 +18,6 @@ public interface IDepartementDao extends IDao<Departement, Long>{
     
     public List<Departement> findAllActive()throws DataAccessException;
     
+    public Departement findByCode(String code) throws DataAccessException;
+    
 }

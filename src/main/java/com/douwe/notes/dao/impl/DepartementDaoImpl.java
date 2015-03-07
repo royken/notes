@@ -15,6 +15,7 @@ import javax.inject.Named;
 @Named
 public class DepartementDaoImpl extends GenericDao<Departement, Long> implements IDepartementDao{
 
+    @Override
     public List<Option> getAllOptions(Departement departement) throws DataAccessException {
       return  getManager().createNamedQuery("Departement.getAllOptions").setParameter("idParam", departement.getId()).getResultList();
     }
@@ -23,8 +24,14 @@ public class DepartementDaoImpl extends GenericDao<Departement, Long> implements
         getManager().createNamedQuery("Departement.deleteActive").setParameter("idParam", departement.getId());
     }
 
+    @Override
     public List<Departement> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Departement.findAllActive").getResultList();
+    }
+
+    @Override
+    public Departement findByCode(String code) throws DataAccessException {
+        return (Departement)(getManager().createNamedQuery("Departement.findByCode").setParameter("param", code).getSingleResult());
     }
     
 }

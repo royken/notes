@@ -15,4 +15,6 @@ public interface ICoursDao extends IDao<Cours, Long>{
     
     public List<Cours> findAllActive() throws DataAccessException;
     
+    public Cours findByIntitule(String intitule) throws DataAccessException;
+    
 }

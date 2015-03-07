@@ -16,8 +16,14 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao{
         getManager().createNamedQuery("Cours.deleteActive").setParameter("idParam", cours.getId());
     }
 
+    @Override
     public List<Cours> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Cours.findAllActive").getResultList();
+    }
+
+    @Override
+    public Cours findByIntitule(String intitule) throws DataAccessException {
+        return (Cours)(getManager().createNamedQuery("Cours.findByIntitule").setParameter("param", intitule).getSingleResult());
     }
     
 }

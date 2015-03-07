@@ -30,6 +30,7 @@ public class Niveau implements Serializable {
     private String code;
     
     @ManyToOne
+    @XmlTransient
     private Cycle cycle;
     
      @XmlTransient
@@ -56,10 +57,12 @@ public class Niveau implements Serializable {
         this.code = code;
     }
 
+    @JsonIgnore
     public Cycle getCycle() {
         return cycle;
     }
 
+    @JsonIgnore
     public void setCycle(Cycle cycle) {
         this.cycle = cycle;
     }
@@ -81,6 +84,13 @@ public class Niveau implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
-    }    
+    }   
+
+    @Override
+    public String toString() {
+        return "Niveau{" + "id=" + id + ", version=" + version + ", code=" + code +  ", active=" + active + '}';
+    }
+    
+    
    
 }

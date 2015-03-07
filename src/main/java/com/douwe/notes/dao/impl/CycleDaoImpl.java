@@ -16,6 +16,7 @@ public class CycleDaoImpl extends GenericDao<Cycle, Long> implements ICycleDao{
         getManager().createNamedQuery("Cycle.deleteActive").setParameter("idParam", cycle.getId());
     }
 
+    @Override
     public List<Cycle> getAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Cycle.findAllActive").getResultList();
     }
