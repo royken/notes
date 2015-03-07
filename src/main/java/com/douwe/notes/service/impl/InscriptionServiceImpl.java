@@ -171,10 +171,25 @@ public class InscriptionServiceImpl implements IInscriptionService {
     public Inscription inscrireEtudiant(String matricule, String codeNiveau, String codeOption, Long anneeId) throws ServiceException {
         try {
             Etudiant etudiant = etudiantDao.findByMatricule(matricule);
+            if(etudiant == null){
+                throw new ServiceException("La ressource demandée est introuvable");
+            }
             Niveau niveau = niveauDao.findByCode(codeOption);
+            if(niveau == null){
+                throw new ServiceException("La ressource demandée est introuvable");
+            }
             Option option = optionDao.findByCode(codeOption);
+            if(option == null){
+                throw new ServiceException("La ressource demandée est introuvable");
+            }
             AnneeAcademique academique = academiqueDao.findById(anneeId);
+            if(academique == null){
+                throw new ServiceException("La ressource demandée est introuvable");
+            }
             Parcours parcours = parcoursDao.findByNiveauOption(niveau, option);
+            if(parcours == null){
+                throw new ServiceException("La ressource demandée est introuvable");
+            }
             Inscription inscription = new Inscription();
             inscription.setEtudiant(etudiant);
             inscription.setParcours(parcours);
