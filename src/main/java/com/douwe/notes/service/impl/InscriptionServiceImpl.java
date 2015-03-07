@@ -4,10 +4,14 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.IEtudiantDao;
 import com.douwe.notes.dao.IInscriptionDao;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Inscription;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.service.IInscriptionService;
 import com.douwe.notes.service.ServiceException;
@@ -35,6 +39,12 @@ public class InscriptionServiceImpl implements IInscriptionService {
     
     @Inject
     private IParcoursDao parcoursDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
+    
+    @Inject
+    private IOptionDao optionDao;
     
     public IInscriptionDao getInscriptionDao() {
         return inscriptionDao;
@@ -66,6 +76,22 @@ public class InscriptionServiceImpl implements IInscriptionService {
 
     public void setParcoursDao(IParcoursDao parcoursDao) {
         this.parcoursDao = parcoursDao;
+    }
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
     }
     
     
@@ -124,15 +150,43 @@ public class InscriptionServiceImpl implements IInscriptionService {
     public Inscription saveEtudiant(Etudiant etudiant, AnneeAcademique academique, Parcours parcours) throws ServiceException {
         try {
             Etudiant etudiant1 = etudiantDao.create(etudiant);
+            
+            
+            
+            
             Inscription inscription = new  Inscription();
             inscription.setAnneeAcademique(academique);
             inscription.setEtudiant(etudiant1);
             inscription.setParcours(parcours);
             return  inscriptionDao.create(inscription);
+            
+            
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    @Override
+    public Inscription inscrireEtudiant(String matricule, String codeNiveau, String codeOption, Long anneeId) throws ServiceException {
+        try {
+            Etudiant etudiant = etudiantDao.findByMatricule(matricule);
+            Niveau niveau = niveauDao.findByCode(codeOption);
+            Option option = optionDao.findByCode(codeOption);
+            AnneeAcademique academique = academiqueDao.findById(anneeId);
+            Parcours parcours = parcoursDao.findByNiveauOption(niveau, option);
+            Inscription inscription = new Inscription();
+            inscription.setEtudiant(etudiant);
+            inscription.setParcours(parcours);
+            inscription.setActive(1);
+            inscription.setAnneeAcademique(academique);
+            inscriptionDao.create(inscription);
+            return inscription;
+        } catch (DataAccessException ex) {
+            Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+   
     }
     
 }
