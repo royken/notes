@@ -1,6 +1,9 @@
 package com.douwe.notes.service;
 
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Inscription;
+import com.douwe.notes.entities.Parcours;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -12,6 +15,8 @@ import javax.ejb.Local;
 public interface IInscriptionService {
     
     public Inscription saveOrUpdateInscription(Inscription inscription) throws ServiceException;
+    
+    public Inscription saveEtudiant(Etudiant etudiant, AnneeAcademique academique, Parcours parcours) throws ServiceException;
     
     public void deleteInscription(long id) throws ServiceException;
     

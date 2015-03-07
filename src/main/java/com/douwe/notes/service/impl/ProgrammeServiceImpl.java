@@ -29,9 +29,11 @@ public class ProgrammeServiceImpl implements IProgrammeService {
         this.programmeDao = programmeDao;
     }
 
+    @Override
     public Programme saveOrUpdateProgramme(Programme programme) throws ServiceException{
         try {
             if (programme.getId() == null) {
+                programme.setActive(1);
                 return programmeDao.create(programme);
             } else {
                 return programmeDao.update(programme);
@@ -42,16 +44,21 @@ public class ProgrammeServiceImpl implements IProgrammeService {
         }
     }
 
+    @Override
     public void deleteProgramme(Long id) throws ServiceException{
         try {
             Programme programme = programmeDao.findById(id);
-            programmeDao.deleteActiv(programme);
+            if(programme != null){
+                programme.setActive(0);
+                programmeDao.update(programme);
+            }
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
+    @Override
     public Programme findProgrammeById(long id) throws ServiceException{
         try {
             return programmeDao.findById(id);
@@ -61,6 +68,7 @@ public class ProgrammeServiceImpl implements IProgrammeService {
         }
     }
 
+    @Override
     public List<Programme> getAllProgrammes() throws ServiceException{
         try {
             return programmeDao.findAllActive();

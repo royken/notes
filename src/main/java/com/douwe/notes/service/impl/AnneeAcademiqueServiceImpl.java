@@ -38,6 +38,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique) throws ServiceException{
         try {
             if (anneeAcademique.getId() == null) {
+                anneeAcademique.setActive(1);
                 return academiqueDao.create(anneeAcademique);
             } else {
                 return academiqueDao.update(anneeAcademique);
@@ -54,7 +55,8 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         try {
             AnneeAcademique anneeAcademique = academiqueDao.findById(id);
             if(anneeAcademique != null){
-                academiqueDao.delete(anneeAcademique);
+                anneeAcademique.setActive(0);
+                academiqueDao.update(anneeAcademique);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

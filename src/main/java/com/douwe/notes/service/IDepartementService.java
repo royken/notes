@@ -22,5 +22,7 @@ public interface IDepartementService {
     
     public List<Option> getAllOptions(Departement departement) throws ServiceException;
     
+    public Departement findByCode(String code) throws ServiceException;
+    
     
 }

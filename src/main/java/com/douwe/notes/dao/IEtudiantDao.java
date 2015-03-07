@@ -20,6 +20,8 @@ public interface IEtudiantDao extends IDao<Etudiant, Long>{
     
     public List<Etudiant> findAllActive()throws DataAccessException;
     
+    public Etudiant findByMatricule(String matricule) throws DataAccessException;
+    
     // List des étudiants d'un département pour une année académique
     public List<Etudiant> listeEtudiantParDepartement(Departement departement, AnneeAcademique academique) throws DataAccessException;
     

@@ -29,9 +29,11 @@ public class SemestreServiceImpl implements ISemestreService{
         this.semestreDao = semestreDao;
     }
 
+    @Override
     public Semestre saveOrUpdateSemestre(Semestre semestre) throws ServiceException{
         try {
             if (semestre.getId() == null) {
+                semestre.setActive(1);
                 return semestreDao.create(semestre);
             } else {
                 return semestreDao.update(semestre);
@@ -42,6 +44,7 @@ public class SemestreServiceImpl implements ISemestreService{
         }
     }
 
+    @Override
     public void deleteSemestre(Long id) throws ServiceException{
         try {
             Semestre semestre = semestreDao.findById(id);
@@ -54,6 +57,7 @@ public class SemestreServiceImpl implements ISemestreService{
         }
     }
 
+    @Override
     public Semestre findSemestreById(long id) throws ServiceException{
         try {
             return semestreDao.findById(id);
@@ -63,6 +67,7 @@ public class SemestreServiceImpl implements ISemestreService{
         }
     }
 
+    @Override
     public List<Semestre> getAllSemestre() throws ServiceException{
         try {
             return semestreDao.findAll();

@@ -8,6 +8,7 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -49,7 +50,7 @@ public class EtudiantBean {
         
     }
     
-    public String filtrer(){
+    public String filtrer() throws ServiceException{
         System.err.println("Douwe est un vrai idiot");
         etudiants = etudiantService.findByCritiria(departement, annee, niveau, option);       
         //etudiants = etudiantService.findByCritiria(null, null, niveau, null);

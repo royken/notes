@@ -31,9 +31,11 @@ public class NiveauServiceImpl implements INiveauService{
         this.niveauDao = niveauDao;
     }
 
+    @Override
     public Niveau saveOrUpdateNiveau(Niveau niveau) throws ServiceException{
         try {
         if(niveau.getId() ==null){
+            niveau.setActive(1);
                 return niveauDao.create(niveau);         
         }
         else{
@@ -45,6 +47,7 @@ public class NiveauServiceImpl implements INiveauService{
             }
     }
 
+    @Override
     public void deleteNiveau(Long id) throws ServiceException{
         try {
             Niveau niveau = niveauDao.findById(id);
@@ -55,6 +58,7 @@ public class NiveauServiceImpl implements INiveauService{
         }
     }
 
+    @Override
     public Niveau findNiveauById(long id) throws ServiceException{
         try {
             return niveauDao.findById(id);
@@ -64,9 +68,14 @@ public class NiveauServiceImpl implements INiveauService{
         }
     }
 
+    @Override
     public List<Niveau> getAllNiveaux() throws ServiceException{
         try {
-            return niveauDao.findAll();
+            List <Niveau> list = niveauDao.findAll();
+            for (Niveau list1 : list) {
+                System.out.println(list1);
+            }
+            return list;
         } catch (DataAccessException ex) {
             Logger.getLogger(NiveauServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");

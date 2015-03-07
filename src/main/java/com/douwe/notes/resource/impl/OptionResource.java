@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
@@ -31,6 +30,7 @@ public class OptionResource implements IOptionResource{
         this.optionService = optionService;
     }
 
+    @Override
     public Option createOption(Option option) {
         try {
             return optionService.saveOrUpdateOption(option);
@@ -40,6 +40,7 @@ public class OptionResource implements IOptionResource{
         }
     }
 
+    @Override
     public List<Option> getAllOptions() {
         try {
             return optionService.getAllOptions();
@@ -49,6 +50,7 @@ public class OptionResource implements IOptionResource{
         }
     }
 
+    @Override
     public Option getOption(long id) {
         try {
             Option option = optionService.findOptionById(id);
@@ -62,6 +64,7 @@ public class OptionResource implements IOptionResource{
         }
     }
 
+    @Override
     public Option updateOption(long id, Option option) {
         try {
             Option option1 = optionService.findOptionById(id);
@@ -77,6 +80,7 @@ public class OptionResource implements IOptionResource{
         }
     }
 
+    @Override
     public void deleteOption(long id) {
         try {
             optionService.deleteOption(id);
@@ -85,6 +89,7 @@ public class OptionResource implements IOptionResource{
         }
     }
 
+    @Override
     public Option getDepartement(long id) {
         try {
             Option option = optionService.findOptionById(id);
@@ -97,4 +102,18 @@ public class OptionResource implements IOptionResource{
             return null;
         }
     }   
+
+    @Override
+    public Option findByCode(String code) {
+        try {
+            Option option = optionService.findByCode(code);
+            if(option == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return option;
+        } catch (ServiceException ex) {
+            Logger.getLogger(OptionResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }

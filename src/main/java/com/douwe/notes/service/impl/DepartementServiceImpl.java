@@ -23,9 +23,11 @@ public class DepartementServiceImpl implements IDepartementService{
     @Inject
     private IDepartementDao departementDao;
     
+    @Override
     public Departement saveOrUpdateDepartement(Departement departement) throws ServiceException{
         try {
             if (departement.getId() == null) {
+                departement.setActive(1);
                 return departementDao.create(departement);
             } else {
                 return departementDao.update(departement);
@@ -36,11 +38,13 @@ public class DepartementServiceImpl implements IDepartementService{
         }
     }
 
+    @Override
     public void deleteDepartement(Long id) throws ServiceException{
         try {
             Departement departement = departementDao.findById(id);
             if (departement != null) {
-                departementDao.deleteActive(departement);
+                departement.setActive(0);
+                departementDao.update(departement);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
@@ -48,6 +52,7 @@ public class DepartementServiceImpl implements IDepartementService{
         }
     }
 
+    @Override
     public List<Departement> getAllDepartements() throws ServiceException{
         try {
             return departementDao.findAllActive();
@@ -65,6 +70,7 @@ public class DepartementServiceImpl implements IDepartementService{
         this.departementDao = departementDao;
     }
 
+    @Override
     public Departement findDepartementById(long id) throws ServiceException{
         try {
             return departementDao.findById(id);
@@ -75,9 +81,20 @@ public class DepartementServiceImpl implements IDepartementService{
         
     }
 
+    @Override
     public List<Option> getAllOptions(Departement departement) throws ServiceException{
         try {
             return departementDao.getAllOptions(departement);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public Departement findByCode(String code) throws ServiceException {
+        try {
+            return departementDao.findByCode(code);
         } catch (DataAccessException ex) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");

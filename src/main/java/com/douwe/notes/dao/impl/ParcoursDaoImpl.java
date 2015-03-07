@@ -3,6 +3,8 @@ package com.douwe.notes.dao.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IParcoursDao;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import java.util.List;
 
@@ -16,8 +18,14 @@ public class ParcoursDaoImpl extends GenericDao<Parcours, Long> implements IParc
         getManager().createNamedQuery("Parcours.deleteActive").setParameter("idParam", parcours.getId());
     }
 
+    @Override
     public List<Parcours> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Parcours.findAllActive").getResultList();
+    }
+
+    @Override
+    public Parcours findByNiveauOption(Niveau niveau, Option option) throws DataAccessException {
+        return (Parcours)(getManager().createNamedQuery("Parcours.findByNiveauOption").setParameter("param1", niveau.getId()).setParameter("param2", option.getId()).getSingleResult());
     }
     
 }

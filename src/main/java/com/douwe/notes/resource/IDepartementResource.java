@@ -43,5 +43,10 @@ public interface IDepartementResource {
     @Path(value = "{id : \\d+}/options")
     @Produces(value = "application/json")
     List<Option> getAllOptions(@PathParam(value = "id") long id);
+    
+    @GET
+    @Path(value = "{code}")
+    @Produces(value = "application/json")
+    public Departement findByCode(@PathParam(value = "code") String code);
 
 }

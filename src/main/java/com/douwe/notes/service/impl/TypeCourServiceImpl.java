@@ -31,9 +31,11 @@ public class TypeCourServiceImpl implements ITypeCoursService{
     
     
 
+    @Override
     public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException{
         try {
             if (typeCours.getId() == null) {
+                typeCours.setActive(1);
                 return typeCoursDao.create(typeCours);
             } else {
                 return typeCoursDao.update(typeCours);
@@ -44,6 +46,7 @@ public class TypeCourServiceImpl implements ITypeCoursService{
         }
     }
 
+    @Override
     public void deleteTypeCours(Long id) throws ServiceException{
         try {
             TypeCours typeCours = typeCoursDao.findById(id);
@@ -54,6 +57,7 @@ public class TypeCourServiceImpl implements ITypeCoursService{
         }
     }
 
+    @Override
     public TypeCours findTypeCoursById(long id) throws ServiceException{
         try {
             return typeCoursDao.findById(id);
@@ -63,6 +67,7 @@ public class TypeCourServiceImpl implements ITypeCoursService{
         }
     }
 
+    @Override
     public List<TypeCours> getAllTypeCours() throws ServiceException{
         try {
             return typeCoursDao.findAll();

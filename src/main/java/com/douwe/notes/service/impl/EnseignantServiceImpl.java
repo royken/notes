@@ -31,9 +31,11 @@ public class EnseignantServiceImpl implements IEnseignantService{
     
     
 
+    @Override
     public Enseignant saveOrUpdateEnseignant(Enseignant enseignant) throws ServiceException{
         try {
             if (enseignant.getId() == null) {
+                enseignant.setActive(1);
                 return enseignantDao.create(enseignant);
             } else {
                 return enseignantDao.update(enseignant);
@@ -44,11 +46,13 @@ public class EnseignantServiceImpl implements IEnseignantService{
         }
     }
 
+    @Override
     public void deleteEnseignant(Long id) throws ServiceException{
         try {
             Enseignant enseignant = enseignantDao.findById(id);
             if(enseignant != null){
-                enseignantDao.deleteActive(enseignant);
+                enseignant.setActive(0);
+                enseignantDao.update(enseignant);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,6 +60,7 @@ public class EnseignantServiceImpl implements IEnseignantService{
         }
     }
 
+    @Override
     public Enseignant findEnseignantById(long id) throws ServiceException{
         try {
             return enseignantDao.findById(id);
@@ -65,6 +70,7 @@ public class EnseignantServiceImpl implements IEnseignantService{
         }
     }
 
+    @Override
     public List<Enseignant> getAllEnseignants() throws ServiceException{
         try {
             return enseignantDao.findAllActive();

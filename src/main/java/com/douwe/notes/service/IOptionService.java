@@ -22,4 +22,6 @@ public interface IOptionService {
     
     public Departement getDepartement(Option option) throws ServiceException;
     
+     public Option findByCode(String code) throws ServiceException;
+    
 }

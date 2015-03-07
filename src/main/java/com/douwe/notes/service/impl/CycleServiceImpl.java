@@ -30,9 +30,11 @@ public class CycleServiceImpl implements  ICycleService{
         this.cycleDao = cycleDao;
     }
     
+    @Override
     public Cycle saveOrUpdateCycle(Cycle cycle) throws ServiceException{
         try {
             if (cycle.getId() == null) {
+                cycle.setActive(1);
                 return cycleDao.create(cycle);
             } else {
                 return cycleDao.update(cycle);
@@ -43,11 +45,13 @@ public class CycleServiceImpl implements  ICycleService{
         }
     }
 
+    @Override
     public void deleteCycle(long id) throws ServiceException{
         try {
             Cycle c = cycleDao.findById(id);
             if (c != null) {
-                cycleDao.deleteActive(c);
+                c.setActive(0);
+                cycleDao.update(c);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,6 +59,7 @@ public class CycleServiceImpl implements  ICycleService{
         }
     }
 
+    @Override
     public Cycle findCycleById(long id) throws ServiceException{
         try {
             return cycleDao.findById(id);
@@ -64,6 +69,7 @@ public class CycleServiceImpl implements  ICycleService{
         }
     }
 
+    @Override
     public List<Cycle> getAllCycles() throws ServiceException{
         try {
             return cycleDao.getAllActive();

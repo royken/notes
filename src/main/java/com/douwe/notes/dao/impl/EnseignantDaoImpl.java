@@ -17,6 +17,7 @@ public class EnseignantDaoImpl extends GenericDao<Enseignant, Long> implements I
         getManager().createNamedQuery("Enseignant.deleteActive").setParameter("idParam", enseignant.getId());
     }
 
+    @Override
     public List<Enseignant> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Enseignant.findAllActive").getResultList();
     }

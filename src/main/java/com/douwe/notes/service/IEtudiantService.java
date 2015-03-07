@@ -23,6 +23,8 @@ public interface IEtudiantService {
     
     public List<Etudiant> getAllEtudiant() throws ServiceException;
     
-    public List<Etudiant> findByCritiria(Departement departement, AnneeAcademique annee, Niveau niveau, Option option);
+    public List<Etudiant> findByCritiria(Departement departement, AnneeAcademique annee, Niveau niveau, Option option) throws ServiceException;
+    
+    public Etudiant findByMatricule(String matricule) throws ServiceException;
     
 }

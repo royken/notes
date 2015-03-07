@@ -17,8 +17,8 @@ import javax.ws.rs.core.Response;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Path("/cours")
-public class CoursResource implements ICoursResource{
-    
+public class CoursResource implements ICoursResource {
+
     @EJB
     private ICoursService coursService;
 
@@ -30,6 +30,7 @@ public class CoursResource implements ICoursResource{
         this.coursService = coursService;
     }
 
+    @Override
     public Cours createCours(Cours cours) {
         try {
             return coursService.saveOrUpdateCours(cours);
@@ -39,6 +40,7 @@ public class CoursResource implements ICoursResource{
         }
     }
 
+    @Override
     public List<Cours> getAllCours() {
         try {
             return coursService.getAllCours();
@@ -48,11 +50,12 @@ public class CoursResource implements ICoursResource{
         }
     }
 
+    @Override
     public Cours getCours(long id) {
         try {
             Cours cours = coursService.findCoursById(id);
-            if(cours == null){
-                throw  new  WebApplicationException(Response.Status.NOT_FOUND);
+            if (cours == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return cours;
         } catch (ServiceException ex) {
@@ -61,10 +64,11 @@ public class CoursResource implements ICoursResource{
         }
     }
 
+    @Override
     public Cours updateCours(long id, Cours cours) {
         try {
             Cours cours1 = coursService.findCoursById(id);
-            if(cours1 != null){
+            if (cours1 != null) {
                 cours1.setCredit(cours.getCredit());
                 cours1.setIntitule(cours.getIntitule());
                 cours1.setTypeCours(cours.getTypeCours());
@@ -77,6 +81,7 @@ public class CoursResource implements ICoursResource{
         }
     }
 
+    @Override
     public void deleteCours(long id) {
         try {
             coursService.deleteCours(id);
@@ -84,8 +89,19 @@ public class CoursResource implements ICoursResource{
             Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
-    
+
+    @Override
+    public Cours findByIntitule(String intitule) {
+        try {
+            Cours cours = coursService.findByIntitule(intitule);           
+            if (cours == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return cours;
+        } catch (ServiceException ex) {
+            Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
 }

@@ -31,9 +31,11 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
     
     
 
+    @Override
     public EvaluationDetails saveOrUpdateEvaluationDetails(EvaluationDetails evaluationDetails) throws ServiceException{
         try {
             if (evaluationDetails.getId() == null) {
+                evaluationDetails.setActive(1);
                 return detailsDao.create(evaluationDetails);
             } else {
                 return detailsDao.update(evaluationDetails);
@@ -44,17 +46,21 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
         }
     }
 
+    @Override
     public void deleteEvaluationDetails(Long id) throws ServiceException{
         try {
             EvaluationDetails details = detailsDao.findById(id);
-            if(details != null)
-                detailsDao.delete(details);
+            if(details != null){
+                details.setActive(0);
+                detailsDao.update(details);
+            }
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
+    @Override
     public EvaluationDetails findEvaluationDetailsById(long id) throws ServiceException{
         try {
             return detailsDao.findById(id);
@@ -64,6 +70,7 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
         }
     }
 
+    @Override
     public List<EvaluationDetails> getAllEvaluationDetails() throws ServiceException{
         try {
             return detailsDao.findAll();

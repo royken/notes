@@ -42,4 +42,9 @@ public interface IOptionResource {
     @GET
     @Path(value = "{id : \\d+}/departement")
     Option getDepartement(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path("{code}")
+    @Produces(value = "application/json")
+    public Option findByCode(@PathParam(value = "code") String code);
 }

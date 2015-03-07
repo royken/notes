@@ -117,6 +117,7 @@ public class DepartementResource implements IDepartementResource {
 //        return builder.toString();
 //    }
 
+    @Override
     public List<Departement> getAllDepartement() {
         try {
             List<Departement> deps = departementService.getAllDepartements();
@@ -127,6 +128,7 @@ public class DepartementResource implements IDepartementResource {
         }
     }
 
+    @Override
     public void deleteDepartement(long id) {
         try {
             departementService.deleteDepartement(id);
@@ -136,6 +138,7 @@ public class DepartementResource implements IDepartementResource {
         
     }
 
+    @Override
     public List<Option> getAllOptions(long id) {
         try {
             Departement dep = departementService.findDepartementById(id);
@@ -152,5 +155,19 @@ public class DepartementResource implements IDepartementResource {
 
     public void setDepartementService(IDepartementService departementService) {
         this.departementService = departementService;
+    }
+
+    @Override
+    public Departement findByCode(String code) {
+        try {
+            Departement departement = departementService.findByCode(code);
+            if(departement == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return departement;
+        } catch (ServiceException ex) {
+            Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 }

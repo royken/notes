@@ -90,12 +90,19 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         return getManager().createQuery(cq).getResultList();
     }
 
+    @Override
     public void deleteActive(Etudiant etudiant) throws DataAccessException {
         getManager().createNamedQuery("Etudiant.deleteActive").setParameter("idParam", etudiant.getId());
     }
 
+    @Override
     public List<Etudiant> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("Etudiant.findAllActive").getResultList();
+    }
+
+    @Override
+    public Etudiant findByMatricule(String matricule) throws DataAccessException {
+        return (Etudiant)(getManager().createNamedQuery("Etudiant.findByMatricule").setParameter("param", matricule).getSingleResult());
     }
     
 }

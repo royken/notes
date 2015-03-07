@@ -1,6 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -23,7 +24,7 @@ public interface INiveauResource {
 
     @GET
     @Produces(value = "application/json")
-    List<Niveau> getAllNiveaux();
+    List<Niveau> getAllNiveaux() throws ServiceException;
 
     @GET
     @Path(value = "{id : \\d+}")
