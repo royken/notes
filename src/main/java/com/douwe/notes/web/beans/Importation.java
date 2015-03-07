@@ -31,10 +31,14 @@ import javax.inject.Named;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -77,9 +81,9 @@ public class Importation {
     private IParcoursService parcoursService;
     @EJB
     private IOptionService optionService;
-    
+
     String idAca = new String();
-    
+
     String nomFeuille = new String();
 
     public Importation() {
@@ -98,23 +102,19 @@ public class Importation {
         this.file = file;
     }
 
-    public String saveData() throws ServiceException, ParseException, IOException {
-        System.err.println("-------------- 1 "+ file.getInputstream());
-        if (file != null && nomFeuille!=null && nomFeuille.trim().length()!=0) {
-            //final Workbook workbook = WorkbookFactory.create(file);
-            POIFSFileSystem fs = new POIFSFileSystem(file.getInputstream());
-            //POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("etudiant.xlsx"));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            final HSSFSheet sheet = wb.getSheet("etudiant");
-            //final HSSFSheet sheet = wb.getSheetName("etudiant");
-            int index = 1;
-            HSSFRow row = sheet.getRow(index++);
-            System.err.println("-------------- 2 ");
+    public String saveData() throws ServiceException, ParseException, IOException, InvalidFormatException {
+        System.err.println("-------------- 1 " + file.getInputstream());
+        if (file != null && nomFeuille != null && nomFeuille.trim().length() != 0) {
+        Workbook workbook = WorkbookFactory.create(file.getInputstream());
+        final Sheet sheet = workbook.getSheet("Feuil1");
+        int index = 1;
+        Row row = sheet.getRow(index++);                        
             while (row != null) {
 
                 etudiant.setNom(row.getCell(1).getStringCellValue());
-                etudiant.setEmail(row.getCell(4).getStringCellValue());                
-                etudiant.setDateDeNaissance(new SimpleDateFormat().parse(row.getCell(2).getStringCellValue()));
+                etudiant.setEmail(row.getCell(4).getStringCellValue());
+                //System.err.println("-------------- 2--- " + row.getCell(2).getStringCellValue());
+                etudiant.setDateDeNaissance(row.getCell(2).getDateCellValue());
                 if (row.getCell(6).getStringCellValue().trim().toLowerCase().compareTo("feminin") == 0) {
                     etudiant.setGenre(Genre.feminin);
                 }
@@ -123,7 +123,7 @@ public class Importation {
                 }
                 etudiant.setLieuDeNaissance(row.getCell(3).getStringCellValue());
                 etudiant.setMatricule(row.getCell(0).getStringCellValue());
-                etudiant.setNumeroTelephone(row.getCell(5).getStringCellValue());
+                etudiant.setNumeroTelephone(row.getCell(5).getNumericCellValue()+"");
                 etudiantService.saveOrUpdateEtudiant(etudiant);
                 inscription.setParcours(null);
 //                niveau = niveauService.findNiveauByCode(row.getCell(7).getStringCellValue());
@@ -252,8 +252,9 @@ public class Importation {
     }
 
     public String getIdAca() {
-        if(anneeAcademique!=null)
-            idAca=anneeAcademique.getId().toString();
+        if (anneeAcademique != null) {
+            idAca = anneeAcademique.getId().toString();
+        }
         return idAca;
     }
 
@@ -268,6 +269,5 @@ public class Importation {
     public void setNomFeuille(String nomFeuille) {
         this.nomFeuille = nomFeuille;
     }
-        
 
 }
