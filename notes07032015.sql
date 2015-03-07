@@ -1,0 +1,615 @@
+-- MySQL dump 10.13  Distrib 5.5.41, for debian-linux-gnu (i686)
+--
+-- Host: localhost    Database: notes
+-- ------------------------------------------------------
+-- Server version	5.5.41-0ubuntu0.14.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `notes`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `notes` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `notes`;
+
+--
+-- Table structure for table `ANNEEACADEMIQUE`
+--
+
+DROP TABLE IF EXISTS `ANNEEACADEMIQUE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ANNEEACADEMIQUE` (
+  `ID` bigint(20) NOT NULL,
+  `DEBUT` date DEFAULT NULL,
+  `FIN` date DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ANNEEACADEMIQUE`
+--
+
+LOCK TABLES `ANNEEACADEMIQUE` WRITE;
+/*!40000 ALTER TABLE `ANNEEACADEMIQUE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ANNEEACADEMIQUE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `COURS`
+--
+
+DROP TABLE IF EXISTS `COURS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `COURS` (
+  `ID` bigint(20) NOT NULL,
+  `CREDIT` int(11) DEFAULT NULL,
+  `INTITULE` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `TYPECOURS_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_COURS_TYPECOURS_ID` (`TYPECOURS_ID`),
+  CONSTRAINT `FK_COURS_TYPECOURS_ID` FOREIGN KEY (`TYPECOURS_ID`) REFERENCES `TYPECOURS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `COURS`
+--
+
+LOCK TABLES `COURS` WRITE;
+/*!40000 ALTER TABLE `COURS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `COURS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CYCLES`
+--
+
+DROP TABLE IF EXISTS `CYCLES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CYCLES` (
+  `ID` bigint(20) NOT NULL,
+  `NOM` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CYCLES`
+--
+
+LOCK TABLES `CYCLES` WRITE;
+/*!40000 ALTER TABLE `CYCLES` DISABLE KEYS */;
+INSERT INTO `CYCLES` VALUES (651,'Licence',3),(652,'Master',1),(751,'Licence 1',1);
+/*!40000 ALTER TABLE `CYCLES` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `DEPARTEMENT`
+--
+
+DROP TABLE IF EXISTS `DEPARTEMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DEPARTEMENT` (
+  `ID` bigint(20) NOT NULL,
+  `CODE` varchar(255) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DEPARTEMENT`
+--
+
+LOCK TABLES `DEPARTEMENT` WRITE;
+/*!40000 ALTER TABLE `DEPARTEMENT` DISABLE KEYS */;
+INSERT INTO `DEPARTEMENT` VALUES (51,'ENREN','Energies Renouvelables',3),(101,'SCIENV','Sciences Environnementales',1),(401,'INFOTEL','Informatique et Télécommunication',9),(402,'HYMAE','Hydraulique et Maitrise des Eaux',1),(451,'SCISOD','Sciences Sociales pour le Developpement',1),(801,'TRAMARH','Traitement des Matériaux Architecture et Habitat',2);
+/*!40000 ALTER TABLE `DEPARTEMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ENSEIGNANT`
+--
+
+DROP TABLE IF EXISTS `ENSEIGNANT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ENSEIGNANT` (
+  `ID` bigint(20) NOT NULL,
+  `NOM` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ENSEIGNANT`
+--
+
+LOCK TABLES `ENSEIGNANT` WRITE;
+/*!40000 ALTER TABLE `ENSEIGNANT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ENSEIGNANT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ENSEIGNEMENT`
+--
+
+DROP TABLE IF EXISTS `ENSEIGNEMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ENSEIGNEMENT` (
+  `ID` bigint(20) NOT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `ANNEEACADEMIQUE_ID` bigint(20) DEFAULT NULL,
+  `COURS_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_ENSEIGNEMENT_COURS_ID` (`COURS_ID`),
+  KEY `FK_ENSEIGNEMENT_ANNEEACADEMIQUE_ID` (`ANNEEACADEMIQUE_ID`),
+  CONSTRAINT `FK_ENSEIGNEMENT_ANNEEACADEMIQUE_ID` FOREIGN KEY (`ANNEEACADEMIQUE_ID`) REFERENCES `ANNEEACADEMIQUE` (`ID`),
+  CONSTRAINT `FK_ENSEIGNEMENT_COURS_ID` FOREIGN KEY (`COURS_ID`) REFERENCES `COURS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ENSEIGNEMENT`
+--
+
+LOCK TABLES `ENSEIGNEMENT` WRITE;
+/*!40000 ALTER TABLE `ENSEIGNEMENT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ENSEIGNEMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ENSEIGNEMENT_ENSEIGNANT`
+--
+
+DROP TABLE IF EXISTS `ENSEIGNEMENT_ENSEIGNANT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ENSEIGNEMENT_ENSEIGNANT` (
+  `Enseignement_ID` bigint(20) NOT NULL,
+  `enseignants_ID` bigint(20) NOT NULL,
+  PRIMARY KEY (`Enseignement_ID`,`enseignants_ID`),
+  KEY `FK_ENSEIGNEMENT_ENSEIGNANT_enseignants_ID` (`enseignants_ID`),
+  CONSTRAINT `FK_ENSEIGNEMENT_ENSEIGNANT_enseignants_ID` FOREIGN KEY (`enseignants_ID`) REFERENCES `ENSEIGNANT` (`ID`),
+  CONSTRAINT `FK_ENSEIGNEMENT_ENSEIGNANT_Enseignement_ID` FOREIGN KEY (`Enseignement_ID`) REFERENCES `ENSEIGNEMENT` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ENSEIGNEMENT_ENSEIGNANT`
+--
+
+LOCK TABLES `ENSEIGNEMENT_ENSEIGNANT` WRITE;
+/*!40000 ALTER TABLE `ENSEIGNEMENT_ENSEIGNANT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ENSEIGNEMENT_ENSEIGNANT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ETUDIANT`
+--
+
+DROP TABLE IF EXISTS `ETUDIANT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ETUDIANT` (
+  `ID` bigint(20) NOT NULL,
+  `DATEDENAISSANCE` date DEFAULT NULL,
+  `EMAIL` varchar(255) DEFAULT NULL,
+  `GENRE` int(11) DEFAULT NULL,
+  `LIEUDENAISSANCE` varchar(255) DEFAULT NULL,
+  `MATRICULE` varchar(255) DEFAULT NULL,
+  `NOM` varchar(255) DEFAULT NULL,
+  `NUMEROTELEPHONE` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ETUDIANT`
+--
+
+LOCK TABLES `ETUDIANT` WRITE;
+/*!40000 ALTER TABLE `ETUDIANT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ETUDIANT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EVALUATION`
+--
+
+DROP TABLE IF EXISTS `EVALUATION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EVALUATION` (
+  `ID` bigint(20) NOT NULL,
+  `CODE` varchar(255) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EVALUATION`
+--
+
+LOCK TABLES `EVALUATION` WRITE;
+/*!40000 ALTER TABLE `EVALUATION` DISABLE KEYS */;
+/*!40000 ALTER TABLE `EVALUATION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `EVALUATIONDETAILS`
+--
+
+DROP TABLE IF EXISTS `EVALUATIONDETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EVALUATIONDETAILS` (
+  `ID` bigint(20) NOT NULL,
+  `POURCENTAGE` int(11) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `EVALUATION_ID` bigint(20) DEFAULT NULL,
+  `TYPECOURS_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_EVALUATIONDETAILS_TYPECOURS_ID` (`TYPECOURS_ID`),
+  KEY `FK_EVALUATIONDETAILS_EVALUATION_ID` (`EVALUATION_ID`),
+  CONSTRAINT `FK_EVALUATIONDETAILS_EVALUATION_ID` FOREIGN KEY (`EVALUATION_ID`) REFERENCES `EVALUATION` (`ID`),
+  CONSTRAINT `FK_EVALUATIONDETAILS_TYPECOURS_ID` FOREIGN KEY (`TYPECOURS_ID`) REFERENCES `TYPECOURS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EVALUATIONDETAILS`
+--
+
+LOCK TABLES `EVALUATIONDETAILS` WRITE;
+/*!40000 ALTER TABLE `EVALUATIONDETAILS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `EVALUATIONDETAILS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `INSCRIPTION`
+--
+
+DROP TABLE IF EXISTS `INSCRIPTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `INSCRIPTION` (
+  `ID` bigint(20) NOT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `ANNEEACADEMIQUE_ID` bigint(20) DEFAULT NULL,
+  `ETUDIANT_ID` bigint(20) DEFAULT NULL,
+  `PARCOURS_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_INSCRIPTION_ETUDIANT_ID` (`ETUDIANT_ID`),
+  KEY `FK_INSCRIPTION_PARCOURS_ID` (`PARCOURS_ID`),
+  KEY `FK_INSCRIPTION_ANNEEACADEMIQUE_ID` (`ANNEEACADEMIQUE_ID`),
+  CONSTRAINT `FK_INSCRIPTION_ANNEEACADEMIQUE_ID` FOREIGN KEY (`ANNEEACADEMIQUE_ID`) REFERENCES `ANNEEACADEMIQUE` (`ID`),
+  CONSTRAINT `FK_INSCRIPTION_ETUDIANT_ID` FOREIGN KEY (`ETUDIANT_ID`) REFERENCES `ETUDIANT` (`ID`),
+  CONSTRAINT `FK_INSCRIPTION_PARCOURS_ID` FOREIGN KEY (`PARCOURS_ID`) REFERENCES `PARCOURS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `INSCRIPTION`
+--
+
+LOCK TABLES `INSCRIPTION` WRITE;
+/*!40000 ALTER TABLE `INSCRIPTION` DISABLE KEYS */;
+/*!40000 ALTER TABLE `INSCRIPTION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `NIVEAU`
+--
+
+DROP TABLE IF EXISTS `NIVEAU`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `NIVEAU` (
+  `ID` bigint(20) NOT NULL,
+  `CODE` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `CYCLE_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_NIVEAU_CYCLE_ID` (`CYCLE_ID`),
+  CONSTRAINT `FK_NIVEAU_CYCLE_ID` FOREIGN KEY (`CYCLE_ID`) REFERENCES `CYCLES` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `NIVEAU`
+--
+
+LOCK TABLES `NIVEAU` WRITE;
+/*!40000 ALTER TABLE `NIVEAU` DISABLE KEYS */;
+INSERT INTO `NIVEAU` VALUES (0,'Licence 1',1,651);
+/*!40000 ALTER TABLE `NIVEAU` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `NOTE`
+--
+
+DROP TABLE IF EXISTS `NOTE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `NOTE` (
+  `ID` bigint(20) NOT NULL,
+  `sessions` int(11) DEFAULT NULL,
+  `VALEUR` double DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `ANNEEACADEMIQUE_ID` bigint(20) DEFAULT NULL,
+  `COURS_ID` bigint(20) DEFAULT NULL,
+  `ETUDIANT_ID` bigint(20) DEFAULT NULL,
+  `EVALUATION_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_NOTE_EVALUATION_ID` (`EVALUATION_ID`),
+  KEY `FK_NOTE_ETUDIANT_ID` (`ETUDIANT_ID`),
+  KEY `FK_NOTE_ANNEEACADEMIQUE_ID` (`ANNEEACADEMIQUE_ID`),
+  KEY `FK_NOTE_COURS_ID` (`COURS_ID`),
+  CONSTRAINT `FK_NOTE_ANNEEACADEMIQUE_ID` FOREIGN KEY (`ANNEEACADEMIQUE_ID`) REFERENCES `ANNEEACADEMIQUE` (`ID`),
+  CONSTRAINT `FK_NOTE_COURS_ID` FOREIGN KEY (`COURS_ID`) REFERENCES `COURS` (`ID`),
+  CONSTRAINT `FK_NOTE_ETUDIANT_ID` FOREIGN KEY (`ETUDIANT_ID`) REFERENCES `ETUDIANT` (`ID`),
+  CONSTRAINT `FK_NOTE_EVALUATION_ID` FOREIGN KEY (`EVALUATION_ID`) REFERENCES `EVALUATION` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `NOTE`
+--
+
+LOCK TABLES `NOTE` WRITE;
+/*!40000 ALTER TABLE `NOTE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `NOTE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `OPTIONS`
+--
+
+DROP TABLE IF EXISTS `OPTIONS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `OPTIONS` (
+  `ID` bigint(20) NOT NULL,
+  `CODE` varchar(255) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `DEPARTEMENT_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_OPTIONS_DEPARTEMENT_ID` (`DEPARTEMENT_ID`),
+  CONSTRAINT `FK_OPTIONS_DEPARTEMENT_ID` FOREIGN KEY (`DEPARTEMENT_ID`) REFERENCES `DEPARTEMENT` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `OPTIONS`
+--
+
+LOCK TABLES `OPTIONS` WRITE;
+/*!40000 ALTER TABLE `OPTIONS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `OPTIONS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PARCOURS`
+--
+
+DROP TABLE IF EXISTS `PARCOURS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PARCOURS` (
+  `ID` bigint(20) NOT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `NIVEAU_ID` bigint(20) DEFAULT NULL,
+  `OPTION_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_PARCOURS_OPTION_ID` (`OPTION_ID`),
+  KEY `FK_PARCOURS_NIVEAU_ID` (`NIVEAU_ID`),
+  CONSTRAINT `FK_PARCOURS_NIVEAU_ID` FOREIGN KEY (`NIVEAU_ID`) REFERENCES `NIVEAU` (`ID`),
+  CONSTRAINT `FK_PARCOURS_OPTION_ID` FOREIGN KEY (`OPTION_ID`) REFERENCES `OPTIONS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PARCOURS`
+--
+
+LOCK TABLES `PARCOURS` WRITE;
+/*!40000 ALTER TABLE `PARCOURS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PARCOURS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PARCOURS_UNITEENSEIGNEMENT`
+--
+
+DROP TABLE IF EXISTS `PARCOURS_UNITEENSEIGNEMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PARCOURS_UNITEENSEIGNEMENT` (
+  `uniteEnseignements_ID` bigint(20) NOT NULL,
+  `parcours_ID` bigint(20) NOT NULL,
+  PRIMARY KEY (`uniteEnseignements_ID`,`parcours_ID`),
+  KEY `FK_PARCOURS_UNITEENSEIGNEMENT_parcours_ID` (`parcours_ID`),
+  CONSTRAINT `FK_PARCOURS_UNITEENSEIGNEMENT_parcours_ID` FOREIGN KEY (`parcours_ID`) REFERENCES `PARCOURS` (`ID`),
+  CONSTRAINT `PARCOURS_UNITEENSEIGNEMENT_uniteEnseignements_ID` FOREIGN KEY (`uniteEnseignements_ID`) REFERENCES `UNITEENSEIGNEMENT` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PARCOURS_UNITEENSEIGNEMENT`
+--
+
+LOCK TABLES `PARCOURS_UNITEENSEIGNEMENT` WRITE;
+/*!40000 ALTER TABLE `PARCOURS_UNITEENSEIGNEMENT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PARCOURS_UNITEENSEIGNEMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PROGRAMME`
+--
+
+DROP TABLE IF EXISTS `PROGRAMME`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PROGRAMME` (
+  `ID` bigint(20) NOT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `ANNEEACADEMIQUE_ID` bigint(20) DEFAULT NULL,
+  `PARCOURS_ID` bigint(20) DEFAULT NULL,
+  `UNITEENSEIGNEMENT_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_PROGRAMME_PARCOURS_ID` (`PARCOURS_ID`),
+  KEY `FK_PROGRAMME_ANNEEACADEMIQUE_ID` (`ANNEEACADEMIQUE_ID`),
+  KEY `FK_PROGRAMME_UNITEENSEIGNEMENT_ID` (`UNITEENSEIGNEMENT_ID`),
+  CONSTRAINT `FK_PROGRAMME_ANNEEACADEMIQUE_ID` FOREIGN KEY (`ANNEEACADEMIQUE_ID`) REFERENCES `ANNEEACADEMIQUE` (`ID`),
+  CONSTRAINT `FK_PROGRAMME_PARCOURS_ID` FOREIGN KEY (`PARCOURS_ID`) REFERENCES `PARCOURS` (`ID`),
+  CONSTRAINT `FK_PROGRAMME_UNITEENSEIGNEMENT_ID` FOREIGN KEY (`UNITEENSEIGNEMENT_ID`) REFERENCES `UNITEENSEIGNEMENT` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PROGRAMME`
+--
+
+LOCK TABLES `PROGRAMME` WRITE;
+/*!40000 ALTER TABLE `PROGRAMME` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PROGRAMME` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SEMESTRE`
+--
+
+DROP TABLE IF EXISTS `SEMESTRE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SEMESTRE` (
+  `ID` bigint(20) NOT NULL,
+  `INTITULE` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  `NIVEAU_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_SEMESTRE_NIVEAU_ID` (`NIVEAU_ID`),
+  CONSTRAINT `FK_SEMESTRE_NIVEAU_ID` FOREIGN KEY (`NIVEAU_ID`) REFERENCES `NIVEAU` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SEMESTRE`
+--
+
+LOCK TABLES `SEMESTRE` WRITE;
+/*!40000 ALTER TABLE `SEMESTRE` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SEMESTRE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SEQUENCE`
+--
+
+DROP TABLE IF EXISTS `SEQUENCE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SEQUENCE` (
+  `SEQ_NAME` varchar(50) NOT NULL,
+  `SEQ_COUNT` decimal(38,0) DEFAULT NULL,
+  PRIMARY KEY (`SEQ_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SEQUENCE`
+--
+
+LOCK TABLES `SEQUENCE` WRITE;
+/*!40000 ALTER TABLE `SEQUENCE` DISABLE KEYS */;
+INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',850);
+/*!40000 ALTER TABLE `SEQUENCE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TYPECOURS`
+--
+
+DROP TABLE IF EXISTS `TYPECOURS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TYPECOURS` (
+  `ID` bigint(20) NOT NULL,
+  `NOM` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TYPECOURS`
+--
+
+LOCK TABLES `TYPECOURS` WRITE;
+/*!40000 ALTER TABLE `TYPECOURS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `TYPECOURS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UNITEENSEIGNEMENT`
+--
+
+DROP TABLE IF EXISTS `UNITEENSEIGNEMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UNITEENSEIGNEMENT` (
+  `ID` bigint(20) NOT NULL,
+  `CODE` varchar(255) DEFAULT NULL,
+  `INTITULE` varchar(255) DEFAULT NULL,
+  `VERSION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UNITEENSEIGNEMENT`
+--
+
+LOCK TABLES `UNITEENSEIGNEMENT` WRITE;
+/*!40000 ALTER TABLE `UNITEENSEIGNEMENT` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UNITEENSEIGNEMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-02-07 17:02:40

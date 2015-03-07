@@ -34,7 +34,7 @@ public class Cycle implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column (unique = true)
     private String nom;
     
     @OneToMany(mappedBy = "cycle")
