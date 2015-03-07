@@ -81,5 +81,19 @@ public class NiveauServiceImpl implements INiveauService{
             throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
+
+    @Override
+    public Niveau findByCode(String code) throws ServiceException {
+        try {
+            Niveau niveau = niveauDao.findByCode(code);
+            if(niveau == null){
+                throw  new ServiceException("La ressource demandée est introuvable");
+            }
+            return niveau;
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NiveauServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
     
 }

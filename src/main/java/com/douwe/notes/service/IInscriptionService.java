@@ -24,4 +24,6 @@ public interface IInscriptionService {
     
     public List<Inscription> getAllInscriptions() throws ServiceException;
     
+    public Inscription inscrireEtudiant(String matricule, String codeNiveau, String codeOption, Long anneeId) throws ServiceException;
+    
 }
