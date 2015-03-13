@@ -23,7 +23,7 @@
                                 <h:selectOneMenu value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 200px; margin-left: 10px;"  >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
                                 </h:selectOneMenu> 
-                                <h:outputText  value="Cliquer pour importer le fichier selectioné"  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
                                 <p:commandButton value="Cliquer ici !!!" ajax="false"  
                                                  actionListener="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px;"/>  
                             </h:panelGrid>

@@ -50,20 +50,12 @@ import org.primefaces.model.UploadedFile;
 public class Importation {
 
     private UploadedFile file;
-
-    private Inscription inscription;
+   
 
     private Etudiant etudiant;
-
-    private AnneeAcademique anneeAcademique;
+    
 
     private List<AnneeAcademique> anneeAcademiques;
-
-    private Niveau niveau;
-
-    private Option option;
-
-    private Parcours parcours;
 
     @EJB
     private IEtudiantService etudiantService;
@@ -73,25 +65,13 @@ public class Importation {
 
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-
-    @EJB
-    private INiveauService niveauService;
-
-    @EJB
-    private IParcoursService parcoursService;
-    @EJB
-    private IOptionService optionService;
-
     String idAca = new String();
 
     String nomFeuille = new String();
 
     public Importation() {
-        parcours = new Parcours();
-        niveau = new Niveau();
-        option = new Option();
         etudiant = new Etudiant();
-        inscription = new Inscription();
+
     }
 
     public UploadedFile getFile() {
@@ -102,18 +82,16 @@ public class Importation {
         this.file = file;
     }
 
-    public String saveData() throws ServiceException, ParseException, IOException, InvalidFormatException {
-        System.err.println("-------------- 1 " + file.getInputstream());
+    public String saveData() throws ServiceException, ParseException, IOException, InvalidFormatException {        
         if (file != null && nomFeuille != null && nomFeuille.trim().length() != 0) {
         Workbook workbook = WorkbookFactory.create(file.getInputstream());
-        final Sheet sheet = workbook.getSheet("Feuil1");
+        final Sheet sheet = workbook.getSheet(nomFeuille);
         int index = 1;
         Row row = sheet.getRow(index++);                        
             while (row != null) {
 
                 etudiant.setNom(row.getCell(1).getStringCellValue());
                 etudiant.setEmail(row.getCell(4).getStringCellValue());
-                //System.err.println("-------------- 2--- " + row.getCell(2).getStringCellValue());
                 etudiant.setDateDeNaissance(row.getCell(2).getDateCellValue());
                 if (row.getCell(6).getStringCellValue().trim().toLowerCase().compareTo("feminin") == 0) {
                     etudiant.setGenre(Genre.feminin);
@@ -124,34 +102,15 @@ public class Importation {
                 etudiant.setLieuDeNaissance(row.getCell(3).getStringCellValue());
                 etudiant.setMatricule(row.getCell(0).getStringCellValue());
                 etudiant.setNumeroTelephone(row.getCell(5).getNumericCellValue()+"");
-                etudiantService.saveOrUpdateEtudiant(etudiant);
-                inscription.setParcours(null);
-//                niveau = niveauService.findNiveauByCode(row.getCell(7).getStringCellValue());
-//                option = optionService.findOptionByCode(row.getCell(8).getStringCellValue());
-//                parcours = parcoursService.findParcoursByNiveauAndOption(niveau.getId(), option.getId());
-//                inscription.setParcours(parcours);
-                anneeAcademique = anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca));
-                inscription.setAnneeAcademique(anneeAcademique);
-                inscription.setEtudiant(etudiant);
-                inscriptionService.saveOrUpdateInscription(inscription);
-                parcours = new Parcours();
-                niveau = new Niveau();
-                option = new Option();
-                etudiant = new Etudiant();
-                inscription = new Inscription();
+                etudiantService.saveOrUpdateEtudiant(etudiant);                               
+                System.err.println("------------> " + row.getCell(7).getStringCellValue().toLowerCase());
+                inscriptionService.inscrireEtudiant(etudiant.getMatricule(),row.getCell(7).getStringCellValue().toLowerCase(),row.getCell(8).getStringCellValue().toUpperCase(),Long.valueOf(idAca));                
+                etudiant = new Etudiant();                
                 row = sheet.getRow(index++);
             }
 
         }
         return "importationEtudiant";
-    }
-
-    public Inscription getInscription() {
-        return inscription;
-    }
-
-    public void setInscription(Inscription inscription) {
-        this.inscription = inscription;
     }
 
     public Etudiant getEtudiant() {
@@ -162,36 +121,13 @@ public class Importation {
         this.etudiant = etudiant;
     }
 
-    public AnneeAcademique getAnneeAcademique() {
-        return anneeAcademique;
+    public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
+        anneeAcademiques = anneeAcademiqueService.getAllAnnee();
+        return anneeAcademiques;
     }
 
-    public void setAnneeAcademique(AnneeAcademique anneeAcademique) {
-        this.anneeAcademique = anneeAcademique;
-    }
-
-    public Niveau getNiveau() {
-        return niveau;
-    }
-
-    public void setNiveau(Niveau niveau) {
-        this.niveau = niveau;
-    }
-
-    public Option getOption() {
-        return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
-    }
-
-    public Parcours getParcours() {
-        return parcours;
-    }
-
-    public void setParcours(Parcours parcours) {
-        this.parcours = parcours;
+    public void setAnneeAcademiques(List<AnneeAcademique> anneeAcademiques) {
+        this.anneeAcademiques = anneeAcademiques;
     }
 
     public IEtudiantService getEtudiantService() {
@@ -210,51 +146,7 @@ public class Importation {
         this.inscriptionService = inscriptionService;
     }
 
-    public IAnneeAcademiqueService getAnneeAcademiqueService() {
-        return anneeAcademiqueService;
-    }
-
-    public void setAnneeAcademiqueService(IAnneeAcademiqueService anneeAcademiqueService) {
-        this.anneeAcademiqueService = anneeAcademiqueService;
-    }
-
-    public INiveauService getNiveauService() {
-        return niveauService;
-    }
-
-    public void setNiveauService(INiveauService niveauService) {
-        this.niveauService = niveauService;
-    }
-
-    public IParcoursService getParcoursService() {
-        return parcoursService;
-    }
-
-    public void setParcoursService(IParcoursService parcoursService) {
-        this.parcoursService = parcoursService;
-    }
-
-    public IOptionService getOptionService() {
-        return optionService;
-    }
-
-    public void setOptionService(IOptionService optionService) {
-        this.optionService = optionService;
-    }
-
-    public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
-        anneeAcademiques = anneeAcademiqueService.getAllAnnee();
-        return anneeAcademiques;
-    }
-
-    public void setAnneeAcademiques(List<AnneeAcademique> anneeAcademiques) {
-        this.anneeAcademiques = anneeAcademiques;
-    }
-
-    public String getIdAca() {
-        if (anneeAcademique != null) {
-            idAca = anneeAcademique.getId().toString();
-        }
+    public String getIdAca() {            
         return idAca;
     }
 
@@ -270,4 +162,7 @@ public class Importation {
         this.nomFeuille = nomFeuille;
     }
 
+
+
+   
 }

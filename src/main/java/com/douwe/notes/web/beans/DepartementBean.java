@@ -41,7 +41,7 @@ public class DepartementBean {
 
     public void deleteDepartement() throws ServiceException {
         if (departement != null) {  
-            
+            System.out.println(""+departement);
             message = "Suppression reussi de "+departement.getCode();            
             service.deleteDepartement(departement.getId());
             departement = new Departement();            
@@ -49,20 +49,20 @@ public class DepartementBean {
         //return "deleteDepartement";
     }
 
-    public void choix(int n) {
-        if (n == 1) {
-            departement=new Departement();
-            message="Enregistrement reussi ";
-            //return "saveDepartement";
-        }
-
-        else if (n == 2 && departement!=null &&departement.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            //return "updateDepartement";
-        }
-        //departement = new Departement();        
-        //return "departement";
-    }
+//    public void choix(int n) {
+//        if (n == 1) {
+//            departement=new Departement();
+//            message="Enregistrement reussi ";
+//            //return "saveDepartement";
+//        }
+//
+//        else if (n == 2 && departement!=null &&departement.getVersion() >= 1) {
+//            message="Mise à jour reussi ";
+//            //return "updateDepartement";
+//        }
+//        //departement = new Departement();        
+//        //return "departement";
+//    }
     public void notification(ActionEvent actionEvent) {  
         FacesContext context = FacesContext.getCurrentInstance();            
         context.addMessage(null, new FacesMessage("Succes", message));          
@@ -85,8 +85,7 @@ public class DepartementBean {
     }
 
     public List<Departement> getDepartements() throws ServiceException {        
-        departements = service.getAllDepartements();
-        departement = new Departement();
+        departements = service.getAllDepartements();        
         return departements;
     }
 

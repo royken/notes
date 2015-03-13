@@ -11,8 +11,8 @@
                 <p:panel  id="p1">
 
                     <h:form id="f" style="text-align: center;">
-                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rows="15" rowKey="#{departement.code}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
-                                     sortOrder="ascending" selection="#{departementBean.departement}" selectionMode="single" sortBy="#{departement.code}">            
+                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rows="15" rowKey="#{departement.id}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
+                                      selection="#{departementBean.departement}" selectionMode="single">
                             <f:facet name="header">
                                 LA LISTE DES DÉPARTEMENTS
                             </f:facet>                           
@@ -23,13 +23,13 @@
                                 #{departement.description}  
                             </p:column>                                                  
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Departement" type="button" onclick="PF('dlgSave').show()" action="#{departementBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="ajouter" value="Nouveau Departement" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" type="button" onclick="PF('cd').show()"   icon="ui-icon-close"/>
+                                <p:commandButton  id="delete" value="Supprimer" type="button" action="#{departementBean.deleteDepartement()}"  icon="ui-icon-close"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" type="button" onclick="PF('dlgUpdate').show()" action="#{departementBean.choix(2)}" update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                                <p:commandButton id="modifier" value="Modifier" type="button" onclick="PF('dlgUpdate').show()" update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
                     </h:form>    
