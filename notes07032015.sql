@@ -31,9 +31,9 @@ SET time_zone = "+00:00";
 -- Contenu de la table `ANNEEACADEMIQUE`
 --
 
-INSERT INTO `ANNEEACADEMIQUE` (`ID`, `DEBUT`, `FIN`, `VERSION`, `ACTIVE`, `DF`) VALUES
-(951, '2014-09-01', '2015-08-31', 1, 1, NULL),
-(952, '2013-09-02', '2014-08-29', 1, 1, NULL);
+INSERT INTO `ANNEEACADEMIQUE` (`ID`, `DEBUT`, `FIN`, `VERSION`, `ACTIVE`) VALUES
+(951, '2014-09-01', '2015-08-31', 1, 1),
+(952, '2013-09-02', '2014-08-29', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -80,9 +80,7 @@ INSERT INTO `DEPARTEMENT` (`ID`, `CODE`, `DESCRIPTION`, `VERSION`, `ACTIVE`) VAL
 (402, 'HYMAE', 'Hydraulique et Maitrise des Eaux', 1, 1),
 (451, 'SCISOD', 'Sciences Sociales pour le Developpement', 1, 1),
 (801, 'TRAMARH', 'Traitement des Matériaux Architecture et Habitat', 2, 1),
-(1001, 'AGEPD', 'AGEPD', 1, 0),
-(1051, 'Royken', 'I''m the best', 1, 1),
-(1052, 'zozo', 'zaza', 2, 0);
+(1001, 'AGEPD', 'AGEPD', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -299,7 +297,6 @@ INSERT INTO `ETUDIANT` (`ID`, `DATEDENAISSANCE`, `EMAIL`, `GENRE`, `LIEUDENAISSA
 (186, '1990-07-05', NULL, 0, 'MARO', '12X220S', 'MAMSOAL NDADJINYAM     ISRAEL', NULL, 1, 1),
 (187, '1990-06-21', NULL, 0, 'NGUELEMENDOUGA', '12X222S', 'DOUMTSOP MELI  FRANCK WALTER', NULL, 1, 1),
 (188, '1990-05-24', NULL, 0, 'MAROUA', '12X228S', 'MOHAMED ABDOURAMAN', NULL, 1, 1),
-(189, '1990-05-02', NULL, 0, 'DSCHANG', '12X234S', 'MEWA TIYO  ANTOINE', NULL, 1, 1),
 (190, '1990-05-02', NULL, 0, 'DSCHANG', '12X234S', 'MEWA TIYO  ANTOINE', NULL, 1, 1),
 (191, '1990-03-06', NULL, 0, 'YAOUNDÉ', '12X243S', 'MAMBOU NOUYADJE SOPHONIE', NULL, 1, 1),
 (192, '1990-02-19', NULL, 0, 'BAFOUSSAM', '12X245S', 'OUAFO KENGNE WILLIAMS STEVE', NULL, 1, 1),

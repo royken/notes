@@ -14,18 +14,22 @@
                     <h:form id="form">                        
                         <p:outputLabel value="Departement" for="departement" />
                         <h:selectOneMenu value="#{etudiantBean.departement}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
+                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                             <f:selectItems value="#{departementServiceImpl.allDepartements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement}" />
                         </h:selectOneMenu>
                         <p:outputLabel value="Année" for="annee" />
                         <h:selectOneMenu value="#{etudiantBean.annee}" style="margin-top:10px; height: 30px; width: 200px;"  id="annee">
+                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                             <f:selectItems value="#{anneeAcademiqueServiceImpl.allAnnee}" var="annee" itemLabel="#{annee}" itemValue="#{annee}" />
                         </h:selectOneMenu>
                         <p:outputLabel value="Niveau" for="niveau" />
                         <h:selectOneMenu value="#{etudiantBean.niveau}" style="margin-top:10px; height: 30px; width: 200px;"  id="niveau">
+                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                             <f:selectItems value="#{niveauServiceImpl.allNiveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau}" />
                         </h:selectOneMenu>
                         <p:outputLabel value="Option" for="option" />
                         <h:selectOneMenu value="#{etudiantBean.option}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
+                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                             <f:selectItems value="#{optionServiceImpl.allOptions}" var="option" itemLabel="#{option.code}" itemValue="#{option}" />
                         </h:selectOneMenu>
                         <p:commandButton type="button" action="#{etudiantBean.filtrer()}"  update=":table"  value="Filtrer"/>

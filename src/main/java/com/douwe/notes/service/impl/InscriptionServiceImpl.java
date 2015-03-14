@@ -172,19 +172,19 @@ public class InscriptionServiceImpl implements IInscriptionService {
         try {
             Etudiant etudiant = etudiantDao.findByMatricule(matricule);
             if(etudiant == null){
-                throw new ServiceException("La ressource demandée est introuvable");
+                throw new ServiceException("L'étudiant en question est introuvable");
             }
             Niveau niveau = niveauDao.findByCode(codeOption);
             if(niveau == null){
-                throw new ServiceException("La ressource demandée est introuvable");
+                throw new ServiceException("Le niveau demandé est introuvable");
             }
             Option option = optionDao.findByCode(codeOption);
             if(option == null){
-                throw new ServiceException("La ressource demandée est introuvable");
+                throw new ServiceException("L'option demandée est introuvable");
             }
             AnneeAcademique academique = academiqueDao.findById(anneeId);
             if(academique == null){
-                throw new ServiceException("La ressource demandée est introuvable");
+                throw new ServiceException("L'année académique demandée est introuvable");
             }
             Parcours parcours = parcoursDao.findByNiveauOption(niveau, option);
             if(parcours == null){

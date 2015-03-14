@@ -13,4 +13,5 @@
     <bean id="INoteService" class="cm.maroua.iss.service.impl.NoteServiceImpl"/>
     <bean id="ICycleService" class="cm.maroua.iss.service.impl.CycleServiceImpl"/>
 
+
 </beans>

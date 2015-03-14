@@ -13,6 +13,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -20,10 +23,12 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@XmlRootElement(name = "etudiant")
+@XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
 @NamedQuery(name = "Etudiant.deleteActive",query = "update Etudiant e set e.active = 0 where e.id = :idParam"),
 @NamedQuery(name = "Etudiant.findAllActive",query = "select e from Etudiant e where e.active=1"),    
-@NamedQuery(name = "Etudiant.findByMatricule",query = "SELECT e from Etudiant e WHERE e.matricule = :param")
+@NamedQuery(name = "Etudiant.findByMatricule",query = "SELECT e from Etudiant e WHERE e.matricule like :param")
 })
 public class Etudiant implements Serializable {
     
