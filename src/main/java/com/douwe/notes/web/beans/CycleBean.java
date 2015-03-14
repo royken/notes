@@ -7,11 +7,10 @@ import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped; 
-import javax.faces.application.FacesMessage;  
-import javax.faces.context.FacesContext;  
-import javax.faces.event.ActionEvent; 
-
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 @Named(value = "cycleBean")
 @RequestScoped
@@ -20,50 +19,37 @@ public class CycleBean {
     @EJB
     private ICycleService service;
     private Cycle cycle = new Cycle();
-    private List<Cycle> cycles; 
-    private String message;
+    private List<Cycle> cycles;    
 
- 
     public CycleBean() {        
-        message="";
     }
 
-
-    public void saveOrUpdateCycle() throws ServiceException {        
-        if (cycle != null) {  
-            System.out.println("save --- "+cycle);
+    public void saveOrUpdateCycle(ActionEvent actionEvent) throws ServiceException {
+        if (cycle != null && cycle.getNom() != null) {
             service.saveOrUpdateCycle(cycle);
-            cycle = new Cycle();                      
-        }        
+            FacesContext context = FacesContext.getCurrentInstance();
+            if (cycle.getId() == null) {                
+                context.addMessage(null, new FacesMessage("Operation reussie", cycle.getNom() + "a été mis à jour "));                                
+            } else {
+                context.addMessage(null, new FacesMessage("Operation reussie", cycle.getNom() + "a été enregistré"));
+            }
+
+            cycle = new Cycle();
+        }
     }
 
-    public void deleteCycle() throws ServiceException {
-        if (cycle != null) {  
-            System.out.println("delete --- "+cycle);
-            message = "Suppression reussi de "+cycle.getNom();
+    public void deleteCycle(ActionEvent actionEvent) throws ServiceException {
+        if (cycle != null) {
+            System.out.println("delete --- " + cycle);
+            String message = cycle.getNom();
             service.deleteCycle(cycle.getId());
-            cycle = new Cycle();            
-        }        
+            
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, new FacesMessage("Operation reussie", message + " a été supprimé"));
+              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Operation reussie", "a été supprimé"));
+            cycle = new Cycle();
+        }
     }
 
-//    public String choix(int n) {
-//        if (n == 1) {
-//            cycle=new Cycle();
-//            message="Enregistrement reussi ";
-//            return "saveCycle";
-//        }
-//
-//        else if (n == 2 && cycle!=null &&cycle.getVersion() >= 1) {
-//            message="Mise à jour reussi ";
-//            return "updateCycle";
-//        }
-//        cycle = new Cycle();        
-//        return "cycle";
-//    }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
-    }
     public ICycleService getService() {
         return service;
     }
@@ -72,16 +58,15 @@ public class CycleBean {
         this.service = service;
     }
 
-
     public Cycle getCycle() {
         return cycle;
     }
 
-    public void setCycle(Cycle cycle) {        
+    public void setCycle(Cycle cycle) {
         this.cycle = cycle;
     }
 
-    public List<Cycle> getCycles() throws ServiceException {        
+    public List<Cycle> getCycles() throws ServiceException {
         cycles = service.getAllCycles();
         return cycles;
     }

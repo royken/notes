@@ -8,37 +8,21 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Genre;
-import com.douwe.notes.entities.Inscription;
-import com.douwe.notes.entities.Niveau;
-import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IInscriptionService;
-import com.douwe.notes.service.INiveauService;
-import com.douwe.notes.service.IOptionService;
-import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.ServiceException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -103,8 +87,8 @@ public class Importation {
                 etudiant.setMatricule(row.getCell(0).getStringCellValue());
                 etudiant.setNumeroTelephone(row.getCell(5).getNumericCellValue()+"");
                 etudiantService.saveOrUpdateEtudiant(etudiant);                               
-                System.err.println("------------> " + row.getCell(7).getStringCellValue().toLowerCase());
-                inscriptionService.inscrireEtudiant(etudiant.getMatricule(),row.getCell(7).getStringCellValue().toLowerCase(),row.getCell(8).getStringCellValue().toUpperCase(),Long.valueOf(idAca));                
+                System.err.println("------------> " + row.getCell(7).getStringCellValue().toLowerCase());                
+                inscriptionService.inscrireEtudiant(etudiant,row.getCell(7).getStringCellValue().toLowerCase(),row.getCell(8).getStringCellValue().toUpperCase(),Long.valueOf(idAca));                
                 etudiant = new Etudiant();                
                 row = sheet.getRow(index++);
             }
