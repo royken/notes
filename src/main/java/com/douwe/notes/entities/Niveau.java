@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -16,6 +18,9 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "Niveau.findByCode",query = "SELECT n from Niveau n where n.code = :param")
+})
 public class Niveau implements Serializable {
     
     @Id
@@ -26,10 +31,11 @@ public class Niveau implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column(unique = true)
     private String code;
     
     @ManyToOne
+    @XmlTransient
     private Cycle cycle;
     
      @XmlTransient
@@ -56,10 +62,12 @@ public class Niveau implements Serializable {
         this.code = code;
     }
 
+    @JsonIgnore
     public Cycle getCycle() {
         return cycle;
     }
 
+    @JsonIgnore
     public void setCycle(Cycle cycle) {
         this.cycle = cycle;
     }
@@ -81,6 +89,13 @@ public class Niveau implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
-    }    
+    }   
+
+    @Override
+    public String toString() {
+        return "Niveau{" + "id=" + id + ", version=" + version + ", code=" + code +  ", active=" + active + '}';
+    }
+    
+    
    
 }

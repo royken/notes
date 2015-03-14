@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun Programme n'est enregistré" var="programme" value="#{programmeBean.programmes}" rowKey="#{programme.id}" paginator="true" rows="15"  paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
+                                     selection="#{programmeBean.programme}" selectionMode="single" >            
+                            <f:facet name="header">
+                                LA LISTE DES PROGRAMMES
+                            </f:facet>                                                        
+                            <p:column headerText="Parcours "  id="parcours">  
+                                #{programme.parcours.niveau.code} - #{programme.parcours.option.code}
+                            </p:column>                              
+                            <p:column headerText="Unité d'Enseignement "  id="UE">  
+                                #{programme.uniteEnseignement.code}  
+                            </p:column>                                                  
+                            <p:column headerText="Année Académique "  id="aca">  
+                                #{programme.anneeAcademique.debut.toString().substring(programme.anneeAcademique.debut.toString().length()-4)}/#{programme.anneeAcademique.fin.toString().substring(programme.anneeAcademique.fin.toString().length()-4)}
+                            </p:column>  
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau Programme" action="#{programmeBean.choix(1)}" icon="ui-icon-disk"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{programmeBean.deleteProgramme()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{programmeBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                             
+                        </p:dataTable>                                                              
+                    </h:form>                                      
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

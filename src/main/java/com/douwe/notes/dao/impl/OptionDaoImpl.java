@@ -12,8 +12,14 @@ import com.douwe.notes.entities.Option;
  */
 public class OptionDaoImpl extends GenericDao<Option, Long> implements IOptionDao{
 
+    @Override
     public Departement findDepartement(Option option) throws DataAccessException {
        return (Departement) getManager().createNamedQuery("Option.findDepartement").setParameter("idParam", option.getDepartement().getId()).getSingleResult();
+    }
+
+    @Override
+    public Option findByCode(String code) throws DataAccessException {
+        return (Option)(getManager().createNamedQuery("Option.findByCode").setParameter("param", code).getSingleResult());
     }
     
 }

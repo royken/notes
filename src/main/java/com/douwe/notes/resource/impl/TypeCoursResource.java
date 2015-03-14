@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.resource.ITypeCoursResource;
 import com.douwe.notes.service.ITypeCoursService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -28,31 +31,55 @@ public class TypeCoursResource implements ITypeCoursResource{
     }
 
     public TypeCours createTypeCours(TypeCours typeCours) {
-        return typeCoursService.saveOrUpdateTpyeCours(typeCours);
+        try {
+            return typeCoursService.saveOrUpdateTpyeCours(typeCours);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public TypeCours getTypeCours(long id) {
-        TypeCours typeCours = typeCoursService.findTypeCoursById(id);
-        if(typeCours == null){
-            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            TypeCours typeCours = typeCoursService.findTypeCoursById(id);
+            if(typeCours == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return typeCours;
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return typeCours;
     }
 
     public TypeCours updateTypeCours(long id, TypeCours typeCours) {
-        TypeCours typeCours1 = typeCoursService.findTypeCoursById(id);
-        if(typeCours1 != null){
-            typeCours1.setNom(typeCours.getNom());
-            return typeCoursService.saveOrUpdateTpyeCours(typeCours1);
+        try {
+            TypeCours typeCours1 = typeCoursService.findTypeCoursById(id);
+            if(typeCours1 != null){
+                typeCours1.setNom(typeCours.getNom());
+                return typeCoursService.saveOrUpdateTpyeCours(typeCours1);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public List<TypeCours> getAllTypeCours() {
-        return typeCoursService.getAllTypeCours();
+        try {
+            return typeCoursService.getAllTypeCours();
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public void deleteTypeCours(long id) {
-        typeCoursService.deleteTypeCours(id);
+        try {
+            typeCoursService.deleteTypeCours(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
 }

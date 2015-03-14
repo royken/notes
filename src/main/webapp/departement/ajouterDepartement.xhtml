@@ -14,16 +14,17 @@
                         <h:panelGroup >
                             <h:panelGrid id="display" columns="2">                                                                                                                      
                                 <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:inputText value="#{departementBean.departement.code}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
-                                    <f:validateLength minimum="2" maximum="20"/>  
+                                <p:inputText value="#{departementBean.departement.code}"   style="margin-left: 10px;margin-top: 10px;" >  
+                                    <f:validateLength maximum="20"/>  
                                 </p:inputText>
                                 <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                <p:inputText value="#{departementBean.departement.description}" required="true"  style="margin-left: 10px;margin-top: 10px;"/>                                                             
+                                <p:inputText value="#{departementBean.departement.description}"   style="margin-left: 10px;margin-top: 10px;"/>                                                             
                             </h:panelGrid>  
                         </h:panelGroup>
                         <p:separator/>
                         <div>
                             <p:commandButton value="Soumettre"  id="ajax" action="#{departementBean.saveOrUpdateDepartement()}" actionListener="#{departementBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/departement/departement.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
                         </div>                    
                     </p:panel>
                 </h:form>  

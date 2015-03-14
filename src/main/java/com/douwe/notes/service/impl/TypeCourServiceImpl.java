@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.ITypeCoursDao;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.service.ITypeCoursService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,43 +31,49 @@ public class TypeCourServiceImpl implements ITypeCoursService{
     
     
 
-    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) {
+    @Override
+    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException{
         try {
             if (typeCours.getId() == null) {
+                typeCours.setActive(1);
                 return typeCoursDao.create(typeCours);
             } else {
                 return typeCoursDao.update(typeCours);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteTypeCours(Long id) {
+    @Override
+    public void deleteTypeCours(Long id) throws ServiceException{
         try {
             TypeCours typeCours = typeCoursDao.findById(id);
             typeCoursDao.delete(typeCours);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public TypeCours findTypeCoursById(long id) {
+    @Override
+    public TypeCours findTypeCoursById(long id) throws ServiceException{
         try {
             return typeCoursDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<TypeCours> getAllTypeCours() {
+    @Override
+    public List<TypeCours> getAllTypeCours() throws ServiceException{
         try {
             return typeCoursDao.findAll();
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
     

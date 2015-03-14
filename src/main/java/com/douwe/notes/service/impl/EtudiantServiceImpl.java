@@ -2,8 +2,14 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IEtudiantDao;
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
+import com.douwe.notes.service.ServiceException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,45 +36,76 @@ public class EtudiantServiceImpl implements IEtudiantService{
     
     
 
-    public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) {
+
+    @Override
+    public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) throws ServiceException{
         try {
             if (etudiant.getId() == null) {
+                etudiant.setActive(1);
                 return etudiantDao.create(etudiant);
             } else {
                 return etudiantDao.update(etudiant);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteEtudiant(Long id) {
+
+    @Override
+    public void deleteEtudiant(Long id) throws ServiceException{
         try {
             Etudiant etudiant = etudiantDao.findById(id);
             if (etudiant != null) {
-                etudiantDao.delete(etudiant);
+                etudiant.setActive(0);
+                etudiantDao.update(etudiant);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Etudiant findEtudiantById(long id) {
+
+    @Override
+    public Etudiant findEtudiantById(long id) throws ServiceException{
         try {
             return etudiantDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Etudiant> getAllEtudiant() {
+
+    @Override
+    public List<Etudiant> getAllEtudiant() throws ServiceException{
         try {
-            return etudiantDao.findAll();
+            return etudiantDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+           throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public List<Etudiant> findByCritiria(Departement departement, AnneeAcademique annee, Niveau niveau, Option option) {
+        try {
+            return etudiantDao.listeEtudiantParDepartementEtNiveau(departement, annee, niveau, option);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public Etudiant findByMatricule(String matricule) throws ServiceException {
+        try {
+            return etudiantDao.findByMatricule(matricule);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
     

@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.service.IProgrammeService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +16,8 @@ import javax.inject.Inject;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
-public class ProgrammeServiceImpl implements IProgrammeService{
-    
+public class ProgrammeServiceImpl implements IProgrammeService {
+
     @Inject
     private IProgrammeDao programmeDao;
 
@@ -27,48 +28,54 @@ public class ProgrammeServiceImpl implements IProgrammeService{
     public void setProgrammeDao(IProgrammeDao programmeDao) {
         this.programmeDao = programmeDao;
     }
-    
-    
 
-    public Programme saveOrUpdateProgramme(Programme programme) {
+    @Override
+    public Programme saveOrUpdateProgramme(Programme programme) throws ServiceException{
         try {
-        if(programme.getId() == null){
-            return programmeDao.create(programme);
-        }
-        else{
-            return programmeDao.update(programme);
-        }
-        } catch (DataAccessException ex) {
-                Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+            if (programme.getId() == null) {
+                programme.setActive(1);
+                return programmeDao.create(programme);
+            } else {
+                return programmeDao.update(programme);
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
     }
 
-    public void deleteProgramme(Long id) {
+    @Override
+    public void deleteProgramme(Long id) throws ServiceException{
         try {
             Programme programme = programmeDao.findById(id);
-            programmeDao.delete(programme);
+            if(programme != null){
+                programme.setActive(0);
+                programmeDao.update(programme);
+            }
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Programme findProgrammeById(long id) {
+    @Override
+    public Programme findProgrammeById(long id) throws ServiceException{
         try {
-            return  programmeDao.findById(id);
+            return programmeDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Programme> getAllProgrammes() {
+    @Override
+    public List<Programme> getAllProgrammes() throws ServiceException{
         try {
-            return programmeDao.findAll();
+            return programmeDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
-    
+
 }

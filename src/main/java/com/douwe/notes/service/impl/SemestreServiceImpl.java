@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.service.ISemestreService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,20 +29,23 @@ public class SemestreServiceImpl implements ISemestreService{
         this.semestreDao = semestreDao;
     }
 
-    public Semestre saveOrUpdateSemestre(Semestre semestre) {
+    @Override
+    public Semestre saveOrUpdateSemestre(Semestre semestre) throws ServiceException{
         try {
             if (semestre.getId() == null) {
+                semestre.setActive(1);
                 return semestreDao.create(semestre);
             } else {
                 return semestreDao.update(semestre);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(SemestreServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteSemestre(Long id) {
+    @Override
+    public void deleteSemestre(Long id) throws ServiceException{
         try {
             Semestre semestre = semestreDao.findById(id);
             if (semestre != null) {
@@ -49,24 +53,27 @@ public class SemestreServiceImpl implements ISemestreService{
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(SemestreServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Semestre findSemestreById(long id) {
+    @Override
+    public Semestre findSemestreById(long id) throws ServiceException{
         try {
             return semestreDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(SemestreServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Semestre> getAllSemestre() {
+    @Override
+    public List<Semestre> getAllSemestre() throws ServiceException{
         try {
             return semestreDao.findAll();
         } catch (DataAccessException ex) {
             Logger.getLogger(SemestreServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 }

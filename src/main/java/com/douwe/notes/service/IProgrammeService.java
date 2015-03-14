@@ -11,12 +11,12 @@ import javax.ejb.Local;
 @Local
 public interface IProgrammeService {
     
-    public Programme saveOrUpdateProgramme(Programme programme);
+    public Programme saveOrUpdateProgramme(Programme programme) throws ServiceException;
     
-    public void deleteProgramme(Long id);
+    public void deleteProgramme(Long id) throws ServiceException;
     
-    public Programme findProgrammeById(long id);
+    public Programme findProgrammeById(long id) throws ServiceException;
     
-    public List<Programme> getAllProgrammes();
+    public List<Programme> getAllProgrammes() throws ServiceException;
     
 }

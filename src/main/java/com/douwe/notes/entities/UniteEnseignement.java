@@ -3,12 +3,15 @@ package com.douwe.notes.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -17,6 +20,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "UE.deleteActive",query = "update UniteEnseignement ue set ue.active = 0 where ue.id = :idParam"),
+@NamedQuery(name = "UE.findAllActive",query = "select ue from UniteEnseignement ue where ue.active=1")    
+
+})
 public class UniteEnseignement implements Serializable {
     
     @Id
@@ -39,6 +47,9 @@ public class UniteEnseignement implements Serializable {
     
     @ManyToMany(mappedBy = "uniteEnseignements")
     private List<Parcours> parcours;
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Cours> courses;
     
     
     
@@ -98,6 +109,16 @@ public class UniteEnseignement implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    public List<Cours> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Cours> courses) {
+        this.courses = courses;
+    }
+    
+    
 
     @Override
     public String toString() {

@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.resource.IEtudiantResource;
 import com.douwe.notes.service.IEtudiantService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -27,38 +30,82 @@ public class EtudiantResource implements IEtudiantResource{
         this.etudiantService = etudiantService;
     }
 
+    @Override
     public Etudiant createEtudiant(Etudiant etudiant) {
-        return etudiantService.saveOrUpdateEtudiant(etudiant);
+        try {
+            return etudiantService.saveOrUpdateEtudiant(etudiant);
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
+    @Override
     public List<Etudiant> getAllEtudiants() {
-        return etudiantService.getAllEtudiant();
+        try {
+            return etudiantService.getAllEtudiant();
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
+    @Override
     public Etudiant getEtudiant(long id) {
-        Etudiant etudiant = etudiantService.findEtudiantById(id);
-        if(etudiant == null){
-            throw  new  WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            Etudiant etudiant = etudiantService.findEtudiantById(id);
+            if(etudiant == null){
+                throw  new  WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return etudiant;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return  null;
         }
-        return etudiant;
     }
 
+    @Override
     public Etudiant updateEtudiant(long id, Etudiant etudiant) {
-        Etudiant etud = etudiantService.findEtudiantById(etudiant.getId());
-        if(etud != null){
-            etud.setDateDeNaissance(etudiant.getDateDeNaissance());
-            etud.setEmail(etudiant.getEmail());
-            etud.setGenre(etudiant.getGenre());
-            etud.setLieuDeNaissance(etudiant.getLieuDeNaissance());
-            etud.setMatricule(etudiant.getMatricule());
-            etud.setNom(etudiant.getNom());
-            etud.setNumeroTelephone(etudiant.getNumeroTelephone());
-            return etudiantService.saveOrUpdateEtudiant(etud);
+        try {
+            Etudiant etud = etudiantService.findEtudiantById(etudiant.getId());
+            if(etud != null){
+                etud.setDateDeNaissance(etudiant.getDateDeNaissance());
+                etud.setEmail(etudiant.getEmail());
+                etud.setGenre(etudiant.getGenre());
+                etud.setLieuDeNaissance(etudiant.getLieuDeNaissance());
+                etud.setMatricule(etudiant.getMatricule());
+                etud.setNom(etudiant.getNom());
+                etud.setNumeroTelephone(etudiant.getNumeroTelephone());
+                return etudiantService.saveOrUpdateEtudiant(etud);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
+    @Override
     public void deleteEtudiant(long id) {
+        try {
             etudiantService.deleteEtudiant(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Etudiant findByMatricule(String matricule) {
+        try {
+            Etudiant etudiant = etudiantService.findByMatricule(matricule);
+            
+            if(etudiant == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return etudiant;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 }

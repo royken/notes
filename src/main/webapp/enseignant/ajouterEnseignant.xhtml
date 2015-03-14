@@ -9,23 +9,23 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content"> 
                  <p:growl id="growl" showDetail="true" />
+                 <p:panel header="AJOUTER UN ENSEIGNANT"> 
                 <h:form id="eleveForm">
-                    <p:panel header="AJOUTER UN ENSEIGNANT">                            
+                                               
                         <h:panelGroup >
                             <h:panelGrid id="display" columns="2">                                                                                                                      
                                 <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:inputText value="#{enseignantBean.enseignant.nom}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
+                                <p:inputText value="#{enseignantBean.enseignant.nom}"   style="margin-left: 10px;margin-top: 10px;" >  
                                     <f:validateLength minimum="2" />  
                                 </p:inputText>                                
                             </h:panelGrid>  
-                        </h:panelGroup>
-                        <p:separator/>
-                        <div>
-                            <p:commandButton value="Soumettre"  id="ajax" action="#{enseignantBean.saveOrUpdateEnseignant()}" actionListener="#{enseignantBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
-                        </div>                    
-                    </p:panel>
+                        </h:panelGroup>                         
+                        <p:separator/>                         
+                        <p:commandButton type="submit" value="Soumettre"  id="ajax" action="#{enseignantBean.saveOrUpdateEnseignant()}" actionListener="#{enseignantBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/>                                                                      
+                        <p:commandButton value="Annuler"  id="annule" action="/faces/enseignant/enseignant.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
                 </h:form>  
-
+                 
+                 </p:panel>
             </ui:define>            
         </ui:composition>
     </body>

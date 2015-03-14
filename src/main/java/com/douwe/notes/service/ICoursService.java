@@ -11,11 +11,13 @@ import javax.ejb.Local;
 @Local
 public interface ICoursService {
     
-    public Cours saveOrUpdateCours(Cours cours);
+    public Cours saveOrUpdateCours(Cours cours) throws ServiceException;
     
-    public void deleteCours(Long id);
+    public void deleteCours(Long id) throws ServiceException;
     
-    public Cours findCoursById(long id);
+    public Cours findCoursById(long id) throws ServiceException;
     
-    public List<Cours> getAllCours();
+    public List<Cours> getAllCours() throws ServiceException;
+    
+    public Cours findByIntitule(String intitule) throws ServiceException;
 }

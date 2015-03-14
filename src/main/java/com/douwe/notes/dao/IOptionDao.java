@@ -12,4 +12,6 @@ import com.douwe.notes.entities.Option;
 public interface IOptionDao extends IDao<Option, Long>{
     
     public Departement findDepartement(Option option) throws DataAccessException;
+    
+    public Option findByCode(String code) throws DataAccessException;
 }

@@ -37,6 +37,10 @@ public interface ICoursResource {
 
     @DELETE
     @Path(value = "{id : \\d+}")
-    void deleteCours(@PathParam(value = "id")long id);
+    void deleteCours(@PathParam(value = "id")long id); 
     
+    @GET
+    @Path(value = "{intitule}")
+    @Produces(value = "application/json") 
+    public Cours findByIntitule(@PathParam(value = "intitule")String intitule);
 }

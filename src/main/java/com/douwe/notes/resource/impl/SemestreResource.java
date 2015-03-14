@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.resource.ISemestreResource;
 import com.douwe.notes.service.ISemestreService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -30,33 +33,58 @@ public class SemestreResource implements ISemestreResource{
     
 
     public Semestre createSemestre(Semestre semestre) {
-        return semestreService.saveOrUpdateSemestre(semestre);
+        try {
+            return semestreService.saveOrUpdateSemestre(semestre);
+        } catch (ServiceException ex) {
+            Logger.getLogger(SemestreResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public List<Semestre> getAllSemestres() {
-        return semestreService.getAllSemestre();
+        try {
+            return semestreService.getAllSemestre();
+        } catch (ServiceException ex) {
+            Logger.getLogger(SemestreResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public Semestre getSemestre(long id) {
-        Semestre semestre = semestreService.findSemestreById(id);
-        if(semestre == null){
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            Semestre semestre = semestreService.findSemestreById(id);
+            if(semestre == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return semestre;
+        } catch (ServiceException ex) {
+            Logger.getLogger(SemestreResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return semestre;
     }
 
     public Semestre updateSemestre(long id, Semestre semestre) {
-        Semestre semestre1 = semestreService.findSemestreById(id);
-        if(semestre1 != null){
-            semestre1.setIntitule(semestre.getIntitule());
-            semestre1.setNiveau(semestre1.getNiveau());
-            return semestreService.saveOrUpdateSemestre(semestre1);
+        try {
+            Semestre semestre1 = semestreService.findSemestreById(id);
+            if(semestre1 != null){
+                semestre1.setIntitule(semestre.getIntitule());
+                semestre1.setNiveau(semestre1.getNiveau());
+                return semestreService.saveOrUpdateSemestre(semestre1);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(SemestreResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public void deleteSemestre(long id) {
-        semestreService.deleteSemestre(id);
+        try {
+            semestreService.deleteSemestre(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(SemestreResource.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
     }
     
 }

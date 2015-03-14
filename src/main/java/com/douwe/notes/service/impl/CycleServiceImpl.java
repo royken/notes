@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.ICycleDao;
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.service.ICycleService;
+import com.douwe.notes.service.ServiceException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,45 +30,52 @@ public class CycleServiceImpl implements  ICycleService{
         this.cycleDao = cycleDao;
     }
     
-    public Cycle saveOrUpdateCycle(Cycle cycle) {
+    @Override
+    public Cycle saveOrUpdateCycle(Cycle cycle) throws ServiceException{
         try {
             if (cycle.getId() == null) {
+                cycle.setActive(1);
                 return cycleDao.create(cycle);
             } else {
                 return cycleDao.update(cycle);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteCycle(long id) {
+    @Override
+    public void deleteCycle(long id) throws ServiceException{
         try {
             Cycle c = cycleDao.findById(id);
             if (c != null) {
-                cycleDao.delete(c);
+                c.setActive(0);
+                cycleDao.update(c);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Cycle findCycleById(long id) {
+    @Override
+    public Cycle findCycleById(long id) throws ServiceException{
         try {
             return cycleDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Cycle> getAllCycles() {
+    @Override
+    public List<Cycle> getAllCycles() throws ServiceException{
         try {
-            return cycleDao.findAll();
+            return cycleDao.getAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(InfrastructureServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return Collections.EMPTY_LIST;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 

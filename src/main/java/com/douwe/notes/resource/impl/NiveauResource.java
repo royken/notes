@@ -4,7 +4,10 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.resource.INiveauResource;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
@@ -32,31 +35,62 @@ public class NiveauResource implements INiveauResource{
     
     
 
+    @Override
     public Niveau createNiveau(Niveau niveau) {
-        System.out.println("Le cycle "+niveau.getCycle());
-        return service.saveOrUpdateNiveau(niveau);
-    }
-
-    public List<Niveau> getAllNiveaux() {
-        return service.getAllNiveaux();
-    }
-
-    public Niveau getNiveau(long id) {
-        return service.findNiveauById(id);
-    }
-
-    public Niveau updateNiveau(long id, Niveau niveau) {
-        Niveau n = service.findNiveauById(id);
-        if(n != null){
-            n.setCode(niveau.getCode());
-            n.setCycle(niveau.getCycle());
-            return service.saveOrUpdateNiveau(n);
+        try {
+            System.out.println("Le cycle "+niveau.getCycle());
+            return service.saveOrUpdateNiveau(niveau);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
+    @Override
+    public List<Niveau> getAllNiveaux() throws ServiceException{
+        
+            //return service.getAllNiveaux();
+            List<Niveau> list = service.getAllNiveaux();
+            for (Niveau list1 : list) {
+                System.out.println(list1);
+            }
+            return list;
+        
+    }
+
+    @Override
+    public Niveau getNiveau(long id) {
+        try {
+            return service.findNiveauById(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public Niveau updateNiveau(long id, Niveau niveau) {
+        try {
+            Niveau n = service.findNiveauById(id);
+            if(n != null){
+                n.setCode(niveau.getCode());
+                n.setCycle(niveau.getCycle());
+                return service.saveOrUpdateNiveau(n);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
     public void deleteNiveau(long id) {
-        service.deleteNiveau(id);
+        try {
+            service.deleteNiveau(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public IInsfrastructureService getInsfrastructureService() {

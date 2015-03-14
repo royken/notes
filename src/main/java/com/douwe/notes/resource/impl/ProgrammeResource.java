@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.resource.IProgrammeResource;
 import com.douwe.notes.service.IProgrammeService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -30,33 +33,57 @@ public class ProgrammeResource implements IProgrammeResource{
     
 
     public Programme createProgramme(Programme programme) {
-        return service.saveOrUpdateProgramme(programme);
+        try {
+            return service.saveOrUpdateProgramme(programme);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public List<Programme> getAllProgrammes() {
-        return service.getAllProgrammes();
+        try {
+            return service.getAllProgrammes();
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public Programme getProgramme(long id) {
-        Programme programme = service.findProgrammeById(id);
-        if(programme == null){
-            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            Programme programme = service.findProgrammeById(id);
+            if(programme == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public Programme updateProgramme(long id, Programme programme) {
-        Programme programme1 = service.findProgrammeById(id);
-        if(programme1 != null){
-            programme1.setAnneeAcademique(programme.getAnneeAcademique());
-            programme1.setParcours(programme.getParcours());
-            programme1.setUniteEnseignement(programme.getUniteEnseignement());
-            return service.saveOrUpdateProgramme(programme1);
+        try {
+            Programme programme1 = service.findProgrammeById(id);
+            if(programme1 != null){
+                programme1.setAnneeAcademique(programme.getAnneeAcademique());
+                programme1.setParcours(programme.getParcours());
+                programme1.setUniteEnseignement(programme.getUniteEnseignement());
+                return service.saveOrUpdateProgramme(programme1);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public void deleteProgramme(long id) {
-        service.deleteProgramme(id);
+        try {
+            service.deleteProgramme(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -3,10 +3,30 @@
   <persistence-unit name="notes" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>jdbc/notesDatasource</jta-data-source>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+<!--    <exclude-unlisted-classes>false</exclude-unlisted-classes>-->
+<!--    <jta-data-source>jdbc/notesDatasource</jta-data-source>-->
+    <class>com.douwe.notes.entities.AnneeAcademique</class>
+    <class>com.douwe.notes.entities.Cours</class>
+    <class>com.douwe.notes.entities.Cycle</class>
+    <class>com.douwe.notes.entities.Departement</class>
+    <class>com.douwe.notes.entities.Enseignant</class>
+    <class>com.douwe.notes.entities.Enseignement</class>
+    <class>com.douwe.notes.entities.Etudiant</class>
+    <class>com.douwe.notes.entities.Evaluation</class>
+    <class>com.douwe.notes.entities.EvaluationDetails</class>
+    <class>com.douwe.notes.entities.Inscription</class>
+    <class>com.douwe.notes.entities.Niveau</class>
+    <class>com.douwe.notes.entities.Note</class>
+    <class>com.douwe.notes.entities.Option</class>
+    <class>com.douwe.notes.entities.Parcours</class>
+    <class>com.douwe.notes.entities.Programme</class>
+    <class>com.douwe.notes.entities.Semestre</class>
+    <class>com.douwe.notes.entities.TypeCours</class>
+    <class>com.douwe.notes.entities.UniteEnseignement</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-      <property name="eclipselink.logging.level" value="SEVERE"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
     </properties>
   </persistence-unit>
 </persistence>

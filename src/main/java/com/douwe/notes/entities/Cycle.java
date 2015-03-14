@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,6 +19,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity(name="cycles")
+@NamedQueries({
+@NamedQuery(name = "Cycle.deleteActive",query ="update cycles c set c.active = 0 where c.id = :idParam"),
+@NamedQuery(name = "Cycle.findAllActive",query = "select c from cycles c where c.active = 1")
+
+})
 public class Cycle implements Serializable {
     
     @Id
@@ -27,10 +34,11 @@ public class Cycle implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column (unique = true)
     private String nom;
     
     @OneToMany(mappedBy = "cycle")
+    @XmlTransient
     private List<Niveau> niveaux;
     
      @XmlTransient
@@ -57,10 +65,12 @@ public class Cycle implements Serializable {
         this.nom = nom;
     }
 
+    @JsonIgnore
     public List<Niveau> getNiveaux() {
         return niveaux;
     }
 
+    @JsonIgnore
     public void setNiveaux(List<Niveau> niveaux) {
         this.niveaux = niveaux;
     }
@@ -88,7 +98,6 @@ public class Cycle implements Serializable {
 
     @Override
     public String toString() {
-        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom + ", niveaux=" + niveaux + '}';
+        return "Cycle{" + "id=" + id + ", version=" + version + ", nom=" + nom +  '}';
     }
- 
 }

@@ -2,7 +2,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.service.IDepartementService;
-import static java.awt.SystemColor.text;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -30,7 +30,7 @@ public class DepartementBean {
     }
 
 
-    public String saveOrUpdateDepartement() {
+    public String saveOrUpdateDepartement() throws ServiceException {
         if (departement != null) {            
             service.saveOrUpdateDepartement(departement);
             departement = new Departement();                      
@@ -38,7 +38,7 @@ public class DepartementBean {
         return "saveOrUpdateDepartement";
     }
 
-    public String deleteDepartement() {
+    public String deleteDepartement() throws ServiceException {
         if (departement != null) {          
             message = "Suppression reussi de "+departement.getCode();
             service.deleteDepartement(departement.getId());
@@ -82,7 +82,7 @@ public class DepartementBean {
         this.departement = departement;
     }
 
-    public List<Departement> getDepartements() {        
+    public List<Departement> getDepartements() throws ServiceException {        
         departements = service.getAllDepartements();
         return departements;
     }

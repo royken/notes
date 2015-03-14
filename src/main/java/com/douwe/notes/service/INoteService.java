@@ -11,11 +11,11 @@ import javax.ejb.Local;
 @Local
 public interface INoteService {
     
-    public Note saveOrUpdateNote(Note note);
+    public Note saveOrUpdateNote(Note note) throws ServiceException;
     
-    public void deleteNote(Long id);
+    public void deleteNote(Long id) throws ServiceException;
     
-    public Note findNoteById(long id);
+    public Note findNoteById(long id) throws ServiceException;
     
-    public List<Note> getAllNotes();
+    public List<Note> getAllNotes() throws ServiceException;
 }

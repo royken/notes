@@ -9,6 +9,7 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.ISemestreService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -41,11 +42,11 @@ public class SemestreBean {
         semestre.setNiveau(new Niveau());
     }
 
-    public List<Semestre> findAll() {
+    public List<Semestre> findAll() throws ServiceException {
         return semestreService.getAllSemestre();
     }
 
-    public String saveOrUpdateSemestre() {
+    public String saveOrUpdateSemestre() throws ServiceException {
         if (semestre != null) { 
             semestre.setNiveau(niveauService.findNiveauById(Integer.parseInt(id)));                        
             semestreService.saveOrUpdateSemestre(semestre);
@@ -55,7 +56,7 @@ public class SemestreBean {
         return "saveOrUpdateSemestre";
     }
 
-    public String deleteSemestre() {
+    public String deleteSemestre() throws ServiceException {
         if (semestre != null && semestre.getId() > 0) {          
             message = "Suppression reussi de "+semestre.getIntitule();
             semestreService.deleteSemestre(semestre.getId());
@@ -118,7 +119,7 @@ public class SemestreBean {
 
    
 
-    public List<Semestre> getSemestres() {
+    public List<Semestre> getSemestres() throws ServiceException {
         semestres = semestreService.getAllSemestre();
         return semestres;
     }

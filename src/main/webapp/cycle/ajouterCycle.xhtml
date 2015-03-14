@@ -14,14 +14,15 @@
                         <h:panelGroup >
                             <h:panelGrid id="display" columns="2">                                                                                                                      
                                 <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:inputText value="#{cycleBean.cycle.nom}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
-                                    <f:validateLength minimum="2" maximum="20"/>  
+                                <p:inputText value="#{cycleBean.cycle.nom}"   style="margin-left: 10px;margin-top: 10px;" >  
+                                    <f:validateLength  maximum="20"/>  
                                 </p:inputText>                                
                             </h:panelGrid>  
                         </h:panelGroup>
                         <p:separator/>
                         <div>
                             <p:commandButton value="Soumettre"  id="ajax" action="#{cycleBean.saveOrUpdateCycle()}" actionListener="#{cycleBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/cycle/cycle.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
                         </div>                    
                     </p:panel>
                 </h:form>  

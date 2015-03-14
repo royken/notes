@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IEnseignantDao;
 import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.service.IEnseignantService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,45 +31,52 @@ public class EnseignantServiceImpl implements IEnseignantService{
     
     
 
-    public Enseignant saveOrUpdateEnseignant(Enseignant enseignant) {
+    @Override
+    public Enseignant saveOrUpdateEnseignant(Enseignant enseignant) throws ServiceException{
         try {
             if (enseignant.getId() == null) {
+                enseignant.setActive(1);
                 return enseignantDao.create(enseignant);
             } else {
                 return enseignantDao.update(enseignant);
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public void deleteEnseignant(Long id) {
+    @Override
+    public void deleteEnseignant(Long id) throws ServiceException{
         try {
             Enseignant enseignant = enseignantDao.findById(id);
             if(enseignant != null){
-                enseignantDao.delete(enseignant);
+                enseignant.setActive(0);
+                enseignantDao.update(enseignant);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public Enseignant findEnseignantById(long id) {
+    @Override
+    public Enseignant findEnseignantById(long id) throws ServiceException{
         try {
             return enseignantDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
 
-    public List<Enseignant> getAllEnseignants() {
+    @Override
+    public List<Enseignant> getAllEnseignants() throws ServiceException{
         try {
-            return enseignantDao.findAll();
+            return enseignantDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
     

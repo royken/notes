@@ -11,11 +11,11 @@ import javax.ejb.Local;
 @Local
 public interface ISemestreService {
     
-    public Semestre saveOrUpdateSemestre(Semestre semestre);
+    public Semestre saveOrUpdateSemestre(Semestre semestre) throws ServiceException;
     
-    public void deleteSemestre(Long id);
+    public void deleteSemestre(Long id) throws ServiceException;
     
-    public Semestre findSemestreById(long id);
+    public Semestre findSemestreById(long id) throws ServiceException;
     
-    public List<Semestre> getAllSemestre();
+    public List<Semestre> getAllSemestre() throws ServiceException;
 }

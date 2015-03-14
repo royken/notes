@@ -1,5 +1,7 @@
 package com.douwe.notes.resource;
 
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import java.util.List;
 import javax.ws.rs.DELETE;
@@ -38,5 +40,11 @@ public interface IParcoursResource {
     @DELETE
     @Path(value = "{id : \\d+}")
     void deleteParcours(@PathParam(value = "id")long id);
+    
+    
+    @GET
+    @Path("{idNiveau : \\d+}/{idOption : \\d+}")
+    @Produces(value = "application/json")
+    public Parcours findByNiveauOption(@PathParam(value = "idNiveau") long idNveau, @PathParam(value = "idOption")long idOption);
     
 }

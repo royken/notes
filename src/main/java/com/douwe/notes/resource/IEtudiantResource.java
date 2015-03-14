@@ -1,9 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Etudiant;
-import com.douwe.notes.entities.Option;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,5 +37,10 @@ public interface IEtudiantResource {
     @DELETE
     @Path(value = "{id : \\d+}")
     void deleteEtudiant(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path(value = "{matricule}")
+    @Produces(value = "application/json")
+    public Etudiant findByMatricule(@PathParam(value = "id") String matricule);
     
 }

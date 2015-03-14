@@ -3,7 +3,10 @@ package com.douwe.notes.resource.impl;
 import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.resource.IEvaluationDetailResource;
 import com.douwe.notes.service.IEvaluationDetailService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
@@ -30,34 +33,58 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
     
 
     public EvaluationDetails createEvalDetail(EvaluationDetails evaluationDetails) {
-        return detailService.saveOrUpdateEvaluationDetails(evaluationDetails);
+        try {
+            return detailService.saveOrUpdateEvaluationDetails(evaluationDetails);
+        } catch (ServiceException ex) {
+            Logger.getLogger(EvaluationDetailResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public List<EvaluationDetails> getAllEvalDetails() {
-        return detailService.getAllEvaluationDetails();
+        try {
+            return detailService.getAllEvaluationDetails();
+        } catch (ServiceException ex) {
+            Logger.getLogger(EvaluationDetailResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public EvaluationDetails getEvalDetail(long id) {
-        EvaluationDetails details = detailService.findEvaluationDetailsById(id);
-        if(details == null){
-            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        try {
+            EvaluationDetails details = detailService.findEvaluationDetailsById(id);
+            if(details == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return details;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EvaluationDetailResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return details;
     }
 
     public EvaluationDetails updateEvalDetail(long id, EvaluationDetails evaluationDetails) {
-        EvaluationDetails details = detailService.findEvaluationDetailsById(id);
-        if(details != null){
-            details.setPourcentage(evaluationDetails.getPourcentage());
-            details.setEvaluation(evaluationDetails.getEvaluation());
-            details.setTypeCours(evaluationDetails.getTypeCours());
-            return detailService.saveOrUpdateEvaluationDetails(details);
+        try {
+            EvaluationDetails details = detailService.findEvaluationDetailsById(id);
+            if(details != null){
+                details.setPourcentage(evaluationDetails.getPourcentage());
+                details.setEvaluation(evaluationDetails.getEvaluation());
+                details.setTypeCours(evaluationDetails.getTypeCours());
+                return detailService.saveOrUpdateEvaluationDetails(details);
+            }
+            return null;
+        } catch (ServiceException ex) {
+            Logger.getLogger(EvaluationDetailResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     public void deleteEvalDetail(long id) {
-        detailService.deleteEvaluationDetails(id);
+        try {
+            detailService.deleteEvaluationDetails(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(EvaluationDetailResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
