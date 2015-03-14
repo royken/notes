@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -18,6 +21,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity(name = "options")
+@XmlRootElement(name = "option")
+@XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
         @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam"),
         @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code = :param")

@@ -13,6 +13,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -20,6 +23,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@XmlRootElement(name = "unites")
+@XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
 @NamedQuery(name = "UE.deleteActive",query = "update UniteEnseignement ue set ue.active = 0 where ue.id = :idParam"),
 @NamedQuery(name = "UE.findAllActive",query = "select ue from UniteEnseignement ue where ue.active=1")    
