@@ -166,7 +166,7 @@ public class InscriptionServiceImpl implements IInscriptionService {
     public Inscription inscrireEtudiant(Etudiant etudiant, String codeNiveau, String codeOption, Long anneeId) throws ServiceException {
         try {
             
-            Niveau niveau = niveauDao.findByCode(codeOption);
+            Niveau niveau = niveauDao.findByCode(codeNiveau);
             if(niveau == null){
                 throw new ServiceException("Le niveau demandé est introuvable");
             }
