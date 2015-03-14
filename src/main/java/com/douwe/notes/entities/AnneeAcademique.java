@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class AnneeAcademique implements Serializable {
     
     @Transient
+    @XmlTransient
     private DateFormat df;
     
     @Id
