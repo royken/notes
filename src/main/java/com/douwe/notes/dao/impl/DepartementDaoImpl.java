@@ -20,6 +20,7 @@ public class DepartementDaoImpl extends GenericDao<Departement, Long> implements
       return  getManager().createNamedQuery("Departement.getAllOptions").setParameter("idParam", departement.getId()).getResultList();
     }
 
+    @Override
     public void deleteActive(Departement departement) throws DataAccessException {
         getManager().createNamedQuery("Departement.deleteActive").setParameter("idParam", departement.getId());
     }

@@ -11,8 +11,8 @@
                 <p:panel  id="p1">
 
                     <h:form id="f" style="text-align: center;">
-                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rows="15" rowKey="#{departement.code}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
-                                     sortOrder="ascending" selection="#{departementBean.departement}" selectionMode="single" sortBy="#{departement.code}">            
+                        <p:dataTable id="d"  emptyMessage="Aucun département n'est enregistré" var="departement" value="#{departementBean.departements}" rows="15" rowKey="#{departement.id}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
+                                      selection="#{departementBean.departement}" selectionMode="single">
                             <f:facet name="header">
                                 LA LISTE DES DÉPARTEMENTS
                             </f:facet>                           
@@ -23,16 +23,69 @@
                                 #{departement.description}  
                             </p:column>                                                  
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Departement" action="#{departementBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="ajouter" value="Nouveau Departement" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" action="#{departementBean.deleteDepartement()}" update=":f:d"  icon="ui-icon-close"/>
+                                <p:commandButton  id="delete" value="Supprimer" type="button" action="#{departementBean.deleteDepartement()}" update=":f:d"  icon="ui-icon-close"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="#{departementBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
+                                <p:commandButton id="modifier" value="Modifier" type="button" onclick="PF('dlgUpdate').show()" update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                             
                         </p:dataTable>                                                              
-                    </h:form>                                      
+                    </h:form>    
+                    <p:dialog widgetVar="dlgSave" header="AJOUTER UN DEPARTEMENT" hideEffect="explode" modal="true">
+                        <h:form id="formSave">
+                            <p:panel >                            
+                                <h:panelGroup >
+                                    <h:panelGrid id="panelSave" columns="2">                                                                                                                      
+                                        <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                        <p:inputText value="#{departementBean.departement.code}"   style="margin-left: 10px;margin-top: 10px;" >  
+                                            <f:validateLength maximum="20"/>  
+                                        </p:inputText>
+                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.description}"   style="margin-left: 10px;margin-top: 10px;"/>                                                             
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" action="#{departementBean.saveOrUpdateDepartement()}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="formUpdate">
+                        <p:dialog widgetVar="dlgUpdate" header="MODIFIER LE DEPARTEMENT" hideEffect="explode" modal="true">                        
+                            <p:panel >                            
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">                                                                                                                      
+                                        <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                        <p:inputText value="#{departementBean.departement.code}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
+                                            <f:validateLength minimum="2" maximum="20"/>  
+                                        </p:inputText>
+                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.description}" required="true"  style="margin-left: 10px;margin-top: 10px;"/>                                                             
+                                        <h:inputHidden value="#{departementBean.departement.id}"  />
+                                        <h:inputHidden value="#{departementBean.departement.version}"  />
+                                        <h:inputHidden value="#{departementBean.departement.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" action="#{departementBean.saveOrUpdateDepartement()}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>                        
+                        </p:dialog>
+                    </h:form> 
+                    <p:confirmDialog message="voulez-vous vraiment supprimer ce departement ?"
+                                     header="Initialisation de la suppression" severity="alert"
+                                     widgetVar="cd" hideEffect="fade" style="text-align: center; ">                           
+                        <h:form>
+                            <p:commandButton id="confirm" value="oui" action="#{departementBean.deleteDepartement()}" oncomplete="PF('cd').hide()" update=":f:d" />
+                            <p:commandButton id="decline" value="non" onclick ="PF('cd').hide();"/>                                                                
+                        </h:form>
+                    </p:confirmDialog> 
                 </p:panel> 
             </ui:define>            
         </ui:composition>

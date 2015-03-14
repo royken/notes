@@ -8,9 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -18,6 +23,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "Note.findNoteEvaluationCours",query = "SELECT n from Note n WHERE n.etudiant = :param1 and n.evaluation = :param2 and n.cours = :param3 and n.anneeAcademique = :param4")
+})
+@XmlRootElement(name = "note")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Note implements Serializable {
     
     @Id
@@ -73,34 +83,42 @@ public class Note implements Serializable {
         this.valeur = valeur;
     }
 
+    @JsonIgnore
     public Etudiant getEtudiant() {
         return etudiant;
     }
 
+    @JsonIgnore
     public void setEtudiant(Etudiant etudiant) {
         this.etudiant = etudiant;
     }
 
+    @JsonIgnore
     public Evaluation getEvaluation() {
         return evaluation;
     }
 
+    @JsonIgnore
     public void setEvaluation(Evaluation evaluation) {
         this.evaluation = evaluation;
     }
 
+    @JsonIgnore
     public Cours getCours() {
         return cours;
     }
 
+    @JsonIgnore
     public void setCours(Cours cours) {
         this.cours = cours;
     }
 
+    @JsonIgnore
     public AnneeAcademique getAnneeAcademique() {
         return anneeAcademique;
     }
 
+    @JsonIgnore
     public void setAnneeAcademique(AnneeAcademique anneeAcademique) {
         this.anneeAcademique = anneeAcademique;
     }
@@ -113,6 +131,7 @@ public class Note implements Serializable {
         this.session = session;
     }
 
+    @JsonIgnore
     public int getVersion() {
         return version;
     }

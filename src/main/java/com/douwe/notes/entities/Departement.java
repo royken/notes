@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Departement.deleteActive",query = "update Departement d set d.active = 0 where d.id = :idParam"),
     @NamedQuery(name = "Departement.findAllActive", query = "select d from Departement d where d.active = 1"),
     @NamedQuery(name = "Departement.getAllOptions", query = "select o from options o where o.departement.id = :idParam"),
-    @NamedQuery(name = "Departement.findByCode",query = "SELECT d from Departement d WHERE d.code = :param")
+    @NamedQuery(name = "Departement.findByCode",query = "SELECT d from Departement d WHERE d.code like :param")
 })
 public class Departement implements Serializable {
     

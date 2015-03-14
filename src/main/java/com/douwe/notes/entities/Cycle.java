@@ -12,12 +12,17 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
+@XmlRootElement(name = "cycle")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity(name="cycles")
 @NamedQueries({
 @NamedQuery(name = "Cycle.deleteActive",query ="update cycles c set c.active = 0 where c.id = :idParam"),

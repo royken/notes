@@ -9,6 +9,7 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.ServiceException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -107,6 +108,11 @@ public class EtudiantServiceImpl implements IEtudiantService{
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    @Override
+    public void importEtudiants(InputStream stream, AnneeAcademique academique) throws ServiceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -6,44 +6,14 @@
     <action-listener>org.primefaces.application.DialogActionListener</action-listener>
     <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
     <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
-
-    <!--   departements -->    
-    <navigation-rule>       
-        <from-view-id>/departement/ajouterDepartement.xhtml</from-view-id>        
-        <navigation-case>
-            <from-outcome>saveOrUpdateDepartement</from-outcome>
-            <to-view-id>departement/departement.xhtml</to-view-id>                       
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>               
-        <from-view-id>/departement/modifierDepartement.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>saveOrUpdateDepartement</from-outcome>
-            <to-view-id>departement/departement.xhtml</to-view-id>                       
-        </navigation-case>
-    </navigation-rule>  
-    <navigation-rule>               
-        <from-view-id>/departement/departement.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>saveDepartement</from-outcome>
-            <to-view-id>departement/ajouterDepartement.xhtml</to-view-id>                       
-        </navigation-case>
-    </navigation-rule>   
-    <navigation-rule>               
-        <from-view-id>/departement/departement.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>updateDepartement</from-outcome>
-            <to-view-id>departement/modifierDepartement.xhtml</to-view-id>                       
-        </navigation-case>
-    </navigation-rule> 
+<!--   importation -->    
     <navigation-rule>               
         <from-view-id>/*</from-view-id>
         <navigation-case>
-            <from-outcome>departement</from-outcome>
-            <to-view-id>departement/departement.xhtml</to-view-id>                       
+            <from-outcome>importationEtudiant</from-outcome>
+            <to-view-id>/faces/etudiant/Liste.xhtml</to-view-id>                       
         </navigation-case>
-    </navigation-rule>  
-    
+    </navigation-rule>    
 
     <!--    cycles -->
     <navigation-rule>       
@@ -414,4 +384,5 @@
             <to-view-id>parcours/parcours.xhtml</to-view-id>                       
         </navigation-case>
     </navigation-rule> 
+    
 </faces-config>

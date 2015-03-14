@@ -9,6 +9,7 @@ import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Cours_;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Etudiant_;
+import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Note_;
 import java.util.ArrayList;
@@ -52,5 +53,10 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao{
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
         return getManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique) throws DataAccessException {
+        return (Note)(getManager().createNamedQuery("Note.findNoteEvaluationCours").setParameter("param1", etudiant.getId()).setParameter("param2",evaluation.getId()).setParameter("param3",cours.getId()).setParameter("param4",academique.getId()).getSingleResult());
     }
 }
