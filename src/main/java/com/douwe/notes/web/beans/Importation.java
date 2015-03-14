@@ -1,44 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Etudiant;
-import com.douwe.notes.entities.Genre;
-import com.douwe.notes.entities.Inscription;
-import com.douwe.notes.entities.Niveau;
-import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IInscriptionService;
-import com.douwe.notes.service.INiveauService;
-import com.douwe.notes.service.IOptionService;
-import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.ServiceException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -65,7 +39,7 @@ public class Importation {
 
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-    String idAca = new String();
+    Long idAca;
 
     String nomFeuille = new String();
 
@@ -84,31 +58,7 @@ public class Importation {
 
     public String saveData() throws ServiceException, ParseException, IOException, InvalidFormatException {        
         if (file != null && nomFeuille != null && nomFeuille.trim().length() != 0) {
-        Workbook workbook = WorkbookFactory.create(file.getInputstream());
-        final Sheet sheet = workbook.getSheet(nomFeuille);
-        int index = 1;
-        Row row = sheet.getRow(index++);                        
-            while (row != null) {
-
-                etudiant.setNom(row.getCell(1).getStringCellValue());
-                etudiant.setEmail(row.getCell(4).getStringCellValue());
-                etudiant.setDateDeNaissance(row.getCell(2).getDateCellValue());
-                if (row.getCell(6).getStringCellValue().trim().toLowerCase().compareTo("feminin") == 0) {
-                    etudiant.setGenre(Genre.feminin);
-                }
-                if (row.getCell(6).getStringCellValue().trim().toLowerCase().compareTo("masculin") == 0) {
-                    etudiant.setGenre(Genre.masculin);
-                }
-                etudiant.setLieuDeNaissance(row.getCell(3).getStringCellValue());
-                etudiant.setMatricule(row.getCell(0).getStringCellValue());
-                etudiant.setNumeroTelephone(row.getCell(5).getNumericCellValue()+"");
-                etudiantService.saveOrUpdateEtudiant(etudiant);                               
-                System.err.println("------------> " + row.getCell(7).getStringCellValue().toLowerCase());
-                inscriptionService.inscrireEtudiant(etudiant.getMatricule(),row.getCell(7).getStringCellValue().toLowerCase(),row.getCell(8).getStringCellValue().toUpperCase(),Long.valueOf(idAca));                
-                etudiant = new Etudiant();                
-                row = sheet.getRow(index++);
-            }
-
+            etudiantService.importEtudiants(file.getInputstream(), idAca);
         }
         return "importationEtudiant";
     }
@@ -146,11 +96,11 @@ public class Importation {
         this.inscriptionService = inscriptionService;
     }
 
-    public String getIdAca() {            
+    public Long getIdAca() {            
         return idAca;
     }
 
-    public void setIdAca(String idAca) {
+    public void setIdAca(Long idAca) {
         this.idAca = idAca;
     }
 
