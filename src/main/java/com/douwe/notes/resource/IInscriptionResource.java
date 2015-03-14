@@ -19,7 +19,7 @@ public interface IInscriptionResource {
     
     @POST
     @Produces(value = "application/json") 
-    Inscription createSemestre(Inscription inscription);
+    Inscription createInscription(Inscription inscription);
 
     @GET
     @Produces(value = "application/json")

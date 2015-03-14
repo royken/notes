@@ -32,7 +32,8 @@ public class InscriptionResource implements IInscriptionResource{
     
     
 
-    public Inscription createSemestre(Inscription inscription) {
+    @Override
+    public Inscription createInscription(Inscription inscription) {
         try {
             return service.saveOrUpdateInscription(inscription);
         } catch (ServiceException ex) {
@@ -41,6 +42,7 @@ public class InscriptionResource implements IInscriptionResource{
         }
     }
 
+    @Override
     public List<Inscription> getAllInscriptions() {
         try {
             return service.getAllInscriptions();
@@ -50,6 +52,7 @@ public class InscriptionResource implements IInscriptionResource{
         }
     }
 
+    @Override
     public Inscription getInscription(long id) {
         try {
             Inscription inscription = service.findInscriptionById(id);
@@ -63,6 +66,7 @@ public class InscriptionResource implements IInscriptionResource{
         }
     }
 
+    @Override
     public Inscription updateInscription(long id, Inscription inscription) {
         try {
             Inscription inscription1 = service.findInscriptionById(id);
@@ -79,6 +83,7 @@ public class InscriptionResource implements IInscriptionResource{
         }
     }
 
+    @Override
     public void deleteInscription(long id) {
         try {
             service.deleteInscription(id);
