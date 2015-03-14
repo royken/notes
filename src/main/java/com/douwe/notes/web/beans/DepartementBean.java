@@ -22,9 +22,7 @@ public class DepartementBean {
     private List<Departement> departements; 
     private String message;
 
-    /**
-     * Creates a new instance of DepartementBean
-     */
+   
     public DepartementBean() {        
         message="";
     }

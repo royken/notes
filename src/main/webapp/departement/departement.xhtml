@@ -26,7 +26,7 @@
                                 <p:commandButton id="ajouter" value="Nouveau Departement" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" type="button" action="#{departementBean.deleteDepartement()}"  icon="ui-icon-close"/>
+                                <p:commandButton  id="delete" value="Supprimer" type="button" action="#{departementBean.deleteDepartement()}" update=":f:d"  icon="ui-icon-close"/>
                             </f:facet>                             
                             <f:facet name="footer">  
                                 <p:commandButton id="modifier" value="Modifier" type="button" onclick="PF('dlgUpdate').show()" update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
@@ -67,6 +67,7 @@
                                         <p:inputText value="#{departementBean.departement.description}" required="true"  style="margin-left: 10px;margin-top: 10px;"/>                                                             
                                         <h:inputHidden value="#{departementBean.departement.id}"  />
                                         <h:inputHidden value="#{departementBean.departement.version}"  />
+                                        <h:inputHidden value="#{departementBean.departement.active}"  />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>

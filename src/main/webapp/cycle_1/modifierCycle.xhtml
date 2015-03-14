@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                                
+                 <p:growl id="growl" showDetail="true"/>
+                <h:form id="eleveForm">
+                    <p:panel header="MODIFIER LE CYCLE">                            
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2">                                                                                                                      
+                                <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:inputText value="#{cycleBean.cycle.nom}" required="true"  style="margin-left: 10px;margin-top: 10px;" >  
+                                    <f:validateLength minimum="2" maximum="20"/>  
+                                </p:inputText>
+                                <h:inputHidden value="#{cycleBean.cycle.id}"  />
+                                <h:inputHidden value="#{cycleBean.cycle.version}"  />
+                            </h:panelGrid>  
+                        </h:panelGroup>
+                        <p:separator/>
+                        <div>
+                            <p:commandButton value="Soumettre"  id="ajax" action="#{cycleBean.saveOrUpdateCycle()}" actionListener="#{cycleBean.notification(actionEvent)}" update=":eleveForm" icon="ui-icon-check" styleClass="ui-priority-primary"/> 
+                            <p:commandButton value="Annuler"  id="annule" action="/faces/cycle/cycle.xhtml" update=":eleveForm" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                        </div>                    
+                    </p:panel>
+                </h:form>  
+
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
+
+

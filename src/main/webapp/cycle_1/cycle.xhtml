@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1">
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                        <p:dataTable id="d"  emptyMessage="Aucun cycle n'est enregistré" var="cycle" value="#{cycleBean.cycles}" rowKey="#{cycle.nom}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                      sortOrder="ascending" selection="#{cycleBean.cycle}" selectionMode="single" >            
+                            <f:facet name="header">
+                                LA LISTE DES CYCLES
+                            </f:facet>                           
+                            <p:column headerText="Nom du cycle" id="code" >  
+                                #{cycle.nom}  
+                            </p:column>                                                                                
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau Cycle" action="#{cycleBean.choix(1)}" icon="ui-icon-disk"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton  id="delete" value="Supprimer" action="#{cycleBean.deleteCycle()}" update=":f:d"  icon="ui-icon-close"/>
+                            </f:facet>                             
+                            <f:facet name="footer">  
+                                <p:commandButton id="modifier" value="Modifier" action="#{cycleBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                             
+                        </p:dataTable>                                                              
+                    </h:form>                                      
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
