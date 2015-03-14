@@ -19,6 +19,7 @@ import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Parcours_;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -102,7 +103,12 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
 
     @Override
     public Etudiant findByMatricule(String matricule) throws DataAccessException {
+        try{
         return (Etudiant)(getManager().createNamedQuery("Etudiant.findByMatricule").setParameter("param", matricule).getSingleResult());
+        }catch(NoResultException nre){
+            
+        }
+        return null;
     }
     
 }
