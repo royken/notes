@@ -13,6 +13,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -23,6 +26,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 @NamedQuery(name = "Note.findNoteEvaluationCours",query = "SELECT n from Note n WHERE n.etudiant = :param1 and n.evaluation = :param2 and n.cours = :param3 and n.anneeAcademique = :param4")
 })
+@XmlRootElement(name = "note")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Note implements Serializable {
     
     @Id
