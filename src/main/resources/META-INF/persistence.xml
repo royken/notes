@@ -5,6 +5,7 @@
     <jta-data-source>jdbc/notesDatasource</jta-data-source>
     <!--    <exclude-unlisted-classes>false</exclude-unlisted-classes>-->
     <!--    <jta-data-source>jdbc/notesDatasource</jta-data-source>-->
+
     <class>com.douwe.notes.entities.AnneeAcademique</class>
     <class>com.douwe.notes.entities.Cours</class>
     <class>com.douwe.notes.entities.Cycle</class>

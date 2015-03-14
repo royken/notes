@@ -23,45 +23,43 @@ public class CycleBean {
     private List<Cycle> cycles; 
     private String message;
 
-    /**
-     * Creates a new instance of CycleBean
-     */
+ 
     public CycleBean() {        
         message="";
     }
 
 
-    public String saveOrUpdateCycle() throws ServiceException {
-        if (cycle != null) {            
+    public void saveOrUpdateCycle() throws ServiceException {        
+        if (cycle != null) {  
+            System.out.println("save --- "+cycle);
             service.saveOrUpdateCycle(cycle);
             cycle = new Cycle();                      
-        }
-        return "saveOrUpdateCycle";
+        }        
     }
 
-    public String deleteCycle() throws ServiceException {
-        if (cycle != null) {          
+    public void deleteCycle() throws ServiceException {
+        if (cycle != null) {  
+            System.out.println("delete --- "+cycle);
             message = "Suppression reussi de "+cycle.getNom();
             service.deleteCycle(cycle.getId());
             cycle = new Cycle();            
-        }
-        return "deleteCycle";
+        }        
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            cycle=new Cycle();
-            message="Enregistrement reussi ";
-            return "saveCycle";
-        }
-
-        else if (n == 2 && cycle!=null &&cycle.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            return "updateCycle";
-        }
-        cycle = new Cycle();        
-        return "cycle";
-    }
+//    public String choix(int n) {
+//        if (n == 1) {
+//            cycle=new Cycle();
+//            message="Enregistrement reussi ";
+//            return "saveCycle";
+//        }
+//
+//        else if (n == 2 && cycle!=null &&cycle.getVersion() >= 1) {
+//            message="Mise à jour reussi ";
+//            return "updateCycle";
+//        }
+//        cycle = new Cycle();        
+//        return "cycle";
+//    }
     public void notification(ActionEvent actionEvent) {  
         FacesContext context = FacesContext.getCurrentInstance();            
         context.addMessage(null, new FacesMessage("Succes", message));          
