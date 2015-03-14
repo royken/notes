@@ -146,21 +146,16 @@ public class InscriptionServiceImpl implements IInscriptionService {
         }
     }
 
-    @Override
-    public Inscription saveEtudiant(Etudiant etudiant, AnneeAcademique academique, Parcours parcours) throws ServiceException {
+    
+    private Inscription saveEtudiant(Etudiant etudiant, AnneeAcademique academique, Parcours parcours) throws ServiceException {
         try {
-            Etudiant etudiant1 = etudiantDao.create(etudiant);
-            
-            
-            
-            
+            Etudiant etudiant1 = etudiantDao.create(etudiant);          
             Inscription inscription = new  Inscription();
             inscription.setAnneeAcademique(academique);
             inscription.setEtudiant(etudiant1);
+            inscription.setActive(1);
             inscription.setParcours(parcours);
-            return  inscriptionDao.create(inscription);
-            
-            
+            return  inscriptionDao.create(inscription);            
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");
@@ -168,12 +163,9 @@ public class InscriptionServiceImpl implements IInscriptionService {
     }
 
     @Override
-    public Inscription inscrireEtudiant(String matricule, String codeNiveau, String codeOption, Long anneeId) throws ServiceException {
+    public Inscription inscrireEtudiant(Etudiant etudiant, String codeNiveau, String codeOption, Long anneeId) throws ServiceException {
         try {
-            Etudiant etudiant = etudiantDao.findByMatricule(matricule);
-            if(etudiant == null){
-                throw new ServiceException("L'étudiant en question est introuvable");
-            }
+            
             Niveau niveau = niveauDao.findByCode(codeOption);
             if(niveau == null){
                 throw new ServiceException("Le niveau demandé est introuvable");
@@ -190,6 +182,12 @@ public class InscriptionServiceImpl implements IInscriptionService {
             if(parcours == null){
                 throw new ServiceException("La ressource demandée est introuvable");
             }
+            Etudiant etudiant1 = etudiantDao.findByMatricule(etudiant.getMatricule());
+            if(etudiant1 == null){
+               // throw new ServiceException("L'étudiant en question est introuvable");
+                return  this.saveEtudiant(etudiant1, academique, parcours);
+            }
+              
             Inscription inscription = new Inscription();
             inscription.setEtudiant(etudiant);
             inscription.setParcours(parcours);
