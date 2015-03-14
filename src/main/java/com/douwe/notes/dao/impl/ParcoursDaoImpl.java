@@ -6,7 +6,12 @@ import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
+import com.douwe.notes.entities.Parcours_;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -14,6 +19,7 @@ import java.util.List;
  */
 public class ParcoursDaoImpl extends GenericDao<Parcours, Long> implements IParcoursDao{
 
+    @Override
     public void deleteActive(Parcours parcours) throws DataAccessException {
         getManager().createNamedQuery("Parcours.deleteActive").setParameter("idParam", parcours.getId());
     }
@@ -25,7 +31,15 @@ public class ParcoursDaoImpl extends GenericDao<Parcours, Long> implements IParc
 
     @Override
     public Parcours findByNiveauOption(Niveau niveau, Option option) throws DataAccessException {
-        return (Parcours)(getManager().createNamedQuery("Parcours.findByNiveauOption").setParameter("param1", niveau.getId()).setParameter("param2", option.getId()).getSingleResult());
+        System.out.println("Le niveau "+ niveau);
+        System.out.println("L'option "+option);
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Parcours> cq = cb.createQuery(Parcours.class);
+        Root<Parcours> noteRoot = cq.from(Parcours.class);
+        Path<Niveau> niveauPath = noteRoot.get(Parcours_.niveau);   
+        Path<Option> optionPath = noteRoot.get(Parcours_.option);
+        cq.where(cb.and(cb.equal(niveauPath, niveau),cb.equal(optionPath, option),cb.equal(noteRoot.get(Parcours_.active), 1)));
+        return getManager().createQuery(cq).getSingleResult();
     }
     
 }

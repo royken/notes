@@ -28,6 +28,6 @@ public interface IEtudiantService {
     
     public Etudiant findByMatricule(String matricule) throws ServiceException;
     
-    public void importEtudiants(InputStream stream, AnneeAcademique academique) throws ServiceException;
+    public void importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException;
     
 }
