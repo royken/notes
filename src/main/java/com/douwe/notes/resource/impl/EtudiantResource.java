@@ -4,6 +4,7 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.resource.IEtudiantResource;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.ServiceException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,5 +108,10 @@ public class EtudiantResource implements IEtudiantResource{
             Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public void importEtudiant(InputStream stream, Long idAnne) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
