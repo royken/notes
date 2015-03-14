@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @NamedQueries({
-@NamedQuery(name = "Niveau.findByCode",query = "SELECT n from Niveau n where n.code = :param")
+@NamedQuery(name = "Niveau.findByCode",query = "SELECT n from Niveau n where n.code like :param")
 })
 public class Niveau implements Serializable {
     

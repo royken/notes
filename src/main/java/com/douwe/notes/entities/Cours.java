@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @NamedQuery(name = "Cours.deleteActive",query = "update Cours c set c.active = 0 where c.id = :idParam"),
 @NamedQuery(name = "Cours.findAllActive",query = "select c from Cours c WHERE c.active=1"),
-@NamedQuery(name = "Cours.findByIntitule",query = "SELECT c FROM Cours c WHERE c.intitule = :param")        
+@NamedQuery(name = "Cours.findByIntitule",query = "SELECT c FROM Cours c WHERE c.intitule like :param")        
 })
 public class Cours implements Serializable {
     
@@ -51,7 +51,7 @@ public class Cours implements Serializable {
     @ManyToMany(mappedBy = "courses")
     private List<UniteEnseignement> uniteEnseignements;
     
-     @XmlTransient
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
     

@@ -8,6 +8,8 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.Cycle;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.service.IInsfrastructureService;
+import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -28,11 +30,23 @@ public class NiveauBean {
 
     @EJB
     private IInsfrastructureService service;
+    @EJB
+    private INiveauService niveauService;
     private Niveau niveau = new Niveau();
     private List<Niveau> niveaux;
     private List<Cycle> cycles;
     private String message;
     String id;
+
+    public INiveauService getNiveauService() {
+        return niveauService;
+    }
+
+    public void setNiveauService(INiveauService niveauService) {
+        this.niveauService = niveauService;
+    }
+    
+    
 
     public NiveauBean() {
         niveau.setCycle(new Cycle());
@@ -42,7 +56,7 @@ public class NiveauBean {
         return service.getAllNiveaux();
     }
 
-    public String saveOrUpdateNiveau() {
+    public String saveOrUpdateNiveau() throws ServiceException {
         if (niveau != null) {            
             niveau.setCycle(service.findCycleById(Integer.parseInt(id)));                       
             service.saveOrUpdateNiveau(niveau);

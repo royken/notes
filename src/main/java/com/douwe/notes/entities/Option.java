@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity(name = "options")
 @NamedQueries({
         @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam"),
-        @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code = :param")
+        @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code like :param")
 })
 public class Option implements Serializable {
 
