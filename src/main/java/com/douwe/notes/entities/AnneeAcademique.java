@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -26,6 +28,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement(name = "annee")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NamedQueries({
+@NamedQuery(name = "Annee.findAllActive",query = "SELECT a from AnneeAcademique a WHERE a.active = 1"),
+@NamedQuery(name = "Annee.findByString",query = " SELECT a from AnneeAcademique a WHERE a.dateString = :param")
+
+})
 public class AnneeAcademique implements Serializable {
     
     @Transient
@@ -47,6 +54,9 @@ public class AnneeAcademique implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fin;
     
+    @Column(unique = true)
+    private String dateString;
+    
      @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
@@ -54,6 +64,7 @@ public class AnneeAcademique implements Serializable {
     
     public AnneeAcademique(){
         df = new SimpleDateFormat("yyyy");
+        dateString = "";
     }
 
     public Long getId() {
@@ -99,6 +110,16 @@ public class AnneeAcademique implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+    
+    
 
     @Override
     public String toString() {

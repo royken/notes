@@ -1,0 +1,16 @@
+/* AUTOMATICALLY GENERATED ON Sat Mar 14 11:23:11 WAT 2015*/
+/* DO NOT EDIT */
+
+grant {
+  permission javax.security.jacc.WebResourcePermission "/";
+  permission javax.security.jacc.WebUserDataPermission "/";
+};
+
+grant      principal * * {
+  permission javax.security.jacc.WebRoleRefPermission "Faces Servlet", "**";
+  permission javax.security.jacc.WebRoleRefPermission "jsp", "**";
+  permission javax.security.jacc.WebRoleRefPermission "", "**";
+  permission javax.security.jacc.WebRoleRefPermission "org.netbeans.rest.application.config.ApplicationConfig", "**";
+  permission javax.security.jacc.WebRoleRefPermission "default", "**";
+};
+

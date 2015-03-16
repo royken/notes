@@ -1,0 +1,1 @@
+PrimeFaces.widget.DataList=PrimeFaces.widget.BaseWidget.extend({init:function(a){this._super(a);this.jq.listview();this.items=this.jq.children("li");this.bindEvents()},bindEvents:function(){if(this.cfg.behaviors){var a=this;$.each(this.cfg.behaviors,function(b,c){a.items.on(b,function(){var d={params:[{name:a.id+"_item",value:$(this).index()}]};c.call(a,d)})})}}});

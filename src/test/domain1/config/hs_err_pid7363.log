@@ -1,0 +1,1143 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGBUS (0x7) at pc=0xb67df843, pid=7363, tid=2243832640
+#
+# JRE version: 7.0_25-b15
+# Java VM: Java HotSpot(TM) Client VM (23.25-b01 mixed mode linux-x86 )
+# Problematic frame:
+# C  [libzip.so+0x4843]  newEntry+0x73
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x85a02c00):  JavaThread "deployment-jar-scanner" daemon [_thread_in_native, id=7441, stack(0x85b92000,0x85be3000)]
+
+siginfo:si_signo=SIGBUS: si_errno=0, si_code=2 (BUS_ADRERR), si_addr=0x8610d6e2
+
+Registers:
+EAX=0x0a074780, EBX=0xb67f21f0, ECX=0x8610d6c5, EDX=0x8610d6c5
+ESP=0x85be18d0, EBP=0x85be1968, ESI=0x0a074780, EDI=0x8610b000
+EIP=0xb67df843, EFLAGS=0x00010286, CR2=0x8610d6e2
+
+Top of Stack: (sp=0x85be18d0)
+0x85be18d0:   00000034 89049ae4 85be1ad8 b4b188e8
+0x85be18e0:   00000008 88cb86d8 88cb85c0 002ff57c
+0x85be18f0:   00000008 17cac884 890948c8 88cb8660
+0x85be1900:   89094e00 890948a8 00000000 b6fcf26e
+0x85be1910:   00000000 890948a8 8904ace0 0a074780
+0x85be1920:   85a0d5e0 89049b30 85be1ad8 b716d988
+0x85be1930:   000005d0 85a02c00 0a074780 8610d6c5
+0x85be1940:   85a0d6c0 00000001 88cb9768 b6f11f3c 
+
+Instructions: (pc=0xb67df843)
+0xb67df823:   00 0f 84 2e 03 00 00 8b 76 04 8b 4a 1c 8b 7a 10
+0xb67df833:   29 ce 01 fe 89 75 d4 8b 55 d4 8b 4d d4 8b 75 b4
+0xb67df843:   0f b6 52 1d 0f b6 41 1c c1 e2 08 09 c2 89 55 c8
+0xb67df853:   0f b6 41 1e 88 45 bc 0f b6 51 1f 8b 45 d4 88 55 
+
+Register to memory mapping:
+
+EAX=0x0a074780 is an unknown value
+EBX=0xb67f21f0: <offset 0x171f0> in /home/royken/jdk1.7.0_25/jre/lib/i386/libzip.so at 0xb67db000
+ECX=0x8610d6c5 is an unknown value
+EDX=0x8610d6c5 is an unknown value
+ESP=0x85be18d0 is pointing into the stack for thread: 0x85a02c00
+EBP=0x85be1968 is pointing into the stack for thread: 0x85a02c00
+ESI=0x0a074780 is an unknown value
+EDI=0x8610b000 is an unknown value
+
+
+Stack: [0x85b92000,0x85be3000],  sp=0x85be18d0,  free space=318k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libzip.so+0x4843]  newEntry+0x73
+C  [libzip.so+0x4f77]  ZIP_GetNextEntry+0x57
+C  [libzip.so+0x3954]  Java_java_util_zip_ZipFile_getNextEntry+0x24
+J  java.util.zip.ZipFile.getNextEntry(JI)J
+J  java.util.zip.ZipFile$1.nextElement()Ljava/util/zip/ZipEntry;
+j  java.util.jar.JarFile$1.nextElement()Ljava/lang/Object;+1
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$ArchiveJarEntrySource.getNextJarEntry()Ljava/util/jar/JarEntry;+16
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.getNextJarEntry()Ljava/util/jar/JarEntry;+4
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$NonDirectoryEntryEnumeration.skipToNextMatchingEntry()Ljava/util/jar/JarEntry;+1
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.nextElement()Ljava/lang/String;+25
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.nextElement()Ljava/lang/Object;+1
+j  com.sun.enterprise.v3.server.ReadableArchiveScannerAdapter.onSelectedEntries(Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter$Selector;Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter$EntryTask;Ljava/util/logging/Logger;)V+23
+j  org.glassfish.hk2.classmodel.reflect.Parser.doJob(Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter;Ljava/lang/Runnable;)V+144
+j  org.glassfish.hk2.classmodel.reflect.Parser.access$300(Lorg/glassfish/hk2/classmodel/reflect/Parser;Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter;Ljava/lang/Runnable;)V+3
+j  org.glassfish.hk2.classmodel.reflect.Parser$3.call()Lorg/glassfish/hk2/classmodel/reflect/Parser$Result;+144
+j  org.glassfish.hk2.classmodel.reflect.Parser$3.call()Ljava/lang/Object;+1
+j  java.util.concurrent.FutureTask$Sync.innerRun()V+29
+j  java.util.concurrent.FutureTask.run()V+4
+j  java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V+95
+j  java.util.concurrent.ThreadPoolExecutor$Worker.run()V+5
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x27d3d5]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x315
+V  [libjvm.so+0x3a3899]  os::os_exception_wrapper(void (*)(JavaValue*, methodHandle*, JavaCallArguments*, Thread*), JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x19
+V  [libjvm.so+0x27c0cf]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x2f
+V  [libjvm.so+0x27c2da]  JavaCalls::call_virtual(JavaValue*, KlassHandle, Symbol*, Symbol*, JavaCallArguments*, Thread*)+0xfa
+V  [libjvm.so+0x27c3fb]  JavaCalls::call_virtual(JavaValue*, Handle, KlassHandle, Symbol*, Symbol*, Thread*)+0x4b
+V  [libjvm.so+0x2c8149]  thread_entry(JavaThread*, Thread*)+0xd9
+V  [libjvm.so+0x4617d4]  JavaThread::thread_main_inner()+0xf4
+V  [libjvm.so+0x461961]  JavaThread::run()+0x161
+V  [libjvm.so+0x3aa4b1]  java_start(Thread*)+0x111
+C  [libpthread.so.0+0x6f70]  start_thread+0xd0
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J  java.util.zip.ZipFile.getNextEntry(JI)J
+J  java.util.zip.ZipFile$1.nextElement()Ljava/util/zip/ZipEntry;
+J  java.util.zip.ZipFile$1.nextElement()Ljava/lang/Object;
+j  java.util.jar.JarFile$1.nextElement()Ljava/util/jar/JarFile$JarFileEntry;+4
+j  java.util.jar.JarFile$1.nextElement()Ljava/lang/Object;+1
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$ArchiveJarEntrySource.getNextJarEntry()Ljava/util/jar/JarEntry;+16
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.getNextJarEntry()Ljava/util/jar/JarEntry;+4
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$NonDirectoryEntryEnumeration.skipToNextMatchingEntry()Ljava/util/jar/JarEntry;+1
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.nextElement()Ljava/lang/String;+25
+j  com.sun.enterprise.deployment.deploy.shared.InputJarArchive$EntryEnumeration.nextElement()Ljava/lang/Object;+1
+j  com.sun.enterprise.v3.server.ReadableArchiveScannerAdapter.onSelectedEntries(Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter$Selector;Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter$EntryTask;Ljava/util/logging/Logger;)V+23
+j  org.glassfish.hk2.classmodel.reflect.Parser.doJob(Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter;Ljava/lang/Runnable;)V+144
+j  org.glassfish.hk2.classmodel.reflect.Parser.access$300(Lorg/glassfish/hk2/classmodel/reflect/Parser;Lorg/glassfish/hk2/classmodel/reflect/ArchiveAdapter;Ljava/lang/Runnable;)V+3
+j  org.glassfish.hk2.classmodel.reflect.Parser$3.call()Lorg/glassfish/hk2/classmodel/reflect/Parser$Result;+144
+j  org.glassfish.hk2.classmodel.reflect.Parser$3.call()Ljava/lang/Object;+1
+j  java.util.concurrent.FutureTask$Sync.innerRun()V+29
+j  java.util.concurrent.FutureTask.run()V+4
+j  java.util.concurrent.ThreadPoolExecutor.runWorker(Ljava/util/concurrent/ThreadPoolExecutor$Worker;)V+95
+j  java.util.concurrent.ThreadPoolExecutor$Worker.run()V+5
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x85a2e800 JavaThread "iiop-service-kernel(1) SelectorRunner" daemon [_thread_in_native, id=7444, stack(0x8593a000,0x8598b000)]
+  0x85a11c00 JavaThread "deployment-jar-scanner" daemon [_thread_in_native, id=7443, stack(0x859af000,0x85a00000)]
+  0x85a07800 JavaThread "deployment-jar-scanner" daemon [_thread_in_native, id=7442, stack(0x85b41000,0x85b92000)]
+=>0x85a02c00 JavaThread "deployment-jar-scanner" daemon [_thread_in_native, id=7441, stack(0x85b92000,0x85be3000)]
+  0x86061800 JavaThread "deployment-jar-scanner" daemon [_thread_in_native, id=7440, stack(0x85be3000,0x85c34000)]
+  0x86044800 JavaThread "admin-listener-kernel(1) SelectorRunner" daemon [_thread_in_native, id=7439, stack(0x85c34000,0x85c85000)]
+  0x86045000 JavaThread "admin-listener-expirer(1)" daemon [_thread_blocked, id=7438, stack(0x85c85000,0x85cd6000)]
+  0x86042800 JavaThread "admin-listener(5)" daemon [_thread_blocked, id=7437, stack(0x85cd6000,0x85d27000)]
+  0x86041400 JavaThread "admin-listener(4)" daemon [_thread_blocked, id=7436, stack(0x85d27000,0x85d78000)]
+  0x8603fc00 JavaThread "admin-listener(3)" daemon [_thread_blocked, id=7435, stack(0x85d78000,0x85dc9000)]
+  0x8603e800 JavaThread "admin-listener(2)" daemon [_thread_blocked, id=7434, stack(0x85dc9000,0x85e1a000)]
+  0x86030800 JavaThread "admin-listener(1)" daemon [_thread_blocked, id=7433, stack(0x85e1a000,0x85e6b000)]
+  0x86018000 JavaThread "http-listener-2-kernel(1) SelectorRunner" daemon [_thread_in_native, id=7432, stack(0x85e6b000,0x85ebc000)]
+  0x86016400 JavaThread "http-listener-2-expirer(1)" daemon [_thread_blocked, id=7431, stack(0x85ebc000,0x85f0d000)]
+  0x86014800 JavaThread "http-listener-2(5)" daemon [_thread_blocked, id=7430, stack(0x85f0d000,0x85f5e000)]
+  0x86012c00 JavaThread "http-listener-2(4)" daemon [_thread_blocked, id=7429, stack(0x85f5e000,0x85faf000)]
+  0x86011400 JavaThread "http-listener-2(3)" daemon [_thread_blocked, id=7428, stack(0x85faf000,0x86000000)]
+  0x8600b400 JavaThread "http-listener-2(2)" daemon [_thread_blocked, id=7427, stack(0x86134000,0x86185000)]
+  0x86009400 JavaThread "http-listener-2(1)" daemon [_thread_blocked, id=7426, stack(0x86185000,0x861d6000)]
+  0x865e1c00 JavaThread "http-listener-1-kernel(1) SelectorRunner" daemon [_thread_in_native, id=7424, stack(0x861d6000,0x86227000)]
+  0x865bac00 JavaThread "http-listener-1-expirer(1)" daemon [_thread_blocked, id=7423, stack(0x86227000,0x86278000)]
+  0x865a9000 JavaThread "http-listener-1(5)" daemon [_thread_blocked, id=7422, stack(0x86278000,0x862c9000)]
+  0x865a5800 JavaThread "http-listener-1(4)" daemon [_thread_blocked, id=7421, stack(0x862c9000,0x8631a000)]
+  0x865a3800 JavaThread "http-listener-1(3)" daemon [_thread_blocked, id=7420, stack(0x8631a000,0x8636b000)]
+  0x86599c00 JavaThread "http-listener-1(2)" daemon [_thread_blocked, id=7419, stack(0x8636b000,0x863bc000)]
+  0x86598000 JavaThread "http-listener-1(1)" daemon [_thread_blocked, id=7418, stack(0x863bc000,0x8640d000)]
+  0x0a12e000 JavaThread "Thread-12" daemon [_thread_blocked, id=7417, stack(0x8640d000,0x8645e000)]
+  0x86538800 JavaThread "transaction-manager" daemon [_thread_blocked, id=7416, stack(0x8645e000,0x864af000)]
+  0x86513000 JavaThread "Grizzly-HttpSession-Expirer" daemon [_thread_blocked, id=7415, stack(0x864af000,0x86500000)]
+  0x0a0c2000 JavaThread "RunLevelControllerThread-1423844444001" daemon [_thread_blocked, id=7392, stack(0x8660d000,0x8665e000)]
+  0x86a9f800 JavaThread "Thread-9" daemon [_thread_blocked, id=7391, stack(0x8665e000,0x866af000)]
+  0x86a9e400 JavaThread "Thread-8" daemon [_thread_blocked, id=7390, stack(0x866af000,0x86700000)]
+  0x86a9c800 JavaThread "Thread-7" daemon [_thread_blocked, id=7389, stack(0x86700000,0x86751000)]
+  0x86a25400 JavaThread "pool-1-thread-1" daemon [_thread_blocked, id=7388, stack(0x867bc000,0x8680d000)]
+  0x88129400 JavaThread "RunLevelControllerThread-1423844443551" daemon [_thread_blocked, id=7387, stack(0x8680d000,0x8685e000)]
+  0x88128000 JavaThread "RunLevelControllerThread-1423844443551" daemon [_thread_blocked, id=7386, stack(0x8685e000,0x868af000)]
+  0x88126800 JavaThread "RunLevelControllerThread-1423844443542" daemon [_thread_blocked, id=7385, stack(0x868af000,0x86900000)]
+  0x86a0d000 JavaThread "RunLevelControllerThread-1423844443538" daemon [_thread_blocked, id=7384, stack(0x86e30000,0x86e81000)]
+  0x869e9800 JavaThread "Timer-0" daemon [_thread_blocked, id=7383, stack(0x86e81000,0x86ed2000)]
+  0x87677000 JavaThread "FelixStartLevel" daemon [_thread_blocked, id=7379, stack(0x87772000,0x877c3000)]
+  0x87c0f400 JavaThread "FelixDispatchQueue" daemon [_thread_blocked, id=7378, stack(0x87721000,0x87772000)]
+  0x87d3c000 JavaThread "Service Thread" daemon [_thread_blocked, id=7375, stack(0x878af000,0x87900000)]
+  0x87d3a400 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=7374, stack(0x87b2e000,0x87baf000)]
+  0x87d38800 JavaThread "JDWP Event Helper Thread" daemon [_thread_blocked, id=7373, stack(0x87baf000,0x87c00000)]
+  0x87d36000 JavaThread "JDWP Transport Listener: dt_socket" daemon [_thread_in_native, id=7372, stack(0x88009000,0x8805a000)]
+  0xb6ac4c00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=7371, stack(0x8805e000,0x880af000)]
+  0xb6a89c00 JavaThread "Finalizer" daemon [_thread_blocked, id=7370, stack(0x880af000,0x88100000)]
+  0xb6a88000 JavaThread "Reference Handler" daemon [_thread_blocked, id=7369, stack(0x88209000,0x8825a000)]
+  0xb6a0a000 JavaThread "main" [_thread_blocked, id=7365, stack(0xb6bb7000,0xb6c08000)]
+
+Other Threads:
+  0xb6a82400 VMThread [stack: 0x8825a000,0x882db000] [id=7368]
+  0x87d46800 WatcherThread [stack: 0x8782e000,0x878af000] [id=7376]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 21824K, used 21494K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,  98% used [0x88750000, 0x899fd9b0, 0x89a50000)
+  from space 2368K,  99% used [0x89ca0000, 0x89eefff8, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 34594K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  71% used [0x931f0000, 0x953b8a80, 0x953b8c00, 0x9612b000)
+ compacting perm gen  total 14592K, used 14353K [0xa8750000, 0xa9590000, 0xb4750000)
+   the space 14592K,  98% used [0xa8750000, 0xa95546a0, 0xa9554800, 0xa9590000)
+No shared spaces configured.
+
+Card table byte_map: [0x885ef000,0x88750000] byte_map_base: 0x881ab580
+
+Polling page: 0xb778b000
+
+Code Cache  [0xb47db000, 0xb4b63000, 0xb67db000)
+ total_blobs=1744 nmethods=1581 adapters=105 free_code_cache=29168Kb largest_free_block=29863616
+
+Compilation events (10 events):
+Event: 3,842 Thread 0x87d3a400 1516             org.glassfish.hk2.external.org.objectweb.asm.Type::getType (9 bytes)
+Event: 3,843 Thread 0x87d3a400 nmethod 1516 0xb4b2ba48 code [0xb4b2bb60, 0xb4b2bcd8]
+Event: 3,843 Thread 0x87d3a400 1517             java.util.concurrent.ConcurrentHashMap::containsKey (137 bytes)
+Event: 3,844 Thread 0x87d3a400 nmethod 1517 0xb4b2be08 code [0xb4b2bf30, 0xb4b2c138]
+Event: 3,864 Thread 0x87d3a400 1518             org.glassfish.hk2.classmodel.reflect.impl.TypeProxy::get (5 bytes)
+Event: 3,864 Thread 0x87d3a400 nmethod 1518 0xb4b2c308 code [0xb4b2c400, 0xb4b2c480]
+Event: 3,864 Thread 0x87d3a400 1519             org.glassfish.hk2.classmodel.reflect.impl.TypesImpl::getHolder (9 bytes)
+Event: 3,864 Thread 0x87d3a400 nmethod 1519 0xb4b2c4c8 code [0xb4b2c5d0, 0xb4b2c67c]
+Event: 3,865 Thread 0x87d3a400 1520             org.glassfish.hk2.classmodel.reflect.impl.ModelClassVisitor::visitField (184 bytes)
+Event: 3,866 Thread 0x87d3a400 nmethod 1520 0xb4b2c708 code [0xb4b2c930, 0xb4b2d058]
+
+GC Heap History (10 events):
+Event: 3,230 GC heap before
+{Heap before GC invocations=28 (full 3):
+ def new generation   total 21824K, used 19456K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K, 100% used [0x88750000, 0x89a50000, 0x89a50000)
+  from space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+  to   space 2368K,   0% used [0x89ca0000, 0x89ca0000, 0x89ef0000)
+ tenured generation   total 48364K, used 29016K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  59% used [0x931f0000, 0x94e460a0, 0x94e46200, 0x9612b000)
+ compacting perm gen  total 12288K, used 11143K [0xa8750000, 0xa9350000, 0xb4750000)
+   the space 12288K,  90% used [0xa8750000, 0xa9231fe8, 0xa9232000, 0xa9350000)
+No shared spaces configured.
+Event: 3,240 GC heap after
+Heap after GC invocations=29 (full 3):
+ def new generation   total 21824K, used 2368K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,   0% used [0x88750000, 0x88750000, 0x89a50000)
+  from space 2368K, 100% used [0x89ca0000, 0x89ef0000, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 29343K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  60% used [0x931f0000, 0x94e97fe0, 0x94e98000, 0x9612b000)
+ compacting perm gen  total 12288K, used 11143K [0xa8750000, 0xa9350000, 0xb4750000)
+   the space 12288K,  90% used [0xa8750000, 0xa9231fe8, 0xa9232000, 0xa9350000)
+No shared spaces configured.
+}
+Event: 3,400 GC heap before
+{Heap before GC invocations=29 (full 3):
+ def new generation   total 21824K, used 21824K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K, 100% used [0x88750000, 0x89a50000, 0x89a50000)
+  from space 2368K, 100% used [0x89ca0000, 0x89ef0000, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 29343K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  60% used [0x931f0000, 0x94e97fe0, 0x94e98000, 0x9612b000)
+ compacting perm gen  total 12800K, used 12686K [0xa8750000, 0xa93d0000, 0xb4750000)
+   the space 12800K,  99% used [0xa8750000, 0xa93b3940, 0xa93b3a00, 0xa93d0000)
+No shared spaces configured.
+Event: 3,410 GC heap after
+Heap after GC invocations=30 (full 3):
+ def new generation   total 21824K, used 2368K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,   0% used [0x88750000, 0x88750000, 0x89a50000)
+  from space 2368K, 100% used [0x89a50000, 0x89ca0000, 0x89ca0000)
+  to   space 2368K,   0% used [0x89ca0000, 0x89ca0000, 0x89ef0000)
+ tenured generation   total 48364K, used 30329K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  62% used [0x931f0000, 0x94f8e508, 0x94f8e600, 0x9612b000)
+ compacting perm gen  total 12800K, used 12686K [0xa8750000, 0xa93d0000, 0xb4750000)
+   the space 12800K,  99% used [0xa8750000, 0xa93b3940, 0xa93b3a00, 0xa93d0000)
+No shared spaces configured.
+}
+Event: 3,619 GC heap before
+{Heap before GC invocations=30 (full 3):
+ def new generation   total 21824K, used 21824K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K, 100% used [0x88750000, 0x89a50000, 0x89a50000)
+  from space 2368K, 100% used [0x89a50000, 0x89ca0000, 0x89ca0000)
+  to   space 2368K,   0% used [0x89ca0000, 0x89ca0000, 0x89ef0000)
+ tenured generation   total 48364K, used 30329K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  62% used [0x931f0000, 0x94f8e508, 0x94f8e600, 0x9612b000)
+ compacting perm gen  total 14080K, used 14014K [0xa8750000, 0xa9510000, 0xb4750000)
+   the space 14080K,  99% used [0xa8750000, 0xa94ffad0, 0xa94ffc00, 0xa9510000)
+No shared spaces configured.
+Event: 3,634 GC heap after
+Heap after GC invocations=31 (full 3):
+ def new generation   total 21824K, used 2179K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,   0% used [0x88750000, 0x88750000, 0x89a50000)
+  from space 2368K,  92% used [0x89ca0000, 0x89ec0cc8, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 31318K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  64% used [0x931f0000, 0x95085978, 0x95085a00, 0x9612b000)
+ compacting perm gen  total 14080K, used 14014K [0xa8750000, 0xa9510000, 0xb4750000)
+   the space 14080K,  99% used [0xa8750000, 0xa94ffad0, 0xa94ffc00, 0xa9510000)
+No shared spaces configured.
+}
+Event: 3,741 GC heap before
+{Heap before GC invocations=31 (full 3):
+ def new generation   total 21824K, used 21635K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K, 100% used [0x88750000, 0x89a50000, 0x89a50000)
+  from space 2368K,  92% used [0x89ca0000, 0x89ec0cc8, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 31318K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  64% used [0x931f0000, 0x95085978, 0x95085a00, 0x9612b000)
+ compacting perm gen  total 14336K, used 14163K [0xa8750000, 0xa9550000, 0xb4750000)
+   the space 14336K,  98% used [0xa8750000, 0xa9524fe0, 0xa9525000, 0xa9550000)
+No shared spaces configured.
+Event: 3,753 GC heap after
+Heap after GC invocations=32 (full 3):
+ def new generation   total 21824K, used 2368K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,   0% used [0x88750000, 0x88750000, 0x89a50000)
+  from space 2368K, 100% used [0x89a50000, 0x89ca0000, 0x89ca0000)
+  to   space 2368K,   0% used [0x89ca0000, 0x89ca0000, 0x89ef0000)
+ tenured generation   total 48364K, used 32963K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  68% used [0x931f0000, 0x95220d18, 0x95220e00, 0x9612b000)
+ compacting perm gen  total 14336K, used 14163K [0xa8750000, 0xa9550000, 0xb4750000)
+   the space 14336K,  98% used [0xa8750000, 0xa9524fe0, 0xa9525000, 0xa9550000)
+No shared spaces configured.
+}
+Event: 3,822 GC heap before
+{Heap before GC invocations=32 (full 3):
+ def new generation   total 21824K, used 21818K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,  99% used [0x88750000, 0x89a4e880, 0x89a50000)
+  from space 2368K, 100% used [0x89a50000, 0x89ca0000, 0x89ca0000)
+  to   space 2368K,   0% used [0x89ca0000, 0x89ca0000, 0x89ef0000)
+ tenured generation   total 48364K, used 32963K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  68% used [0x931f0000, 0x95220d18, 0x95220e00, 0x9612b000)
+ compacting perm gen  total 14336K, used 14170K [0xa8750000, 0xa9550000, 0xb4750000)
+   the space 14336K,  98% used [0xa8750000, 0xa9526828, 0xa9526a00, 0xa9550000)
+No shared spaces configured.
+Event: 3,830 GC heap after
+Heap after GC invocations=33 (full 3):
+ def new generation   total 21824K, used 2367K [0x88750000, 0x89ef0000, 0x931f0000)
+  eden space 19456K,   0% used [0x88750000, 0x88750000, 0x89a50000)
+  from space 2368K,  99% used [0x89ca0000, 0x89eefff8, 0x89ef0000)
+  to   space 2368K,   0% used [0x89a50000, 0x89a50000, 0x89ca0000)
+ tenured generation   total 48364K, used 34594K [0x931f0000, 0x9612b000, 0xa8750000)
+   the space 48364K,  71% used [0x931f0000, 0x953b8a80, 0x953b8c00, 0x9612b000)
+ compacting perm gen  total 14336K, used 14170K [0xa8750000, 0xa9550000, 0xb4750000)
+   the space 14336K,  98% used [0xa8750000, 0xa9526828, 0xa9526a00, 0xa9550000)
+No shared spaces configured.
+}
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 3,500 Thread 0x0a0c2000 Threw 0x890440b8 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,500 Thread 0x0a0c2000 Threw 0x890446f0 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,500 Thread 0x0a0c2000 Threw 0x8905b858 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,501 Thread 0x0a0c2000 Threw 0x89061cd0 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,501 Thread 0x0a0c2000 Threw 0x89062310 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,501 Thread 0x0a0c2000 Threw 0x89066288 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/prims/jvm.cpp:1235
+Event: 3,504 Thread 0x0a0c2000 Threw 0x8908e160 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/runtime/sharedRuntime.cpp:613
+Event: 3,506 Thread 0x0a0c2000 Threw 0x8909dbd0 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/runtime/sharedRuntime.cpp:613
+Event: 3,602 Thread 0x86a0d000 Threw 0x89981be8 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/runtime/sharedRuntime.cpp:613
+Event: 3,609 Thread 0x88126800 Threw 0x899b0cf8 at /HUDSON/workspace/jdk7u25-2-build-linux-i586-product/jdk7u25/hotspot/src/share/vm/runtime/sharedRuntime.cpp:613
+
+Events (10 events):
+Event: 3,732 Thread 0x87d3a400 flushing nmethod 0xb4999f48
+Event: 3,732 Thread 0x87d3a400 flushing nmethod 0xb499a148
+Event: 3,733 Thread 0x87d3a400 flushing nmethod 0xb49c2bc8
+Event: 3,733 Thread 0x87d3a400 flushing nmethod 0xb49df7c8
+Event: 3,733 Thread 0x87d3a400 flushing nmethod 0xb49dfd88
+Event: 3,733 Thread 0x87d3a400 flushing nmethod 0xb49e4208
+Event: 3,739 Executing VM operation: GenCollectForAllocation
+Event: 3,755 Executing VM operation: GenCollectForAllocation done
+Event: 3,819 Executing VM operation: GenCollectForAllocation
+Event: 3,831 Executing VM operation: GenCollectForAllocation done
+
+
+Dynamic libraries:
+08048000-08049000 r-xp 00000000 08:05 526871     /home/royken/jdk1.7.0_25/bin/java
+08049000-0804a000 rw-p 00000000 08:05 526871     /home/royken/jdk1.7.0_25/bin/java
+09ecd000-0a246000 rw-p 00000000 00:00 0          [heap]
+8578d000-8593a000 rw-p 00000000 00:00 0 
+8593a000-8593d000 ---p 00000000 00:00 0 
+8593d000-8598b000 rw-p 00000000 00:00 0          [stack:7444]
+8598b000-85999000 r--s 0008c000 08:05 1573555    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/spring-web-3.2.8.RELEASE.jar
+85999000-859ab000 r--s 000c4000 08:05 1573553    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/spring-core-3.2.8.RELEASE.jar
+859ab000-859af000 r--s 0002c000 08:05 1573554    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/spring-expression-3.2.8.RELEASE.jar
+859af000-859b2000 ---p 00000000 00:00 0 
+859b2000-85a00000 rw-p 00000000 00:00 0          [stack:7443]
+85a00000-85a48000 rw-p 00000000 00:00 0 
+85a48000-85b00000 ---p 00000000 00:00 0 
+85b00000-85b03000 r--s 00025000 08:05 1573544    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/commons-dbcp-1.4.jar
+85b03000-85b2c000 r--s 00269000 08:05 1573546    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/primefaces-5.1.jar
+85b2c000-85b41000 r--s 000bf000 08:05 1573552    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/spring-context-3.2.8.RELEASE.jar
+85b41000-85b44000 ---p 00000000 00:00 0 
+85b44000-85b92000 rw-p 00000000 00:00 0          [stack:7442]
+85b92000-85b95000 ---p 00000000 00:00 0 
+85b95000-85be3000 rw-p 00000000 00:00 0          [stack:7441]
+85be3000-85be6000 ---p 00000000 00:00 0 
+85be6000-85c34000 rw-p 00000000 00:00 0          [stack:7440]
+85c34000-85c37000 ---p 00000000 00:00 0 
+85c37000-85c85000 rw-p 00000000 00:00 0          [stack:7439]
+85c85000-85c88000 ---p 00000000 00:00 0 
+85c88000-85cd6000 rw-p 00000000 00:00 0          [stack:7438]
+85cd6000-85cd9000 ---p 00000000 00:00 0 
+85cd9000-85d27000 rw-p 00000000 00:00 0          [stack:7437]
+85d27000-85d2a000 ---p 00000000 00:00 0 
+85d2a000-85d78000 rw-p 00000000 00:00 0          [stack:7436]
+85d78000-85d7b000 ---p 00000000 00:00 0 
+85d7b000-85dc9000 rw-p 00000000 00:00 0          [stack:7435]
+85dc9000-85dcc000 ---p 00000000 00:00 0 
+85dcc000-85e1a000 rw-p 00000000 00:00 0          [stack:7434]
+85e1a000-85e1d000 ---p 00000000 00:00 0 
+85e1d000-85e6b000 rw-p 00000000 00:00 0          [stack:7433]
+85e6b000-85e6e000 ---p 00000000 00:00 0 
+85e6e000-85ebc000 rw-p 00000000 00:00 0          [stack:7432]
+85ebc000-85ebf000 ---p 00000000 00:00 0 
+85ebf000-85f0d000 rw-p 00000000 00:00 0          [stack:7431]
+85f0d000-85f10000 ---p 00000000 00:00 0 
+85f10000-85f5e000 rw-p 00000000 00:00 0          [stack:7430]
+85f5e000-85f61000 ---p 00000000 00:00 0 
+85f61000-85faf000 rw-p 00000000 00:00 0          [stack:7429]
+85faf000-85fb2000 ---p 00000000 00:00 0 
+85fb2000-86000000 rw-p 00000000 00:00 0          [stack:7428]
+86000000-8607e000 rw-p 00000000 00:00 0 
+8607e000-86100000 ---p 00000000 00:00 0 
+86102000-8610b000 r--s 0004a000 08:05 1573550    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/spring-aop-3.2.8.RELEASE.jar
+8610b000-86111000 r--s 00096000 08:05 1573543    /home/royken/Programmes/notes/target/notes/WEB-INF/lib/mysql-connector-java-5.1.2.jar
+86134000-86137000 ---p 00000000 00:00 0 
+86137000-86185000 rw-p 00000000 00:00 0          [stack:7427]
+86185000-86188000 ---p 00000000 00:00 0 
+86188000-861d6000 rw-p 00000000 00:00 0          [stack:7426]
+861d6000-861d9000 ---p 00000000 00:00 0 
+861d9000-86227000 rw-p 00000000 00:00 0          [stack:7424]
+86227000-8622a000 ---p 00000000 00:00 0 
+8622a000-86278000 rw-p 00000000 00:00 0          [stack:7423]
+86278000-8627b000 ---p 00000000 00:00 0 
+8627b000-862c9000 rw-p 00000000 00:00 0          [stack:7422]
+862c9000-862cc000 ---p 00000000 00:00 0 
+862cc000-8631a000 rw-p 00000000 00:00 0          [stack:7421]
+8631a000-8631d000 ---p 00000000 00:00 0 
+8631d000-8636b000 rw-p 00000000 00:00 0          [stack:7420]
+8636b000-8636e000 ---p 00000000 00:00 0 
+8636e000-863bc000 rw-p 00000000 00:00 0          [stack:7419]
+863bc000-863bf000 ---p 00000000 00:00 0 
+863bf000-8640d000 rw-p 00000000 00:00 0          [stack:7418]
+8640d000-86410000 ---p 00000000 00:00 0 
+86410000-8645e000 rw-p 00000000 00:00 0          [stack:7417]
+8645e000-86461000 ---p 00000000 00:00 0 
+86461000-864af000 rw-p 00000000 00:00 0          [stack:7416]
+864af000-864b2000 ---p 00000000 00:00 0 
+864b2000-86500000 rw-p 00000000 00:00 0          [stack:7415]
+86500000-865f8000 rw-p 00000000 00:00 0 
+865f8000-86600000 ---p 00000000 00:00 0 
+86603000-86605000 rw-p 00000000 00:00 0 
+86605000-8660c000 r-xp 00000000 08:05 526179     /home/royken/jdk1.7.0_25/jre/lib/i386/libmanagement.so
+8660c000-8660d000 rw-p 00006000 08:05 526179     /home/royken/jdk1.7.0_25/jre/lib/i386/libmanagement.so
+8660d000-86610000 ---p 00000000 00:00 0 
+86610000-8665e000 rw-p 00000000 00:00 0          [stack:7392]
+8665e000-86661000 ---p 00000000 00:00 0 
+86661000-866af000 rw-p 00000000 00:00 0          [stack:7391]
+866af000-866b2000 ---p 00000000 00:00 0 
+866b2000-86700000 rw-p 00000000 00:00 0          [stack:7390]
+86700000-86703000 ---p 00000000 00:00 0 
+86703000-86751000 rw-p 00000000 00:00 0          [stack:7389]
+86751000-86755000 r--s 00039000 08:05 661481     /home/royken/glassfish-4.1/javadb/lib/derbynet.jar
+86755000-86759000 r--s 00030000 08:05 661456     /home/royken/glassfish-4.1/javadb/lib/derbytools.jar
+86759000-86760000 r--s 00085000 08:05 661438     /home/royken/glassfish-4.1/javadb/lib/derbyclient.jar
+86760000-8678a000 r--s 00271000 08:05 661517     /home/royken/glassfish-4.1/javadb/lib/derby.jar
+8678a000-8678e000 r--s 00039000 08:05 661481     /home/royken/glassfish-4.1/javadb/lib/derbynet.jar
+8678e000-867b8000 r--s 00271000 08:05 661517     /home/royken/glassfish-4.1/javadb/lib/derby.jar
+867b8000-867bc000 r--s 00030000 08:05 661456     /home/royken/glassfish-4.1/javadb/lib/derbytools.jar
+867bc000-867bf000 ---p 00000000 00:00 0 
+867bf000-8680d000 rw-p 00000000 00:00 0          [stack:7388]
+8680d000-86810000 ---p 00000000 00:00 0 
+86810000-8685e000 rw-p 00000000 00:00 0          [stack:7387]
+8685e000-86861000 ---p 00000000 00:00 0 
+86861000-868af000 rw-p 00000000 00:00 0          [stack:7386]
+868af000-868b2000 ---p 00000000 00:00 0 
+868b2000-86900000 rw-p 00000000 00:00 0          [stack:7385]
+86900000-86afd000 rw-p 00000000 00:00 0 
+86afd000-86b00000 ---p 00000000 00:00 0 
+86b00000-86ceb000 rw-p 00000000 00:00 0 
+86ceb000-86d00000 ---p 00000000 00:00 0 
+86d00000-86e00000 rw-p 00000000 00:00 0 
+86e00000-86e01000 rw-p 00000000 00:00 0 
+86e01000-86e02000 r--s 00001000 08:05 661482     /home/royken/glassfish-4.1/javadb/lib/derbyrun.jar
+86e02000-86e05000 r--s 00017000 08:05 661263     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_zh_TW.jar
+86e05000-86e07000 r--s 00017000 08:05 661264     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_zh_CN.jar
+86e07000-86e0a000 r--s 0001a000 08:05 661369     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_ru.jar
+86e0a000-86e0c000 r--s 00014000 08:05 661265     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_pt_BR.jar
+86e0c000-86e0e000 r--s 00015000 08:05 661366     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_pl.jar
+86e0e000-86e10000 r--s 00019000 08:05 661262     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_ko_KR.jar
+86e10000-86e12000 r--s 0001a000 08:05 661261     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_ja_JP.jar
+86e12000-86e15000 r--s 00016000 08:05 661370     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_it.jar
+86e15000-86e17000 r--s 00015000 08:05 661368     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_hu.jar
+86e17000-86e19000 r--s 00018000 08:05 661365     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_fr.jar
+86e19000-86e1c000 r--s 00016000 08:05 661364     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_es.jar
+86e1c000-86e1e000 r--s 00018000 08:05 661260     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_de_DE.jar
+86e1e000-86e20000 r--s 00015000 08:05 661367     /home/royken/glassfish-4.1/javadb/lib/derbyLocale_cs.jar
+86e20000-86e27000 r--s 00085000 08:05 661438     /home/royken/glassfish-4.1/javadb/lib/derbyclient.jar
+86e27000-86e2f000 r--s 000c3000 08:05 662172     /home/royken/glassfish-4.1/glassfish/domains/domain1/lib/mysql-connector-java-5.1.23-bin.jar
+86e2f000-86e30000 r--s 00000000 08:05 661191     /home/royken/glassfish-4.1/glassfish/lib/jndi-properties.jar
+86e30000-86e33000 ---p 00000000 00:00 0 
+86e33000-86e81000 rw-p 00000000 00:00 0          [stack:7384]
+86e81000-86e84000 ---p 00000000 00:00 0 
+86e84000-86ed2000 rw-p 00000000 00:00 0          [stack:7383]
+86ed2000-86edc000 r--s 00254000 08:05 526173     /home/royken/jdk1.7.0_25/jre/lib/resources.jar
+86edc000-86ede000 r--s 00008000 08:05 1312735    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle141/version0.0/bundle.jar
+86ede000-86ee2000 r--s 00029000 08:05 1442249    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle286/version0.0/bundle.jar
+86ee2000-86ee3000 r--s 0000a000 08:05 1312170    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle28/version0.0/bundle.jar
+86ee3000-86ee6000 r--s 0002c000 08:05 1441959    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle228/version0.0/bundle.jar
+86ee6000-86ee8000 r--s 00001000 08:05 1312675    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle129/version0.0/bundle.jar
+86ee8000-86eea000 r--s 0000a000 08:05 1312760    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle146/version0.0/bundle.jar
+86eea000-86eec000 r--s 00010000 08:05 1442324    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle301/version0.0/bundle.jar
+86eec000-86eee000 r--s 00006000 08:05 1442304    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle297/version0.0/bundle.jar
+86eee000-86ef7000 r--s 000a1000 08:05 1312995    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle193/version0.0/bundle.jar
+86ef7000-86f0c000 r--s 000af000 08:05 662079     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle10/version0.0/bundle.jar
+86f0c000-86f0e000 r--s 0000c000 08:05 1312810    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle156/version0.0/bundle.jar
+86f0e000-86f12000 r--s 0000e000 08:05 1312175    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle29/version0.0/bundle.jar
+86f12000-86f13000 r--s 00001000 08:05 1442154    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle267/version0.0/bundle.jar
+86f13000-86f15000 r--s 0000b000 08:05 1312705    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle135/version0.0/bundle.jar
+86f15000-86f1b000 r--s 00027000 08:05 1442179    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle272/version0.0/bundle.jar
+86f1b000-86f1d000 r--s 0000b000 08:05 1312150    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle24/version0.0/bundle.jar
+86f1d000-86f22000 r--s 0002a000 08:05 1312415    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle77/version0.0/bundle.jar
+86f22000-86f24000 r--s 00003000 08:05 1441884    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle213/version0.0/bundle.jar
+86f24000-86f26000 r--s 00001000 08:05 1312200    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle34/version0.0/bundle.jar
+86f26000-86f30000 r--s 000a8000 08:05 1442089    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle254/version0.0/bundle.jar
+86f30000-86f3d000 r--s 0007e000 08:05 1312915    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle177/version0.0/bundle.jar
+86f3d000-86f41000 r--s 00022000 08:05 1442044    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle245/version0.0/bundle.jar
+86f41000-86f43000 r--s 00005000 08:05 1312130    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle20/version0.0/bundle.jar
+86f43000-86f47000 r--s 0002d000 08:05 1442124    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle261/version0.0/bundle.jar
+86f47000-86f48000 r--s 00005000 08:05 1442254    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle287/version0.0/bundle.jar
+86f48000-86f54000 r--s 00073000 08:05 1442114    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle259/version0.0/bundle.jar
+86f54000-86f56000 r--s 00004000 08:05 1312385    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle71/version0.0/bundle.jar
+86f56000-86f58000 r--s 0000b000 08:05 1312825    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle159/version0.0/bundle.jar
+86f58000-86f5f000 r--s 0002b000 08:05 1442284    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle293/version0.0/bundle.jar
+86f5f000-87018000 r--s 00b1f000 08:05 1312300    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle54/version0.0/bundle.jar
+87018000-8701e000 r--s 0005a000 08:05 1312450    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle84/version0.0/bundle.jar
+8701e000-87021000 r--s 0001e000 08:05 1312700    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle134/version0.0/bundle.jar
+87021000-87026000 r--s 00046000 08:05 1442184    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle273/version0.0/bundle.jar
+87026000-87027000 r--s 0000c000 08:05 662094     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle13/version0.0/bundle.jar
+87027000-87029000 r--s 00001000 08:05 1442194    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle275/version0.0/bundle.jar
+87029000-8702a000 r--s 0000c000 08:05 662089     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle12/version0.0/bundle.jar
+8702a000-8702c000 r--s 00008000 08:05 1441844    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle205/version0.0/bundle.jar
+8702c000-8702e000 r--s 00002000 08:05 1312635    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle121/version0.0/bundle.jar
+8702e000-8702f000 r--s 00001000 08:05 1312490    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle92/version0.0/bundle.jar
+8702f000-87032000 r--s 00012000 08:05 1442274    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle291/version0.0/bundle.jar
+87032000-87033000 r--s 00006000 08:05 1312755    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle145/version0.0/bundle.jar
+87033000-87047000 r--s 000dd000 08:05 1441924    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle221/version0.0/bundle.jar
+87047000-87048000 r--s 00004000 08:05 1441964    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle229/version0.0/bundle.jar
+87048000-87049000 r--s 00000000 08:05 662074     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle9/version0.0/bundle.jar
+87049000-8704a000 r--s 00000000 08:05 1312950    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle184/version0.0/bundle.jar
+8704a000-8704c000 r--s 00006000 08:05 1442299    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle296/version0.0/bundle.jar
+8704c000-8704e000 r--s 00004000 08:05 1442169    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle270/version0.0/bundle.jar
+8704e000-87050000 r--s 0000a000 08:05 1312480    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle90/version0.0/bundle.jar
+87050000-87054000 r--s 00028000 08:05 1312585    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle111/version0.0/bundle.jar
+87054000-87056000 r--s 00007000 08:05 1312165    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle27/version0.0/bundle.jar
+87056000-87058000 r--s 00004000 08:05 1312355    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle65/version0.0/bundle.jar
+87058000-8705a000 r--s 00009000 08:05 1312225    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle39/version0.0/bundle.jar
+8705a000-8705c000 r--s 00002000 08:05 1442234    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle283/version0.0/bundle.jar
+8705c000-87061000 r--s 00066000 08:05 1312730    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle140/version0.0/bundle.jar
+87061000-87065000 r--s 0002b000 08:05 1312630    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle120/version0.0/bundle.jar
+87065000-8706e000 r--s 0007a000 08:05 1442054    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle247/version0.0/bundle.jar
+8706e000-87071000 r--s 00012000 08:05 1442309    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle298/version0.0/bundle.jar
+87071000-87073000 r--s 0000d000 08:05 1441869    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle210/version0.0/bundle.jar
+87073000-87075000 r--s 00010000 08:05 1442074    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle251/version0.0/bundle.jar
+87075000-87077000 r--s 0000a000 08:05 1312485    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle91/version0.0/bundle.jar
+87077000-87099000 r--s 00170000 08:05 1312985    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle191/version0.0/bundle.jar
+87099000-8709d000 r--s 00036000 08:05 1442104    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle257/version0.0/bundle.jar
+8709d000-870a1000 r--s 00022000 08:05 1312190    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle32/version0.0/bundle.jar
+870a1000-870a4000 r--s 00026000 08:05 1312715    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle137/version0.0/bundle.jar
+870a4000-870a8000 r--s 00018000 08:05 1312890    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle172/version0.0/bundle.jar
+870a8000-870a9000 r--s 00004000 08:05 1312785    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle151/version0.0/bundle.jar
+870a9000-870aa000 r--s 00008000 08:05 1312970    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle188/version0.0/bundle.jar
+870aa000-870d3000 r--s 002c7000 08:05 1441939    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle224/version0.0/bundle.jar
+870d3000-870d7000 r--s 00015000 08:05 1312920    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle178/version0.0/bundle.jar
+870d7000-870db000 r--s 00012000 08:05 662084     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle11/version0.0/bundle.jar
+870db000-870de000 r--s 00013000 08:05 1312615    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle117/version0.0/bundle.jar
+870de000-870e0000 r--s 00002000 08:05 1312235    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle41/version0.0/bundle.jar
+870e0000-870e1000 r--s 00002000 08:05 1312665    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle127/version0.0/bundle.jar
+870e1000-870e3000 r--s 00005000 08:05 1312555    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle105/version0.0/bundle.jar
+870e3000-870e5000 r--s 0000e000 08:05 1442294    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle295/version0.0/bundle.jar
+870e5000-870e8000 r--s 0001d000 08:05 1441839    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle204/version0.0/bundle.jar
+870e8000-870f0000 r--s 00056000 08:05 1312275    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle49/version0.0/bundle.jar
+870f0000-870f2000 r--s 0000c000 08:05 1312370    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle68/version0.0/bundle.jar
+870f2000-870f4000 r--s 00001000 08:05 1441929    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle222/version0.0/bundle.jar
+870f4000-870f6000 r--s 00004000 08:05 1442134    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle263/version0.0/bundle.jar
+870f6000-870f9000 r--s 0000d000 08:05 1441949    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle226/version0.0/bundle.jar
+870f9000-87100000 r--s 00078000 08:05 1312420    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle78/version0.0/bundle.jar
+87100000-871fe000 rw-p 00000000 00:00 0 
+871fe000-87200000 ---p 00000000 00:00 0 
+87200000-87201000 r--s 00006000 08:05 1442099    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle256/version0.0/bundle.jar
+87201000-87203000 r--s 00006000 08:05 1312380    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle70/version0.0/bundle.jar
+87203000-87204000 r--s 0000b000 08:05 1442314    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle299/version0.0/bundle.jar
+87204000-87209000 r--s 00032000 08:05 1312925    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle179/version0.0/bundle.jar
+87209000-8720b000 r--s 00007000 08:05 1312405    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle75/version0.0/bundle.jar
+8720b000-8720c000 r--s 00003000 08:05 1312990    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle192/version0.0/bundle.jar
+8720c000-8720e000 r--s 00004000 08:05 1441914    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle219/version0.0/bundle.jar
+8720e000-87211000 r--s 00006000 08:05 1441944    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle225/version0.0/bundle.jar
+87211000-87214000 r--s 0000c000 08:05 1312800    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle154/version0.0/bundle.jar
+87214000-87217000 r--s 00012000 08:05 1442119    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle260/version0.0/bundle.jar
+87217000-8721b000 r--s 00028000 08:05 1312565    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle107/version0.0/bundle.jar
+8721b000-8721d000 r--s 00005000 08:05 1442034    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle243/version0.0/bundle.jar
+8721d000-8721e000 r--s 0000a000 08:05 1442319    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle300/version0.0/bundle.jar
+8721e000-8721f000 r--s 0000c000 08:05 1312805    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle155/version0.0/bundle.jar
+8721f000-87221000 r--s 00005000 08:05 1442189    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle274/version0.0/bundle.jar
+87221000-87224000 r--s 0000a000 08:05 1312935    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle181/version0.0/bundle.jar
+87224000-8722a000 r--s 00059000 08:05 1442144    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle265/version0.0/bundle.jar
+8722a000-8722e000 r--s 00010000 08:05 662104     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle15/version0.0/bundle.jar
+8722e000-87237000 r--s 0006e000 08:05 1312245    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle43/version0.0/bundle.jar
+87237000-87244000 r--s 00106000 08:05 1312840    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle162/version0.0/bundle.jar
+87244000-87246000 r--s 0000b000 08:05 1441979    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle232/version0.0/bundle.jar
+87246000-8724a000 r--s 0003a000 08:05 1312205    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle35/version0.0/bundle.jar
+8724a000-8724c000 r--s 00006000 08:05 1312470    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle88/version0.0/bundle.jar
+8724c000-87253000 r--s 0004c000 08:05 662054     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle5/version0.0/bundle.jar
+87253000-87271000 r--s 001b8000 08:05 1312320    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle58/version0.0/bundle.jar
+87271000-87272000 r--s 00000000 08:05 1313000    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle194/version0.0/bundle.jar
+87272000-87274000 r--s 0000d000 08:05 1312770    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle148/version0.0/bundle.jar
+87274000-87276000 r--s 00001000 08:05 1441969    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle230/version0.0/bundle.jar
+87276000-87284000 r--s 0012a000 08:05 1312400    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle74/version0.0/bundle.jar
+87284000-87286000 r--s 00004000 08:05 1442289    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle294/version0.0/bundle.jar
+87286000-8728c000 r--s 00027000 08:05 1441919    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle220/version0.0/bundle.jar
+8728c000-8728f000 r--s 00019000 08:05 1442204    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle277/version0.0/bundle.jar
+8728f000-87291000 r--s 00018000 08:05 1312285    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle51/version0.0/bundle.jar
+87291000-87298000 r--s 0003b000 08:05 1312610    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle116/version0.0/bundle.jar
+87298000-8729c000 r--s 0002a000 08:05 1312505    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle95/version0.0/bundle.jar
+8729c000-8729f000 r--s 0000f000 08:05 1312215    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle37/version0.0/bundle.jar
+8729f000-872a1000 r--s 00008000 08:05 1312160    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle26/version0.0/bundle.jar
+872a1000-872ac000 r--s 00072000 08:05 1442219    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle280/version0.0/bundle.jar
+872ac000-872b0000 r--s 0001f000 08:05 1312855    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle165/version0.0/bundle.jar
+872b0000-872b2000 r--s 00001000 08:05 1312625    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle119/version0.0/bundle.jar
+872b2000-872b6000 r--s 0003b000 08:05 1312790    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle152/version0.0/bundle.jar
+872b6000-872b8000 r--s 00003000 08:05 1312975    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle189/version0.0/bundle.jar
+872b8000-872bc000 r--s 0002c000 08:05 1312310    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle56/version0.0/bundle.jar
+872bc000-872c1000 r--s 0002c000 08:05 1312850    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle164/version0.0/bundle.jar
+872c1000-872c5000 r--s 0000e000 08:05 1312595    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle113/version0.0/bundle.jar
+872c5000-872c6000 r--s 00003000 08:05 1442024    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle241/version0.0/bundle.jar
+872c6000-872dc000 r--s 00138000 08:05 1442009    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle238/version0.0/bundle.jar
+872dc000-872de000 r--s 0000e000 08:05 1442224    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle281/version0.0/bundle.jar
+872de000-872e0000 r--s 00007000 08:05 1312410    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle76/version0.0/bundle.jar
+872e0000-872e2000 r--s 00006000 08:05 1442259    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle288/version0.0/bundle.jar
+872e2000-872e4000 r--s 00012000 08:05 1441804    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle197/version0.0/bundle.jar
+872e4000-872e5000 r--s 00006000 08:05 1442279    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle292/version0.0/bundle.jar
+872e5000-872e7000 r--s 00005000 08:05 1312145    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle23/version0.0/bundle.jar
+872e7000-872e8000 r--s 00001000 08:05 1312845    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle163/version0.0/bundle.jar
+872e8000-872ec000 r--s 00018000 08:05 1312960    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle186/version0.0/bundle.jar
+872ec000-872ef000 r--s 0001f000 08:05 1312550    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle104/version0.0/bundle.jar
+872ef000-872f7000 r--s 00027000 08:05 1312655    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle125/version0.0/bundle.jar
+872f7000-872fa000 r--s 00010000 08:05 662034     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle1/version0.0/bundle.jar
+872fa000-872fc000 r--s 00007000 08:05 1312910    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle176/version0.0/bundle.jar
+872fc000-872ff000 r--s 00019000 08:05 1312815    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle157/version0.0/bundle.jar
+872ff000-87302000 r--s 00009000 08:05 1441989    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle234/version0.0/bundle.jar
+87302000-87304000 r--s 00007000 08:05 1442084    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle253/version0.0/bundle.jar
+87304000-8730a000 r--s 00036000 08:05 1312135    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle21/version0.0/bundle.jar
+8730a000-8730f000 r--s 00038000 08:05 1442229    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle282/version0.0/bundle.jar
+8730f000-87310000 r--s 00001000 08:05 662109     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle16/version0.0/bundle.jar
+87310000-87312000 r--s 00001000 08:05 1441889    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle214/version0.0/bundle.jar
+87312000-87315000 r--s 0000f000 08:05 1312560    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle106/version0.0/bundle.jar
+87315000-87317000 r--s 00006000 08:05 1442239    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle284/version0.0/bundle.jar
+87317000-87318000 r--s 00001000 08:05 1441879    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle212/version0.0/bundle.jar
+87318000-8731c000 r--s 00019000 08:05 1312255    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle45/version0.0/bundle.jar
+8731c000-8731e000 r--s 0000b000 08:05 1312265    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle47/version0.0/bundle.jar
+8731e000-87322000 r--s 000d1000 08:05 1442079    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle252/version0.0/bundle.jar
+87322000-87324000 r--s 00006000 08:05 662099     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle14/version0.0/bundle.jar
+87324000-8733b000 r--s 000cf000 08:05 1441999    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle236/version0.0/bundle.jar
+8733b000-8733f000 r--s 0001d000 08:05 1312835    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle161/version0.0/bundle.jar
+8733f000-87340000 r--s 00005000 08:05 1442214    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle279/version0.0/bundle.jar
+87340000-87343000 r--s 0000e000 08:05 1442174    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle271/version0.0/bundle.jar
+87343000-87344000 r--s 00001000 08:05 1312525    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle99/version0.0/bundle.jar
+87344000-8734c000 r--s 00087000 08:05 1312465    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle87/version0.0/bundle.jar
+8734c000-8734d000 r--s 00004000 08:05 1312640    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle122/version0.0/bundle.jar
+8734d000-8734e000 r--s 00005000 08:05 1312660    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle126/version0.0/bundle.jar
+8734e000-8735b000 r--s 000d6000 08:05 1312870    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle168/version0.0/bundle.jar
+8735b000-8735e000 r--s 00013000 08:05 1312605    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle115/version0.0/bundle.jar
+8735e000-8735f000 r--s 00001000 08:05 1312270    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle48/version0.0/bundle.jar
+8735f000-87361000 r--s 00007000 08:05 1442199    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle276/version0.0/bundle.jar
+87361000-87363000 r--s 00003000 08:05 1312535    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle101/version0.0/bundle.jar
+87363000-87365000 r--s 00012000 08:05 1441994    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle235/version0.0/bundle.jar
+87365000-87368000 r--s 00014000 08:05 1312390    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle72/version0.0/bundle.jar
+87368000-87369000 r--s 00001000 08:05 1312540    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle102/version0.0/bundle.jar
+87369000-8736b000 r--s 00008000 08:05 1312680    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle130/version0.0/bundle.jar
+8736b000-8736e000 r--s 00022000 08:05 1442094    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle255/version0.0/bundle.jar
+8736e000-87371000 r--s 00017000 08:05 1312325    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle59/version0.0/bundle.jar
+87371000-87374000 r--s 00023000 08:05 1312725    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle139/version0.0/bundle.jar
+87374000-87377000 r--s 00016000 08:05 662044     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle3/version0.0/bundle.jar
+87377000-8737a000 r--s 0000d000 08:05 1441894    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle215/version0.0/bundle.jar
+8737a000-8737d000 r--s 00018000 08:05 1441809    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle198/version0.0/bundle.jar
+8737d000-8737f000 r--s 00011000 08:05 1312860    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle166/version0.0/bundle.jar
+8737f000-87385000 r--s 00058000 08:05 1312795    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle153/version0.0/bundle.jar
+87385000-87386000 r--s 00002000 08:05 1442149    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle266/version0.0/bundle.jar
+87386000-87387000 r--s 00003000 08:05 1312765    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle147/version0.0/bundle.jar
+87387000-87389000 r--s 00006000 08:05 662114     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle17/version0.0/bundle.jar
+87389000-8738b000 r--s 00016000 08:05 1442039    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle244/version0.0/bundle.jar
+8738b000-8738c000 r--s 00001000 08:05 1312315    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle57/version0.0/bundle.jar
+8738c000-87390000 r--s 0002f000 08:05 1312720    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle138/version0.0/bundle.jar
+87390000-87392000 r--s 00014000 08:05 1442209    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle278/version0.0/bundle.jar
+87392000-87394000 r--s 00007000 08:05 1312620    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle118/version0.0/bundle.jar
+87394000-87395000 r--s 00001000 08:05 1442269    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle290/version0.0/bundle.jar
+87395000-87397000 r--s 00015000 08:05 1312210    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle36/version0.0/bundle.jar
+87397000-87398000 r--s 00005000 08:05 1312745    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle143/version0.0/bundle.jar
+87398000-8739a000 r--s 0000f000 08:05 1441864    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle209/version0.0/bundle.jar
+8739a000-873a6000 r--s 00196000 08:05 1312830    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle160/version0.0/bundle.jar
+873a6000-873a8000 r--s 00008000 08:05 1441954    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle227/version0.0/bundle.jar
+873a8000-873ba000 r--s 000a1000 08:05 1312140    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle22/version0.0/bundle.jar
+873ba000-873bd000 r--s 0000d000 08:05 1312460    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle86/version0.0/bundle.jar
+873bd000-873ce000 r--s 000c8000 08:05 1442059    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle248/version0.0/bundle.jar
+873ce000-873cf000 r--s 00002000 08:05 1312930    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle180/version0.0/bundle.jar
+873cf000-873d1000 r--s 00009000 08:05 1312375    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle69/version0.0/bundle.jar
+873d1000-873d3000 r--s 00006000 08:05 1441899    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle216/version0.0/bundle.jar
+873d3000-873d8000 r--s 00020000 08:05 1441819    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle200/version0.0/bundle.jar
+873d8000-873da000 r--s 0000c000 08:05 1312530    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle100/version0.0/bundle.jar
+873da000-873e0000 r--s 0007e000 08:05 1441834    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle203/version0.0/bundle.jar
+873e0000-873e2000 r--s 00003000 08:05 1312365    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle67/version0.0/bundle.jar
+873e2000-873e4000 r--s 00005000 08:05 1312750    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle144/version0.0/bundle.jar
+873e4000-873e5000 r--s 00001000 08:05 662059     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle6/version0.0/bundle.jar
+873e5000-873e6000 r--s 00004000 08:05 1442019    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle240/version0.0/bundle.jar
+873e6000-873e9000 r--s 0002a000 08:05 1441814    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle199/version0.0/bundle.jar
+873e9000-873ec000 r--s 0000f000 08:05 1312875    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle169/version0.0/bundle.jar
+873ec000-873ef000 r--s 00009000 08:05 1312690    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle132/version0.0/bundle.jar
+873ef000-873f1000 r--s 00006000 08:05 1442244    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle285/version0.0/bundle.jar
+873f1000-873f4000 r--s 00019000 08:05 1312290    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle52/version0.0/bundle.jar
+873f4000-873f6000 r--s 00005000 08:05 662039     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle2/version0.0/bundle.jar
+873f6000-873f7000 r--s 00003000 08:05 1441829    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle202/version0.0/bundle.jar
+873f7000-873f8000 r--s 00002000 08:05 662064     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle7/version0.0/bundle.jar
+873f8000-87400000 r--s 00064000 08:05 662069     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle8/version0.0/bundle.jar
+87400000-87401000 r--s 00004000 08:05 662049     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle4/version0.0/bundle.jar
+87401000-87403000 r--s 00002000 08:05 1312435    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle81/version0.0/bundle.jar
+87403000-87408000 r--s 0003d000 08:05 1312360    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle66/version0.0/bundle.jar
+87408000-8740a000 r--s 00012000 08:05 1442129    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle262/version0.0/bundle.jar
+8740a000-8740c000 r--s 0000a000 08:05 1441824    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle201/version0.0/bundle.jar
+8740c000-87410000 r--s 00028000 08:05 1441854    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle207/version0.0/bundle.jar
+87410000-87412000 r--s 0000e000 08:05 1442264    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle289/version0.0/bundle.jar
+87412000-87416000 r--s 0002b000 08:05 1442004    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle237/version0.0/bundle.jar
+87416000-87418000 r--s 00011000 08:05 1442109    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle258/version0.0/bundle.jar
+87418000-8741c000 r--s 00021000 08:05 1312440    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle82/version0.0/bundle.jar
+8741c000-87423000 r--s 0004c000 08:05 1312580    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle110/version0.0/bundle.jar
+87423000-87425000 r--s 00012000 08:05 1441934    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle223/version0.0/bundle.jar
+87425000-87428000 r--s 00013000 08:05 1312430    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle80/version0.0/bundle.jar
+87428000-8742a000 r--s 00006000 08:05 1312395    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle73/version0.0/bundle.jar
+8742a000-87431000 r--s 0003c000 08:05 1182571    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle19/version0.0/bundle.jar
+87431000-87432000 r--s 00007000 08:05 1312475    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle89/version0.0/bundle.jar
+87432000-87433000 r--s 00003000 08:05 1312500    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle94/version0.0/bundle.jar
+87433000-87457000 r--s 001a4000 08:05 1312545    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle103/version0.0/bundle.jar
+87457000-8745a000 r--s 0000d000 08:05 1312570    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle108/version0.0/bundle.jar
+8745a000-87462000 r--s 00078000 08:05 1312820    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle158/version0.0/bundle.jar
+87462000-87465000 r--s 0003b000 08:05 1441984    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle233/version0.0/bundle.jar
+87465000-87467000 r--s 00005000 08:05 1312230    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle40/version0.0/bundle.jar
+87467000-87470000 r--s 0005a000 08:05 1312740    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle142/version0.0/bundle.jar
+87470000-87473000 r--s 0000b000 08:05 1312650    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle124/version0.0/bundle.jar
+87473000-87475000 r--s 00000000 08:05 1312305    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle55/version0.0/bundle.jar
+87475000-87478000 r--s 00015000 08:05 1441859    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle208/version0.0/bundle.jar
+87478000-8748d000 r--s 000c6000 08:05 1312260    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle46/version0.0/bundle.jar
+8748d000-8748f000 r--s 00008000 08:05 1312455    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle85/version0.0/bundle.jar
+8748f000-87493000 r--s 00026000 08:05 1312340    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle62/version0.0/bundle.jar
+87493000-874af000 r--s 00161000 08:05 920462     /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle18/version0.0/bundle.jar
+874af000-874b2000 r--s 00018000 08:05 1441904    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle217/version0.0/bundle.jar
+874b2000-874c1000 r--s 0009e000 08:05 1312330    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle60/version0.0/bundle.jar
+874c1000-874c3000 r--s 0000d000 08:05 1312780    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle150/version0.0/bundle.jar
+874c3000-874c5000 r--s 00006000 08:05 1441849    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle206/version0.0/bundle.jar
+874c5000-874c9000 r--s 00025000 08:05 1312865    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle167/version0.0/bundle.jar
+874c9000-874ca000 r--s 00000000 08:05 1312575    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle109/version0.0/bundle.jar
+874ca000-874ce000 r--s 00011000 08:05 1312710    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle136/version0.0/bundle.jar
+874ce000-874d4000 r--s 00044000 08:05 1312335    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle61/version0.0/bundle.jar
+874d4000-874d6000 r--s 0000e000 08:05 1312515    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle97/version0.0/bundle.jar
+874d6000-874dc000 r--s 0004f000 08:05 1441874    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle211/version0.0/bundle.jar
+874dc000-874de000 r--s 0000f000 08:05 1441909    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle218/version0.0/bundle.jar
+874de000-874df000 r--s 00001000 08:05 1312895    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle173/version0.0/bundle.jar
+874df000-874e9000 r--s 00094000 08:05 1312880    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle170/version0.0/bundle.jar
+874e9000-874ea000 r--s 00005000 08:05 1312980    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle190/version0.0/bundle.jar
+874ea000-874ec000 r--s 0000a000 08:05 1312885    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle171/version0.0/bundle.jar
+874ec000-874ed000 r--s 00001000 08:05 1442029    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle242/version0.0/bundle.jar
+874ed000-874ee000 r--s 00005000 08:05 1442064    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle249/version0.0/bundle.jar
+874ee000-874f0000 r--s 00005000 08:05 1312295    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle53/version0.0/bundle.jar
+874f0000-874fe000 r--s 000aa000 08:05 1312520    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle98/version0.0/bundle.jar
+874fe000-87501000 r--s 00016000 08:05 1312695    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle133/version0.0/bundle.jar
+87501000-87507000 r--s 0006e000 08:05 1312940    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle182/version0.0/bundle.jar
+87507000-87509000 r--s 00008000 08:05 1441799    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle196/version0.0/bundle.jar
+87509000-87516000 r--s 000ca000 08:05 1441974    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle231/version0.0/bundle.jar
+87516000-87518000 r--s 00002000 08:05 1312180    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle30/version0.0/bundle.jar
+87518000-8751a000 r--s 00006000 08:05 1312195    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle33/version0.0/bundle.jar
+8751a000-8751d000 r--s 00008000 08:05 1312955    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle185/version0.0/bundle.jar
+8751d000-8753a000 r--s 00131000 08:05 1312670    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle128/version0.0/bundle.jar
+8753a000-8753c000 r--s 00002000 08:05 1312185    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle31/version0.0/bundle.jar
+8753c000-8753f000 r--s 00014000 08:05 1312685    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle131/version0.0/bundle.jar
+8753f000-87541000 r--s 00009000 08:05 1442159    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle268/version0.0/bundle.jar
+87541000-87545000 r--s 00025000 08:05 1312250    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle44/version0.0/bundle.jar
+87545000-87546000 r--s 00000000 08:05 1312945    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle183/version0.0/bundle.jar
+87546000-87548000 r--s 00004000 08:05 1312495    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle93/version0.0/bundle.jar
+87548000-8754d000 r--s 00024000 08:05 1441794    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle195/version0.0/bundle.jar
+8754d000-8754f000 r--s 0000b000 08:05 1312350    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle64/version0.0/bundle.jar
+8754f000-8758d000 r--s 00495000 08:05 1312590    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle112/version0.0/bundle.jar
+8758d000-87591000 r--s 00039000 08:05 1312155    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle25/version0.0/bundle.jar
+87591000-87594000 r--s 00011000 08:05 1312905    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle175/version0.0/bundle.jar
+87594000-87597000 r--s 00017000 08:05 1312220    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle38/version0.0/bundle.jar
+87597000-8759d000 r--s 00022000 08:05 1312965    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle187/version0.0/bundle.jar
+8759d000-875de000 r--s 0035a000 08:05 1312510    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle96/version0.0/bundle.jar
+875de000-875e4000 r--s 0003f000 08:05 1312425    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle79/version0.0/bundle.jar
+875e4000-87600000 r--s 00165000 08:05 1312900    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle174/version0.0/bundle.jar
+87600000-876f9000 rw-p 00000000 00:00 0 
+876f9000-87700000 ---p 00000000 00:00 0 
+87700000-87701000 r--s 0000a000 08:05 1312645    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle123/version0.0/bundle.jar
+87701000-87709000 r--s 0004b000 08:05 1442164    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle269/version0.0/bundle.jar
+87709000-8770b000 r--s 00011000 08:05 1312600    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle114/version0.0/bundle.jar
+8770b000-87711000 r--s 0004d000 08:05 1442139    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle264/version0.0/bundle.jar
+87711000-87713000 r--s 00000000 08:05 1312775    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle149/version0.0/bundle.jar
+87713000-87715000 r--s 00006000 08:05 1442049    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle246/version0.0/bundle.jar
+87715000-87717000 r--s 0000d000 08:05 1312280    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle50/version0.0/bundle.jar
+87717000-87719000 r--s 0000a000 08:05 1312445    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle83/version0.0/bundle.jar
+87719000-87721000 r--s 00082000 08:05 1442069    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle250/version0.0/bundle.jar
+87721000-87724000 ---p 00000000 00:00 0 
+87724000-87772000 rw-p 00000000 00:00 0          [stack:7378]
+87772000-87775000 ---p 00000000 00:00 0 
+87775000-877c3000 rw-p 00000000 00:00 0          [stack:7379]
+877c3000-8782e000 r--s 00e18000 08:05 526829     /home/royken/jdk1.7.0_25/lib/tools.jar
+8782e000-8782f000 ---p 00000000 00:00 0 
+8782f000-878af000 rw-p 00000000 00:00 0          [stack:7376]
+878af000-878b2000 ---p 00000000 00:00 0 
+878b2000-87900000 rw-p 00000000 00:00 0          [stack:7375]
+87900000-87983000 rw-p 00000000 00:00 0 
+87983000-87a00000 ---p 00000000 00:00 0 
+87a00000-87a3b000 rw-p 00000000 00:00 0 
+87a3b000-87b00000 ---p 00000000 00:00 0 
+87b00000-87b02000 r--s 00000000 08:05 1312345    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle63/version0.0/bundle.jar
+87b02000-87b10000 r-xp 00000000 08:05 526621     /home/royken/jdk1.7.0_25/jre/lib/i386/libnio.so
+87b10000-87b11000 rw-p 0000e000 08:05 526621     /home/royken/jdk1.7.0_25/jre/lib/i386/libnio.so
+87b11000-87b25000 r-xp 00000000 08:05 526623     /home/royken/jdk1.7.0_25/jre/lib/i386/libnet.so
+87b25000-87b26000 rw-p 00014000 08:05 526623     /home/royken/jdk1.7.0_25/jre/lib/i386/libnet.so
+87b26000-87b2a000 r--s 0008a000 08:05 526787     /home/royken/jdk1.7.0_25/jre/lib/jsse.jar
+87b2a000-87b2e000 r--s 000f7000 08:05 526346     /home/royken/jdk1.7.0_25/jre/lib/ext/localedata.jar
+87b2e000-87b31000 ---p 00000000 00:00 0 
+87b31000-87baf000 rw-p 00000000 00:00 0          [stack:7374]
+87baf000-87bb2000 ---p 00000000 00:00 0 
+87bb2000-87c00000 rw-p 00000000 00:00 0          [stack:7373]
+87c00000-87d00000 rw-p 00000000 00:00 0 
+87d00000-87dfe000 rw-p 00000000 00:00 0 
+87dfe000-87e00000 ---p 00000000 00:00 0 
+87e00000-87e21000 rw-p 00000000 00:00 0 
+87e21000-87f00000 ---p 00000000 00:00 0 
+87f00000-87f21000 rw-p 00000000 00:00 0 
+87f21000-88000000 ---p 00000000 00:00 0 
+88000000-88001000 r--s 00003000 08:05 1312240    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle42/version0.0/bundle.jar
+88001000-88009000 r--s 00076000 08:05 661181     /home/royken/glassfish-4.1/glassfish/osgi/felix/bin/felix.jar
+88009000-8800c000 ---p 00000000 00:00 0 
+8800c000-8805a000 rw-p 00000000 00:00 0          [stack:7372]
+8805a000-8805d000 r-xp 00000000 08:05 526225     /home/royken/jdk1.7.0_25/jre/lib/i386/libdt_socket.so
+8805d000-8805e000 rw-p 00003000 08:05 526225     /home/royken/jdk1.7.0_25/jre/lib/i386/libdt_socket.so
+8805e000-88061000 ---p 00000000 00:00 0 
+88061000-880af000 rw-p 00000000 00:00 0          [stack:7371]
+880af000-880b2000 ---p 00000000 00:00 0 
+880b2000-88100000 rw-p 00000000 00:00 0          [stack:7370]
+88100000-88200000 rw-p 00000000 00:00 0 
+88200000-88209000 r--s 000a1000 08:05 661288     /home/royken/glassfish-4.1/glassfish/modules/javassist.jar
+88209000-8820c000 ---p 00000000 00:00 0 
+8820c000-8825a000 rw-p 00000000 00:00 0          [stack:7369]
+8825a000-8825b000 ---p 00000000 00:00 0 
+8825b000-88326000 rw-p 00000000 00:00 0          [stack:7368]
+88326000-884e3000 r--s 039f9000 08:05 526816     /home/royken/jdk1.7.0_25/jre/lib/rt.jar
+884e3000-884eb000 rw-p 00000000 00:00 0 
+884eb000-88544000 rw-p 00000000 00:00 0 
+88544000-8855c000 rw-p 00000000 00:00 0 
+8855c000-885ef000 rw-p 00000000 00:00 0 
+885ef000-885fb000 rw-p 00000000 00:00 0 
+885fb000-88644000 rw-p 00000000 00:00 0 
+88644000-8865c000 rw-p 00000000 00:00 0 
+8865c000-886ef000 rw-p 00000000 00:00 0 
+886ef000-886f7000 rw-p 00000000 00:00 0 
+886f7000-8874f000 rw-p 00000000 00:00 0 
+8874f000-89ef0000 rw-p 00000000 00:00 0 
+89ef0000-931f0000 rw-p 00000000 00:00 0 
+931f0000-9612b000 rw-p 00000000 00:00 0 
+9612b000-a8750000 rw-p 00000000 00:00 0 
+a8750000-a9590000 rw-p 00000000 00:00 0 
+a9590000-b4750000 rw-p 00000000 00:00 0 
+b4750000-b4751000 r--s 00003000 08:05 1442014    /home/royken/glassfish-4.1/glassfish/domains/domain1/osgi-cache/felix/bundle239/version0.0/bundle.jar
+b4751000-b4752000 rw-p 00000000 00:00 0 
+b4752000-b4753000 r--s 00000000 08:05 660867     /home/royken/glassfish-4.1/glassfish/lib/monitor/flashlight-agent.jar
+b4753000-b4756000 r--s 00013000 08:05 661291     /home/royken/glassfish-4.1/glassfish/modules/hk2-utils.jar
+b4756000-b475b000 r--s 00024000 08:05 661354     /home/royken/glassfish-4.1/glassfish/modules/hk2-api.jar
+b475b000-b476a000 rw-p 00000000 00:00 0 
+b476a000-b47db000 rw-p 00000000 00:00 0 
+b47db000-b4b63000 rwxp 00000000 00:00 0 
+b4b63000-b67db000 rw-p 00000000 00:00 0 
+b67db000-b67f2000 r-xp 00000000 08:05 526629     /home/royken/jdk1.7.0_25/jre/lib/i386/libzip.so
+b67f2000-b67f3000 rw-p 00017000 08:05 526629     /home/royken/jdk1.7.0_25/jre/lib/i386/libzip.so
+b67f3000-b67fe000 r-xp 00000000 08:05 3146791    /lib/i386-linux-gnu/libnss_files-2.19.so
+b67fe000-b67ff000 r--p 0000a000 08:05 3146791    /lib/i386-linux-gnu/libnss_files-2.19.so
+b67ff000-b6800000 rw-p 0000b000 08:05 3146791    /lib/i386-linux-gnu/libnss_files-2.19.so
+b6800000-b6a00000 r--p 00000000 08:05 4464824    /usr/lib/locale/locale-archive
+b6a00000-b6aff000 rw-p 00000000 00:00 0 
+b6aff000-b6b00000 ---p 00000000 00:00 0 
+b6b00000-b6b01000 r--s 00002000 08:05 660883     /home/royken/glassfish-4.1/glassfish/modules/simple-glassfish-api.jar
+b6b01000-b6b04000 r--s 00026000 08:05 661215     /home/royken/glassfish-4.1/glassfish/modules/hk2-locator.jar
+b6b04000-b6b0e000 r-xp 00000000 08:05 3146801    /lib/i386-linux-gnu/libnss_nis-2.19.so
+b6b0e000-b6b0f000 r--p 00009000 08:05 3146801    /lib/i386-linux-gnu/libnss_nis-2.19.so
+b6b0f000-b6b10000 rw-p 0000a000 08:05 3146801    /lib/i386-linux-gnu/libnss_nis-2.19.so
+b6b10000-b6b25000 r-xp 00000000 08:05 3146785    /lib/i386-linux-gnu/libnsl-2.19.so
+b6b25000-b6b26000 r--p 00015000 08:05 3146785    /lib/i386-linux-gnu/libnsl-2.19.so
+b6b26000-b6b27000 rw-p 00016000 08:05 3146785    /lib/i386-linux-gnu/libnsl-2.19.so
+b6b27000-b6b29000 rw-p 00000000 00:00 0 
+b6b29000-b6b30000 r-xp 00000000 08:05 3146787    /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6b30000-b6b31000 r--p 00006000 08:05 3146787    /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6b31000-b6b32000 rw-p 00007000 08:05 3146787    /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6b32000-b6b34000 r--s 00002000 08:05 660814     /home/royken/glassfish-4.1/glassfish/modules/aopalliance-repackaged.jar
+b6b34000-b6b38000 r--s 00019000 08:05 661437     /home/royken/glassfish-4.1/glassfish/modules/core.jar
+b6b38000-b6b3b000 r--s 0001d000 08:05 661293     /home/royken/glassfish-4.1/glassfish/modules/glassfish.jar
+b6b3b000-b6b3e000 r--s 00016000 08:05 660987     /home/royken/glassfish-4.1/glassfish/modules/endorsed/jaxb-api.jar
+b6b3e000-b6b40000 r--s 00005000 08:05 660561     /home/royken/glassfish-4.1/glassfish/modules/endorsed/javax.annotation-api.jar
+b6b40000-b6b48000 rw-s 00000000 08:05 1835048    /tmp/hsperfdata_royken/7363
+b6b48000-b6b51000 r-xp 00000000 08:05 526175     /home/royken/jdk1.7.0_25/jre/lib/i386/libinstrument.so
+b6b51000-b6b52000 rw-p 00008000 08:05 526175     /home/royken/jdk1.7.0_25/jre/lib/i386/libinstrument.so
+b6b52000-b6b89000 r-xp 00000000 08:05 526569     /home/royken/jdk1.7.0_25/jre/lib/i386/libjdwp.so
+b6b89000-b6b8a000 rw-p 00037000 08:05 526569     /home/royken/jdk1.7.0_25/jre/lib/i386/libjdwp.so
+b6b8a000-b6bad000 r-xp 00000000 08:05 526565     /home/royken/jdk1.7.0_25/jre/lib/i386/libjava.so
+b6bad000-b6bae000 rw-p 00022000 08:05 526565     /home/royken/jdk1.7.0_25/jre/lib/i386/libjava.so
+b6bae000-b6bb5000 r-xp 00000000 08:05 3146844    /lib/i386-linux-gnu/librt-2.19.so
+b6bb5000-b6bb6000 r--p 00006000 08:05 3146844    /lib/i386-linux-gnu/librt-2.19.so
+b6bb6000-b6bb7000 rw-p 00007000 08:05 3146844    /lib/i386-linux-gnu/librt-2.19.so
+b6bb7000-b6bba000 ---p 00000000 00:00 0 
+b6bba000-b6c08000 rw-p 00000000 00:00 0          [stack:7365]
+b6c08000-b6c4c000 r-xp 00000000 08:05 3146766    /lib/i386-linux-gnu/libm-2.19.so
+b6c4c000-b6c4d000 r--p 00043000 08:05 3146766    /lib/i386-linux-gnu/libm-2.19.so
+b6c4d000-b6c4e000 rw-p 00044000 08:05 3146766    /lib/i386-linux-gnu/libm-2.19.so
+b6c4e000-b7160000 r-xp 00000000 08:05 526178     /home/royken/jdk1.7.0_25/jre/lib/i386/client/libjvm.so
+b7160000-b717d000 rw-p 00511000 08:05 526178     /home/royken/jdk1.7.0_25/jre/lib/i386/client/libjvm.so
+b717d000-b759d000 rw-p 00000000 00:00 0 
+b759d000-b7746000 r-xp 00000000 08:05 3146716    /lib/i386-linux-gnu/libc-2.19.so
+b7746000-b7748000 r--p 001a9000 08:05 3146716    /lib/i386-linux-gnu/libc-2.19.so
+b7748000-b7749000 rw-p 001ab000 08:05 3146716    /lib/i386-linux-gnu/libc-2.19.so
+b7749000-b774c000 rw-p 00000000 00:00 0 
+b774c000-b774f000 r-xp 00000000 08:05 3146733    /lib/i386-linux-gnu/libdl-2.19.so
+b774f000-b7750000 r--p 00002000 08:05 3146733    /lib/i386-linux-gnu/libdl-2.19.so
+b7750000-b7751000 rw-p 00003000 08:05 3146733    /lib/i386-linux-gnu/libdl-2.19.so
+b7751000-b7764000 r-xp 00000000 08:05 526344     /home/royken/jdk1.7.0_25/jre/lib/i386/jli/libjli.so
+b7764000-b7765000 rw-p 00012000 08:05 526344     /home/royken/jdk1.7.0_25/jre/lib/i386/jli/libjli.so
+b7765000-b7766000 rw-p 00000000 00:00 0 
+b7766000-b777e000 r-xp 00000000 08:05 3146836    /lib/i386-linux-gnu/libpthread-2.19.so
+b777e000-b777f000 r--p 00017000 08:05 3146836    /lib/i386-linux-gnu/libpthread-2.19.so
+b777f000-b7780000 rw-p 00018000 08:05 3146836    /lib/i386-linux-gnu/libpthread-2.19.so
+b7780000-b7782000 rw-p 00000000 00:00 0 
+b7782000-b7783000 r--s 00001000 08:05 661176     /home/royken/glassfish-4.1/glassfish/modules/javax.inject.jar
+b7783000-b7786000 r--s 00010000 08:05 660562     /home/royken/glassfish-4.1/glassfish/modules/endorsed/webservices-api-osgi.jar
+b7786000-b7787000 r--p 00859000 08:05 4464824    /usr/lib/locale/locale-archive
+b7787000-b7789000 r-xp 00000000 08:05 526624     /home/royken/jdk1.7.0_25/jre/lib/i386/libnpt.so
+b7789000-b778a000 rw-p 00002000 08:05 526624     /home/royken/jdk1.7.0_25/jre/lib/i386/libnpt.so
+b778a000-b778b000 rw-p 00000000 00:00 0 
+b778b000-b778c000 r--p 00000000 00:00 0 
+b778c000-b7797000 r-xp 00000000 08:05 526420     /home/royken/jdk1.7.0_25/jre/lib/i386/libverify.so
+b7797000-b7798000 rw-p 0000b000 08:05 526420     /home/royken/jdk1.7.0_25/jre/lib/i386/libverify.so
+b7798000-b779a000 rw-p 00000000 00:00 0 
+b779a000-b779b000 r-xp 00000000 00:00 0          [vdso]
+b779b000-b77bb000 r-xp 00000000 08:05 3146692    /lib/i386-linux-gnu/ld-2.19.so
+b77bb000-b77bc000 r--p 0001f000 08:05 3146692    /lib/i386-linux-gnu/ld-2.19.so
+b77bc000-b77bd000 rw-p 00020000 08:05 3146692    /lib/i386-linux-gnu/ld-2.19.so
+bfa12000-bfa34000 rw-p 00000000 00:00 0          [stack]
+
+VM Arguments:
+jvm_args: -XX:MaxPermSize=192m -Djava.awt.headless=true -Djdk.corba.allowOutputStreamSubclass=true -Djavax.xml.accessExternalSchema=all -Djavax.management.builder.initial=com.sun.enterprise.v3.admin.AppServerMBeanServerBuilder -XX:+UnlockDiagnosticVMOptions -Djava.endorsed.dirs=/home/royken/glassfish-4.1/glassfish/modules/endorsed:/home/royken/glassfish-4.1/glassfish/lib/endorsed -Djava.security.policy=/home/royken/glassfish-4.1/glassfish/domains/domain1/config/server.policy -Djava.security.auth.login.config=/home/royken/glassfish-4.1/glassfish/domains/domain1/config/login.conf -Dcom.sun.enterprise.security.httpsOutboundKeyAlias=s1as -Xmx512m -Djavax.net.ssl.keyStore=/home/royken/glassfish-4.1/glassfish/domains/domain1/config/keystore.jks -Djavax.net.ssl.trustStore=/home/royken/glassfish-4.1/glassfish/domains/domain1/config/cacerts.jks -Djava.ext.dirs=/home/royken/jdk1.7.0_25/lib/ext:/home/royken/jdk1.7.0_25/jre/lib/ext:/home/royken/glassfish-4.1/glassfish/domains/domain1/lib/ext -Djdbc.drivers=org.apache.derby.jdbc.ClientDriver -DANTLR_USE_DIRECT_CLASS_LOADING=true -Dcom.sun.enterprise.config.config_environment_factory_class=com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory -Dorg.glassfish.additionalOSGiBundlesToStart=org.apache.felix.shell,org.apache.felix.gogo.runtime,org.apache.felix.gogo.shell,org.apache.felix.gogo.command,org.apache.felix.shell.remote,org.apache.felix.fileinstall -Dosgi.shell.telnet.port=6666 -Dosgi.shell.telnet.maxconn=1 -Dosgi.shell.telnet.ip=127.0.0.1 -Dgosh.args=--nointeractive -Dfelix.fileinstall.dir=/home/royken/glassfish-4.1/glassfish/modules/autostart/ -Dfelix.fileinstall.poll=5000 -Dfelix.fileinstall.log.level=2 -Dfelix.fileinstall.bundles.new.start=true -Dfelix.fileinstall.bundles.startTransient=true -Dfelix.fileinstall.disableConfigSave=false -XX:NewRatio=2 -Dcom.ctc.wstx.returnNullForDefaultNamespace=true -javaagent:/home/royken/glassfish-4.1/glassfish/lib/monitor/flashlight-agent.jar -Xdebug -Xrunjdwp:transport=dt_socket,address=9009,server=y,suspend=n -Dcom.sun.aas.javaRoot=/home/royken/jdk1.7.0_25 -Dcom.sun.aas.derbyRoot=/home/royken/glassfish-4.1/javadb -Dcom.sun.aas.instanceRoot=/home/royken/glassfish-4.1/glassfish/domains/domain1 -Dcom.sun.aas.installRoot=/home/royken/glassfish-4.1/glassfish 
+java_command: com.sun.enterprise.glassfish.bootstrap.ASMain --domain domain1 --domaindir /home/royken/glassfish-4.1/glassfish/domains/domain1
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/home/royken/jdk1.7.0_25
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+LD_LIBRARY_PATH=/home/royken/jdk1.7.0_25/jre/lib/amd64:/home/royken/jdk1.7.0_25/jre/lib/i386:
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x491ad0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x491ad0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x3a55a0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x3a55a0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x3a55a0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x3a55a0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x3a4e80], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x3a7470], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: SIG_IGN, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGTERM: [libjvm.so+0x3a7470], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x3a7470], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:jessie/sid
+
+uname:Linux 3.13.0-24-generic #46-Ubuntu SMP Thu Apr 10 19:08:14 UTC 2014 i686
+libc:glibc 2.19 NPTL 2.19 
+rlimit: STACK 8192k, CORE 0k, NPROC 63875, NOFILE 4096, AS infinity
+load average:0,67 0,37 0,42
+
+/proc/meminfo:
+MemTotal:        8195168 kB
+MemFree:         2632512 kB
+Buffers:          115256 kB
+Cached:          3620668 kB
+SwapCached:            0 kB
+Active:          3384588 kB
+Inactive:        2014420 kB
+Active(anon):    1665588 kB
+Inactive(anon):   303256 kB
+Active(file):    1719000 kB
+Inactive(file):  1711164 kB
+Unevictable:          48 kB
+Mlocked:              48 kB
+HighTotal:       7386632 kB
+HighFree:        2274080 kB
+LowTotal:         808536 kB
+LowFree:          358432 kB
+SwapTotal:      39060476 kB
+SwapFree:       39060476 kB
+Dirty:               860 kB
+Writeback:           256 kB
+AnonPages:       1665316 kB
+Mapped:           301724 kB
+Shmem:            305716 kB
+Slab:             104612 kB
+SReclaimable:      79620 kB
+SUnreclaim:        24992 kB
+KernelStack:        4976 kB
+PageTables:        13836 kB
+NFS_Unstable:          0 kB
+Bounce:               56 kB
+WritebackTmp:          0 kB
+CommitLimit:    43158060 kB
+Committed_AS:    5564596 kB
+VmallocTotal:     122880 kB
+VmallocUsed:       30836 kB
+VmallocChunk:      86032 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:    847872 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       12280 kB
+DirectMap2M:      901120 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, ht, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4200M CPU @ 2.50GHz
+stepping	: 3
+microcode	: 0x16
+cpu MHz		: 800.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4988.48
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4200M CPU @ 2.50GHz
+stepping	: 3
+microcode	: 0x16
+cpu MHz		: 2500.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4988.48
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4200M CPU @ 2.50GHz
+stepping	: 3
+microcode	: 0x16
+cpu MHz		: 1600.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 2
+initial apicid	: 2
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4988.48
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4200M CPU @ 2.50GHz
+stepping	: 3
+microcode	: 0x16
+cpu MHz		: 2300.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 3
+initial apicid	: 3
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4988.48
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8195168k(2632512k free), swap 39060476k(39060476k free)
+
+vm_info: Java HotSpot(TM) Client VM (23.25-b01) for linux-x86 JRE (1.7.0_25-b15), built on Jun  5 2013 20:58:23 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Fri Feb 13 17:20:45 2015
+elapsed time: 4 seconds
+

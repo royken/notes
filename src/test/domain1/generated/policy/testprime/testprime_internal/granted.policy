@@ -1,0 +1,13 @@
+/* AUTOMATICALLY GENERATED ON Thu Mar 12 20:50:24 WAT 2015*/
+/* DO NOT EDIT */
+
+grant {
+  permission javax.security.jacc.EJBMethodPermission "MonBean", "removePersonne,Local,long";
+  permission javax.security.jacc.EJBMethodPermission "MonBean", "addPersonne,Local,com.douwe.testprime.entity.Personne";
+  permission javax.security.jacc.EJBMethodPermission "MonBean", "listeAll,Local,";
+};
+
+grant      principal * * {
+  permission javax.security.jacc.EJBRoleRefPermission "MonBean", "**";
+};
+
