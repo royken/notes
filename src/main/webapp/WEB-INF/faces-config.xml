@@ -3,10 +3,16 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-    <action-listener>org.primefaces.application.DialogActionListener</action-listener>
-    <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
-    <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
-<!--   importation -->    
+    <action-listener>
+        org.primefaces.application.DialogActionListener
+    </action-listener>
+    <navigation-handler>
+        org.primefaces.application.DialogNavigationHandler
+    </navigation-handler>
+    <view-handler>
+        org.primefaces.application.DialogViewHandler
+    </view-handler>
+    <!--   importation -->    
     <navigation-rule>               
         <from-view-id>/*</from-view-id>
         <navigation-case>
@@ -89,7 +95,7 @@
         </navigation-case>
     </navigation-rule>  
 
-<!-- options -->
+    <!-- options -->
     <navigation-rule>       
         <from-view-id>/option/ajouterOption.xhtml</from-view-id>        
         <navigation-case>
@@ -126,7 +132,7 @@
         </navigation-case>
     </navigation-rule>  
     
-<!-- semestres -->
+    <!-- semestres -->
     <navigation-rule>       
         <from-view-id>/semestre/ajouterSemestre.xhtml</from-view-id>        
         <navigation-case>
@@ -200,7 +206,7 @@
         </navigation-case>
     </navigation-rule>  
 
-<!-- cours -->
+    <!-- cours -->
     <navigation-rule>       
         <from-view-id>/cours/ajouterCours.xhtml</from-view-id>        
         <navigation-case>
@@ -237,7 +243,7 @@
         </navigation-case>
     </navigation-rule>  
 
-<!-- enseignants -->
+    <!-- enseignants -->
     <navigation-rule>       
         <from-view-id>/enseignant/ajouterEnseignant.xhtml</from-view-id>        
         <navigation-case>
@@ -311,7 +317,7 @@
         </navigation-case>
     </navigation-rule> 
      
-     <!-- programmes -->
+    <!-- programmes -->
     <navigation-rule>       
         <from-view-id>/programme/ajouterProgramme.xhtml</from-view-id>        
         <navigation-case>
@@ -348,7 +354,7 @@
         </navigation-case>
     </navigation-rule> 
     
-     <!-- parcours -->
+    <!-- parcours -->
     <navigation-rule>       
         <from-view-id>/parcours/ajouterParcours.xhtml</from-view-id>        
         <navigation-case>

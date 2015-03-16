@@ -8,31 +8,30 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content"> 
-                <h1>LA LISTE DES ETUDIANTS</h1>
-
-                <f:view>
-                    <h:form id="form">                        
-                        <p:outputLabel value="Departement" for="departement" />
-                        <h:selectOneMenu value="#{etudiantBean.departement}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
+                <h1>LA LISTE DES ETUDIANTS</h1>               
+                    <h:form id="form">                              
+                        <p:outputLabel value="Departement"  />
+                        <h:selectOneMenu value="#{etudiantBean.idD}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
                             <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{departementServiceImpl.allDepartements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement}" />
+                            <f:selectItems value="#{etudiantBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
                         </h:selectOneMenu>
-                        <p:outputLabel value="Année" for="annee" />
-                        <h:selectOneMenu value="#{etudiantBean.annee}" style="margin-top:10px; height: 30px; width: 200px;"  id="annee">
+                        <p:outputLabel value="Année"  />
+                        <h:selectOneMenu value="#{etudiantBean.idA}" style="margin-top:10px; height: 30px; width: 200px;"  id="annee">
                             <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{anneeAcademiqueServiceImpl.allAnnee}" var="annee" itemLabel="#{annee}" itemValue="#{annee}" />
+                            <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="annee" itemLabel="#{annee}" itemValue="#{annee.id}" />
                         </h:selectOneMenu>
-                        <p:outputLabel value="Niveau" for="niveau" />
-                        <h:selectOneMenu value="#{etudiantBean.niveau}" style="margin-top:10px; height: 30px; width: 200px;"  id="niveau">
+                        <p:outputLabel value="Niveau"  />
+                        <h:selectOneMenu value="#{etudiantBean.idN}" style="margin-top:10px; height: 30px; width: 200px;"  id="niveau">
                             <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{niveauServiceImpl.allNiveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau}" />
+                            <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
                         </h:selectOneMenu>
-                        <p:outputLabel value="Option" for="option" />
-                        <h:selectOneMenu value="#{etudiantBean.option}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
+                        <p:outputLabel value="Option" />
+                        <h:selectOneMenu value="#{etudiantBean.idO}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
                             <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{optionServiceImpl.allOptions}" var="option" itemLabel="#{option.code}" itemValue="#{option}" />
+                            <f:selectItems value="#{optionBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
                         </h:selectOneMenu>
-                        <p:commandButton type="button" action="#{etudiantBean.filtrer()}"  update=":table"  value="Filtrer"/>
+                        
+                        <p:commandButton type="submit" action="#{etudiantBean.filtrer()}"  update=":form:table"  value="Filtrer"/>
                         <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="1000">                            
                             <p:column>
                                 <f:facet name="header">
@@ -79,9 +78,7 @@
                                 <h:outputText value="#{item.genre}"/>
                             </p:column>                            
                         </p:dataTable>
-                    </h:form>
-                </f:view>
-
+                    </h:form>                
             </ui:define>            
         </ui:composition>
     </body>

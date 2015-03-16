@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.primefaces.context.RequestContext;
 
 @Named(value = "cycleBean")
 @RequestScoped
@@ -19,19 +20,18 @@ public class CycleBean {
     @EJB
     private ICycleService service;
     private Cycle cycle = new Cycle();
-    private List<Cycle> cycles;    
+    private List<Cycle> cycles;
 
-    public CycleBean() {        
+    public CycleBean() {
     }
 
     public void saveOrUpdateCycle(ActionEvent actionEvent) throws ServiceException {
         if (cycle != null && cycle.getNom() != null) {
             service.saveOrUpdateCycle(cycle);
-            FacesContext context = FacesContext.getCurrentInstance();
-            if (cycle.getId() == null) {                
-                context.addMessage(null, new FacesMessage("Operation reussie", cycle.getNom() + "a été mis à jour "));                                
+            if (cycle.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", cycle.getNom() + " a été mis à jour "));
             } else {
-                context.addMessage(null, new FacesMessage("Operation reussie", cycle.getNom() + "a été enregistré"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", cycle.getNom() + " a été enregistré"));
             }
 
             cycle = new Cycle();
@@ -39,14 +39,26 @@ public class CycleBean {
     }
 
     public void deleteCycle(ActionEvent actionEvent) throws ServiceException {
-        if (cycle != null) {
-            System.out.println("delete --- " + cycle);
-            String message = cycle.getNom();
+        if (cycle != null && cycle.getId() != null) {
             service.deleteCycle(cycle.getId());
-            
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, new FacesMessage("Operation reussie", message + " a été supprimé"));
-              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Operation reussie", "a été supprimé"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", cycle.getNom() + " a été supprimé"));
             cycle = new Cycle();
+        }
+    }
+
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (cycle != null && cycle.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un Cycle avant de modifier "));
+        }
+    }
+
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (cycle != null && cycle.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un Cycle avant de supprimer "));
         }
     }
 

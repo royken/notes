@@ -5,13 +5,71 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1">
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucun cours n'est enregistré" var="cours" value="#{coursBean.courss}" rowKey="#{cours.id}" paginator="true" rows="15"  paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
-                                     selection="#{coursBean.cours}" selectionMode="single" >            
+                <p:panel  id="p1">                            
+                    <p:dialog header="AJOUTER UN COURS" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSave">                                
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySave" columns="2">
+                                        <h:outputText  value="Intitule : " />  
+                                        <p:inputText value="#{coursBean.cours.intitule}" />
+                                        <h:outputText  value="Credit : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{coursBean.credit}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Type de Cours : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{coursBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{coursBean.typeCourss}" var="typeCours" itemLabel="#{typeCours.nom}" itemValue="#{typeCours.id}" />
+                                        </h:selectOneMenu>                                   
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{coursBean.verifierCreditEtSave(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>                    
+                    <p:dialog header="MODIFIER LE COURS" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdate">    
+                            <p:growl id="growl1" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Intitule : " />  
+                                        <p:inputText value="#{coursBean.cours.intitule}" />
+                                        <h:outputText  value="Credit : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{coursBean.credit}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Type de Cours : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{coursBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{coursBean.typeCourss}" var="typeCours" itemLabel="#{typeCours.nom}" itemValue="#{typeCours.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:inputHidden value="#{coursBean.cours.id}"  />
+                                        <h:inputHidden value="#{coursBean.cours.version}"  />
+                                        <h:inputHidden value="#{coursBean.cours.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{coursBean.verifierCreditEtSave(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog message="voulez-vous vraiment supprimer ce cours ?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                            <p:commandButton id="confirm" value="OUI" action="#{coursBean.deleteCours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                        </p:confirmDialog>
+                        <p:dataTable id="d"  emptyMessage="Aucun cours n'est enregistré" var="cours" value="#{coursBean.courss}" rowKey="#{cours.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                     sortOrder="ascending" selection="#{coursBean.cours}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES COURS
                             </f:facet>                            
@@ -23,18 +81,18 @@
                             </p:column>
                             <p:column headerText="Type de cours" >  
                                 #{cours.typeCours.nom}  
-                            </p:column>                                                  
+                            </p:column> 
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Cours" action="#{coursBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="ajouter" value="Nouveau cours" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" action="#{coursBean.deleteCours()}" update=":f:d"  icon="ui-icon-close"/>
+                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{coursBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="#{coursBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
-                            </f:facet>                             
+                                <p:commandButton id="modifier" value="Modifier" actionListener="#{coursBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                              
                         </p:dataTable>                                                              
-                    </h:form>                                      
+                    </h:form>   
                 </p:panel> 
             </ui:define>            
         </ui:composition>

@@ -14,11 +14,10 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -46,42 +45,43 @@ public class SemestreBean {
         return semestreService.getAllSemestre();
     }
 
-    public String saveOrUpdateSemestre() throws ServiceException {
-        if (semestre != null) { 
-            semestre.setNiveau(niveauService.findNiveauById(Integer.parseInt(id)));                        
+    public void saveOrUpdateSemestre(ActionEvent actionEvent) throws ServiceException {
+        if (semestre != null && semestre.getIntitule() != null) {
+            semestre.setNiveau(niveauService.findNiveauById(Integer.parseInt(id)));
             semestreService.saveOrUpdateSemestre(semestre);
+            if (semestre.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", semestre.getIntitule() + " a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", semestre.getIntitule() + " a été enregistré"));
+            }
+
             semestre = new Semestre();
-            id = new String();                     
+            id = new String(); 
         }
-        return "saveOrUpdateSemestre";
     }
 
-    public String deleteSemestre() throws ServiceException {
-        if (semestre != null && semestre.getId() > 0) {          
-            message = "Suppression reussi de "+semestre.getIntitule();
+    public void deleteSemestre(ActionEvent actionEvent) throws ServiceException {
+        if (semestre != null && semestre.getId() != null) {
             semestreService.deleteSemestre(semestre.getId());
-            semestre = new Semestre();            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", semestre.getIntitule() + " a été supprimé"));
+            semestre = new Semestre();
         }
-        return "deleteSemestre";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            semestre=new Semestre();
-            message="Enregistrement reussi ";
-            return "saveSemestre";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (semestre != null && semestre.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un semestre avant de modifier "));
         }
-
-        else if (n == 2 && semestre!=null &&semestre.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            return "updateSemestre";
-        }
-        semestre = new Semestre();        
-        return "semestre";
     }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
+
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (semestre != null && semestre.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un semestre avant de supprimer "));
+        }
     }
 
     public Semestre getSemestre() {
@@ -117,8 +117,6 @@ public class SemestreBean {
         this.niveaux = niveaux;
     }
 
-   
-
     public List<Semestre> getSemestres() throws ServiceException {
         semestres = semestreService.getAllSemestre();
         return semestres;
@@ -126,11 +124,12 @@ public class SemestreBean {
 
     public void setSemestres(List<Semestre> semestres) {
         this.semestres = semestres;
-    }   
+    }
 
     public String getId() {
-        if(semestre!=null && semestre.getVersion() != 0){        
-        id = semestre.getNiveau().getId().toString();        }        
+        if (semestre != null && semestre.getVersion() != 0) {
+            id = semestre.getNiveau().getId().toString();
+        }
         return id;
     }
 

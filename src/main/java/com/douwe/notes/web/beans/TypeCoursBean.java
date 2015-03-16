@@ -3,7 +3,6 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.service.ITypeCoursService;
 import com.douwe.notes.service.ServiceException;
-import static java.awt.SystemColor.text;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -11,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;  
 import javax.faces.context.FacesContext;  
 import javax.faces.event.ActionEvent; 
+import org.primefaces.context.RequestContext;
 
 
 @Named(value = "typeCoursBean")
@@ -18,63 +18,62 @@ import javax.faces.event.ActionEvent;
 public class TypeCoursBean {
 
     @EJB
-    private ITypeCoursService service;
+    private ITypeCoursService typeCoursService;
     private TypeCours typeCours = new TypeCours();
     private List<TypeCours> typeCourss; 
-    private String message;
+    
 
-    /**
-     * Creates a new instance of TypeCoursBean
-     */
+   
     public TypeCoursBean() {        
-        message="";
+    
     }
 
 
-    public String saveOrUpdateTypeCours() throws ServiceException {
-        if (typeCours != null) {            
-            service.saveOrUpdateTpyeCours(typeCours);
-            typeCours = new TypeCours();                      
+public void saveOrUpdateTypeCours(ActionEvent actionEvent) throws ServiceException {
+        if (typeCours != null && typeCours.getNom() != null) {
+            typeCoursService.saveOrUpdateTpyeCours(typeCours);
+            if (typeCours.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", typeCours.getNom() + " a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", typeCours.getNom()+ " a été enregistré"));
+            }
+
+            typeCours = new TypeCours();
         }
-        return "saveOrUpdateTypeCours";
     }
 
-    public String deleteTypeCours() throws ServiceException {
-        if (typeCours != null) {          
-            message = "Suppression reussi de "+typeCours.getNom();
-            service.deleteTypeCours(typeCours.getId());
-            typeCours = new TypeCours();            
+    public void deleteTypeCours(ActionEvent actionEvent) throws ServiceException {
+        if (typeCours != null && typeCours.getId() != null) {
+            typeCoursService.deleteTypeCours(typeCours.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", typeCours.getNom() + " a été supprimé"));
+            typeCours = new TypeCours();
         }
-        return "deleteTypeCours";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            typeCours=new TypeCours();
-            message="Enregistrement reussi ";
-            return "saveTypeCours";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (typeCours != null && typeCours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un type de cours avant de modifier "));
         }
+    }
 
-        else if (n == 2 && typeCours!=null &&typeCours.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            return "updateTypeCours";
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (typeCours != null && typeCours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un type de cours avant de supprimer "));
         }
-        typeCours = new TypeCours();        
-        return "typeCours";
-    }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
-    }
-    public ITypeCoursService getService() {
-        return service;
     }
 
-    public void setService(ITypeCoursService service) {
-        this.service = service;
+    public ITypeCoursService getTypeCoursService() {
+        return typeCoursService;
     }
 
-
+    public void setTypeCoursService(ITypeCoursService typeCoursService) {
+        this.typeCoursService = typeCoursService;
+    }
+ 
     public TypeCours getTypeCours() {
         return typeCours;
     }
@@ -84,7 +83,7 @@ public class TypeCoursBean {
     }
 
     public List<TypeCours> getTypeCourss() throws ServiceException {        
-        typeCourss = service.getAllTypeCours();
+        typeCourss = typeCoursService.getAllTypeCours();        
         return typeCourss;
     }
 
