@@ -5,6 +5,8 @@ import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ServiceException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,14 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
+    
+    private final DateFormat df;
+
+    public AnneeAcademiqueServiceImpl() {
+       df = new SimpleDateFormat("yyyy");
+    }
+    
+    
 
     public IAnneeAcademiqueDao getAcademiqueDao() {
         return academiqueDao;
@@ -39,6 +49,8 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         try {
             if (anneeAcademique.getId() == null) {
                 anneeAcademique.setActive(1);
+                
+                anneeAcademique.setDateString(df.format(anneeAcademique.getDebut()) + "-" + df.format(anneeAcademique.getFin()));
                 return academiqueDao.create(anneeAcademique);
             } else {
                 return academiqueDao.update(anneeAcademique);
@@ -79,10 +91,27 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     @Override
     public List<AnneeAcademique> getAllAnnee() throws ServiceException {
         try {
-            return academiqueDao.findAll();
+            return academiqueDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public AnneeAcademique findAnneeByString(String annee) throws ServiceException {
+        try {
+            AnneeAcademique anneeA= academiqueDao.findByString(annee);
+            if(anneeA != null){
+                return anneeA;
+            }
+            else{
+                throw new ServiceException("La ressource demandée est introuvable");
+                
+            }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
     

@@ -5,6 +5,7 @@ import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Option;
+import java.util.List;
 
 /**
  *
@@ -20,6 +21,11 @@ public class OptionDaoImpl extends GenericDao<Option, Long> implements IOptionDa
     @Override
     public Option findByCode(String code) throws DataAccessException {
         return (Option)(getManager().createNamedQuery("Option.findByCode").setParameter("param", code).getSingleResult());
+    }
+
+    @Override
+    public List<Option> findAllActive() throws DataAccessException {
+        return getManager().createNamedQuery("Option.findAllActive").getResultList();
     }
     
 }

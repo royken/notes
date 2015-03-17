@@ -33,6 +33,7 @@ public class AnneeResource implements IAnneeResource{
     
     
 
+    @Override
     public AnneeAcademique createAnnee(AnneeAcademique anneeAcademique) {
         try {
             return academiqueService.saveOrUpdateAnnee(anneeAcademique);
@@ -42,6 +43,7 @@ public class AnneeResource implements IAnneeResource{
         }
     }
 
+    @Override
     public List<AnneeAcademique> getAllAnnees() {
         try {
             return academiqueService.getAllAnnee();
@@ -51,6 +53,7 @@ public class AnneeResource implements IAnneeResource{
         }
     }
 
+    @Override
     public AnneeAcademique getAnnee(long id) {
         try {
             AnneeAcademique anneeAcademique = academiqueService.findAnneeById(id);
@@ -64,6 +67,7 @@ public class AnneeResource implements IAnneeResource{
         }
     }
 
+    @Override
     public AnneeAcademique updateAnnee(long id, AnneeAcademique anneeAcademique) {
         try {
             AnneeAcademique academique = academiqueService.findAnneeById(id);
@@ -80,12 +84,29 @@ public class AnneeResource implements IAnneeResource{
         return null;
     }
 
+    @Override
     public void deleteAnnee(long id) {
         try {
             academiqueService.deleteAnnee(id);
         } catch (ServiceException ex) {
             Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public AnneeAcademique getAnnee(String annee) {
+        try {
+            AnneeAcademique date = academiqueService.findAnneeByString(annee);
+            
+            if(date == null){
+                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return date;
+        } catch (ServiceException ex) {
+            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+                
     }
     
 }
