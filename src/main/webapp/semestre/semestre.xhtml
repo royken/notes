@@ -5,33 +5,87 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1">
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
+                <p:panel  id="p1">                            
+                    <p:dialog header="AJOUTER UN SEMESTRE" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSave">                                
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySave" columns="2">
+                                        <h:outputText  value="Intitulé : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{semestreBean.semestre.intitule}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Niveau : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{semestreBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{semestreBean.niveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                        </h:selectOneMenu>                                   
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{semestreBean.saveOrUpdateSemestre(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>                    
+                    <p:dialog header="MODIFIER LE SEMESTRE" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdate">    
+                            <p:growl id="growl1" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Intitulé : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{semestreBean.semestre.intitule}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Niveau : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{semestreBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{semestreBean.niveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:inputHidden value="#{semestreBean.semestre.id}"  />
+                                        <h:inputHidden value="#{semestreBean.semestre.version}"  />
+                                        <h:inputHidden value="#{semestreBean.semestre.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{semestreBean.saveOrUpdateSemestre(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog message="voulez-vous vraiment supprimer ce semestre ?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                            <p:commandButton id="confirm" value="OUI" action="#{semestreBean.deleteSemestre(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                        </p:confirmDialog>
                         <p:dataTable id="d"  emptyMessage="Aucun semestre n'est enregistré" var="semestre" value="#{semestreBean.semestres}" rowKey="#{semestre.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
-                                     selection="#{semestreBean.semestre}" selectionMode="single" >            
+                                     sortOrder="ascending" selection="#{semestreBean.semestre}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES SEMESTRES
-                            </f:facet>                            
-                            <p:column headerText="Intitulé">  
+                            </f:facet>                           
+                            <p:column headerText="Code du semestre" id="code" >  
                                 #{semestre.intitule}  
-                            </p:column>            
-                            <p:column headerText="Niveau" >  
+                            </p:column>                                                                                
+                             <p:column headerText="Niveau" id="niveau" >  
                                 #{semestre.niveau.code}  
-                            </p:column>                                                  
+                            </p:column>
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Semestre" action="#{semestreBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="ajouter" value="Nouveau semestre" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" action="#{semestreBean.deleteSemestre()}" update=":f:d"  icon="ui-icon-close"/>
+                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{semestreBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="#{semestreBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
-                            </f:facet>                             
+                                <p:commandButton id="modifier" value="Modifier" actionListener="#{semestreBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                              
                         </p:dataTable>                                                              
-                    </h:form>                                      
+                    </h:form>   
                 </p:panel> 
             </ui:define>            
         </ui:composition>

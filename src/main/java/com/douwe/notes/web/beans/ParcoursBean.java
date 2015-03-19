@@ -5,32 +5,25 @@
  */
 package com.douwe.notes.web.beans;
 
-import com.douwe.notes.entities.AnneeAcademique;
-import com.douwe.notes.entities.Cycle;
-import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.UniteEnseignement;
-import com.douwe.notes.service.IAnneeAcademiqueService;
-import com.douwe.notes.service.IInsfrastructureService;
-import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.IUniteEnseignementService;
 import com.douwe.notes.service.ServiceException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
-import javax.faces.model.DataModel;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -51,66 +44,71 @@ public class ParcoursBean {
 
     private Parcours parcours = new Parcours();
     private List<Parcours> parcourses;
+   
     private List<UniteEnseignement> uniteEnseignements;
     private List<UniteEnseignement> uniteEnseignementChoisis;
     private List<Niveau> niveaux;
     private List<Option> Options;
-    private String message;
+   
+    Long[] idUEs;
     String idN, idO;
-    UEDataModel dataModel;
+    int n = 50;
 
-    public ParcoursBean() throws ServiceException {
+    public ParcoursBean() throws ServiceException {        
+        idUEs = new Long[n];
         uniteEnseignementChoisis = new LinkedList<UniteEnseignement>();
-        uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
-        dataModel = new UEDataModel(uniteEnseignements);
+//        uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
+        //      dataModel = new UEDataModel(uniteEnseignements);
     }
 
-    public String saveOrUpdateParcours() throws ServiceException {
-        if (parcours != null) {
-
-            //parcours.setUniteEnseignements(uniteEnseignementService.findUniteEnseignementById(Integer.parseInt(id)));
-            if (uniteEnseignementChoisis != null) {
-                for (UniteEnseignement UE : uniteEnseignementChoisis) {
-                    System.out.println("-------------------------> interieur" + UE);
+    public void saveOrUpdateParcours(ActionEvent actionEvent) throws ServiceException {               
+            int i;
+            for (i = 0; i < idUEs.length; i++) {
+                if (idUEs[i] > 0) {
+                    UniteEnseignement ue = uniteEnseignementService.findUniteEnseignementById(idUEs[i]);
+                    //c.setId(ids[i]+courses.size());                    
+                    uniteEnseignementChoisis.add(ue);
                 }
-                parcours.setUniteEnseignements(uniteEnseignementChoisis);
-            }
-            System.out.println("-------------------------> exterieur");
+            parcours.setActive(1);
+            parcours.setUniteEnseignements(uniteEnseignementChoisis);
             parcours.setNiveau(niveauService.findNiveauById(Integer.parseInt(idN)));
             parcours.setOption(optionService.findOptionById(Integer.parseInt(idO)));
-            parcoursService.saveOrUpdateParcours(parcours);
-            parcours = new Parcours();
+            parcoursService.saveOrUpdateParcours(parcours);           
+            if (parcours.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été  enregistré "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été mis à jour"));
+            }
+             parcours = new Parcours();
             idO = new String();
             idN = new String();
+            idUEs = new Long[n];
+            uniteEnseignementChoisis = new LinkedList<UniteEnseignement>();
         }
-        return "saveOrUpdateParcours";
     }
 
-    public String deleteParcours() throws ServiceException {
-        if (parcours != null && parcours.getId() > 0) {
-            message = "Suppression reussi ";
+    public void deleteParcours(ActionEvent actionEvent) throws ServiceException {
+        if (parcours != null && parcours.getId() != null) {
             parcoursService.deleteParcours(parcours.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été supprimé"));
             parcours = new Parcours();
         }
-        return "deleteParcours";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            parcours = new Parcours();
-            message = "Enregistrement reussi ";
-            return "saveParcours";
-        } else if (n == 2 && parcours != null && parcours.getVersion() >= 1) {
-            message = "Mise à jour reussi ";
-            return "updateParcours";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (parcours != null && parcours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez un parcours avant de modifier "));
         }
-        parcours = new Parcours();
-        return "parcours";
     }
 
-    public void notification(ActionEvent actionEvent) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Succes", message));
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (parcours != null && parcours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un parcours avant de supprimer "));
+        }
     }
 
     public IParcoursService getParcoursService() {
@@ -212,7 +210,7 @@ public class ParcoursBean {
     }
 
     public List<UniteEnseignement> getUniteEnseignementChoisis() {
-        uniteEnseignementChoisis = parcours.getUniteEnseignements();
+        //uniteEnseignementChoisis = parcours.getUniteEnseignements();
         return uniteEnseignementChoisis;
     }
 
@@ -220,12 +218,27 @@ public class ParcoursBean {
         this.uniteEnseignementChoisis = uniteEnseignementChoisis;
     }
 
-    public UEDataModel getDataModel() {
-        return dataModel;
+    public Long[] getIdUEs() {
+         if (parcours!=null && parcours.getUniteEnseignements()!=null) {
+            int i=0;
+             for (UniteEnseignement next : parcours.getUniteEnseignements()) {
+                 idUEs[i] = next.getId();
+                 i++;
+             }
+        }
+        return idUEs;
     }
 
-    public void setDataModel(UEDataModel dataModel) {
-        this.dataModel = dataModel;
+    public void setIdUEs(Long[] idUEs) {
+        this.idUEs = idUEs;
     }
-
+   
+          public void verifierEtAffiche(ActionEvent actionEvent) throws ServiceException {
+        if (parcours != null && parcours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgAfficheCours').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez le parcours donc vous voulez affichez la listes des UE"));
+        }
+    } 
+    
 }

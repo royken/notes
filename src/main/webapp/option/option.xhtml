@@ -5,36 +5,93 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1">
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucunne option n'est enregistrée" var="option" value="#{optionBean.options}" rowKey="#{option.id}" paginator="true" rows="15"  paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
-                                     selection="#{optionBean.option}" selectionMode="single" >            
+                <p:panel  id="p1">                            
+                    <p:dialog header="AJOUTER UN OPTION" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSave">                                
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySave" columns="2">
+                                        <h:outputText  value="Code : " />  
+                                        <p:inputText value="#{optionBean.option.code}" />
+                                        <h:outputText  value="Description : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{optionBean.option.description}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Departement : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{optionBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{optionBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                        </h:selectOneMenu>                                                                       </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{optionBean.saveOrUpdateOption(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>                    
+                    <p:dialog header="MODIFIER LE OPTION" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdate">    
+                            <p:growl id="growl1" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Code : " />  
+                                        <p:inputText value="#{optionBean.option.code}" />
+                                        <h:outputText  value="Description : " style="margin-top:10px;" />  
+                                        <p:inputText value="#{optionBean.option.description}" style="margin-top:10px; height: 30px; width: 200px;" />
+                                        <h:outputText  value="Departement : " style="margin-top:10px;" /> 
+                                        <h:selectOneMenu value="#{optionBean.id}" style="margin-top:10px; height: 30px; width: 200px;"  >
+                                            <f:selectItems value="#{optionBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:inputHidden value="#{optionBean.option.id}"  />
+                                        <h:inputHidden value="#{optionBean.option.version}"  />
+                                        <h:inputHidden value="#{optionBean.option.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{optionBean.saveOrUpdateOption(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog message="voulez-vous vraiment supprimer ce option ?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                            <p:commandButton id="confirm" value="OUI" action="#{optionBean.deleteOption(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                        </p:confirmDialog>
+                        <p:dataTable id="d"  emptyMessage="Aucun option n'est enregistré" var="option" value="#{optionBean.options}" rowKey="#{option.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                     sortOrder="ascending" selection="#{optionBean.option}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES OPTIONS
-                            </f:facet>                            
-                            <p:column headerText="Code">  
+                            </f:facet>                           
+                            <p:column headerText="Code du option" id="code" >  
                                 #{option.code}  
-                            </p:column>            
-                            <p:column headerText="Description">  
+                            </p:column>                                                                                
+                            <p:column headerText="Description" id="description" >  
                                 #{option.description}  
                             </p:column>
-                            <p:column headerText="Departement" >  
+                            <p:column headerText="Departement" id="departement" >  
                                 #{option.departement.code}  
-                            </p:column>                                                  
+                            </p:column>
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouvelle Option" action="#{optionBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="ajouter" value="Nouveau option" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" action="#{optionBean.deleteOption()}" update=":f:d"  icon="ui-icon-close"/>
+                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{optionBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="#{optionBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
-                            </f:facet>                             
+                                <p:commandButton id="modifier" value="Modifier" actionListener="#{optionBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                              
                         </p:dataTable>                                                              
-                    </h:form>                                      
+                    </h:form>   
                 </p:panel> 
             </ui:define>            
         </ui:composition>
