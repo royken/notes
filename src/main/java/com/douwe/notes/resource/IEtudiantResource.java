@@ -44,8 +44,8 @@ public interface IEtudiantResource {
     @Produces(value = "application/json")
     public Etudiant findByMatricule(@PathParam(value = "id") String matricule);
     
-    @GET
-    @Path("import/{file}-{annee:\\d+}")
-    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
+//    @GET
+//    @Path("import/{file}-{annee:\\d+}")
+//    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
     
 }
