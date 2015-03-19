@@ -100,6 +100,10 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
 
     @Override
     public AnneeAcademique findAnneeByString(String annee) throws ServiceException {
+        
+        System.out.println("---------------------------------\n\n");
+        System.out.println(annee);
+        System.out.println("----------------------------------\n\n");
         try {
             AnneeAcademique anneeA= academiqueDao.findByString(annee);
             if(anneeA != null){

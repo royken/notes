@@ -33,7 +33,7 @@ public interface IAnneeResource {
     @GET
     @Path(value = "{annee}")
     @Produces(value = "application/json")
-    AnneeAcademique getAnnee(@PathParam(value = "id")String annee);
+    AnneeAcademique getAnneeByString(@PathParam(value = "annee")String annee);
 
     @PUT
     @Path(value = "{id : \\d+}")

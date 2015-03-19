@@ -94,7 +94,7 @@ public class AnneeResource implements IAnneeResource{
     }
 
     @Override
-    public AnneeAcademique getAnnee(String annee) {
+    public AnneeAcademique getAnneeByString(String annee) {
         try {
             AnneeAcademique date = academiqueService.findAnneeByString(annee);
             
