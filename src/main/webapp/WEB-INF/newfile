@@ -1,6 +1,0 @@
-
-
-    
-                                    <h:selectManyCheckbox value="#{uniteEnseignementBean.coursChoisis}" >
-                                        <f:selectItems value="#{uniteEnseignementBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours}"/>
-                                    </h:selectManyCheckbox>

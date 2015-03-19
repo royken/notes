@@ -68,8 +68,18 @@
                             <p:commandButton id="confirm" value="OUI" action="#{coursBean.deleteCours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
                             <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
                         </p:confirmDialog>
-                        <p:dataTable id="d"  emptyMessage="Aucun cours n'est enregistré" var="cours" value="#{coursBean.courss}" rowKey="#{cours.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
-                                     sortOrder="ascending" selection="#{coursBean.cours}" selectionMode="single" >            
+                        <p:dataTable id="d"  
+                                     emptyMessage="Aucun cours n'est enregistré" 
+                                     var="cours" 
+                                     value="#{coursBean.courss}" 
+                                     rowKey="#{cours.id}" 
+                                     paginator="true" 
+                                     rows="15"   
+                                     paginatorPosition="bottom" 
+                                     paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                     sortOrder="ascending" 
+                                     selection="#{coursBean.cours}" 
+                                     selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES COURS
                             </f:facet>                            

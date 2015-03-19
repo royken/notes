@@ -133,13 +133,13 @@ public class EtudiantServiceImpl implements IEtudiantService {
                     etudiant.setEmail(row.getCell(5).getStringCellValue());
                 }
                 if (row.getCell(6) != null) {
-                    etudiant.setNumeroTelephone(row.getCell(6).getStringCellValue());
+                    etudiant.setNumeroTelephone(row.getCell(6).getNumericCellValue()+"");
                 }
                 etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
                 System.out.println("Le genre donne "+etudiant.getGenre());
                 System.out.println("toto is back "+row.getCell(10));
-                String niveau = row.getCell(10).getStringCellValue();
-                String option = row.getCell(11).getStringCellValue();
+                String niveau = row.getCell(8).getStringCellValue();
+                String option = row.getCell(9).getStringCellValue();
                 etudiant.setActive(1);
                 inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
                 row = sheet.getRow(index++);

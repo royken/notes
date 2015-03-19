@@ -29,27 +29,29 @@ public class UniteEnseignementBean {
     private List<Cours> courses;
     private List<Cours> coursChoisis;
     private Long[] ids;
-    int n=5;
+    int n = 5;
 
     public UniteEnseignementBean() {
-        this.ids = new Long[n];           
-        coursChoisis =  new LinkedList<Cours>();
+        this.ids = new Long[n];
+        coursChoisis = new LinkedList<Cours>();
     }
 
     public void saveOrUpdateUniteEnseignement(ActionEvent actionEvent) throws ServiceException {
         if (uniteEnseignement != null && uniteEnseignement.getCode() != null) {
             int i;
-            for (i = 0; i < ids.length ; i++) {                
-                if(ids[i]>0){
-                    Cours c = coursService.findCoursById(ids[i]);                    
-                    //c.setId(ids[i]+courses.size());                    
-                coursChoisis.add(c);
+            for (i = 0; i < ids.length; i++) {
+                if (ids[i] > 0) {
+                    Cours c = coursService.findCoursById(ids[i]);
+                    if (uniteEnseignement.getId() != 0L) {
+                        c.setId(ids[i] + courses.size());
+                    }
+                    coursChoisis.add(c);
                 }
-                        
+
             }
-       
+
             uniteEnseignement.setCourses(coursChoisis);
-            System.out.println("---"+uniteEnseignement.getCourses());
+            System.out.println("---" + uniteEnseignement.getCourses());
             uniteEnseignementService.saveOrUpdateCours(uniteEnseignement);
             if (uniteEnseignement.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", uniteEnseignement.getCode() + " a été mis à jour "));
@@ -57,7 +59,7 @@ public class UniteEnseignementBean {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", uniteEnseignement.getCode() + " a été enregistré"));
             }
 
-            uniteEnseignement = new UniteEnseignement();            
+            uniteEnseignement = new UniteEnseignement();
             ids = new Long[n];
         }
     }
@@ -85,16 +87,18 @@ public class UniteEnseignementBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez une unité d'enseignement avant de supprimer "));
         }
     }
-        public void verifierEtAffiche(ActionEvent actionEvent) throws ServiceException {
+
+    public void verifierEtAffiche(ActionEvent actionEvent) throws ServiceException {
         if (uniteEnseignement != null && uniteEnseignement.getId() != null) {
             RequestContext.getCurrentInstance().execute("PF('dlgAfficheCours').show()");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez l'unité d'enseignement donc vous voulez affichez la listes des cours"));
         }
     }
-        public void annuler(){
+
+    public void annuler() {
         uniteEnseignement = new UniteEnseignement();
-        }
+    }
 
     public IUniteEnseignementService getUniteEnseignementService() {
         return uniteEnseignementService;
@@ -130,7 +134,7 @@ public class UniteEnseignementBean {
     }
 
     public List<Cours> getCourses() throws ServiceException {
-        courses = coursService.getAllCours();        
+        courses = coursService.getAllCours();
         return courses;
     }
 
@@ -139,10 +143,10 @@ public class UniteEnseignementBean {
     }
 
     public Long[] getIds() {
-        if (uniteEnseignement!=null && uniteEnseignement.getCourses()!=null) {
-            int i=0;
-            for (Iterator<Cours> iterator = uniteEnseignement.getCourses().iterator(); iterator.hasNext();) {                
-                Cours next = iterator.next();                
+        if (uniteEnseignement != null && uniteEnseignement.getCourses() != null) {
+            int i = 0;
+            for (Iterator<Cours> iterator = uniteEnseignement.getCourses().iterator(); iterator.hasNext();) {
+                Cours next = iterator.next();
                 ids[i] = next.getId();
                 i++;
             }
@@ -150,7 +154,7 @@ public class UniteEnseignementBean {
         return ids;
     }
 
-    public void setIds(Long[] ids) {       
+    public void setIds(Long[] ids) {
         this.ids = ids;
     }
 
@@ -161,6 +165,5 @@ public class UniteEnseignementBean {
     public void setN(int n) {
         this.n = n;
     }
-
 
 }

@@ -9,76 +9,78 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content"> 
                 <h1>LA LISTE DES ETUDIANTS</h1>               
-                    <h:form id="form">                              
-                        <p:outputLabel value="Departement"  />
-                        <h:selectOneMenu value="#{etudiantBean.idD}" style="margin-top:10px; height: 30px; width: 200px;"  id="departement">
-                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{etudiantBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
-                        </h:selectOneMenu>
-                        <p:outputLabel value="Année"  />
-                        <h:selectOneMenu value="#{etudiantBean.idA}" style="margin-top:10px; height: 30px; width: 200px;"  id="annee">
-                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="annee" itemLabel="#{annee}" itemValue="#{annee.id}" />
-                        </h:selectOneMenu>
-                        <p:outputLabel value="Niveau"  />
-                        <h:selectOneMenu value="#{etudiantBean.idN}" style="margin-top:10px; height: 30px; width: 200px;"  id="niveau">
-                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
-                        </h:selectOneMenu>
-                        <p:outputLabel value="Option" />
-                        <h:selectOneMenu value="#{etudiantBean.idO}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
-                            <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                            <f:selectItems value="#{optionBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
-                        </h:selectOneMenu>
-                        
-                        <p:commandButton type="submit" action="#{etudiantBean.filtrer()}"  update=":form:table"  value="Filtrer"/>
-                        <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="1000">                            
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Matricule"/>
-                                </f:facet>
-                                <h:outputText value="#{item.matricule}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Nom"/>
-                                </f:facet>
-                                <h:outputText value="#{item.nom}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="DateDeNaissance"/>
-                                </f:facet>
-                                <h:outputText value="#{item.dateDeNaissance}">
-                                    <f:convertDateTime pattern="MM/dd/yyyy" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="LieuDeNaissance"/>
-                                </f:facet>
-                                <h:outputText value="#{item.lieuDeNaissance}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Email"/>
-                                </f:facet>
-                                <h:outputText value="#{item.email}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="NumeroTelephone"/>
-                                </f:facet>
-                                <h:outputText value="#{item.numeroTelephone}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Genre"/>
-                                </f:facet>
-                                <h:outputText value="#{item.genre}"/>
-                            </p:column>                            
-                        </p:dataTable>
-                    </h:form>                
+                <h:form id="form">                          
+                    <p:outputLabel value="Departement"  />
+                    <h:selectOneMenu value="#{etudiantBean.idD}"  style="margin-top:10px; height: 30px; width: 100px;"  id="departement">
+                        <f:selectItem value="#{null}" itemLabel=""/>
+                        <f:selectItems value="#{etudiantBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                    </h:selectOneMenu>
+                    <p:outputLabel value="Année"  />
+                    <h:selectOneMenu value="#{etudiantBean.idA}" style="margin-top:10px; height: 30px; width: 100px;"  id="annee">
+                        <f:selectItem value="#{null}" itemLabel=""/>
+                        <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="annee" itemLabel="#{annee}" itemValue="#{annee.id}" />
+                    </h:selectOneMenu>
+                    <p:outputLabel value="Niveau"  />
+                    <h:selectOneMenu value="#{etudiantBean.idN}" style="margin-top:10px; height: 30px; width: 100px;"  id="niveau">
+                        <f:selectItem value="#{null}" itemLabel=""/>
+                        <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                    </h:selectOneMenu>
+                    <p:outputLabel value="Option" />
+                    <h:selectOneMenu value="#{etudiantBean.idO}" style="margin-top:10px; height: 30px; width: 200px;"  id="option">
+                        <f:selectItem value="#{null}" itemLabel=""/>
+                        <f:selectItems value="#{optionBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
+                    </h:selectOneMenu>                       
+                    <p:commandButton type="submit" action="#{etudiantBean.filtrer()}"  update=":form:table"  value="Filtrer"/>
+                    <p:dataTable value="#{etudiantBean.etudiants}" var="item" id="table" paginator="true" paginatorPosition="bottom" rows="1000"/>                            
+                    <p:dataTable id="table"  emptyMessage="Aucun etudiant trouvé" var="item" value="#{etudiantBean.etudiants}" rowKey="#{item.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                 sortOrder="ascending" selection="#{etudiantBean.etudiant}" selectionMode="single" >            
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Matricule"/>
+                            </f:facet>
+                            <h:outputText value="#{item.matricule}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Nom"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nom}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="DateDeNaissance"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateDeNaissance}">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="LieuDeNaissance"/>
+                            </f:facet>
+                            <h:outputText value="#{item.lieuDeNaissance}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Email"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="NumeroTelephone"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numeroTelephone}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Genre"/>
+                            </f:facet>
+                            <h:outputText value="#{item.genre}"/>
+                        </p:column>                            
+                    </p:dataTable>
+                </h:form>                
             </ui:define>            
         </ui:composition>
     </body>

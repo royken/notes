@@ -5,8 +5,6 @@
  */
 package com.douwe.notes.web.beans;
 
-import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -63,8 +61,7 @@ public class ParcoursBean {
         //      dataModel = new UEDataModel(uniteEnseignements);
     }
 
-    public void saveOrUpdateParcours(ActionEvent actionEvent) throws ServiceException {
-                if (parcours != null) {
+    public void saveOrUpdateParcours(ActionEvent actionEvent) throws ServiceException {               
             int i;
             for (i = 0; i < idUEs.length; i++) {
                 if (idUEs[i] > 0) {
@@ -72,8 +69,6 @@ public class ParcoursBean {
                     //c.setId(ids[i]+courses.size());                    
                     uniteEnseignementChoisis.add(ue);
                 }
-
-            }           
             parcours.setActive(1);
             parcours.setUniteEnseignements(uniteEnseignementChoisis);
             parcours.setNiveau(niveauService.findNiveauById(Integer.parseInt(idN)));
@@ -226,11 +221,10 @@ public class ParcoursBean {
     public Long[] getIdUEs() {
          if (parcours!=null && parcours.getUniteEnseignements()!=null) {
             int i=0;
-            for (Iterator<UniteEnseignement> iterator = parcours.getUniteEnseignements().iterator(); iterator.hasNext();) {                
-                UniteEnseignement next = iterator.next();                
-                idUEs[i] = next.getId();
-                i++;
-            }
+             for (UniteEnseignement next : parcours.getUniteEnseignements()) {
+                 idUEs[i] = next.getId();
+                 i++;
+             }
         }
         return idUEs;
     }

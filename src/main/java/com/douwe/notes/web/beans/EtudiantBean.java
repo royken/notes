@@ -1,24 +1,30 @@
 package com.douwe.notes.web.beans;
 
-import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.entities.Genre;
+import com.douwe.notes.entities.Inscription;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IEtudiantService;
+import com.douwe.notes.service.IInscriptionService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
+import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.ServiceException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.bean.ManagedBean;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
-import org.apache.poi.ss.formula.atp.AnalysisToolPak;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -48,26 +54,41 @@ public class EtudiantBean {
     @EJB
     private IOptionService optionService;
     @EJB
+    private IParcoursService parcoursService;
+
+    @EJB
     private IDepartementService departementService;
 
-    private List<Etudiant> etudiants;
+    @EJB
+    private IInscriptionService inscriptionService;
+
+    private List<Etudiant> etudiants = new LinkedList<Etudiant>();
+
     private List<Niveau> niveaus;
     private List<Option> options;
     private List<AnneeAcademique> anneeAcademiques;
     private List<Departement> departements;
-    private Etudiant etudiant;
-    private AnneeAcademique anneeAcademique;   
-    Long idD = 0L, idN = 0L, idO = 0L, idA = 0L;
+    private Etudiant etudiant = new Etudiant();
+    private Inscription inscription;
+    private AnneeAcademique anneeAcademique;
+    private Genre genre;
+    private List<String> genres = new LinkedList<String>();
+    private Parcours parcours;
+    private List<Parcours> parcourses = new LinkedList<Parcours>();
+    Long idD = 0L, idN = 0L, idO = 0L, idA = 0L, idP = 0L;
+    int taille = 30;
 
     /**
      * Creates a new instance of EtudiantBean
      */
     public EtudiantBean() {
-        etudiants = new ArrayList<Etudiant>();
+
         departement = new Departement();
         anneeAcademique = new AnneeAcademique();
-        niveau =  new Niveau();
-        option = new Option();
+        niveau = new Niveau();
+        option = new Option();        
+        parcours = new Parcours();
+        inscription = new Inscription();
     }
 
     public void update() {
@@ -75,25 +96,91 @@ public class EtudiantBean {
     }
 
     public void filtrer() throws ServiceException {
-        if (idA != 0) {
+        if (idA != null) {
             anneeAcademique = anneeAcademiqueService.findAnneeById(idA);
         }
-        if(idD!=0)
+        if (idD != null) {
             departement = departementService.findDepartementById(idD);
-        if (idN!=0) {
-            niveau = niveauService.findNiveauById(idN);            
         }
-        if (idO!=0) {
+        if (idN != null) {
+            niveau = niveauService.findNiveauById(idN);
+        }
+        if (idO != null) {
             option = optionService.findOptionById(idO);
         }
         etudiants = etudiantService.findByCritiria(departement, annee, niveau, option);
-        //etudiants = etudiantService.findByCritiria(null, null, niveau, null);
-        System.err.println("Le nombre d'etudiants " + etudiants.size());        
-                etudiants = new ArrayList<Etudiant>();
+        initTaille();        
         departement = new Departement();
         anneeAcademique = new AnneeAcademique();
-        niveau =  new Niveau();
-        option = new Option();
+        niveau = new Niveau();
+        option = new Option();        
+        idD = null;
+        idN = null;
+        idO = null;
+    }
+
+    public void saveOrUpdateEtudiant(ActionEvent actionEvent) throws ServiceException {
+        if (etudiant != null && etudiant != null) {
+            etudiantService.saveOrUpdateEtudiant(etudiant);
+            parcours = parcoursService.findParcoursById(idP);
+            System.out.println("" + parcours);
+            inscription.setParcours(parcours);
+            inscription.setEtudiant(etudiant);
+            AnneeAcademique anneeAcademique1 = anneeAcademiqueService.findAnneeById(idA);
+            inscription.setAnneeAcademique(anneeAcademique1);
+            inscriptionService.saveOrUpdateInscription(inscription);
+            if (etudiant.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + " option " + inscription.getParcours().getOption().getCode()));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + " option " + inscription.getParcours().getOption().getCode()));
+            }
+            idA = inscription.getAnneeAcademique().getId();
+            idD = inscription.getParcours().getOption().getDepartement().getId();
+            idN = inscription.getParcours().getNiveau().getId();
+            idO = inscription.getParcours().getOption().getId();
+            filtrer();                        
+            inscription = new Inscription();
+            parcours = new Parcours();
+            etudiant = new Etudiant();
+
+        }
+    }
+
+    public void initTaille() {
+        if (etudiants.isEmpty()) {
+            taille = 30;
+        } else {
+            taille = 300;
+        }
+    }
+
+    public void deleteEtudiant(ActionEvent actionEvent) throws ServiceException {
+        if (etudiant != null && etudiant.getId() != null) {
+            AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
+            //find inscriptionbyEtudiant
+            // inscription = findIncriptionByEtudiant(etudiant,a);
+            etudiantService.deleteEtudiant(etudiant.getId());
+            //inscriptionService.deleteInscription(inscription.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + "/" + inscription.getParcours().getOption().getCode()));
+            etudiant = new Etudiant();
+        }
+    }
+
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (etudiant != null && etudiant.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un etudiant avant de modifier "));
+        }
+    }
+
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        System.out.println("verifierEtSupprimer-------"+etudiant);
+        if (etudiant != null && etudiant.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un etudiant avant de supprimer "));
+        }
     }
 
     public Departement getDepartement() {
@@ -138,10 +225,6 @@ public class EtudiantBean {
     }
 
     public List<Etudiant> getEtudiants() throws ServiceException {
-        //niveau = niveauService.findNiveauById(851);
-        // etudiants = etudiantService.findByCritiria(null, null, niveau, null);
-        //System.err.println("Le nombre d'etudiants "+ etudiants.size());
-        //etudiants = etudiantService.getAllEtudiant();
         return etudiants;
     }
 
@@ -246,11 +329,95 @@ public class EtudiantBean {
     }
 
     public Long getIdA() {
+        if (etudiant != null && inscription != null && inscription.getAnneeAcademique() != null) {
+            idP = inscription.getAnneeAcademique().getId();
+        }
+        
         return idA;
     }
 
-    public void setIdA(Long idA) {
+    public void setIdA(Long idA) {        
         this.idA = idA;
+    }
+
+    public Etudiant getEtudiant() throws ServiceException {
+        AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
+        // inscription = findIncriptionByEtudiant(etudiant,a);
+        return etudiant;
+    }
+
+    public void setEtudiant(Etudiant etudiant) {
+        this.etudiant = etudiant;
+    }
+
+    public Inscription getInscription() {        
+        return inscription;
+    }
+
+    public void setInscription(Inscription inscription) {
+        this.inscription = inscription;
+    }
+
+    public List<String> getGenres() {
+        genres.add("feminin");
+        genres.add("masculin");
+        return genres;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
+    public Long getIdP() {
+        if (etudiant != null && inscription != null && inscription.getParcours() != null) {
+            idP = inscription.getParcours().getId();
+        }
+        return idP;
+    }
+
+    public void setIdP(Long idP) {
+        this.idP = idP;
+    }
+
+    public IParcoursService getParcoursService() {
+        return parcoursService;
+    }
+
+    public void setParcoursService(IParcoursService parcoursService) {
+        this.parcoursService = parcoursService;
+    }
+
+    public Parcours getParcours() {
+        return parcours;
+    }
+
+    public void setParcours(Parcours parcours) {
+        this.parcours = parcours;
+    }
+
+    public List<Parcours> getParcourses() throws ServiceException {
+        parcourses = parcoursService.getAllParcours();
+        return parcourses;
+    }
+
+    public void setParcourses(List<Parcours> parcourses) {
+        this.parcourses = parcourses;
+    }
+
+    public int getTaille() {
+        return taille;
+    }
+
+    public void setTaille(int taille) {
+        this.taille = taille;
+    }
+
+    public IInscriptionService getInscriptionService() {
+        return inscriptionService;
+    }
+
+    public void setInscriptionService(IInscriptionService inscriptionService) {
+        this.inscriptionService = inscriptionService;
     }
 
 }

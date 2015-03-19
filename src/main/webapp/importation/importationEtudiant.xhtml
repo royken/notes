@@ -12,20 +12,24 @@
                     <h:form enctype="multipart/form-data">                                                    
                         <h:panelGroup >
                             <h:panelGrid id="display" columns="2">                                                                                                                      
-                                <h:outputText  value="Selectionner le fichier excel "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:fileUpload required="true"  value="#{importationBean.file}" mode="simple"                                          
+                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:fileUpload   
+                                              value="#{importationBean.file}" 
+                                              mode="simple"
                                               auto="true"  
                                               sizeLimit="100000"   
-                                              allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:outputText  value="Nom de la feuille " style="margin-left:  10px;margin-top: 10px;"/>  
-                                <h:inputText  value="#{importationBean.nomFeuille}" style="margin-left: 10px;margin-top: 10px;"/>  
+                                              allowTypes="/(\.|\/)(xslx|xsl)$/" 
+                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                               
+                                              invalidFileMessage="fichier invalide" 
+                                              requiredMessage="chargez le fichier" > 
+<!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                                </p:fileUpload>
                                 <h:outputText  value="Etudiant pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:selectOneMenu value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 200px; margin-left: 10px;"  >
-                                    <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
+                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
+                                    <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
                                 </h:selectOneMenu> 
                                 <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:commandButton value="Cliquer ici !!!" ajax="false"  
-                                                 actionListener="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:commandButton ajax="false" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  
