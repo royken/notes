@@ -75,7 +75,7 @@ public class OptionServiceImpl implements IOptionService{
     @Override
     public List<Option> getAllOptions() throws ServiceException{
         try {
-            return optionDao.findAll();
+            return optionDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");

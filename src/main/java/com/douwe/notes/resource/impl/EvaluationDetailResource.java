@@ -32,6 +32,7 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
     
     
 
+    @Override
     public EvaluationDetails createEvalDetail(EvaluationDetails evaluationDetails) {
         try {
             return detailService.saveOrUpdateEvaluationDetails(evaluationDetails);
@@ -41,6 +42,7 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
         }
     }
 
+    @Override
     public List<EvaluationDetails> getAllEvalDetails() {
         try {
             return detailService.getAllEvaluationDetails();
@@ -50,6 +52,7 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
         }
     }
 
+    @Override
     public EvaluationDetails getEvalDetail(long id) {
         try {
             EvaluationDetails details = detailService.findEvaluationDetailsById(id);
@@ -63,6 +66,7 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
         }
     }
 
+    @Override
     public EvaluationDetails updateEvalDetail(long id, EvaluationDetails evaluationDetails) {
         try {
             EvaluationDetails details = detailService.findEvaluationDetailsById(id);
@@ -79,6 +83,7 @@ public class EvaluationDetailResource implements IEvaluationDetailResource{
         }
     }
 
+    @Override
     public void deleteEvalDetail(long id) {
         try {
             detailService.deleteEvaluationDetails(id);
