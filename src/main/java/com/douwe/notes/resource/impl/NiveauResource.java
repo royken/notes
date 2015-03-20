@@ -17,11 +17,11 @@ import javax.ws.rs.Path;
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
 @Path("/niveaux")
-public class NiveauResource implements INiveauResource{
-    
+public class NiveauResource implements INiveauResource {
+
     @Inject
     private IInsfrastructureService insfrastructureService;
-    
+
     @EJB
     private INiveauService service;
 
@@ -32,13 +32,10 @@ public class NiveauResource implements INiveauResource{
     public void setService(INiveauService service) {
         this.service = service;
     }
-    
-    
 
     @Override
     public Niveau createNiveau(Niveau niveau) {
         try {
-            System.out.println("Le cycle "+niveau.getCycle());
             return service.saveOrUpdateNiveau(niveau);
         } catch (ServiceException ex) {
             Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,15 +44,8 @@ public class NiveauResource implements INiveauResource{
     }
 
     @Override
-    public List<Niveau> getAllNiveaux() throws ServiceException{
-        
-            //return service.getAllNiveaux();
-            List<Niveau> list = service.getAllNiveaux();
-            for (Niveau list1 : list) {
-                System.out.println(list1);
-            }
-            return list;
-        
+    public List<Niveau> getAllNiveaux() throws ServiceException {
+        return service.getAllNiveaux();
     }
 
     @Override
@@ -72,7 +62,7 @@ public class NiveauResource implements INiveauResource{
     public Niveau updateNiveau(long id, Niveau niveau) {
         try {
             Niveau n = service.findNiveauById(id);
-            if(n != null){
+            if (n != null) {
                 n.setCode(niveau.getCode());
                 n.setCycle(niveau.getCycle());
                 return service.saveOrUpdateNiveau(n);
@@ -100,5 +90,5 @@ public class NiveauResource implements INiveauResource{
     public void setInsfrastructureService(IInsfrastructureService insfrastructureService) {
         this.insfrastructureService = insfrastructureService;
     }
-    
+
 }

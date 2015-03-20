@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.bean.ManagedBean;
 import javax.inject.Named;
 
 /**
@@ -52,12 +51,13 @@ public class EtudiantBean {
     }
     
     public String filtrer() throws ServiceException{
-        System.err.println("Douwe est un vrai idiot");
-        etudiants = etudiantService.findByCritiria(departement, annee, niveau, option);       
+        etudiants = etudiantService.findByCritiria((departement != null)? departement.getId() : -1, 
+                (annee != null) ? annee.getId() : -1, 
+                (niveau != null) ? niveau.getId(): -1, 
+                (option != null) ? option.getId(): -1);       
         //etudiants = etudiantService.findByCritiria(null, null, niveau, null);
-        System.err.println("Le nombre d'etudiants "+ etudiants.size());
         return null;
-    }
+    } 
 
     public Departement getDepartement() {
         return departement;

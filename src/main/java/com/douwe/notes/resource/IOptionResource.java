@@ -2,7 +2,6 @@ package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Option;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -47,4 +46,9 @@ public interface IOptionResource {
     @Path("{code}")
     @Produces(value = "application/json")
     public Option findByCode(@PathParam(value = "code") String code);
+    
+    @GET
+    @Path("{departementId: \\d+}/{niveauId: \\d+}")
+    @Produces(value = "application/json")
+    public List<Option> findByDepartementNiveau(@PathParam(value = "departementId")long departementId, @PathParam(value = "niveauId")long niveauId);
 }

@@ -71,10 +71,7 @@ public class NiveauServiceImpl implements INiveauService{
     @Override
     public List<Niveau> getAllNiveaux() throws ServiceException{
         try {
-            List <Niveau> list = niveauDao.findAll();
-            for (Niveau list1 : list) {
-                System.out.println(list1);
-            }
+            List <Niveau> list = niveauDao.findAll();            
             return list;
         } catch (DataAccessException ex) {
             Logger.getLogger(NiveauServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

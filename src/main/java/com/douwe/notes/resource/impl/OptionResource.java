@@ -116,4 +116,14 @@ public class OptionResource implements IOptionResource{
             return null;
         }
     }
+
+    @Override
+    public List<Option> findByDepartementNiveau(long departementId, long niveauId) {
+        try {
+            return optionService.findByDepartementNiveau(departementId, niveauId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(OptionResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
