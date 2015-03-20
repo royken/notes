@@ -298,6 +298,7 @@ public class InscriptionServiceImplTest {
      * Test of inscrireEtudiant method, of class InscriptionServiceImpl.
      */
     @Test
+    @Ignore
     public void testInscrireEtudiant() throws Exception {
         System.out.println("inscrireEtudiant");
         Etudiant etudiant = new Etudiant();
