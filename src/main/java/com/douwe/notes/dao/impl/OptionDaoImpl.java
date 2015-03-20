@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
 /**
  *
@@ -42,6 +43,11 @@ public class OptionDaoImpl extends GenericDao<Option, Long> implements IOptionDa
         cq.where(cb.and(cb.equal(niveauPath, niv),cb.equal(optionPath.get(Option_.active), 1), cb.equal(departementPath, dep)));
         cq.select(optionPath);
         return getManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Option> findAllActive() throws DataAccessException {
+        return getManager().createNamedQuery("Option.findAllActive").getResultList();
     }
     
 }

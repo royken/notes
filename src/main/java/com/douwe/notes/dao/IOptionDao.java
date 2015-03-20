@@ -18,4 +18,6 @@ public interface IOptionDao extends IDao<Option, Long>{
     public Option findByCode(String code) throws DataAccessException;
 
     public List<Option> findByDepartementNiveau(Departement dep, Niveau niv) throws DataAccessException;
+    
+    public List<Option> findAllActive() throws DataAccessException;
 }

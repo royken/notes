@@ -8,18 +8,16 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.service.ITypeCoursService;
-import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -35,54 +33,59 @@ public class CoursBean {
     private ITypeCoursService typeCoursService;
     private Cours cours = new Cours();
     private List<Cours> courss;
-    private List<TypeCours> typeCourss;
-    private String message;
-    String id;
+    private List<TypeCours> typeCourss;  
+    String id, credit;
 
     public CoursBean() {
         cours.setTypeCours(new TypeCours());
     }
 
-    public List<Cours> findAll() throws ServiceException {
-        return coursService.getAllCours();
-    }
-
-    public String saveOrUpdateCours() throws ServiceException {
-        if (cours != null) { 
-            cours.setTypeCours(typeCoursService.findTypeCoursById(Integer.parseInt(id)));                        
+    public void saveOrUpdateCours(ActionEvent actionEvent) throws ServiceException {
+        if (cours != null && cours.getIntitule() != null) {
+            cours.setCredit(Integer.parseInt(credit));
+            cours.setTypeCours(typeCoursService.findTypeCoursById(Integer.parseInt(id)));
             coursService.saveOrUpdateCours(cours);
+            id = new String();
+            if (cours.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", cours.getIntitule() + " a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", cours.getIntitule() + " a été enregistré"));
+            }
+            credit = new String();
             cours = new Cours();
-            id = new String();                     
         }
-        return "saveOrUpdateCours";
     }
 
-    public String deleteCours() throws ServiceException {
-        if (cours != null && cours.getId() > 0) {          
-            message = "Suppression reussi de "+cours.getIntitule();
+    public void deleteCours(ActionEvent actionEvent) throws ServiceException {
+        if (cours != null && cours.getId() != null) {
             coursService.deleteCours(cours.getId());
-            cours = new Cours();            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", cours.getIntitule() + " a été supprimé"));
+            cours = new Cours();
         }
-        return "deleteCours";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            cours=new Cours();
-            message="Enregistrement reussi ";
-            return "saveCours";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (cours != null && cours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un cours avant de modifier "));
         }
-
-        else if (n == 2 && cours!=null &&cours.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            return "updateCours";
-        }
-        cours = new Cours();        
-        return "cours";
     }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
+
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (cours != null && cours.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un cours avant de supprimer "));
+        }
+    }
+        public void verifierCreditEtSave(ActionEvent actionEvent) throws ServiceException {
+        if (cours != null && credit.isEmpty()==false && isInterger(credit.trim())==true) {
+            saveOrUpdateCours(actionEvent);
+        } else {
+            credit = new String();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "le nombre de credit est un entier. exemple : 45"));
+        }
     }
 
     public Cours getCours() {
@@ -117,7 +120,6 @@ public class CoursBean {
     public void setCourss(List<Cours> courss) {
         this.courss = courss;
     }
-    
 
     public List<TypeCours> getTypeCourss() throws ServiceException {
         typeCourss = typeCoursService.getAllTypeCours();
@@ -129,13 +131,34 @@ public class CoursBean {
     }
 
     public String getId() {
-        if(cours!=null && cours.getVersion() != 0){        
-        id = cours.getTypeCours().getId().toString();        }        
+        if (cours != null && cours.getVersion() != 0) {
+            id = cours.getTypeCours().getId().toString();
+        }
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCredit() {
+        if (cours != null && cours.getVersion() != 0)
+            credit = cours.getCredit().toString();
+        return credit;
+    }
+
+    public void setCredit(String credit) {
+        this.credit = credit;
+    }
+
+    private boolean isInterger(String elt) {
+        int i=0;
+        while (i<elt.length()) {            
+            if(!((elt.charAt(i)=='1')||(elt.charAt(i)=='2')||(elt.charAt(i)=='3')||(elt.charAt(i)=='4')||(elt.charAt(i)=='5')||(elt.charAt(i)=='6')||(elt.charAt(i)=='7')||(elt.charAt(i)=='8')||(elt.charAt(i)=='9')))
+                return false;
+            i++;
+        }  
+        return true;
     }
 
 }

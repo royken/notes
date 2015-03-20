@@ -53,7 +53,7 @@ public class UniteEnseignement implements Serializable {
     @ManyToMany(mappedBy = "uniteEnseignements")
     private List<Parcours> parcours;
     
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Cours> courses;
     
     
@@ -122,13 +122,12 @@ public class UniteEnseignement implements Serializable {
     public void setCourses(List<Cours> courses) {
         this.courses = courses;
     }
-    
-    
+
 
     @Override
     public String toString() {
-        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", parcours=" + parcours + '}';
+        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", parcours=" + parcours + ", courses=" + courses + '}';
     }
-    
-    
+ 
+        
 }

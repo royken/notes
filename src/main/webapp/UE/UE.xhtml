@@ -1,16 +1,133 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
     <body>
-        <div>TODO write content</div>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1">  
+                    <h:form id="formAfficheCours">
+                        <p:dialog header="Cours de l'UE #{uniteEnseignementBean.uniteEnseignement.code}" widgetVar="dlgAfficheCours" hideEffect="explode" showEffect="explode" width="75%">                                                   
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaydAfficheCours">
+                                        <p:dataTable id="e" resizableColumns="true" value="#{uniteEnseignementBean.uniteEnseignement.courses}" emptyMessage="Aucun cours n'est enregistré pour l'UE #{uniteEnseignementBean.uniteEnseignement.code}" var="cours" rowKey="#{cours.id}" rows="5"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" sortOrder="ascending" >            
+                                            <p:column headerText="Intitulé " width="70%">  
+                                                #{cours.intitule}  
+                                            </p:column>            
+                                            <p:column headerText="Credit" width="10%">  
+                                                #{cours.credit}  
+                                            </p:column>
+                                            <p:column headerText="Type de cours" >  
+                                                #{cours.typeCours.nom}  
+                                            </p:column>                                                          
+                                        </p:dataTable> 
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>                                    
+                                    <p:commandButton value="Fermez"  id="annule1" type="reset" onclick="PF('dlgAfficheCours').hide()" action="#{uniteEnseignementBean.annuler()}" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>                               
+                        </p:dialog> 
+                    </h:form>
+
+
+                        <p:dialog header="AJOUTER UNE UNITE D'ENSEIGNEMENT" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                            <h:form id="formSave">                                
+                                <p:growl id="growl" showDetail="true" /> 
+                                <p:panel >
+                                    <h:panelGroup >
+                                        <h:panelGrid id="displaySave" columns="2">
+                                            <h:outputText  value="Code de l'UE: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                            <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.code}"   style="width:100%; margin-left: 10px;margin-top: 10px;" >  
+                                                <f:validateLength maximum="20"/>  
+                                            </p:inputText>
+                                            <h:outputText value="Intitulé de l'UE: "  style="margin-left: 10px; margin-top: 10px;"/>
+                                            <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.intitule}"   style="width:100%;margin-left: 10px;margin-top: 10px;"/>
+                                            <h:outputText  value="Selectionnez les cours de UE: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                            <p:selectCheckboxMenu value="#{uniteEnseignementBean.ids}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                                <f:selectItems value="#{uniteEnseignementBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGrid>
+
+                                    </h:panelGroup>
+                                    <p:separator/>
+                                    <div>
+                                        <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                        <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                    </div>                     
+                                </p:panel>
+                            </h:form>  
+                        </p:dialog>                    
+                        <p:dialog header="MODIFIER L' UNITE D'ENSEIGNEMENT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                            <h:form id="formUpdate">    
+                                <p:growl id="growl1" showDetail="true" /> 
+                                <p:panel >
+                                    <h:panelGroup >
+                                        <h:panelGrid id="displayUpdate" columns="2">                                        
+                                            <h:outputText  value="Code de l'UE: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                            <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.code}"   style="width:100%; margin-left: 10px;margin-top: 10px;" >  
+                                                <f:validateLength maximum="20"/>  
+                                            </p:inputText>
+                                            <h:outputText value="Intitulé de l'UE: "  style="margin-left: 10px; margin-top: 10px;"/>
+                                            <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.intitule}"   style="width:100%;margin-left: 10px;margin-top: 10px;"/>
+                                            <h:outputText  value="Selectionnez les cours de UE: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                            <p:selectCheckboxMenu value="#{uniteEnseignementBean.ids}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                                <f:selectItems value="#{uniteEnseignementBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
+                                            </p:selectCheckboxMenu>
+                                            <h:inputHidden value="#{uniteEnseignementBean.uniteEnseignement.id}"  />
+                                            <h:inputHidden value="#{uniteEnseignementBean.uniteEnseignement.version}"  />
+                                            <h:inputHidden value="#{uniteEnseignementBean.uniteEnseignement.active}"  />
+                                        </h:panelGrid>  
+                                    </h:panelGroup>
+                                    <p:separator/>
+                                    <div>
+                                        <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                        <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                    </div>                    
+                                </p:panel>
+                            </h:form>  
+                        </p:dialog>
+                        <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                            <p:confirmDialog message="voulez-vous vraiment supprimer ce uniteEnseignement ?"
+                                             header="Initialisation de la suppression" severity="alert"
+                                             widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                                <p:commandButton id="confirm" value="OUI" action="#{uniteEnseignementBean.deleteUniteEnseignement(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                                <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                            </p:confirmDialog>
+                            <p:dataTable id="d"  emptyMessage="Aucun uniteEnseignement n'est enregistré" var="uniteEnseignement" value="#{uniteEnseignementBean.uniteEnseignements}" rowKey="#{uniteEnseignement.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                         sortOrder="ascending" selection="#{uniteEnseignementBean.uniteEnseignement}" selectionMode="single" >            
+                                <f:facet name="header">
+                                    LA LISTE DES UNITES D'ENSEIGNEMENTS (UE)
+                                </f:facet>                           
+                                <p:column headerText="Code de l'UE" id="code" >  
+                                    #{uniteEnseignement.code}  
+                                </p:column>                                                                                
+                                <p:column headerText="Intitulé de l'UE" id="description" >  
+                                    #{uniteEnseignement.intitule}  
+                                </p:column>                            
+                                <f:facet name="footer" >  
+                                    <p:commandButton id="affiche" value="Voir les cours de l'UE" actionListener="#{uniteEnseignementBean.verifierEtAffiche(actionEvent)}" update=":formAfficheCours:displaydAfficheCours" icon="ui-icon-extlink"/>
+                                </f:facet>
+                                <f:facet name="footer" >  
+                                    <p:commandButton id="ajouter" value="Nouvelle UE" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
+                                </f:facet>                             
+                                <f:facet name="footer">  
+                                    <p:commandButton id="delete" value="Supprimer"  actionListener="#{uniteEnseignementBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
+                                </f:facet>                             
+                                <f:facet name="footer">  
+                                    <p:commandButton id="modifier" value="Modifier" actionListener="#{uniteEnseignementBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                                </f:facet>                              
+                            </p:dataTable>                                                              
+                        </h:form>   
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
     </body>
 </html>

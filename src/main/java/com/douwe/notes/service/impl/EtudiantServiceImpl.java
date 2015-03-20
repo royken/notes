@@ -194,7 +194,7 @@ public class EtudiantServiceImpl implements IEtudiantService {
                     etudiant.setEmail(row.getCell(5).getStringCellValue());
                 }
                 if (row.getCell(6) != null) {
-                    etudiant.setNumeroTelephone(row.getCell(6).getStringCellValue());
+                    etudiant.setNumeroTelephone(row.getCell(6).getNumericCellValue()+"");
                 }
                 etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
                 String niveau = row.getCell(10).getStringCellValue();

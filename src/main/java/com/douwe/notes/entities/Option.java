@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
         @NamedQuery(name = "Option.findDepartement", query = "select d from Departement d where d.id = :idParam"),
-        @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code like :param")
+        @NamedQuery(name = "Option.findByCode",query = "SELECT o from options o WHERE o.code like :param"),
+        @NamedQuery(name = "Option.findAllActive",query = "SELECT o from options o WHERE o.active=1")
 })
 public class Option implements Serializable {
 

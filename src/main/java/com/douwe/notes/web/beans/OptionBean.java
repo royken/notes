@@ -7,6 +7,7 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.IOptionService;
@@ -20,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -43,47 +45,48 @@ public class OptionBean {
         option.setDepartement(new Departement());
     }
 
-    public List<Option> findAll() throws ServiceException {
-        return optionService.getAllOptions();
-    }
 
-    public String saveOrUpdateOption() throws ServiceException {
-        if (option != null) { 
-            option.setDepartement(departementService.findDepartementById(Integer.parseInt(id)));                        
+
+    public void saveOrUpdateOption(ActionEvent actionEvent) throws ServiceException {
+        if (option != null && option.getCode() != null) {
+             option.setDepartement(departementService.findDepartementById(Integer.parseInt(id)));                        
             optionService.saveOrUpdateOption(option);
+            
+            if (option.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", option.getCode() + " a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", option.getCode() + " a été enregistré"));
+            }
+
             option = new Option();
-            id = new String();                     
+            id = new String(); 
         }
-        return "saveOrUpdateOption";
     }
 
-    public String deleteOption() throws ServiceException {
-        if (option != null && option.getId() > 0) {          
-            message = "Suppression reussi de "+option.getCode();
+    public void deleteOption(ActionEvent actionEvent) throws ServiceException {
+        if (option != null && option.getId() != null) {
+            System.out.println("--------------" + option);                        
             optionService.deleteOption(option.getId());
-            option = new Option();            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", option.getCode() + " a été supprimé"));
+            option = new Option();
         }
-        return "deleteOption";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            option=new Option();
-            message="Enregistrement reussi ";
-            return "saveOption";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (option != null && option.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une option avant de modifier "));
         }
+    }
 
-        else if (n == 2 && option!=null &&option.getVersion() >= 1) {
-            message="Mise à jour reussi ";
-            return "updateOption";
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (option != null && option.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une option avant de supprimer "));
         }
-        option = new Option();        
-        return "option";
-    }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
-    }
+    }    
 
     public Option getOption() {
         return option;
