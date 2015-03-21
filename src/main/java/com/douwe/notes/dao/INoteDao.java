@@ -20,4 +20,6 @@ public interface INoteDao extends IDao<Note, Long>{
     public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique)throws DataAccessException;
     
     
+    
+    
 }

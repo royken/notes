@@ -29,12 +29,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "annee")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
-@NamedQuery(name = "Annee.findAllActive",query = "SELECT a from AnneeAcademique a WHERE a.active = 1")
+
+@NamedQuery(name = "Annee.findAllActive",query = "SELECT a from AnneeAcademique a WHERE a.active = 1"),
+
 //@NamedQuery(name = "Annee.findByString",query = " SELECT a from AnneeAcademique a WHERE a.dateString = :param")
+
 
 })
 public class AnneeAcademique implements Serializable {
     
+
     @Transient
     @XmlTransient
     private DateFormat df;

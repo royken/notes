@@ -200,7 +200,12 @@ public class EtudiantServiceImpl implements IEtudiantService {
                 String niveau = row.getCell(10).getStringCellValue();
                 String option = row.getCell(11).getStringCellValue();
                 etudiant.setActive(1);
-                inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
+                try{
+                    inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
+                }catch(Exception ex){
+                
+                    System.out.println("L'étudiant " + index + "n'a pas été enregistré");
+                }
                 row = sheet.getRow(index++);
             }
         } catch (IOException ex) {

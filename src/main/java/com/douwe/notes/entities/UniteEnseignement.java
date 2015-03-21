@@ -50,9 +50,11 @@ public class UniteEnseignement implements Serializable {
     @Column(columnDefinition = "int default 1")
     private int active;
     
+     @XmlTransient
     @ManyToMany(mappedBy = "uniteEnseignements")
     private List<Parcours> parcours;
     
+     @XmlTransient
     @ManyToMany
     private List<Cours> courses;
     
@@ -87,10 +89,12 @@ public class UniteEnseignement implements Serializable {
         this.code = code;
     }
 
+    @JsonIgnore
     public List<Parcours> getParcours() {
         return parcours;
     }
 
+    @JsonIgnore
     public void setParcours(List<Parcours> parcours) {
         this.parcours = parcours;
     }
@@ -115,10 +119,12 @@ public class UniteEnseignement implements Serializable {
         this.active = active;
     }
 
+    @JsonIgnore
     public List<Cours> getCourses() {
         return courses;
     }
 
+    @JsonIgnore
     public void setCourses(List<Cours> courses) {
         this.courses = courses;
     }
