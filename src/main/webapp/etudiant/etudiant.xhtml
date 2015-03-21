@@ -32,7 +32,7 @@
                                             <p:inputText value="#{etudiantBean.etudiant.email}"   style="width: 100%;margin-left: 10px;margin-top: 10px;"/>
                                             <h:outputText value="Année Académique : "  style="margin-left: 10px;margin-top: 10px;"/>
                                             <h:selectOneMenu value="#{etudiantBean.idA}"   style="height: 30px;width: 100%;margin-left: 10px;margin-top: 10px;">
-                                                <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="annee" itemLabel="#{annee}" itemValue="#{annee.id}" />
+                                                <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
                                             </h:selectOneMenu>
                                             <h:outputText value="Genre : "  style="margin-left: 10px;margin-top: 10px;"/>
                                             <h:selectOneMenu value="#{etudiantBean.etudiant.genre}"   style="height: 30px;width: 100%;margin-left: 10px;margin-top: 10px;">
@@ -92,7 +92,7 @@
                                     <p:outputLabel value="Année"  />
                                     <h:selectOneMenu value="#{etudiantBean.idA}" style=" height: 30px;"  id="annee">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="annee" itemLabel="#{annee}" itemValue="#{annee.id}" />
+                                        <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)} - #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
                                     </h:selectOneMenu>
                                     <p:outputLabel value="Niveau"  />
                                     <h:selectOneMenu value="#{etudiantBean.idN}" style="height: 30px; "  id="niveau">
@@ -133,7 +133,7 @@
                                 #{etudiant.nom}
                             </p:column>
                             <p:column headerText="Date De Naissance" filterBy="#{etudiant.dateDeNaissance}">                                
-<!--                                <h:outputText value="#{etudiant.dateDeNaissance}">
+<!--                                <h:outputText value="">
                                     <f:convertDateTime pattern="MM/dd/yyyy" />
                                 </h:outputText>-->
                             </p:column>
