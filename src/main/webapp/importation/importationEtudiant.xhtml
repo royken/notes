@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
+                    <h:form enctype="multipart/form-data">                                                    
+                        <h:panelGroup >
+                            <h:panelGrid id="display" columns="2">                                                                                                                      
+                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:fileUpload   
+                                              value="#{importationBean.file}" 
+                                              mode="simple"
+                                              auto="true"  
+                                              sizeLimit="100000"   
+                                              allowTypes="/(\.|\/)(xslx|xsl)$/" 
+                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                               
+                                              invalidFileMessage="fichier invalide" 
+                                              requiredMessage="chargez le fichier" > 
+<!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                                </p:fileUpload>
+                                <h:outputText  value="Etudiant pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
+                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
+                                    <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
+                                </h:selectOneMenu> 
+                                <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:commandButton ajax="false" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                            </h:panelGrid>
+                        </h:panelGroup>                        
+                    </h:form>  
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
+
+

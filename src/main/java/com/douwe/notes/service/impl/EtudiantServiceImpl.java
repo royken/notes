@@ -1,7 +1,11 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IAnneeAcademiqueDao;
+import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.IEtudiantDao;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
@@ -35,6 +39,18 @@ public class EtudiantServiceImpl implements IEtudiantService {
 
     @Inject
     private IEtudiantDao etudiantDao;
+    
+    @Inject
+    private IDepartementDao departementDao;
+    
+    @Inject
+    private IOptionDao optionDao;
+    
+    @Inject
+    private IAnneeAcademiqueDao anneeAcademiqueDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
 
     @EJB
     private IInscriptionService inscriptionService;
@@ -46,6 +62,39 @@ public class EtudiantServiceImpl implements IEtudiantService {
     public void setEtudiantDao(IEtudiantDao etudiantDao) {
         this.etudiantDao = etudiantDao;
     }
+
+    public IDepartementDao getDepartementDao() {
+        return departementDao;
+    }
+
+    public void setDepartementDao(IDepartementDao departementDao) {
+        this.departementDao = departementDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
+
+    public IAnneeAcademiqueDao getAnneeAcademiqueDao() {
+        return anneeAcademiqueDao;
+    }
+
+    public void setAnneeAcademiqueDao(IAnneeAcademiqueDao anneeAcademiqueDao) {
+        this.anneeAcademiqueDao = anneeAcademiqueDao;
+    }
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+    
 
     @Override
     public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) throws ServiceException {
@@ -97,8 +146,20 @@ public class EtudiantServiceImpl implements IEtudiantService {
     }
 
     @Override
-    public List<Etudiant> findByCritiria(Departement departement, AnneeAcademique annee, Niveau niveau, Option option) {
+    public List<Etudiant> findByCritiria(long departementId, long anneeId, long niveauId, long optionId) {
         try {
+            Departement departement = null;
+            AnneeAcademique annee = null;
+            Niveau niveau = null;
+            Option option = null;
+            if(departementId > 0)
+                departement = departementDao.findById(departementId);
+            if (anneeId > 0)
+                annee = anneeAcademiqueDao.findById(anneeId);
+            if(niveauId > 0)
+                niveau = niveauDao.findById(niveauId);
+            if (optionId > 0)
+                option = optionDao.findById(optionId);
             return etudiantDao.listeEtudiantParDepartementEtNiveau(departement, annee, niveau, option);
         } catch (DataAccessException ex) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,15 +194,18 @@ public class EtudiantServiceImpl implements IEtudiantService {
                     etudiant.setEmail(row.getCell(5).getStringCellValue());
                 }
                 if (row.getCell(6) != null) {
-                    etudiant.setNumeroTelephone(row.getCell(6).getStringCellValue());
+                    etudiant.setNumeroTelephone(row.getCell(6).getNumericCellValue()+"");
                 }
                 etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
-                System.out.println("Le genre donne "+etudiant.getGenre());
-                System.out.println("toto is back "+row.getCell(10));
                 String niveau = row.getCell(10).getStringCellValue();
                 String option = row.getCell(11).getStringCellValue();
                 etudiant.setActive(1);
-                inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
+                try{
+                    inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
+                }catch(Exception ex){
+                
+                    System.out.println("L'étudiant " + index + "n'a pas été enregistré");
+                }
                 row = sheet.getRow(index++);
             }
         } catch (IOException ex) {

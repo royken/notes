@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;  
 import javax.faces.context.FacesContext;  
 import javax.faces.event.ActionEvent; 
+import org.primefaces.context.RequestContext;
 
 
 @Named(value = "departementBean")
@@ -17,63 +18,62 @@ import javax.faces.event.ActionEvent;
 public class DepartementBean {
 
     @EJB
-    private IDepartementService service;
+    private IDepartementService departementService;
     private Departement departement = new Departement();
     private List<Departement> departements; 
-    private String message;
+    
 
    
     public DepartementBean() {        
-        message="";
+    
     }
 
 
-    public void saveOrUpdateDepartement() throws ServiceException {
-        if (departement != null) {       
-            //departement.setActive(1);
-            service.saveOrUpdateDepartement(departement);
-            departement = new Departement();                      
+public void saveOrUpdateDepartement(ActionEvent actionEvent) throws ServiceException {
+        if (departement != null && departement.getCode() != null) {
+            departementService.saveOrUpdateDepartement(departement);
+            if (departement.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", departement.getCode() + " a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", departement.getCode()+ " a été enregistré"));
+            }
+
+            departement = new Departement();
         }
-        //return "saveOrUpdateDepartement";
     }
 
-    public void deleteDepartement() throws ServiceException {
-        if (departement != null) {  
-            System.out.println(""+departement);
-            message = "Suppression reussi de "+departement.getCode();            
-            service.deleteDepartement(departement.getId());
-            departement = new Departement();            
+    public void deleteDepartement(ActionEvent actionEvent) throws ServiceException {
+        if (departement != null && departement.getId() != null) {
+            departementService.deleteDepartement(departement.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", departement.getCode() + " a été supprimé"));
+            departement = new Departement();
         }
-        //return "deleteDepartement";
     }
 
-//    public void choix(int n) {
-//        if (n == 1) {
-//            departement=new Departement();
-//            message="Enregistrement reussi ";
-//            //return "saveDepartement";
-//        }
-//
-//        else if (n == 2 && departement!=null &&departement.getVersion() >= 1) {
-//            message="Mise à jour reussi ";
-//            //return "updateDepartement";
-//        }
-//        //departement = new Departement();        
-//        //return "departement";
-//    }
-    public void notification(ActionEvent actionEvent) {  
-        FacesContext context = FacesContext.getCurrentInstance();            
-        context.addMessage(null, new FacesMessage("Succes", message));          
-    }
-    public IDepartementService getService() {
-        return service;
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (departement != null && departement.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un departement avant de modifier "));
+        }
     }
 
-    public void setService(IDepartementService service) {
-        this.service = service;
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (departement != null && departement.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un departement avant de supprimer "));
+        }
     }
 
+    public IDepartementService getDepartementService() {
+        return departementService;
+    }
 
+    public void setDepartementService(IDepartementService departementService) {
+        this.departementService = departementService;
+    }
+ 
     public Departement getDepartement() {
         return departement;
     }
@@ -83,7 +83,7 @@ public class DepartementBean {
     }
 
     public List<Departement> getDepartements() throws ServiceException {        
-        departements = service.getAllDepartements();        
+        departements = departementService.getAllDepartements();        
         return departements;
     }
 

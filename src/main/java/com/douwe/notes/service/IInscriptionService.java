@@ -27,4 +27,6 @@ public interface IInscriptionService {
     
     public Inscription inscrireEtudiant(Etudiant etudiant, String codeNiveau, String codeOption, Long anneeId) throws ServiceException;
     
+    public Inscription findInscriptionByEtudiant(Etudiant etudiant, AnneeAcademique academique) throws ServiceException;
+    
 }

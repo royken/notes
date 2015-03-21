@@ -50,10 +50,12 @@ public class UniteEnseignement implements Serializable {
     @Column(columnDefinition = "int default 1")
     private int active;
     
+     @XmlTransient
     @ManyToMany(mappedBy = "uniteEnseignements")
     private List<Parcours> parcours;
     
-    @ManyToMany(cascade = CascadeType.ALL)
+     @XmlTransient
+    @ManyToMany
     private List<Cours> courses;
     
     
@@ -87,10 +89,12 @@ public class UniteEnseignement implements Serializable {
         this.code = code;
     }
 
+    @JsonIgnore
     public List<Parcours> getParcours() {
         return parcours;
     }
 
+    @JsonIgnore
     public void setParcours(List<Parcours> parcours) {
         this.parcours = parcours;
     }
@@ -115,20 +119,21 @@ public class UniteEnseignement implements Serializable {
         this.active = active;
     }
 
+    @JsonIgnore
     public List<Cours> getCourses() {
         return courses;
     }
 
+    @JsonIgnore
     public void setCourses(List<Cours> courses) {
         this.courses = courses;
     }
-    
-    
+
 
     @Override
     public String toString() {
-        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", parcours=" + parcours + '}';
+        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", parcours=" + parcours + ", courses=" + courses + '}';
     }
-    
-    
+ 
+        
 }

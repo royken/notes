@@ -5,17 +5,24 @@
  */
 package com.douwe.notes.web.beans;
 
+import com.douwe.notes.dao.IEnseignantDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cycle;
+import com.douwe.notes.entities.Enseignant;
+import com.douwe.notes.entities.Enseignement;
+import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.service.IAnneeAcademiqueService;
+import com.douwe.notes.service.IEnseignantService;
+import com.douwe.notes.service.IEnseignementService;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.IProgrammeService;
 import com.douwe.notes.service.IUniteEnseignementService;
 import com.douwe.notes.service.ServiceException;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -25,6 +32,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -42,58 +50,80 @@ public class ProgrammeBean {
     private IParcoursService parcoursService;
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-
+    
+    @EJB
+    private IEnseignantService enseignantService;
+    
+    @EJB
+    private IEnseignementService enseignementService;
+    
+    private Enseignement enseignement = new Enseignement();
     private Programme programme = new Programme();
     private List<Programme> programmes;
     private List<AnneeAcademique> anneeAcademiques;
     private List<UniteEnseignement> uniteEnseignements;
     private List<Parcours> parcourses;
+    private List<Enseignant> enseignants = new LinkedList<Enseignant>();
+    private List<Enseignant> enseignantChoisis = new LinkedList<Enseignant>();
     private String message;
     String idAca, idUE, idP;
+    Long[] ide = new Long[10];
 
     public ProgrammeBean() {
     }
 
-    public String saveOrUpdateProgramme() throws ServiceException {
+    public void saveOrUpdateProgramme(ActionEvent actionEvent) throws ServiceException {
         if (programme != null) {
-
+            if(ide!=null){
+                int i=0;
+                while (i<ide.length) {                    
+                    Enseignant e = enseignantService.findEnseignantById(ide[i]);
+                    enseignantChoisis.add(e);
+                    i++;
+                }
+                enseignement.setAnneeAcademique(anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca)));
+                enseignement.setEnseignants(enseignantChoisis);
+                enseignementService.saveOrUpdateEnseignement(enseignement);
+            }
             programme.setAnneeAcademique(anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca)));
             programme.setParcours(parcoursService.findParcoursById(Integer.parseInt(idP)));
             programme.setUniteEnseignement(uniteEnseignementService.findUniteEnseignementById(Integer.parseInt(idUE)));
             programmeService.saveOrUpdateProgramme(programme);
+            if (programme.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " a été programmé en "+ programme.getParcours().getNiveau().getCode().toUpperCase()+"/"+programme.getParcours().getOption().getCode().toUpperCase()+" pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length()-4)+"/"+programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length()-4)));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " a été programmé en "+ programme.getParcours().getNiveau().getCode().toUpperCase()+"/"+programme.getParcours().getOption().getCode().toUpperCase()+" pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length()-4)+"/"+programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length()-4)));
+            }
+
             programme = new Programme();
             idAca = new String();
             idP = new String();
             idUE = new String();
         }
-        return "saveOrUpdateProgramme";
     }
 
-    public String deleteProgramme() throws ServiceException {
-        if (programme != null && programme.getId() > 0) {
-            message = "Suppression reussi ";
+    public void deleteProgramme(ActionEvent actionEvent) throws ServiceException {
+        if (programme != null && programme.getId() != null) {
             programmeService.deleteProgramme(programme.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " n'est plus programmé en "+  programme.getParcours().getNiveau().getCode().toUpperCase()+"/"+programme.getParcours().getOption().getCode().toUpperCase()+" pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length()-4)+"/"+programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length()-4)));
             programme = new Programme();
         }
-        return "deleteProgramme";
     }
 
-    public String choix(int n) {
-        if (n == 1) {
-            programme = new Programme();
-            message = "Enregistrement reussi ";
-            return "saveProgramme";
-        } else if (n == 2 && programme != null && programme.getVersion() >= 1) {
-            message = "Mise à jour reussi ";
-            return "updateProgramme";
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (programme != null && programme.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un programme avant de modifier "));
         }
-        programme = new Programme();
-        return "programme";
     }
 
-    public void notification(ActionEvent actionEvent) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Succes", message));
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (programme != null && programme.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un programme avant de supprimer "));
+        }
     }
 
     public IProgrammeService getProgrammeService() {
@@ -204,5 +234,39 @@ public class ProgrammeBean {
     public void setIdP(String idP) {
         this.idP = idP;
     }
+
+    public IEnseignantService getEnseignantService() {
+        return enseignantService;
+    }
+
+    public void setEnseignantService(IEnseignantService enseignantService) {
+        this.enseignantService = enseignantService;
+    }
+
+    public List<Enseignant> getEnseignants() throws ServiceException {
+        enseignants =  enseignantService.getAllEnseignants();
+        return enseignants;
+    }
+
+    public void setEnseignants(List<Enseignant> enseignants) {
+        this.enseignants = enseignants;
+    }
+
+    public List<Enseignant> getEnseignantChoisis() {        
+        return enseignantChoisis;
+    }
+
+    public void setEnseignantChoisis(List<Enseignant> enseignantChoisis) {
+        this.enseignantChoisis = enseignantChoisis;
+    }
+
+    public Long[] getIde() {
+        return ide;
+    }
+
+    public void setIde(Long[] ide) {
+        this.ide = ide;
+    }
+    
 
 }

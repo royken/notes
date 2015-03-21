@@ -3,9 +3,6 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ServiceException;
-import static java.awt.SystemColor.text;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -13,66 +10,66 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.primefaces.context.RequestContext;
 
 @Named(value = "anneeAcademiqueBean")
 @RequestScoped
 public class AnneeAcademiqueBean {
 
     @EJB
-    private IAnneeAcademiqueService service;
+    private IAnneeAcademiqueService anneeAcademiqueService;
     private AnneeAcademique anneeAcademique = new AnneeAcademique();
-    private List<AnneeAcademique> anneeAcademiques;
-    private String message;
+    private List<AnneeAcademique> anneeAcademiques;    
 
     /**
      * Creates a new instance of AnneeAcademiqueBean
      */
-    public AnneeAcademiqueBean() {
-        message = "";
+    public AnneeAcademiqueBean() {        
     }
 
+public void saveOrUpdateAnneeAcademique(ActionEvent actionEvent) throws ServiceException {     
+        if (anneeAcademique != null && anneeAcademique.getDebut().before(anneeAcademique.getFin())) {
+            anneeAcademiqueService.saveOrUpdateAnnee(anneeAcademique);
+            if (anneeAcademique.getId() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", anneeAcademique.getDebut().toString().substring(anneeAcademique.getDebut().toString().length() -4)+" / "+anneeAcademique.getFin().toString().substring(anneeAcademique.getFin().toString().length() -4)+" a été mis à jour "));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", anneeAcademique.getDebut().toString().substring(anneeAcademique.getDebut().toString().length() -4)+" / "+anneeAcademique.getFin().toString().substring(anneeAcademique.getFin().toString().length() -4) + " a été enregistré"));
+            }
 
-    public String saveOrUpdateAnneeAcademique() throws ServiceException{
-        if (anneeAcademique != null&& anneeAcademique.getDebut().before(anneeAcademique.getFin())) {
-            service.saveOrUpdateAnnee(anneeAcademique);
             anneeAcademique = new AnneeAcademique();
-        }        
-        return "saveOrUpdateAnneeAcademique";
-    }
-
-    public String deleteAnneeAcademique() throws ServiceException {
-        if (anneeAcademique != null&& anneeAcademique.getDebut().getYear()<= anneeAcademique.getFin().getYear()&& anneeAcademique.getDebut().getMonth()<=anneeAcademique.getFin().getMonth() && anneeAcademique.getDebut().getDay()<anneeAcademique.getFin().getDay()) {
-            message = "Suppression reussi";
-            service.deleteAnnee(anneeAcademique.getId());
-            anneeAcademique = new AnneeAcademique();
-        }        
-        return "deleteAnneeAcademique";
-    }
-
-    public String choix(int n) {
-        if (n == 1) {
-            anneeAcademique = new AnneeAcademique();
-            message = "Enregistrement reussi ";
-            return "saveAnneeAcademique";
-        } else if (n == 2 && anneeAcademique != null && anneeAcademique.getVersion() >= 1) {
-            message = "Mise à jour reussi ";
-            return "updateAnneeAcademique";
         }
-        anneeAcademique = new AnneeAcademique();
-        return "anneeAcademique";
     }
 
-    public void notification(ActionEvent actionEvent) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Succes", message));
+    public void deleteAnneeAcademique(ActionEvent actionEvent) throws ServiceException {
+        if (anneeAcademique != null && anneeAcademique.getDebut().before(anneeAcademique.getFin())) {            
+            anneeAcademiqueService.deleteAnnee(anneeAcademique.getId());            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", anneeAcademique.getDebut().toString().substring(anneeAcademique.getDebut().toString().length() -4)+" / "+anneeAcademique.getFin().toString().substring(anneeAcademique.getFin().toString().length() -4) + " a été supprimé"));
+            anneeAcademique = new AnneeAcademique();
+        }
     }
 
-    public IAnneeAcademiqueService getService() {
-        return service;
+    public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
+        if (anneeAcademique != null && anneeAcademique.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une année académique avant de modifier "));
+        }
     }
 
-    public void setService(IAnneeAcademiqueService service) {
-        this.service = service;
+    public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (anneeAcademique != null && anneeAcademique.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une année académique avant de supprimer "));
+        }
+    }
+
+    public IAnneeAcademiqueService getAnneeAcademiqueService() {
+        return anneeAcademiqueService;
+    }
+
+    public void setAnneeAcademiqueService(IAnneeAcademiqueService anneeAcademiqueService) {
+        this.anneeAcademiqueService = anneeAcademiqueService;
     }
 
     public AnneeAcademique getAnneeAcademique() {
@@ -84,7 +81,7 @@ public class AnneeAcademiqueBean {
     }
 
     public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
-        anneeAcademiques = service.getAllAnnee();
+        anneeAcademiques = anneeAcademiqueService.getAllAnnee();
         return anneeAcademiques;
     }
 

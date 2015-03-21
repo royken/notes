@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
 @NamedQuery(name = "Inscription.deleteActive",query = "update Inscription i set i.active = 0 where i.id = :idParam"),
-@NamedQuery(name = "Inscription.findAllActive",query = "select i from Inscription i where i.active=1")    
+@NamedQuery(name = "Inscription.findAllActive",query = "select i from Inscription i where i.active=1"),
+@NamedQuery(name = "Inscription.findByEtudiant",query = "SELECT i from Inscription i WHERE i.etudiant = :param1 and i.anneeAcademique = :param")
 
 })
 public class Inscription implements Serializable {
@@ -39,12 +40,15 @@ public class Inscription implements Serializable {
     private int version;
     
     @ManyToOne
+    @XmlTransient
     private Etudiant etudiant;
     
     @ManyToOne
+    @XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @ManyToOne
+    @XmlTransient
     private Parcours parcours;
     
      @XmlTransient

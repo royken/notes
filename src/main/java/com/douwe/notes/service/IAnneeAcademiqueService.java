@@ -18,5 +18,5 @@ public interface IAnneeAcademiqueService {
     
     public List<AnneeAcademique> getAllAnnee() throws ServiceException;;
     
-    public AnneeAcademique findAnneeByString(String annee) throws ServiceException;
+//    public AnneeAcademique findAnneeByString(String annee) throws ServiceException;
 }

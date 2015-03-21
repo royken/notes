@@ -1,11 +1,15 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IDepartementDao;
+import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.entities.Departement;
+import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +27,12 @@ public class OptionServiceImpl implements IOptionService{
 
     @Inject
     private IOptionDao optionDao;
+    
+    @Inject
+    private IDepartementDao departementDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
 
     public IOptionDao getOptionDao() {
         return optionDao;
@@ -31,7 +41,22 @@ public class OptionServiceImpl implements IOptionService{
     public void setOptionDao(IOptionDao optionDao) {
         this.optionDao = optionDao;
     }
-    
+
+    public IDepartementDao getDepartementDao() {
+        return departementDao;
+    }
+
+    public void setDepartementDao(IDepartementDao departementDao) {
+        this.departementDao = departementDao;
+    }
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
     
     @Override
     public Option saveOrUpdateOption(Option option) throws ServiceException{
@@ -100,6 +125,22 @@ public class OptionServiceImpl implements IOptionService{
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    @Override
+    public List<Option> findByDepartementNiveau(long departementId, long niveauId) throws ServiceException {
+        try {
+            System.out.println("Departement id "+departementId+" niveauID "+ niveauId);
+            Departement dep = departementDao.findById(departementId);
+            Niveau niv = niveauDao.findById(niveauId);
+            System.out.println("Departement "+dep);
+            System.out.println("Niveau "+ niv);
+            if((dep != null) && (niv != null))
+                return optionDao.findByDepartementNiveau(dep, niv);            
+        } catch (DataAccessException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Collections.EMPTY_LIST;
     }
     
 }

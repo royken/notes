@@ -29,13 +29,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "annee")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
+
 @NamedQuery(name = "Annee.findAllActive",query = "SELECT a from AnneeAcademique a WHERE a.active = 1"),
-@NamedQuery(name = "Annee.findByString",query = " SELECT a from AnneeAcademique a WHERE a.dateString = :param")
+
+//@NamedQuery(name = "Annee.findByString",query = " SELECT a from AnneeAcademique a WHERE a.dateString = :param")
+
 
 })
 public class AnneeAcademique implements Serializable {
     
+
     @Transient
+    @XmlTransient
     private DateFormat df;
     
     @Id
@@ -54,8 +59,8 @@ public class AnneeAcademique implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fin;
     
-    @Column(unique = true)
-    private String dateString;
+//    @Column(unique = true)
+//    private String dateString;
     
      @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -64,7 +69,7 @@ public class AnneeAcademique implements Serializable {
     
     public AnneeAcademique(){
         df = new SimpleDateFormat("yyyy");
-        dateString = "";
+        //dateString = "";
     }
 
     public Long getId() {
@@ -111,13 +116,13 @@ public class AnneeAcademique implements Serializable {
         this.active = active;
     }
 
-    public String getDateString() {
-        return dateString;
-    }
-
-    public void setDateString(String dateString) {
-        this.dateString = dateString;
-    }
+//    public String getDateString() {
+//        return dateString;
+//    }
+//
+//    public void setDateString(String dateString) {
+//        this.dateString = dateString;
+//    }
     
     
 

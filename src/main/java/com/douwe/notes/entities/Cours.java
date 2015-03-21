@@ -53,6 +53,7 @@ public class Cours implements Serializable {
     @ManyToOne
     private TypeCours typeCours;
     
+    @XmlTransient
     @ManyToMany(mappedBy = "courses")
     private List<UniteEnseignement> uniteEnseignements;
     
@@ -116,10 +117,12 @@ public class Cours implements Serializable {
         this.active = active;
     }   
 
+    @JsonIgnore
     public List<UniteEnseignement> getUniteEnseignements() {
         return uniteEnseignements;
     }
 
+    @JsonIgnore
     public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
         this.uniteEnseignements = uniteEnseignements;
     }

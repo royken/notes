@@ -5,13 +5,101 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
+
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1">
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                                             
-                        <p:dataTable id="d"  emptyMessage="Aucun Parcours n'est enregistré" var="parcours" value="#{parcoursBean.parcourses}" rowKey="#{parcours.id}" paginator="true" rows="15"  paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" 
-                                     selection="#{parcoursBean.parcours}" selectionMode="single" >            
+                <p:panel  id="p1">    
+                    <h:form id="formAfficheCours">
+                        <p:dialog header="UE du parcours" widgetVar="dlgAfficheCours" hideEffect="explode" showEffect="explode" >                                                   
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaydAfficheCours" columns="1">
+                                        <p:dataList emptyMessage="Accune UE enregistré pour le parcours  #{parcoursBean.parcours.niveau.code}/#{parcoursBean.parcours.option.code}" value="#{parcoursBean.parcours.uniteEnseignements}"  var="eu" type="ordered">  
+                                            #{eu.code}  
+                                            <p:dataList emptyMessage="Aucun cours n'est enregistré pour l'UE #{eu.code}" value="#{eu.courses}" var="c"  itemType="Disc">  
+                                                #{c.intitule}  
+                                            </p:dataList>
+                                        </p:dataList> 
+                                    </h:panelGrid>
+
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>                                    
+                                    <p:commandButton value="Fermez"  id="annule1" type="reset" onclick="PF('dlgAfficheCours').hide()" action="#{uniteEnseignementBean.annuler()}" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>                               
+                        </p:dialog> 
+                    </h:form>
+                    <p:dialog header="AJOUTER UN PARCOURS" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSave">                                
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySave" columns="2">
+                                        <h:outputText  value="Niveau : " /> 
+                                        <h:selectOneMenu value="#{parcoursBean.idN}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{parcoursBean.niveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:outputText  value="Option : " /> 
+                                        <h:selectOneMenu value="#{parcoursBean.idO}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{parcoursBean.options}" var="option" itemLabel="#{option.code}-#{option.departement.code}" itemValue="#{option.id}" />
+                                        </h:selectOneMenu> 
+                                        <h:outputText  value="Selectionnez les UE du parcours: "  />
+                                        <p:selectCheckboxMenu value="#{parcoursBean.idUEs}"  label="Liste des UE" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{uniteEnseignementBean.uniteEnseignements}" var="ue" itemLabel="#{ue.code}" itemValue="#{ue.id}" />
+                                        </p:selectCheckboxMenu>                                      
+                                    </h:panelGrid>                               
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{parcoursBean.saveOrUpdateParcours(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>                    
+                    <p:dialog header="MODIFIER LE PARCOURS" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdate">    
+                            <p:growl id="growl1" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">  
+                                        <h:outputText  value="Niveau : " /> 
+                                        <h:selectOneMenu value="#{parcoursBean.idN}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{parcoursBean.niveaux}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:outputText  value="Option : " /> 
+                                        <h:selectOneMenu value="#{parcoursBean.idO}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{parcoursBean.options}" var="option" itemLabel="#{option.code}-#{option.departement.code}" itemValue="#{option.id}" />
+                                        </h:selectOneMenu> 
+                                        <h:outputText  value="Selectionnez les UE du parcours: "  />
+                                        <p:selectCheckboxMenu value="#{parcoursBean.idUEs}"  label="Liste des UE" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{uniteEnseignementBean.uniteEnseignements}" var="ue" itemLabel="#{ue.code}" itemValue="#{ue.id}" />
+                                        </p:selectCheckboxMenu>  
+                                        <h:inputHidden value="#{parcoursBean.parcours.id}"  />
+                                        <h:inputHidden value="#{parcoursBean.parcours.version}"  />
+                                        <h:inputHidden value="#{parcoursBean.parcours.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{parcoursBean.saveOrUpdateParcours(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog message="voulez-vous vraiment supprimer ce parcours ?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                            <p:commandButton id="confirm" value="OUI" action="#{parcoursBean.deleteParcours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                        </p:confirmDialog>
+                        <p:dataTable id="d"  emptyMessage="Aucun parcours n'est enregistré" var="parcours" value="#{parcoursBean.parcourses}" rowKey="#{parcours.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                     sortOrder="ascending" selection="#{parcoursBean.parcours}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES PARCOURS
                             </f:facet>                                                        
@@ -20,18 +108,21 @@
                             </p:column>                              
                             <p:column headerText="Option "  id="option">  
                                 #{parcours.option.code}-#{parcours.option.departement.code}  
-                            </p:column>
+                            </p:column>      
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Parcours" action="#{parcoursBean.choix(1)}" icon="ui-icon-disk"/>
+                                <p:commandButton id="affiche" value="Voir les UE du parcours" actionListener="#{parcoursBean.verifierEtAffiche(actionEvent)}" update=":formAfficheCours:displaydAfficheCours" icon="ui-icon-extlink"/>
+                            </f:facet>
+                            <f:facet name="footer" >  
+                                <p:commandButton id="ajouter" value="Nouveau parcours" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton  id="delete" value="Supprimer" action="#{parcoursBean.deleteParcours()}" update=":f:d"  icon="ui-icon-close"/>
+                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{parcoursBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" action="#{parcoursBean.choix(2)}" icon="ui-icon-arrowrefresh-1-w"/>  
-                            </f:facet>                             
+                                <p:commandButton id="modifier" value="Modifier" actionListener="#{parcoursBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                            </f:facet>                              
                         </p:dataTable>                                                              
-                    </h:form>                                      
+                    </h:form>   
                 </p:panel> 
             </ui:define>            
         </ui:composition>
