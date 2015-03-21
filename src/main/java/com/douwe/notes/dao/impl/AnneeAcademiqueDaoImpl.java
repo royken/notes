@@ -17,10 +17,10 @@ public class AnneeAcademiqueDaoImpl extends GenericDao<AnneeAcademique, Long> im
         return getManager().createNamedQuery("Annee.findAllActive").getResultList();
     }
 
-    @Override
-    public AnneeAcademique findByString(String date) throws DataAccessException {
-        return (AnneeAcademique)(getManager().createNamedQuery("Annee.findByString").setParameter("param", date).getSingleResult());
-    }
+//    @Override
+//    public AnneeAcademique findByString(String date) throws DataAccessException {
+//        return (AnneeAcademique)(getManager().createNamedQuery("Annee.findByString").setParameter("param", date).getSingleResult());
+//    }
     
     
     

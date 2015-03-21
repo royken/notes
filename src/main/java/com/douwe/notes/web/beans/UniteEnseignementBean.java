@@ -42,16 +42,16 @@ public class UniteEnseignementBean {
             for (i = 0; i < ids.length; i++) {
                 if (ids[i] > 0) {
                     Cours c = coursService.findCoursById(ids[i]);
-                    if (uniteEnseignement.getId() != 0L) {
-                        c.setId(ids[i] + courses.size());
-                    }
+//                    if (uniteEnseignement.getId() != 0L) {
+//                        c.setId(ids[i] + courses.size());
+//                    }
                     coursChoisis.add(c);
                 }
 
             }
 
             uniteEnseignement.setCourses(coursChoisis);
-            System.out.println("---" + uniteEnseignement.getCourses());
+            System.out.println("---" + uniteEnseignement);
             uniteEnseignementService.saveOrUpdateCours(uniteEnseignement);
             if (uniteEnseignement.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", uniteEnseignement.getCode() + " a été mis à jour "));

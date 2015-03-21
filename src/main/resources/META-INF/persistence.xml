@@ -25,8 +25,8 @@
     <class>com.douwe.notes.entities.UniteEnseignement</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
-      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-      <property name="eclipselink.logging.level" value="SEVERE"/>
+      <property name="eclipselink.ddl-generation" value="none"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
     </properties>
   </persistence-unit>
 </persistence>

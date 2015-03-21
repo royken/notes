@@ -108,7 +108,10 @@ public class EtudiantBean {
         if (idO != null) {
             option = optionService.findOptionById(idO);
         }
-        etudiants = etudiantService.findByCritiria(departement, annee, niveau, option);
+        etudiants = etudiantService.findByCritiria((departement != null)? departement.getId() : -1, 
+                (annee != null) ? annee.getId() : -1, 
+                (niveau != null) ? niveau.getId(): -1, 
+                (option != null) ? option.getId(): -1);
         initTaille();        
         departement = new Departement();
         anneeAcademique = new AnneeAcademique();
@@ -182,7 +185,7 @@ public class EtudiantBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un etudiant avant de supprimer "));
         }
     }
-
+    
     public Departement getDepartement() {
         return departement;
     }

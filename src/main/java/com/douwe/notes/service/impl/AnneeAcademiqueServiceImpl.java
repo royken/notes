@@ -50,7 +50,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
             if (anneeAcademique.getId() == null) {
                 anneeAcademique.setActive(1);
                 
-                anneeAcademique.setDateString(df.format(anneeAcademique.getDebut()) + "-" + df.format(anneeAcademique.getFin()));
+                //anneeAcademique.setDateString(df.format(anneeAcademique.getDebut()) + "-" + df.format(anneeAcademique.getFin()));
                 return academiqueDao.create(anneeAcademique);
             } else {
                 return academiqueDao.update(anneeAcademique);
@@ -98,25 +98,23 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
-    @Override
-    public AnneeAcademique findAnneeByString(String annee) throws ServiceException {
-        
-        System.out.println("---------------------------------\n\n");
-        System.out.println(annee);
-        System.out.println("----------------------------------\n\n");
-        try {
-            AnneeAcademique anneeA= academiqueDao.findByString(annee);
-            if(anneeA != null){
-                return anneeA;
-            }
-            else{
-                throw new ServiceException("La ressource demandée est introuvable");
-                
-            }
-        } catch (DataAccessException ex) {
-            Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
+
+//    @Override
+//    public AnneeAcademique findAnneeByString(String annee) throws ServiceException {
+//        try {
+//            AnneeAcademique anneeA= academiqueDao.findByString(annee);
+//            if(anneeA != null){
+//                return anneeA;
+//            }
+//            else{
+//                throw new ServiceException("La ressource demandée est introuvable");
+//                
+//            }
+//        } catch (DataAccessException ex) {
+//            Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
+//    }
+
     
 }

@@ -13,5 +13,5 @@ public interface IAnneeAcademiqueDao extends IDao<AnneeAcademique, Long>{
     
     public List<AnneeAcademique> findAllActive() throws DataAccessException;
     
-    public AnneeAcademique findByString(String date) throws DataAccessException;
+    //public AnneeAcademique findByString(String date) throws DataAccessException;
 }

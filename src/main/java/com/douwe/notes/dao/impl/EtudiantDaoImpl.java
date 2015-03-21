@@ -88,6 +88,7 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
         cq.select(etudiantPath);
+        cq.orderBy(cb.asc(etudiantPath.get(Etudiant_.nom)));
         return getManager().createQuery(cq).getResultList();
     }
 

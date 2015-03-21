@@ -93,20 +93,22 @@ public class AnneeResource implements IAnneeResource{
         }
     }
 
-    @Override
-    public AnneeAcademique getAnneeByString(String annee) {
-        try {
-            AnneeAcademique date = academiqueService.findAnneeByString(annee);
-            
-            if(date == null){
-                throw  new WebApplicationException(Response.Status.NOT_FOUND);
-            }
-            return date;
-        } catch (ServiceException ex) {
-            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-                
-    }
+
+//    @Override
+//    public AnneeAcademique getAnnee(String annee) {
+//        try {
+//            AnneeAcademique date = academiqueService.findAnneeByString(annee);
+//            
+//            if(date == null){
+//                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+//            }
+//            return date;
+//        } catch (ServiceException ex) {
+//            Logger.getLogger(AnneeResource.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
+//                
+//    }
+
     
 }
