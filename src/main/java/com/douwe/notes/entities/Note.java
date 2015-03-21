@@ -46,6 +46,7 @@ public class Note implements Serializable {
     @ManyToOne
     private Etudiant etudiant;
     
+    //les trois derniers a mettre à l'interface importation
     @ManyToOne
     private Evaluation evaluation;
     
