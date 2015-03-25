@@ -33,6 +33,9 @@ public class Evaluation implements Serializable {
     @Column
     private String code;
     
+    @Column (columnDefinition = "boolean default false")
+    private boolean isExam;
+    
     @Column
     private String description;
     
@@ -91,6 +94,14 @@ public class Evaluation implements Serializable {
     @Override
     public String toString() {
         return "Evaluation{" + "id=" + id + ", version=" + version + ", code=" + code + ", description=" + description + ", active=" + active + '}';
+    }
+
+    public boolean isIsExam() {
+        return isExam;
+    }
+
+    public void setIsExam(boolean isExam) {
+        this.isExam = isExam;
     }
     
     
