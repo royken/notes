@@ -1,6 +1,5 @@
 package com.douwe.notes.service;
 
-import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.TypeCours;
 import java.util.List;
 import javax.ejb.Local;
