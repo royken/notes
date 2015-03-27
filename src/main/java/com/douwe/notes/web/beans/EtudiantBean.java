@@ -108,10 +108,10 @@ public class EtudiantBean {
         if (idO != null) {
             option = optionService.findOptionById(idO);
         }
-        etudiants = etudiantService.findByCritiria((departement != null)? departement.getId() : -1, 
-                (annee != null) ? annee.getId() : -1, 
-                (niveau != null) ? niveau.getId(): -1, 
-                (option != null) ? option.getId(): -1);
+        etudiants = etudiantService.findByCritiria((idD == null)? -1 : departement.getId(), 
+                (idA == null) ? -1 : anneeAcademique.getId(), 
+                (idN == null) ? -1: niveau.getId(), 
+                (idO == null) ? -1: option.getId());
         initTaille();        
         departement = new Departement();
         anneeAcademique = new AnneeAcademique();
@@ -344,7 +344,7 @@ public class EtudiantBean {
     }
 
     public Etudiant getEtudiant() throws ServiceException {
-        AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
+//        AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
         // inscription = findIncriptionByEtudiant(etudiant,a);
         return etudiant;
     }
