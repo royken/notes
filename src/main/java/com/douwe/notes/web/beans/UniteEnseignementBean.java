@@ -42,9 +42,6 @@ public class UniteEnseignementBean {
             for (i = 0; i < ids.length; i++) {
                 if (ids[i] > 0) {
                     Cours c = coursService.findCoursById(ids[i]);
-//                    if (uniteEnseignement.getId() != 0L) {
-//                        c.setId(ids[i] + courses.size());
-//                    }
                     coursChoisis.add(c);
                 }
 
