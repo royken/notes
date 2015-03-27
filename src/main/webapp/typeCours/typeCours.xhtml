@@ -36,7 +36,7 @@
                         </p:panel>
                     </h:form>  
                 </p:dialog>
-                                <p:dialog header="MODIFIER L'EVALUATION DETAIL" widgetVar="dlgUpdateEV" hideEffect="explode" showEffect="explode">
+                <p:dialog header="MODIFIER L'EVALUATION DETAIL" widgetVar="dlgUpdateEV" hideEffect="explode" showEffect="explode">
                     <h:form id="formUpdateEV">    
                         <p:growl id="growl10" showDetail="true" /> 
                         <p:panel >
@@ -48,11 +48,11 @@
                                     </h:selectOneMenu>                                   
                                     <h:outputText  value="Pourcentage : " />                                         
                                     <p:spinner    
-                                               value="#{typeCoursBean.evaluationDetails.pourcentage}"
-                                               suffix="%"                                                   
-                                               min="0" 
-                                               max="100" 
-                                               style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
+                                        value="#{typeCoursBean.evaluationDetails.pourcentage}"
+                                        suffix="%"                                                   
+                                        min="0" 
+                                        max="100" 
+                                        style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
                                     <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
                                     <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
                                     <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
@@ -129,7 +129,9 @@
                                 var="node"
                                 selectionMode="single"
                                 selection="#{typeCoursBean.selectedNode}">
-
+                            <p:treeNode type="default">
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
                             <p:treeNode type="node">
                                 <h:outputText value="#{node}" />
                             </p:treeNode>

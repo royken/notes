@@ -110,7 +110,7 @@ public class TypeCoursBean {
             evaluation = new Evaluation();
             idE = 0L;
             displaySelected();            
-            rootWithType = new DefaultTreeNode("Root", null);
+            rootWithType = new DefaultTreeNode("default","liste de type de cours", null);
         }
     }
 
@@ -270,7 +270,7 @@ public class TypeCoursBean {
     public TreeNode getRootWithType() throws ServiceException {
                 typeCourss = typeCoursService.getAllTypeCours();
                 TreeNode[] n = new TreeNode[typeCourss.size()];
-                rootWithType = new DefaultTreeNode("node", "Root", null);
+                rootWithType = new DefaultTreeNode("default","liste de type de cours", null);
                 int i=0;
                 
         for (TypeCours typeCours1 : typeCourss) {
