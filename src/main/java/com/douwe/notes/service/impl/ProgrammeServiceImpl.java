@@ -2,6 +2,8 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.service.IProgrammeService;
 import com.douwe.notes.service.ServiceException;
@@ -72,6 +74,20 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     public List<Programme> getAllProgrammes() throws ServiceException{
         try {
             return programmeDao.findAllActive();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException {
+        try {
+            Programme programme = programmeDao.findByNiveauOption(n, o);
+            if(programme != null){
+                return programme;
+            }
+            return null;
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
