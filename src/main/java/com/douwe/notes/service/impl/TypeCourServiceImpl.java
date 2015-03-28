@@ -16,8 +16,8 @@ import javax.inject.Inject;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
-public class TypeCourServiceImpl implements ITypeCoursService{
-    
+public class TypeCourServiceImpl implements ITypeCoursService {
+
     @Inject
     private ITypeCoursDao typeCoursDao;
 
@@ -28,11 +28,9 @@ public class TypeCourServiceImpl implements ITypeCoursService{
     public void setTypeCoursDao(ITypeCoursDao typeCoursDao) {
         this.typeCoursDao = typeCoursDao;
     }
-    
-    
 
     @Override
-    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException{
+    public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException {
         try {
             if (typeCours.getId() == null) {
                 typeCours.setActive(1);
@@ -42,39 +40,38 @@ public class TypeCourServiceImpl implements ITypeCoursService{
             }
         } catch (DataAccessException dae) {
             Logger.getLogger(DepartementServiceImpl.class.getName()).log(Level.SEVERE, null, dae);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
     @Override
-    public void deleteTypeCours(Long id) throws ServiceException{
+    public void deleteTypeCours(Long id) throws ServiceException {
         try {
             TypeCours typeCours = typeCoursDao.findById(id);
             typeCoursDao.delete(typeCours);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
     @Override
-    public TypeCours findTypeCoursById(long id) throws ServiceException{
+    public TypeCours findTypeCoursById(long id) throws ServiceException {
         try {
             return typeCoursDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
 
     @Override
-    public List<TypeCours> getAllTypeCours() throws ServiceException{
+    public List<TypeCours> getAllTypeCours() throws ServiceException {
         try {
             return typeCoursDao.findAll();
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("La ressource demandée est introuvable");
         }
     }
-    
 }

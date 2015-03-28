@@ -81,6 +81,7 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     }
 
     @Override
+
     public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException {
         try {
             Programme programme = programmeDao.findByNiveauOption(n, o);
@@ -92,6 +93,11 @@ public class ProgrammeServiceImpl implements IProgrammeService {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }

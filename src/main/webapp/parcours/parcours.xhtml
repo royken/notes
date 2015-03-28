@@ -45,11 +45,7 @@
                                         <h:outputText  value="Option : " /> 
                                         <h:selectOneMenu value="#{parcoursBean.idO}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
                                             <f:selectItems value="#{parcoursBean.options}" var="option" itemLabel="#{option.code}-#{option.departement.code}" itemValue="#{option.id}" />
-                                        </h:selectOneMenu> 
-                                        <h:outputText  value="Selectionnez les UE du parcours: "  />
-                                        <p:selectCheckboxMenu value="#{parcoursBean.idUEs}"  label="Liste des UE" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                            <f:selectItems value="#{uniteEnseignementBean.uniteEnseignements}" var="ue" itemLabel="#{ue.code}" itemValue="#{ue.id}" />
-                                        </p:selectCheckboxMenu>                                      
+                                        </h:selectOneMenu>                                                                              
                                     </h:panelGrid>                               
                                 </h:panelGroup>
                                 <p:separator/>
@@ -73,11 +69,7 @@
                                         <h:outputText  value="Option : " /> 
                                         <h:selectOneMenu value="#{parcoursBean.idO}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
                                             <f:selectItems value="#{parcoursBean.options}" var="option" itemLabel="#{option.code}-#{option.departement.code}" itemValue="#{option.id}" />
-                                        </h:selectOneMenu> 
-                                        <h:outputText  value="Selectionnez les UE du parcours: "  />
-                                        <p:selectCheckboxMenu value="#{parcoursBean.idUEs}"  label="Liste des UE" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                            <f:selectItems value="#{uniteEnseignementBean.uniteEnseignements}" var="ue" itemLabel="#{ue.code}" itemValue="#{ue.id}" />
-                                        </p:selectCheckboxMenu>  
+                                        </h:selectOneMenu>                                          
                                         <h:inputHidden value="#{parcoursBean.parcours.id}"  />
                                         <h:inputHidden value="#{parcoursBean.parcours.version}"  />
                                         <h:inputHidden value="#{parcoursBean.parcours.active}"  />
@@ -91,27 +83,32 @@
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/>                                                 
                         <p:confirmDialog message="voulez-vous vraiment supprimer ce parcours ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
                             <p:commandButton id="confirm" value="OUI" action="#{parcoursBean.deleteParcours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
                             <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
                         </p:confirmDialog>
+
                         <p:dataTable id="d"  emptyMessage="Aucun parcours n'est enregistré" var="parcours" value="#{parcoursBean.parcourses}" rowKey="#{parcours.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{parcoursBean.parcours}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES PARCOURS
-                            </f:facet>                                                        
+                            </f:facet>                                                       
                             <p:column headerText="Niveau "  id="niveau">  
                                 #{parcours.niveau.code}
                             </p:column>                              
                             <p:column headerText="Option "  id="option">  
-                                #{parcours.option.code}-#{parcours.option.departement.code}  
+                                #{parcours.option.code}
                             </p:column>      
-                            <f:facet name="footer" >  
-                                <p:commandButton id="affiche" value="Voir les UE du parcours" actionListener="#{parcoursBean.verifierEtAffiche(actionEvent)}" update=":formAfficheCours:displaydAfficheCours" icon="ui-icon-extlink"/>
-                            </f:facet>
+                            <p:column                                      
+                                filterOptions="#{parcoursBean.manufacturerOptions}"  
+                                headerText="Departement" 
+                                filterBy="#{parcours.option.departement.code}"   
+                                id="departement" filterStyle="">  
+                                #{parcours.option.departement.code}  
+                            </p:column> 
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouveau parcours" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             

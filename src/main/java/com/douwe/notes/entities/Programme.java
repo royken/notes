@@ -48,6 +48,9 @@ public class Programme implements Serializable {
     @ManyToOne
     private Parcours parcours;
     
+    @ManyToOne
+    private Semestre semestre;
+    
      @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
@@ -89,6 +92,14 @@ public class Programme implements Serializable {
 
     public void setParcours(Parcours parcours) {
         this.parcours = parcours;
+    }
+
+    public Semestre getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(Semestre semestre) {
+        this.semestre = semestre;
     }
 
     @JsonIgnore

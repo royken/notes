@@ -5,15 +5,16 @@
  */
 package com.douwe.notes.web.beans;
 
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
-import com.douwe.notes.service.IUniteEnseignementService;
 import com.douwe.notes.service.ServiceException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 
@@ -40,59 +42,64 @@ public class ParcoursBean {
     @EJB
     private IOptionService optionService;
     @EJB
-    private IUniteEnseignementService uniteEnseignementService;
+    private IDepartementService departementService;
 
     private Parcours parcours = new Parcours();
+
     private List<Parcours> parcourses;
-   
-    private List<UniteEnseignement> uniteEnseignements;
-    private List<UniteEnseignement> uniteEnseignementChoisis;
     private List<Niveau> niveaux;
     private List<Option> Options;
-   
-    Long[] idUEs;
-    String idN, idO;
-    int n = 50;
+    private List<Departement> departements;
 
-    public ParcoursBean() throws ServiceException {        
-        idUEs = new Long[n];
-        uniteEnseignementChoisis = new LinkedList<UniteEnseignement>();
-//        uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
-        //      dataModel = new UEDataModel(uniteEnseignements);
+    private SelectItem[] manufacturerOptions;
+
+    Long idN = 0L, idO = 0L, idD = 0L;
+
+    public ParcoursBean() throws ServiceException {
+        departements = new ArrayList<Departement>();
     }
 
-    public void saveOrUpdateParcours(ActionEvent actionEvent) throws ServiceException {               
-            int i;
-            for (i = 0; i < idUEs.length; i++) {
-                if (idUEs[i] > 0) {
-                    UniteEnseignement ue = uniteEnseignementService.findUniteEnseignementById(idUEs[i]);
-                    //c.setId(ids[i]+courses.size());                    
-                    uniteEnseignementChoisis.add(ue);
-                }
-            parcours.setActive(1);
-            parcours.setUniteEnseignements(uniteEnseignementChoisis);
-            parcours.setNiveau(niveauService.findNiveauById(Integer.parseInt(idN)));
-            parcours.setOption(optionService.findOptionById(Integer.parseInt(idO)));
-            parcoursService.saveOrUpdateParcours(parcours);           
-            if (parcours.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été  enregistré "));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été mis à jour"));
-            }
-             parcours = new Parcours();
-            idO = new String();
-            idN = new String();
-            idUEs = new Long[n];
-            uniteEnseignementChoisis = new LinkedList<UniteEnseignement>();
+    private void init() throws ServiceException {
+        departements = departementService.getAllDepartements();
+        manufacturerOptions = new SelectItem[departements.size() + 1];
+        manufacturerOptions[0] = new SelectItem("", "Selectionner");
+        for (int j = 0; j < departements.size(); j++) {
+            manufacturerOptions[j + 1] = new SelectItem(departements.get(j).getCode(), departements.get(j).getCode());
         }
+    }
+
+    public void saveOrUpdateParcours(ActionEvent actionEvent) throws ServiceException {
+        parcours.setActive(1);
+        if (idN != null) {
+            parcours.setNiveau(niveauService.findNiveauById(idN));
+        }
+        if (idO != null) {
+            parcours.setOption(optionService.findOptionById(idO));
+        }
+        parcoursService.saveOrUpdateParcours(parcours);
+        if (parcours.getId() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été  enregistré "));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été mis à jour"));
+        }
+        idD = parcours.getOption().getDepartement().getId();
+        parcours = new Parcours();
+        idO = 0L;
+        idN = 0L;
+
     }
 
     public void deleteParcours(ActionEvent actionEvent) throws ServiceException {
         if (parcours != null && parcours.getId() != null) {
             parcoursService.deleteParcours(parcours.getId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", parcours.getNiveau().getCode() + "/" + parcours.getOption().getCode() + " a été supprimé"));
+            idD = parcours.getOption().getDepartement().getId();
             parcours = new Parcours();
         }
+    }
+
+    public String filtrer() throws ServiceException {
+        return "parcours";
     }
 
     public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
@@ -143,25 +150,9 @@ public class ParcoursBean {
         this.optionService = optionService;
     }
 
-    public IUniteEnseignementService getUniteEnseignementService() {
-        return uniteEnseignementService;
-    }
-
-    public void setUniteEnseignementService(IUniteEnseignementService uniteEnseignementService) {
-        this.uniteEnseignementService = uniteEnseignementService;
-    }
-
-    public List<UniteEnseignement> getUniteEnseignements() throws ServiceException {
-        uniteEnseignements = uniteEnseignementService.getAllUniteEnseignements();
-        return uniteEnseignements;
-    }
-
-    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
-        this.uniteEnseignements = uniteEnseignements;
-    }
-
     public List<Niveau> getNiveaux() throws ServiceException {
         niveaux = niveauService.getAllNiveaux();
+        init();
         return niveaux;
     }
 
@@ -178,30 +169,38 @@ public class ParcoursBean {
         this.Options = Options;
     }
 
-    public String getIdN() {
-        if (parcours != null && parcours.getVersion() != 0) {
-            idN = parcours.getNiveau().getId().toString();
+    public Long getIdN() {
+        if (parcours != null && parcours.getId() != null) {
+            idN = parcours.getNiveau().getId();
         }
         return idN;
     }
 
-    public void setIdN(String idN) {
+    public void setIdN(Long idN) {
         this.idN = idN;
     }
 
-    public String getIdO() {
-        if (parcours != null && parcours.getVersion() != 0) {
-            idO = parcours.getOption().getId().toString();
+    public Long getIdO() {
+        if (parcours != null && parcours.getId() != null) {
+            idN = parcours.getOption().getId();
         }
         return idO;
     }
 
-    public void setIdO(String idO) {
+    public void setIdO(Long idO) {
         this.idO = idO;
     }
 
     public List<Parcours> getParcourses() throws ServiceException {
-        parcourses = parcoursService.getAllParcours();
+        if (idD != 0L) {
+            //parcourses = parcoursService.findParcoursByDepartement(Long idD);
+            parcours = parcoursService.findParcoursById(6003L);
+            parcourses = new LinkedList<Parcours>();
+            parcourses.add(parcours);
+            parcours = new Parcours();
+        } else {
+            parcourses = parcoursService.getAllParcours();
+        }
         return parcourses;
     }
 
@@ -209,36 +208,36 @@ public class ParcoursBean {
         this.parcourses = parcourses;
     }
 
-    public List<UniteEnseignement> getUniteEnseignementChoisis() {
-        //uniteEnseignementChoisis = parcours.getUniteEnseignements();
-        return uniteEnseignementChoisis;
+    public IDepartementService getDepartementService() {
+        return departementService;
     }
 
-    public void setUniteEnseignementChoisis(List<UniteEnseignement> uniteEnseignementChoisis) {
-        this.uniteEnseignementChoisis = uniteEnseignementChoisis;
+    public void setDepartementService(IDepartementService departementService) {
+        this.departementService = departementService;
     }
 
-    public Long[] getIdUEs() {
-         if (parcours!=null && parcours.getUniteEnseignements()!=null) {
-            int i=0;
-             for (UniteEnseignement next : parcours.getUniteEnseignements()) {
-                 idUEs[i] = next.getId();
-                 i++;
-             }
-        }
-        return idUEs;
+    public SelectItem[] getManufacturerOptions() {
+        return manufacturerOptions;
     }
 
-    public void setIdUEs(Long[] idUEs) {
-        this.idUEs = idUEs;
+    public void setManufacturerOptions(SelectItem[] manufacturerOptions) {
+        this.manufacturerOptions = manufacturerOptions;
     }
-   
-          public void verifierEtAffiche(ActionEvent actionEvent) throws ServiceException {
-        if (parcours != null && parcours.getId() != null) {
-            RequestContext.getCurrentInstance().execute("PF('dlgAfficheCours').show()");
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez le parcours donc vous voulez affichez la listes des UE"));
-        }
-    } 
-    
+
+    public List<Departement> getDepartements() throws ServiceException {
+        departements = departementService.getAllDepartements();
+        return departements;
+    }
+
+    public void setDepartements(List<Departement> departements) {
+        this.departements = departements;
+    }
+
+    public Long getIdD() {
+        return idD;
+    }
+
+    public void setIdD(Long idD) {
+        this.idD = idD;
+    }
 }
