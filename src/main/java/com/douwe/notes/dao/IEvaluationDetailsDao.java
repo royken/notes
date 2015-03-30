@@ -17,4 +17,6 @@ public interface IEvaluationDetailsDao extends IDao<EvaluationDetails, Long>{
 
     public List<EvaluationDetails> findByTypeCours(TypeCours type) throws DataAccessException;
     
+    public List<EvaluationDetails> findAllActive() throws DataAccessException;
+    
 }
