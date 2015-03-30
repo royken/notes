@@ -50,7 +50,9 @@ public class EvaluationServiceImpl implements IEvaluationService {
         try {
             Evaluation evaluation = evaluationDao.findById(id);
             if (evaluation != null) {
-                evaluationDao.delete(evaluation);
+                evaluation.setActive(0);
+                evaluationDao.update(evaluation);
+                //evaluationDao.delete(evaluation);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

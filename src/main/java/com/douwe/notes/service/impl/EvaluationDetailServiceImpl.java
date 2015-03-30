@@ -174,4 +174,14 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
         }
     }
 
+    @Override
+    public List<EvaluationDetails> getAllActive() throws ServiceException {
+        try {
+            return evaluationDetailsDao.findAllActive();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
 }
