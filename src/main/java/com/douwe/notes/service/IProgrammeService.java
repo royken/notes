@@ -22,9 +22,7 @@ public interface IProgrammeService {
     public List<Programme> getAllProgrammes() throws ServiceException;
     
 
-   
-
-    List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee,Long idSemestre) throws ServiceException;
+   public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee,Long idSemestre) throws ServiceException;
 
     
 }

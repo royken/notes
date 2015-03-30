@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class ProgrammeDaoImpl extends GenericDao<Programme, Long> implements IProgrammeDao{
 
+    @Override
     public void deleteActiv(Programme programme) throws DataAccessException {
         getManager().createNamedQuery("Programme.deleteActive").setParameter("idParam", programme.getId());
     }
@@ -27,8 +28,10 @@ public class ProgrammeDaoImpl extends GenericDao<Programme, Long> implements IPr
 
 
     @Override
+
     public List<Programme> findByNiveauOption(Niveau n, Option o, AnneeAcademique academique, Semestre semestre) throws DataAccessException {
         return getManager().createNamedQuery("Programme.findByNiveauOption").setParameter("param1", n).setParameter("param2", o).setParameter("param3", academique).setParameter("param4", semestre).getResultList();
+
     }
     
 }

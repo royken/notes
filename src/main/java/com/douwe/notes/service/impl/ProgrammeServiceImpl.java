@@ -1,12 +1,18 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.entities.AnneeAcademique;
+
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
+import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.dao.impl.NiveauDaoImpl;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
@@ -34,12 +40,49 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     
     @Inject
     private IOptionDao optionDao;
+
     
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
     
     @Inject
     private ISemestreDao semestreDao;
+
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
+
+    public IAnneeAcademiqueDao getAcademiqueDao() {
+        return academiqueDao;
+    }
+
+    public void setAcademiqueDao(IAnneeAcademiqueDao academiqueDao) {
+        this.academiqueDao = academiqueDao;
+    }
+
+    public ISemestreDao getSemestreDao() {
+        return semestreDao;
+    }
+
+    public void setSemestreDao(ISemestreDao semestreDao) {
+        this.semestreDao = semestreDao;
+    }
+    
+    
+
 
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
@@ -99,13 +142,9 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     }
 
 
-    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-    }
-
     @Override
     public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee, Long idSemestre) throws ServiceException {
+        
         try {
             Niveau niveau = niveauDao.findById(niveauId);
             if(niveau == null){
@@ -131,7 +170,6 @@ public class ProgrammeServiceImpl implements IProgrammeService {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("");
         }
-    }
-
+        }
 
 }

@@ -1,9 +1,9 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,4 +39,9 @@ public interface INiveauResource {
     @DELETE
     @Path(value = "{id : \\d+}")
     void deleteNiveau(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path(value = "{id : \\d+}/semestres")
+    @Produces(value = "application/json")
+    List<Semestre> getAllSemestre(@PathParam(value = "id")long id);
 }
