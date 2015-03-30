@@ -1,11 +1,16 @@
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.entities.Evaluation;
 
-import com.douwe.notes.entities.Genre;
 import com.douwe.notes.service.IAnneeAcademiqueService;
+import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IEtudiantService;
+import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.IInscriptionService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
@@ -16,14 +21,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Named;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -47,13 +45,22 @@ public class ImportationBean {
     private IInscriptionService inscriptionService;
     @EJB
     private INoteService noteService;
-    
+        @EJB
+    private ICoursService coursService;
+        @EJB
+    private IDepartementService departementService;        
+            @EJB
+    private IEvaluationService evaluationService;
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-    Long idAca;
+    private List<Evaluation> evaluations;
+    private List<Cours> courses;
+    private List<Departement> departements;
+    Long idAca;Long idC=0L;Long idE=0L;
 
     String nomFeuille = new String();
     List<String> nomFeuilles = new LinkedList<String>();
+    private Long idD=0L;
 
     public ImportationBean() {
         etudiant = new Etudiant();        
@@ -79,15 +86,30 @@ public class ImportationBean {
         return "etudiant";
     }
     
-public String saveNotes() throws ServiceException, IOException {
-        System.out.println("---------------------");
-        if (file != null) {            
-            //noteService.importNotes(file.getInputstream(), idAca);
+public void saveNotes() throws ServiceException, IOException {        
+        if (file != null && idC!=null && idC!=0L && idE!=null && idE!=0L) {            
+            //noteService.importNotes(file.getInputstream(),idC,idE, idAca);
             //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
+            System.out.println("fichier " + file.getFileName()+" id cours "+ idC+" id Evaluation "+idE +" id Annee "+ idAca);
             file = null;
             idAca = 0L;
+            idE=null;
+            idC=null;
         }        
-        return "note";
+        
+}
+public void exportNotes() throws ServiceException, IOException {        
+        if (file != null && idD!=null && idD!=0L && idC!=null && idC!=0L && idE!=null && idE!=0L) {            
+            //noteService.exportNotes(file.getInputstream(),idC,idE,idD,idAca);
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
+            System.out.println("fichier " + file.getFileName()+" id cours "+ idC+" id Evaluation "+idE +" id Departement "+idD+" id Annee "+ idAca);
+            file = null;
+            idAca = 0L;
+            idE=null;
+            idC=null;
+            idD=null;
+        }        
+        
 }
 //    public void handleFileChange(ActionEvent actionEvent) throws IOException, InvalidFormatException {
 //        if (file != null && file.getFileName().equals("")) {
@@ -179,6 +201,81 @@ public String saveNotes() throws ServiceException, IOException {
 
     public void setNoteService(INoteService noteService) {
         this.noteService = noteService;
+    }
+
+    public ICoursService getCoursService() {
+        return coursService;
+    }
+
+    public void setCoursService(ICoursService coursService) {
+        this.coursService = coursService;
+    }
+
+    public IEvaluationService getEvaluationService() {
+        return evaluationService;
+    }
+
+    public void setEvaluationService(IEvaluationService evaluationService) {
+        this.evaluationService = evaluationService;
+    }
+
+    public List<Evaluation> getEvaluations() throws ServiceException {
+        evaluations=evaluationService.getAllEvaluations();
+        return evaluations;
+    }
+
+    public void setEvaluations(List<Evaluation> evaluations) {
+        this.evaluations = evaluations;
+    }
+
+    public List<Cours> getCourses() throws ServiceException {
+        courses=coursService.getAllCours();
+        return courses;
+    }
+
+    public void setCourses(List<Cours> courses) {
+        this.courses = courses;
+    }
+
+    public Long getIdC() {
+        return idC;
+    }
+
+    public void setIdC(Long idC) {
+        this.idC = idC;
+    }
+
+    public Long getIdE() {
+        return idE;
+    }
+
+    public void setIdE(Long idE) {
+        this.idE = idE;
+    }
+
+    public IDepartementService getDepartementService() {
+        return departementService;
+    }
+
+    public void setDepartementService(IDepartementService departementService) {
+        this.departementService = departementService;
+    }
+
+    public List<Departement> getDepartements() throws ServiceException {
+        departements = departementService.getAllDepartements();
+        return departements;
+    }
+
+    public void setDepartements(List<Departement> departements) {
+        this.departements = departements;
+    }
+
+    public Long getIdD() {
+        return idD;
+    }
+
+    public void setIdD(Long idD) {
+        this.idD = idD;
     }
     
 }

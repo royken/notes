@@ -87,7 +87,8 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
             EvaluationDetails details = detailsDao.findById(id);
             if (details != null) {
                 details.setActive(0);
-                detailsDao.update(details);
+                //detailsDao.update(details);
+                detailsDao.delete(details);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

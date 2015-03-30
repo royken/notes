@@ -36,23 +36,19 @@ public class TypeCoursBean {
     @EJB
     private IEvaluationService evaluationService;
     private List<Evaluation> evaluations;
-    private Evaluation evaluation;   
-    private TreeNode rootWithType;
-    private TreeNode[] selectedNodes;
+    private Evaluation evaluation;
     private TypeCours typeCours = new TypeCours();
     private List<TypeCours> typeCourss;
-   
-    private TreeNode selectedNode;
     private Long idE = 0L;
 
     public TypeCoursBean() {
-        evaluationDetails = new EvaluationDetails();        
+        evaluationDetails = new EvaluationDetails();
+        evaluation = new Evaluation();
     }
 
-
-    public void saveOrUpdateTypeCours(ActionEvent actionEvent) throws ServiceException {        
-        System.out.println(""+typeCours);
-        if (typeCours != null && typeCours.getNom() != null) {            
+    public void saveOrUpdateTypeCours(ActionEvent actionEvent) throws ServiceException {
+        System.out.println("" + typeCours);
+        if (typeCours != null && typeCours.getNom() != null) {
             typeCoursService.saveOrUpdateTpyeCours(typeCours);
             if (typeCours.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", typeCours.getNom() + " a été mis à jour "));
@@ -74,52 +70,57 @@ public class TypeCoursBean {
     }
 
     public void verifierEtUpdate(ActionEvent actionEvent) throws ServiceException {
-        if (typeCours != null && typeCours.getId() != null) {
-            RequestContext.getCurrentInstance().execute("PF('dlgUpdate').show()");
+        if (evaluationDetails != null && evaluationDetails.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('dlgUpdateEV').show()");
         } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un type de cours avant de modifier "));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une évaluation avant de modifier "));
         }
     }
 
     public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
+        if (evaluationDetails != null && evaluationDetails.getId() != null) {
+            RequestContext.getCurrentInstance().execute("PF('c').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner une évaluation avant de supprimer "));
+        }
+    }
+
+    public void verifierEtOuvrir(ActionEvent actionEvent) throws ServiceException {
+        System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getId() != null) {
             RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
         } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un type de cours avant de supprimer "));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", " ne marche pas "));
         }
     }
 
-    public void saveOrUpdateEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
-        
-        if (evaluationDetails != null ) {
-            if (idE != 0L) {
-                evaluation = evaluationService.findEvaluationById(idE);
-                evaluationDetails.setEvaluation(evaluation);
-            }            
-            typeCours=typeCoursService.findTypeCoursById(3702L);
-            evaluationDetails.setEvaluation(evaluation);
-            evaluationDetails.setTypeCours(typeCours);
-            evaluationDetailService.saveOrUpdateEvaluationDetails(evaluationDetails);            
-            if (evaluationDetails.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", evaluationDetails.getEvaluation().getCode() + " : " + evaluationDetails.getPourcentage() + "%" + " a été mis à jour "));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", evaluationDetails.getEvaluation().getCode() + " : " + evaluationDetails.getPourcentage() + "%" + " a été enregistré"));
-            }
+    public void saveEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
+        evaluationDetailService.addEvaluation(typeCours.getId(), idE, evaluationDetails.getPourcentage());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
+        evaluationDetails = new EvaluationDetails();
+        evaluation = new Evaluation();
+        typeCours = new TypeCours();
+        idE = 0L;
+    }
 
-            evaluationDetails = new EvaluationDetails();
-            evaluation = new Evaluation();
-            idE = 0L;
-            displaySelected();            
-            rootWithType = new DefaultTreeNode("default","liste de type de cours", null);
-        }
+    public void updateEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
+        int p = evaluationDetails.getPourcentage();        
+        evaluationDetails=evaluationDetailService.findEvaluationDetailsById(evaluationDetails.getId());
+        System.out.println(""+typeCours.getId()+" " +evaluationDetails.getEvaluation().getId()+" "+ p);
+        evaluationDetailService.modifierEvaluation(typeCours.getId(), evaluationDetails.getEvaluation().getId(), p);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
+        evaluationDetails = new EvaluationDetails();
+        evaluation = new Evaluation();
+        typeCours = new TypeCours();
+        idE = 0L;
     }
 
     public void deleteEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("" + evaluationDetails);
+        System.out.println("deleteEvaluationDetails" + evaluationDetails + typeCours + " idE " + idE);
         if (evaluationDetails != null && evaluationDetails.getId() != null) {
-            
+            //evaluationDetailService.supprimerEvaluation(typeCours.getId(), evaluation.getId());
             evaluationDetailService.deleteEvaluationDetails(evaluationDetails.getId());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", evaluationDetails.getEvaluation().getCode() + " : " + evaluationDetails.getPourcentage() + "%" + " a été supprimé"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'évaluation a été supprimé"));
             evaluationDetails = new EvaluationDetails();
         }
     }
@@ -164,21 +165,16 @@ public class TypeCoursBean {
     public void setEvaluationDetails(EvaluationDetails evaluationDetails) {
         this.evaluationDetails = evaluationDetails;
     }
-
-    public List<EvaluationDetails> getEvaluationDetailses() {
+    public List<EvaluationDetails> findAll(TypeCours typeCours) throws ServiceException{
+    return evaluationDetailService.findEvaluationDetailsByTypeCours(typeCours.getId());
+    }
+    public List<EvaluationDetails> getEvaluationDetailses() throws ServiceException {
+        evaluationDetailses = evaluationDetailService.findEvaluationDetailsByTypeCours(idE);
         return evaluationDetailses;
     }
 
     public void setEvaluationDetailses(List<EvaluationDetails> evaluationDetailses) {
         this.evaluationDetailses = evaluationDetailses;
-    }
-
-    public TreeNode getSelectedNode() {
-        return selectedNode;
-    }
-
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
     }
 
     public IEvaluationService getEvaluationService() {
@@ -216,82 +212,4 @@ public class TypeCoursBean {
     public void setIdE(Long idE) {
         this.idE = idE;
     }
-
-
-
-        
-    public void displaySelected() {
-        if (selectedNode != null) {
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", selectedNode.getData().toString()));
-        }
-
-        if (selectedNodes != null && selectedNodes.length > 0) {
-            StringBuilder builder = new StringBuilder();
-
-            for (TreeNode node : selectedNodes) {
-                builder.append(node.getData().toString());
-                builder.append("<br />");
-            }
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", builder.toString()));
-        }
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", "selectNode est null"));
-        selectedNode = null;
-        selectedNodes = null;
-    }
-
-    public void onNodeExpand(NodeExpandEvent event) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Expanded", event.getTreeNode().toString()));
-    }
-
-    public void onNodeCollapse(NodeCollapseEvent event) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Collapsed", event.getTreeNode().toString()));
-    }
-
-    public void onNodeSelect(NodeSelectEvent event) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", event.getTreeNode().toString()));
-    }
-
-    public void onNodeUnselect(NodeUnselectEvent event) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString()));
-
-    }
-
-    public void deleteNode() {
-        selectedNode.getChildren().clear();
-        selectedNode.getParent().getChildren().remove(selectedNode);
-        selectedNode.setParent(null);
-
-        selectedNode = null;
-    }
-
-
-    public TreeNode getRootWithType() throws ServiceException {
-                typeCourss = typeCoursService.getAllTypeCours();
-                TreeNode[] n = new TreeNode[typeCourss.size()];
-                rootWithType = new DefaultTreeNode("default","liste de type de cours", null);
-                int i=0;
-                
-        for (TypeCours typeCours1 : typeCourss) {
-            n[i] = new DefaultTreeNode("node", typeCours1.getNom(), rootWithType);            
-            //a remplacer
-            evaluationDetailses = evaluationDetailService.getAllEvaluationDetails();
-            for (EvaluationDetails evaluationDetailse : evaluationDetailses) {
-                TreeNode n2 = new DefaultTreeNode("leaf", evaluationDetailse.getEvaluation().getCode() + " : " + evaluationDetailse.getPourcentage() + "%", n[i]);
-            }            
-            i=i+1;
-        }    
-        System.out.println("" + evaluationDetailses);
-        return rootWithType;
-    }
-
-    public TreeNode[] getSelectedNodes() {
-        return selectedNodes;
-    }
-
-    public void setSelectedNodes(TreeNode[] selectedNodes) {
-        this.selectedNodes = selectedNodes;
-    }
-
 }

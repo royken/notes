@@ -27,11 +27,7 @@
                                         <h:outputText  value="Année Académique : " /> 
                                         <h:selectOneMenu value="#{programmeBean.idAca}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
                                             <f:selectItems value="#{programmeBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
-                                        </h:selectOneMenu>
-                                         <h:outputText  value="Selectionnez les Enseignants: "  />
-                                         <p:selectCheckboxMenu value="#{programmeBean.ide}"  label="Enseignant(s)" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                             <f:selectItems value="#{programmeBean.enseignants}" var="enseignant" itemLabel="#{enseignant.nom}" itemValue="#{enseignant.id}" />
-                                        </p:selectCheckboxMenu>  
+                                        </h:selectOneMenu>                                         
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
@@ -80,19 +76,37 @@
                             <p:commandButton id="confirm" value="OUI" action="#{programmeBean.deleteProgramme(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
                             <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
                         </p:confirmDialog>
-                        <p:dataTable id="d"  emptyMessage="Aucun programme n'est enregistré" var="programme" value="#{programmeBean.programmes}" rowKey="#{programme.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
-                                     sortOrder="ascending" selection="#{programmeBean.programme}" selectionMode="single" >            
-                            <f:facet name="header">
-                                LA LISTE DES PROGRAMMES
-                            </f:facet>                                                        
-                            <p:column headerText="Parcours "  id="parcours">  
-                                #{programme.parcours.niveau.code} - #{programme.parcours.option.code}
-                            </p:column>                              
+                         <p:panel>
+                            <h:panelGroup>
+                                <h:panelGrid columns="8" width="100%" >                                                                                                        
+                                    <p:outputLabel value="Niveau"  />
+                                    <h:selectOneMenu value="#{programmeBean.idN}" style="height: 30px; "  id="niveau">
+                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                        <f:selectItems value="#{programmeBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                    </h:selectOneMenu>
+                                    <p:outputLabel value="Option" />
+                                    <h:selectOneMenu value="#{programmeBean.idO}" style=" height: 30px; "  id="option">
+                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                        <f:selectItems value="#{programmeBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
+                                    </h:selectOneMenu>                                                  
+                                    <p:commandButton type="submit" 
+                                                     action="#{programmeBean.filtrer()}"  
+                                                     update=":f:d"  
+                                                      value="Filtrer" 
+                                                     style=" height: 30px;"/>                                    
+                                </h:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+                        <p:dataTable id="d"  emptyMessage="Aucun programme n'a été trouvé" var="programme" value="#{programmeBean.programmes}" rowKey="#{programme.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                                     sortOrder="ascending" selection="#{programmeBean.programme}" selectionMode="single" >                                        
                             <p:column headerText="Unité d'Enseignement "  id="UE">  
                                 #{programme.uniteEnseignement.code}  
-                            </p:column>                                                  
-                            <p:column headerText="Année Académique "  id="aca">  
-                                #{programme.anneeAcademique.debut.toString().substring(programme.anneeAcademique.debut.toString().length()-4)}/#{programme.anneeAcademique.fin.toString().substring(programme.anneeAcademique.fin.toString().length()-4)}
+                            </p:column>                                                           
+                             <p:column headerText="Intitulé " >  
+                                #{programme.uniteEnseignement.intitule}  #{programmeBean.affiche(programme.uniteEnseignement.courses)} 
+                            </p:column>                                                
+                            <p:column headerText="crédit "  id="aca">  
+                                #{programmeBean.cout(programme.uniteEnseignement.courses)} 
                             </p:column> 
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouveau programme" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>

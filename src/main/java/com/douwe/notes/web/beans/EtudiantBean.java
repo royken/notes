@@ -75,7 +75,7 @@ public class EtudiantBean {
     private List<String> genres = new LinkedList<String>();
     private Parcours parcours;
     private List<Parcours> parcourses = new LinkedList<Parcours>();
-    Long idD = 0L, idN = 0L, idO = 0L, idA = 0L, idP = 0L;
+    Long idD = -1L, idN = -1L, idO = -1L, idA = -1L, idP = -1L;
     int taille = 30;
 
     /**
@@ -83,40 +83,21 @@ public class EtudiantBean {
      */
     public EtudiantBean() {
 
-        departement = new Departement();
-        anneeAcademique = new AnneeAcademique();
-        niveau = new Niveau();
-        option = new Option();        
-        parcours = new Parcours();
-        inscription = new Inscription();
+//        departement = new Departement();
+//        anneeAcademique = new AnneeAcademique();
+//        niveau = new Niveau();
+//        option = new Option();        
+//        parcours = new Parcours();
+//        inscription = new Inscription();
+        etudiant=new Etudiant();
     }
-
-    public void update() {
-
-    }
-
-    public void filtrer() throws ServiceException {
-        if (idA != null) {
-            anneeAcademique = anneeAcademiqueService.findAnneeById(idA);
-        }
-        if (idD != null) {
-            departement = departementService.findDepartementById(idD);
-        }
-        if (idN != null) {
-            niveau = niveauService.findNiveauById(idN);
-        }
-        if (idO != null) {
-            option = optionService.findOptionById(idO);
-        }
-        etudiants = etudiantService.findByCritiria((idD == null)? -1 : departement.getId(), 
-                (idA == null) ? -1 : anneeAcademique.getId(), 
-                (idN == null) ? -1: niveau.getId(), 
-                (idO == null) ? -1: option.getId());
-        initTaille();        
-        departement = new Departement();
-        anneeAcademique = new AnneeAcademique();
-        niveau = new Niveau();
-        option = new Option();        
+ 
+    public void filtrer() throws ServiceException {        
+        etudiants = etudiantService.findByCritiria((idD == null)? -1 : idD, 
+                (idA == null) ? -1 : idA, 
+                (idN == null) ? -1: idN, 
+                (idO == null) ? -1: idO);
+        initTaille();                       
         idD = null;
         idN = null;
         idO = null;
@@ -124,26 +105,14 @@ public class EtudiantBean {
 
     public void saveOrUpdateEtudiant(ActionEvent actionEvent) throws ServiceException {
         if (etudiant != null && etudiant != null) {
-            etudiantService.saveOrUpdateEtudiant(etudiant);
-            parcours = parcoursService.findParcoursById(idP);
-            System.out.println("" + parcours);
-            inscription.setParcours(parcours);
-            inscription.setEtudiant(etudiant);
-            AnneeAcademique anneeAcademique1 = anneeAcademiqueService.findAnneeById(idA);
-            inscription.setAnneeAcademique(anneeAcademique1);
-            inscriptionService.saveOrUpdateInscription(inscription);
+            etudiantService.saveOrUpdateEtudiant(etudiant);           
+            System.out.println(""+etudiant);
             if (etudiant.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + " option " + inscription.getParcours().getOption().getCode()));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré" ));
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + " option " + inscription.getParcours().getOption().getCode()));
-            }
-            idA = inscription.getAnneeAcademique().getId();
-            idD = inscription.getParcours().getOption().getDepartement().getId();
-            idN = inscription.getParcours().getNiveau().getId();
-            idO = inscription.getParcours().getOption().getId();
-            filtrer();                        
-            inscription = new Inscription();
-            parcours = new Parcours();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été mis à jour " ));
+            }            
+            filtrer();                     
             etudiant = new Etudiant();
 
         }
@@ -156,15 +125,15 @@ public class EtudiantBean {
             taille = 300;
         }
     }
+    public void message(ActionEvent actionEvent){
+     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "teste", "l'étudiant " + etudiant.getNom() + " a été enregistré " ));
+    }
 
     public void deleteEtudiant(ActionEvent actionEvent) throws ServiceException {
-        if (etudiant != null && etudiant.getId() != null) {
-            AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
-            //find inscriptionbyEtudiant
-            // inscription = findIncriptionByEtudiant(etudiant,a);
-            etudiantService.deleteEtudiant(etudiant.getId());
-            //inscriptionService.deleteInscription(inscription.getId());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré en " + inscription.getParcours().getNiveau().getCode() + "/" + inscription.getParcours().getOption().getCode()));
+        if (etudiant != null && etudiant.getId() != null) { 
+            System.out.println(""+etudiant);
+            etudiantService.deleteEtudiant(etudiant.getId());            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré " ));
             etudiant = new Etudiant();
         }
     }

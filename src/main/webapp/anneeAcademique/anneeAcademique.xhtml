@@ -69,7 +69,7 @@
                                 #{anneeAcademique.debut.toString().subSequence(8,10)}/#{anneeAcademiqueBean.inc(anneeAcademique.debut.month)}/#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length() -4)}
                             </p:column>       
                             <p:column headerText="Date de fin " >  
-                            #{anneeAcademique.fin.toString().subSequence(8,10)}/#{anneeAcademiqueBean.inc(anneeAcademique.fin.month)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -4)}
+                                #{anneeAcademique.fin.toString().subSequence(8,10)}/#{anneeAcademiqueBean.inc(anneeAcademique.fin.month)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length() -4)}
                             </p:column>
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouveau anneeAcademique" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
