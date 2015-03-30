@@ -65,4 +65,9 @@ public class EvaluationDetailsDaoImpl extends GenericDao<EvaluationDetails, Long
         return getManager().createQuery(cq).getResultList();
     }
 
+    @Override
+    public List<EvaluationDetails> findAllActive() throws DataAccessException {
+        return getManager().createNamedQuery("EvaluationDetails.findAllActive").getResultList();
+    }
+
 }
