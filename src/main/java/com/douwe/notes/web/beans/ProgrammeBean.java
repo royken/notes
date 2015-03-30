@@ -109,8 +109,8 @@ public class ProgrammeBean {
 
     public void filtrer() throws ServiceException {
         
-        programmes = programmeService.getAllProgrammes();        
-        //findProgrammeByParcours(idN, idO);
+        // programmes = programmeService.getAllProgrammes();        
+        programmes = programmeService.findProgrammeByParcours(idN, idO);
     }
 
     public void deleteProgramme(ActionEvent actionEvent) throws ServiceException {

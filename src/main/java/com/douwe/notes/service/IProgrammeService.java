@@ -22,7 +22,7 @@ public interface IProgrammeService {
     public List<Programme> getAllProgrammes() throws ServiceException;
     
 
-    public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException;
+    //public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException;
 
     List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException;
 

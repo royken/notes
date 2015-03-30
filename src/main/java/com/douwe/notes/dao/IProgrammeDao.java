@@ -17,6 +17,6 @@ public interface IProgrammeDao extends IDao<Programme, Long>{
     
     public List<Programme> findAllActive() throws DataAccessException;
     
-    public Programme findByNiveauOption(Niveau n, Option o) throws DataAccessException;
+    public List<Programme> findByNiveauOption(Niveau n, Option o) throws DataAccessException;
     
 }
