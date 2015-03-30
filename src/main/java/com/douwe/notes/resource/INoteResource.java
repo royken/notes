@@ -39,4 +39,9 @@ public interface INoteResource {
     @Path(value = "{id : \\d+}")
     void deleteNote(@PathParam(value = "id")long id);
     
+    @GET
+    @Path(value = "{niveauid : \\d+}/{optionid : \\d+}/{coursid : \\d+}/{anneeid : \\d+}/{session : \\d+}")
+            @Produces(value = "application/json")
+    String afficher(@PathParam(value = "niveauid")long niveauid, @PathParam(value = "optionid")long optionid, @PathParam(value = "coursid")long coursid, @PathParam(value = "anneeid")long anneeid, @PathParam(value = "session")int session);
+    
 }

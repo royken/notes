@@ -1,10 +1,21 @@
 package com.douwe.notes.resource.impl;
 
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
+import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Session;
+import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.resource.INoteResource;
+import com.douwe.notes.service.IAnneeAcademiqueService;
+import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.INoteService;
+import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -21,6 +32,19 @@ public class NoteResource implements INoteResource{
     
     @EJB
     private INoteService service;
+    
+    @EJB
+    private IOptionService optionService;
+    
+    @EJB
+    private IAnneeAcademiqueService anneeAcademiqueService;
+    
+    @EJB
+    private ICoursService coursService;
+    
+    @EJB
+    private INiveauService niveauService;
+    
 
     public INoteService getService() {
         return service;
@@ -29,9 +53,41 @@ public class NoteResource implements INoteResource{
     public void setService(INoteService service) {
         this.service = service;
     }
-    
+
+    public IOptionService getOptionService() {
+        return optionService;
+    }
+
+    public void setOptionService(IOptionService optionService) {
+        this.optionService = optionService;
+    }
+
+    public IAnneeAcademiqueService getAnneeAcademiqueService() {
+        return anneeAcademiqueService;
+    }
+
+    public void setAnneeAcademiqueService(IAnneeAcademiqueService anneeAcademiqueService) {
+        this.anneeAcademiqueService = anneeAcademiqueService;
+    }
+
+    public ICoursService getCoursService() {
+        return coursService;
+    }
+
+    public void setCoursService(ICoursService coursService) {
+        this.coursService = coursService;
+    }
+
+    public INiveauService getNiveauService() {
+        return niveauService;
+    }
+
+    public void setNiveauService(INiveauService niveauService) {
+        this.niveauService = niveauService;
+    }
     
 
+    @Override
     public Note createNote(Note note) {
         try {
             return service.saveOrUpdateNote(note);
@@ -41,6 +97,7 @@ public class NoteResource implements INoteResource{
         }
     }
 
+    @Override
     public List<Note> getAllNotes() {
         try {
             return service.getAllNotes();
@@ -50,6 +107,7 @@ public class NoteResource implements INoteResource{
         }
     }
 
+    @Override
     public Note getNote(long id) {
         try {
             Note note = service.findNoteById(id);
@@ -63,6 +121,7 @@ public class NoteResource implements INoteResource{
         }
     }
 
+    @Override
     public Note updateNote(long id, Note note) {
         try {
             Note note1 = service.findNoteById(id);
@@ -82,6 +141,7 @@ public class NoteResource implements INoteResource{
         }
     }
 
+    @Override
     public void deleteNote(long id) {
         try {
             service.deleteNote(id);
@@ -89,6 +149,29 @@ public class NoteResource implements INoteResource{
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
+        try {
+            Niveau n = niveauService.findNiveauById(niveauid);
+            Option o = optionService.findOptionById(optionid);
+            Cours c = coursService.findCoursById(coursid);
+            AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
+            Session s = Session.values()[ses];
+            List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
+            System.out.println("La liste des notes");
+            for (EtudiantNotes et : ets) {
+                System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
+                for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
+                    System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+                }
+                System.out.println(String.format("La moyenne : %.2f",et.getMoyenne()));
+            }
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Hello";
+   }
     
     
 }
