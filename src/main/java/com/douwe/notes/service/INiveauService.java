@@ -1,6 +1,7 @@
 package com.douwe.notes.service;
 
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Semestre;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -20,4 +21,6 @@ public interface INiveauService {
     public List<Niveau> getAllNiveaux() throws ServiceException;
     
     public Niveau findByCode(String code) throws ServiceException;
+
+    public List<Semestre> getAllSemestre(long niveauId) throws ServiceException;
 }
