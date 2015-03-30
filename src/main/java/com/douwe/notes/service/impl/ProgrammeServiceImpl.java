@@ -1,7 +1,10 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.dao.impl.NiveauDaoImpl;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
@@ -22,6 +25,30 @@ public class ProgrammeServiceImpl implements IProgrammeService {
 
     @Inject
     private IProgrammeDao programmeDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
+    
+    @Inject
+    private IOptionDao optionDao;
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
+    
+    
 
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
@@ -80,24 +107,30 @@ public class ProgrammeServiceImpl implements IProgrammeService {
         }
     }
 
-    @Override
+//    @Override
+//    public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException {
+//        try {
+//            Programme programme = programmeDao.findByNiveauOption(n, o);
+//            if(programme != null){
+//                return programme;
+//            }
+//            return null;
+//        } catch (DataAccessException ex) {
+//            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            throw  new ServiceException("La ressource demandée est introuvable");
+//        }
+//    }
 
-    public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException {
+    @Override
+    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException {
         try {
-            Programme programme = programmeDao.findByNiveauOption(n, o);
-            if(programme != null){
-                return programme;
-            }
-            return null;
+            Niveau n = niveauDao.findById(niveauId);
+            Option o = optionDao.findById(optionId);
+            return programmeDao.findByNiveauOption(n, o);
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
-    }
-
-    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
     }
 
 }
