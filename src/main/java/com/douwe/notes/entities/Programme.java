@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
 @NamedQuery(name = "Programme.deleteActive",query = "update Programme p set p.active = 0 where p.id = :idParam"),
-@NamedQuery(name = "Programme.findAllActive",query = "select p from Programme p where p.active=1")    
+@NamedQuery(name = "Programme.findAllActive",query = "select p from Programme p where p.active=1"),
+@NamedQuery(name = "Programme.findByNiveauOption",query = "SELECT p FROM Programme p WHERE p.parcours.niveau.id = :param1 and p.parcours.option.id = :param2")
 
 })
 public class Programme implements Serializable {

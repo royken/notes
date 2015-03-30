@@ -2,7 +2,14 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.INoteDao;
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
+import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Session;
+import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -76,6 +83,11 @@ public class NoteServiceImpl implements INoteService {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    @Override
+    public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique,Session session) throws ServiceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
