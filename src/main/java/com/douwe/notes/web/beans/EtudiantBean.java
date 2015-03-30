@@ -89,30 +89,34 @@ public class EtudiantBean {
 //        option = new Option();        
 //        parcours = new Parcours();
 //        inscription = new Inscription();
-        etudiant=new Etudiant();
+        etudiant = new Etudiant();
     }
- 
-    public void filtrer() throws ServiceException {        
-        etudiants = etudiantService.findByCritiria((idD == null)? -1 : idD, 
-                (idA == null) ? -1 : idA, 
-                (idN == null) ? -1: idN, 
-                (idO == null) ? -1: idO);
-        initTaille();                       
+
+    public void filtrer() throws ServiceException {
+        etudiants = etudiantService.findByCritiria((idD == null) ? -1 : idD,
+                (idA == null) ? -1 : idA,
+                (idN == null) ? -1 : idN,
+                (idO == null) ? -1 : idO);
+        initTaille();
         idD = null;
         idN = null;
         idO = null;
     }
 
+    public void update(ActionEvent actionEvent) {
+
+    }
+
     public void saveOrUpdateEtudiant(ActionEvent actionEvent) throws ServiceException {
         if (etudiant != null && etudiant != null) {
-            etudiantService.saveOrUpdateEtudiant(etudiant);           
-            System.out.println(""+etudiant);
+            etudiantService.saveOrUpdateEtudiant(etudiant);
+            System.out.println("" + etudiant);
             if (etudiant.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré" ));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré"));
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été mis à jour " ));
-            }            
-            filtrer();                     
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été mis à jour "));
+            }
+            filtrer();
             etudiant = new Etudiant();
 
         }
@@ -125,15 +129,16 @@ public class EtudiantBean {
             taille = 300;
         }
     }
-    public void message(ActionEvent actionEvent){
-     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "teste", "l'étudiant " + etudiant.getNom() + " a été enregistré " ));
+
+    public void message(ActionEvent actionEvent) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "teste", "l'étudiant " + etudiant.getNom() + " a été enregistré "));
     }
 
     public void deleteEtudiant(ActionEvent actionEvent) throws ServiceException {
-        if (etudiant != null && etudiant.getId() != null) { 
-            System.out.println(""+etudiant);
-            etudiantService.deleteEtudiant(etudiant.getId());            
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré " ));
+        if (etudiant != null && etudiant.getId() != null) {
+            System.out.println("" + etudiant);
+            etudiantService.deleteEtudiant(etudiant.getId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré "));
             etudiant = new Etudiant();
         }
     }
@@ -147,14 +152,14 @@ public class EtudiantBean {
     }
 
     public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("verifierEtSupprimer-------"+etudiant);
+        System.out.println("verifierEtSupprimer-------" + etudiant);
         if (etudiant != null && etudiant.getId() != null) {
             RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un etudiant avant de supprimer "));
         }
     }
-    
+
     public Departement getDepartement() {
         return departement;
     }
@@ -304,11 +309,11 @@ public class EtudiantBean {
         if (etudiant != null && inscription != null && inscription.getAnneeAcademique() != null) {
             idP = inscription.getAnneeAcademique().getId();
         }
-        
+
         return idA;
     }
 
-    public void setIdA(Long idA) {        
+    public void setIdA(Long idA) {
         this.idA = idA;
     }
 
@@ -322,7 +327,7 @@ public class EtudiantBean {
         this.etudiant = etudiant;
     }
 
-    public Inscription getInscription() {        
+    public Inscription getInscription() {
         return inscription;
     }
 

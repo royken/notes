@@ -83,13 +83,13 @@
                             <h:panelGroup>
                                 <h:panelGrid columns="9" width="100%" >
                                     <p:outputLabel value="Departement"  />
-                                    <h:selectOneMenu value="#{etudiantBean.idD}" style="height: 30px; "  id="departement">
+                                    <h:selectOneMenu onchange="#{etudiantBean.update}"  value="#{etudiantBean.idD}" style="height: 30px; "  id="departement">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                         <f:selectItems value="#{etudiantBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
                                     </h:selectOneMenu>
 
                                     <p:outputLabel value="Année"  />
-                                    <h:selectOneMenu value="#{etudiantBean.idA}" style=" height: 30px;"  id="annee">
+                                    <h:selectOneMenu  value="#{etudiantBean.idA}" style=" height: 30px;"  id="annee">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                         <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)} - #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
                                     </h:selectOneMenu>
