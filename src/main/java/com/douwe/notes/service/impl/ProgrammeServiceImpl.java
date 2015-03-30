@@ -1,6 +1,14 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+
+import com.douwe.notes.dao.IAnneeAcademiqueDao;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
+import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.dao.ISemestreDao;
+import com.douwe.notes.entities.AnneeAcademique;
+
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IProgrammeDao;
@@ -8,6 +16,7 @@ import com.douwe.notes.dao.impl.NiveauDaoImpl;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.service.IProgrammeService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -32,6 +41,14 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     @Inject
     private IOptionDao optionDao;
 
+    
+    @Inject
+    private IAnneeAcademiqueDao academiqueDao;
+    
+    @Inject
+    private ISemestreDao semestreDao;
+
+
     public INiveauDao getNiveauDao() {
         return niveauDao;
     }
@@ -47,8 +64,25 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     public void setOptionDao(IOptionDao optionDao) {
         this.optionDao = optionDao;
     }
+
+    public IAnneeAcademiqueDao getAcademiqueDao() {
+        return academiqueDao;
+    }
+
+    public void setAcademiqueDao(IAnneeAcademiqueDao academiqueDao) {
+        this.academiqueDao = academiqueDao;
+    }
+
+    public ISemestreDao getSemestreDao() {
+        return semestreDao;
+    }
+
+    public void setSemestreDao(ISemestreDao semestreDao) {
+        this.semestreDao = semestreDao;
+    }
     
     
+
 
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
@@ -107,30 +141,35 @@ public class ProgrammeServiceImpl implements IProgrammeService {
         }
     }
 
-//    @Override
-//    public Programme findByNiveauOption(Niveau n, Option o) throws ServiceException {
-//        try {
-//            Programme programme = programmeDao.findByNiveauOption(n, o);
-//            if(programme != null){
-//                return programme;
-//            }
-//            return null;
-//        } catch (DataAccessException ex) {
-//            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            throw  new ServiceException("La ressource demandée est introuvable");
-//        }
-//    }
 
     @Override
-    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException {
+    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee, Long idSemestre) throws ServiceException {
+        
         try {
-            Niveau n = niveauDao.findById(niveauId);
-            Option o = optionDao.findById(optionId);
-            return programmeDao.findByNiveauOption(n, o);
+            Niveau niveau = niveauDao.findById(niveauId);
+            if(niveau == null){
+                throw  new ServiceException("Ressource introuvable");
+            }
+            
+            Option option = optionDao.findById(optionId);
+            if(option == null){
+                throw new ServiceException("Le service demandé est introuvable");
+            }
+            
+            AnneeAcademique academique = academiqueDao.findById(idAnnee);
+            if(academique == null){
+                throw new ServiceException("");
+            }
+            
+            Semestre semestre = semestreDao.findById(idSemestre);
+            if(semestre == null){
+                throw  new ServiceException("");
+            }
+            return programmeDao.findByNiveauOption(niveau, option, academique, semestre);
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw  new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException("");
         }
-    }
+        }
 
 }

@@ -1,10 +1,12 @@
 package com.douwe.notes.resource.impl;
 
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.resource.INiveauResource;
 import com.douwe.notes.service.IInsfrastructureService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.ServiceException;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,6 +91,17 @@ public class NiveauResource implements INiveauResource {
 
     public void setInsfrastructureService(IInsfrastructureService insfrastructureService) {
         this.insfrastructureService = insfrastructureService;
+    }
+
+    @Override
+    public List<Semestre> getAllSemestre(long niveauId) {
+        System.out.println("Un autre toto est entre en jeu");
+        try {
+            return service.getAllSemestre(niveauId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NiveauResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Collections.EMPTY_LIST;
+        }
     }
 
 }

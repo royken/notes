@@ -2,7 +2,9 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -22,6 +24,9 @@ public class NiveauServiceImpl implements INiveauService{
     
     @Inject
     private INiveauDao niveauDao;
+    
+    @Inject
+    private ISemestreDao semestreDao;
 
     public INiveauDao getNiveauDao() {
         return niveauDao;
@@ -30,6 +35,16 @@ public class NiveauServiceImpl implements INiveauService{
     public void setNiveauDao(INiveauDao niveauDao) {
         this.niveauDao = niveauDao;
     }
+
+    public ISemestreDao getSemestreDao() {
+        return semestreDao;
+    }
+
+    public void setSemestreDao(ISemestreDao semestreDao) {
+        this.semestreDao = semestreDao;
+    }
+    
+    
 
     @Override
     public Niveau saveOrUpdateNiveau(Niveau niveau) throws ServiceException{
@@ -90,6 +105,17 @@ public class NiveauServiceImpl implements INiveauService{
         } catch (DataAccessException ex) {
             Logger.getLogger(NiveauServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    @Override
+    public List<Semestre> getAllSemestre(long niveauId) throws ServiceException {
+        try {
+            Niveau n = niveauDao.findById(niveauId);
+            return semestreDao.findByNiveau(n);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NiveauServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException("La ressource demandée est introuvable");
         }
     }
     
