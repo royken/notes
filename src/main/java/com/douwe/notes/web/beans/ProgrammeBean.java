@@ -110,7 +110,7 @@ public class ProgrammeBean {
     public void filtrer() throws ServiceException {
         
         // programmes = programmeService.getAllProgrammes();        
-        programmes = programmeService.findProgrammeByParcours(idN, idO);
+        programmes = programmeService.findProgrammeByParcours(idN, idO,null, null);
     }
 
     public void deleteProgramme(ActionEvent actionEvent) throws ServiceException {

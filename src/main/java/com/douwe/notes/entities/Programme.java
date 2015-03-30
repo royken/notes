@@ -26,7 +26,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 @NamedQuery(name = "Programme.deleteActive",query = "update Programme p set p.active = 0 where p.id = :idParam"),
 @NamedQuery(name = "Programme.findAllActive",query = "select p from Programme p where p.active=1"),
-@NamedQuery(name = "Programme.findByNiveauOption",query = "SELECT p FROM Programme p WHERE p.parcours.niveau = :param1 and p.parcours.option = :param2")
+@NamedQuery(name = "Programme.findByNiveauOption",query = "SELECT p FROM Programme p WHERE p.parcours.niveau = :param1 and p.parcours.option = :param2 and p.anneeAcademique = :param3 and p.semestre = :param4")
+
 
 })
 public class Programme implements Serializable {
