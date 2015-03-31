@@ -19,4 +19,6 @@ public interface IProgrammeService {
     
     public List<Programme> getAllProgrammes() throws ServiceException;
     
+    List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException;
+    
 }

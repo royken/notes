@@ -18,4 +18,12 @@ public interface IEvaluationDetailService {
     public EvaluationDetails findEvaluationDetailsById(long id) throws ServiceException;
     
     public List<EvaluationDetails> getAllEvaluationDetails() throws ServiceException;
+    
+    public List<EvaluationDetails> findEvaluationDetailsByTypeCours(Long typeId) throws ServiceException;
+    
+    void addEvaluation(Long typeId, Long evaluationId, int pourcentage) throws ServiceException;
+    
+    void modifierEvaluation(Long typeId, Long evaluationId, int pourcentage) throws ServiceException;
+    
+    void supprimerEvaluation(Long typeId, Long evaluationId) throws ServiceException;
 }

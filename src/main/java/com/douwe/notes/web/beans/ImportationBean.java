@@ -3,7 +3,6 @@ package com.douwe.notes.web.beans;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Etudiant;
 
-import com.douwe.notes.entities.Genre;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IInscriptionService;
@@ -16,14 +15,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Named;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.primefaces.model.UploadedFile;
 
 /**

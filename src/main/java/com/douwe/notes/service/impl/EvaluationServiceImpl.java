@@ -32,7 +32,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
     @Override
     public Evaluation saveOrUpdateEvaluation(Evaluation evaluation) throws ServiceException {
         try {
-            if (evaluation.getId() != null) {
+            if (evaluation.getId() == null) {
                 evaluation.setActive(1);
                 return evaluationDao.create(evaluation);
                 

@@ -1,7 +1,11 @@
 package com.douwe.notes.resource.impl;
 
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.resource.IProgrammeResource;
+import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.IProgrammeService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -21,6 +25,9 @@ public class ProgrammeResource implements IProgrammeResource{
     
     @EJB
     private IProgrammeService service;
+    
+    @EJB
+    private IParcoursService parcoursService;
 
     public IProgrammeService getService() {
         return service;
@@ -29,11 +36,22 @@ public class ProgrammeResource implements IProgrammeResource{
     public void setService(IProgrammeService service) {
         this.service = service;
     }
-    
-    
 
+    public IParcoursService getParcoursService() {
+        return parcoursService;
+    }
+
+    public void setParcoursService(IParcoursService parcoursService) {
+        this.parcoursService = parcoursService;
+    }
+    
+    @Override
     public Programme createProgramme(Programme programme) {
         try {
+            Niveau n = programme.getParcours().getNiveau();
+            Option o = programme.getParcours().getOption();
+            Parcours p = parcoursService.findByNiveauOption(n, o);
+            programme.setParcours(p);
             return service.saveOrUpdateProgramme(programme);
         } catch (ServiceException ex) {
             Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,6 +59,7 @@ public class ProgrammeResource implements IProgrammeResource{
         }
     }
 
+    @Override
     public List<Programme> getAllProgrammes() {
         try {
             return service.getAllProgrammes();
@@ -50,6 +69,7 @@ public class ProgrammeResource implements IProgrammeResource{
         }
     }
 
+    @Override
     public Programme getProgramme(long id) {
         try {
             Programme programme = service.findProgrammeById(id);
@@ -63,6 +83,7 @@ public class ProgrammeResource implements IProgrammeResource{
         }
     }
 
+    @Override
     public Programme updateProgramme(long id, Programme programme) {
         try {
             Programme programme1 = service.findProgrammeById(id);
@@ -79,6 +100,7 @@ public class ProgrammeResource implements IProgrammeResource{
         }
     }
 
+    @Override
     public void deleteProgramme(long id) {
         try {
             service.deleteProgramme(id);
