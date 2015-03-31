@@ -8,34 +8,39 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" header="IMPORTER DES NOTES">
+                <p:panel  id="p1" header="Exportation DES NOTES">
                     <h:form id="f">                                                    
                         <h:panelGroup >
                             <h:panelGrid id="d" columns="2">                                                                                                                      
-                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
+                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;text-align: right;"/>  
                                 <p:fileUpload required="true"  value="#{importationBean.file}" mode="simple"
                                               auto="true"  
                                               sizeLimit="100000"   
-                                              allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px; width: 100%;" update="feuille" process="@this" invalidFileMessage="fichier invalide" requiredMessage="chargez le fichier" > 
+                                              allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px; width: 100%; " update="feuille" process="@this" invalidFileMessage="fichier invalide" requiredMessage="chargez le fichier" > 
                                     <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
-                                <h:outputText  value="Note pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
+                                <h:outputText  value="Note pour l'Année Académique " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
                                 <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                </h:selectOneMenu> 
-                                <h:outputText  value="Cours : "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                </h:selectOneMenu>
+                                <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <p:selectOneMenu value="#{importationBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                 </p:selectOneMenu>
-                                <h:outputText  value="Evaluation : "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <h:outputText  value="Evaluation : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <p:selectOneMenu value="#{importationBean.idE}" style=" width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
                                 </p:selectOneMenu>  
-                                
-                                <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:commandButton ajax="false" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;" update=":f:d"/>  
+                                <h:outputText value="Departement"  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <p:selectOneMenu value="#{importationBean.idD}"   id="departement" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                </p:selectOneMenu>
+
+                                <h:outputText  value="Cliquer pour exporter dans le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:commandButton ajax="false" value="Cliquer ici !!!" update=":f:d"  action="#{importationBean.exportNotes()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  

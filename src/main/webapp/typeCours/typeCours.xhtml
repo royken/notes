@@ -8,164 +8,235 @@
 
     <body>
         <ui:composition template="./../template/template.xhtml">
-            <ui:define name="content">  
-                <p:dialog header="AJOUTER UNE EVALUATION DETAIL" widgetVar="dlgSaveEV" hideEffect="explode" showEffect="explode">
-                    <h:form id="formSaveEV">                                
-                        <p:growl id="growl9" showDetail="true" /> 
-                        <p:panel >
-                            <h:panelGroup >
-                                <h:panelGrid id="displaySaveEV" columns="2">
-                                    <h:outputText  value="Evaluation : " /> 
-                                    <h:selectOneMenu value="#{typeCoursBean.idE}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                        <f:selectItems value="#{typeCoursBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
-                                    </h:selectOneMenu>                                   
-                                    <h:outputText  value="Pourcentage : " />                                         
-                                    <p:spinner id="minmax"   
-                                               value="#{typeCoursBean.evaluationDetails.pourcentage}"
-                                               suffix="%"                                                   
-                                               min="0" 
-                                               max="100" 
-                                               style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"   actionListener ="#{typeCoursBean.saveOrUpdateEvaluationDetails(actionEvent)}" update=":formSaveEV,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSaveEV').hide()" styleClass="ui-priority-primary"/> 
-                                <p:commandButton value="Annuler"  type="reset" onclick="PF('dlgSaveEV').hide()" update=":formSaveEV" icon="ui-icon-close" style="margin-left: 20px;"/> 
-                            </div>                     
-                        </p:panel>
-                    </h:form>  
-                </p:dialog>
-                <p:dialog header="MODIFIER L'EVALUATION DETAIL" widgetVar="dlgUpdateEV" hideEffect="explode" showEffect="explode">
-                    <h:form id="formUpdateEV">    
-                        <p:growl id="growl10" showDetail="true" /> 
-                        <p:panel >
-                            <h:panelGroup >
-                                <h:panelGrid id="displayUpdateEV" columns="2">                                        
-                                    <h:outputText  value="Evaluation : " /> 
-                                    <h:selectOneMenu value="#{typeCoursBean.idE}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                        <f:selectItems value="#{typeCoursBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
-                                    </h:selectOneMenu>                                   
-                                    <h:outputText  value="Pourcentage : " />                                         
-                                    <p:spinner    
-                                        value="#{typeCoursBean.evaluationDetails.pourcentage}"
-                                        suffix="%"                                                   
-                                        min="0" 
-                                        max="100" 
-                                        style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"   actionListener="#{typeCoursBean.saveOrUpdateEvaluationDetails(actionEvent)}" update=":formUpdateEV,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdateEV').hide()" /> 
-                                <p:commandButton value="Annuler" type="reset"  onclick="PF('dlgUpdateEV').hide()" update=":formUpdateEV" icon="ui-icon-close" style="margin-left: 20px;"/> 
-                            </div>                    
-                        </p:panel>
-                    </h:form>  
-                </p:dialog>
-                <p:dialog header="AJOUTER UN TYPECOURS" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
-                    <h:form id="formSave">                                
-                        <p:growl id="growl0" showDetail="true" /> 
-                        <p:panel >
-                            <h:panelGroup >
-                                <h:panelGrid id="displaySave" columns="2">
-                                    <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                    <p:inputText value="#{typeCoursBean.typeCours.nom}"   style="margin-left: 10px;margin-top: 10px;" />  
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{typeCoursBean.saveOrUpdateTypeCours(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
-                                <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
-                            </div>                     
-                        </p:panel>
-                    </h:form>  
-                </p:dialog>                    
-                <p:dialog header="MODIFIER L' TYPECOURS" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
-                    <h:form id="formUpdate">    
-                        <p:growl id="growl1" showDetail="true" /> 
-                        <p:panel >
-                            <h:panelGroup >
-                                <h:panelGrid id="displayUpdate" columns="2">                                        
-                                    <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                    <p:inputText value="#{typeCoursBean.typeCours.nom}"   style="margin-left: 10px;margin-top: 10px;" />  
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
-                                    <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
-                                </h:panelGrid>  
-                            </h:panelGroup>
-                            <p:separator/>
-                            <div>
-                                <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{typeCoursBean.saveOrUpdateTypeCours(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
-                            </div>                    
-                        </p:panel>
-                    </h:form>  
-                </p:dialog>
-                <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        
-                    <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
-                    <p:confirmDialog message="voulez-vous vraiment supprimer cet typeCours ?"
-                                     header="Initialisation de la suppression" severity="alert"
-                                     widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
-                        <p:commandButton  value="OUI" action="#{typeCoursBean.deleteTypeCours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                        <p:commandButton value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
-                    </p:confirmDialog>
-                    <p:confirmDialog message="voulez-vous vraiment supprimer cette evaluation details de #{typeCoursBean.selectedNode.parent.data} ?"
-                                     header="Initialisation de la suppression" severity="alert"
-                                     widgetVar="c" showEffect="explode" hideEffect="explode"> 
-                        <p:commandButton  value="OUI" action="#{typeCoursBean.deleteEvaluationDetails(actionEvent)}" oncomplete="PF('c').hide()" update=":f:d" style="margin-left: 30% "/>
-                        <p:commandButton value="NON" type="reset" onclick ="PF('c').hide();" style="margin-left: auto"/>
-                    </p:confirmDialog>                   
-                    <p:growl id="growl" showDetail="true" escape="false" />
-
-                    <h:panelGrid columns="2" cellpadding="5">
-                        <p:commandButton  value="Nouveau type de cours" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>                       
-                        <p:tree id="d" value="#{typeCoursBean.rootWithType}" 
-                                orientation="horizontal" 
-                                animate="true"  
-                                var="node"
-                                selectionMode="single"
-                                selection="#{typeCoursBean.selectedNode}">
-                            <p:treeNode type="default">
-                                <h:outputText value="#{node}" />
-                            </p:treeNode>
-                            <p:treeNode type="node">
-                                <h:outputText value="#{node}" />
-                            </p:treeNode>
-
-                            <p:treeNode type="leaf">
-                                <h:outputText value="#{node}" />
-                            </p:treeNode>
-                        </p:tree>
-
-                    </h:panelGrid>
-                    <p:contextMenu for="d" nodeType="node" style="width: 250px;">
-                        <p:menuitem value="Supprimer ce type de cours"  onclick="PF('confirmation').show()"  icon="ui-icon-close"/>
-                        <p:menuitem  value="Modifier ce type de cours "  onclick="PF('dlgUpdate').show()" icon="ui-icon-arrowrefresh-1-w"  update=":formUpdateEV:displayUpdateEV" />  
-                        <p:menuitem value="Nouvelle evaluation detail" onclick="PF('dlgSaveEV').show()"  icon="ui-icon-disk"/>
-                    </p:contextMenu>
-                    <p:contextMenu for="d" nodeType="leaf">
-                        <p:menuitem value="Modifier cette evaluation detail " onclick="PF('dlgUpdateEV').show()" icon="ui-icon-arrowrefresh-1-w"/>  
-                        <p:menuitem value="Supprimer cette evaluation detail " onclick="PF('c').show()"  icon="ui-icon-close"/>
-                    </p:contextMenu>     
-
-                    <p:dialog header="Tree Node Detail" showEffect="fade" widgetVar="nodeDialog" modal="true">
-                        <p:outputPanel id="dialogPanel">
-                            <h:panelGrid  columns="2" cellpadding="5" rendered="#{not empty typeCoursBean.selectedNode}">
-                                <h:outputLabel for="name" value="Value: " />
-                                <h:outputText id="name" value="#{typeCoursBean.selectedNode.data}" />
-                            </h:panelGrid>
-                        </p:outputPanel>
+            <ui:define name="content">                                
+                <p:panel  id="p1">  
+                    <p:dialog header="AJOUTER UNE EVALUATION " widgetVar="dlgSaveEV" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSaveEV">                                
+                            <p:growl id="growl9" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySaveEV" columns="2">
+                                        <h:outputText  value="Evaluation : " /> 
+                                        <h:selectOneMenu value="#{typeCoursBean.idE}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{typeCoursBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
+                                        </h:selectOneMenu>                                   
+                                        <h:outputText  value="Pourcentage : " />                                         
+                                        <p:spinner id="minmax"   
+                                                   value="#{typeCoursBean.evaluationDetails.pourcentage}"
+                                                   suffix="%"                                                   
+                                                   min="0" 
+                                                   max="100" 
+                                                   style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.nom}" />  
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.active}"  /> </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"   actionListener ="#{typeCoursBean.saveEvaluationDetails(actionEvent)}" update=":formSaveEV,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSaveEV').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  type="reset" onclick="PF('dlgSaveEV').hide()" update=":formSaveEV" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
                     </p:dialog>
-
-                    <p:commandButton id="display" value="Display Selected Nodes" update=":f:growl"
-                                     actionListener="#{typeCoursBean.displaySelected}" />
-                </h:form>
+                    <p:dialog header="MODIFIER L'EVALUATION" widgetVar="dlgUpdateEV" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdateEV">    
+                            <p:growl id="growl10" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdateEV" columns="2">                                        
+                                        <h:outputText  value="Evaluation : " /> 
+                                        <h:selectOneMenu disabled="true" value="#{typeCoursBean.evaluationDetails.evaluation.id}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{typeCoursBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
+                                        </h:selectOneMenu>                                         
+                                        <h:outputText  value="Pourcentage : " />                                         
+                                        <p:spinner    
+                                            value="#{typeCoursBean.evaluationDetails.pourcentage}"
+                                            suffix="%"                                                   
+                                            min="0" 
+                                            max="100" 
+                                            style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.nom}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"   actionListener="#{typeCoursBean.updateEvaluationDetails(actionEvent)}" update=":formUpdateEV,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdateEV').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  onclick="PF('dlgUpdateEV').hide()" update=":formUpdateEV" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <p:dialog header="AJOUTER UN TYPECOURS" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                        <h:form id="formSave">                                
+                            <p:growl id="growl" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displaySave" columns="2">
+                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                        <p:inputText value="#{typeCoursBean.typeCours.nom}"   style="margin-left: 10px;margin-top: 10px;" />  
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{typeCoursBean.saveOrUpdateTypeCours(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>                    
+                    <p:dialog header="MODIFIER LE TYPE DE COURS" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                        <h:form id="formUpdate">    
+                            <p:growl id="growl1" showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
+                                        <p:inputText value="#{typeCoursBean.typeCours.nom}"   style="margin-left: 10px;margin-top: 10px;" />  
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{typeCoursBean.saveOrUpdateTypeCours(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <p:dialog header="Initialisation de la suppression" widgetVar="dlgDelete" hideEffect="explode" showEffect="explode">
+                        <h:form id="fs">    
+                            <p:growl showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="ds" columns="1">   
+                                        <p:outputLabel value="voulez-vous vraiment supprimer ce type de cours ?"/>
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.nom}" />  
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="OUI"   actionListener="#{typeCoursBean.deleteTypeCours(actionEvent)}" update=":fs,:f:d" icon="ui-icon-check" oncomplete="PF('dlgDelete').hide()" /> 
+                                    <p:commandButton value="NON" type="reset"  onclick="PF('dlgDelete').hide()" update=":fs" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <p:dialog header="Initialisation de la suppression" widgetVar="dlgDelete1" hideEffect="explode" showEffect="explode">
+                        <h:form id="fs1">    
+                            <p:growl showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="ds1" columns="1">   
+                                        <p:outputLabel value="voulez-vous vraiment supprimer cette evaluation ?"/>
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.nom}" />  
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.id}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.typeCours.active}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.id}" />  
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.version}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.active}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluationDetails.pourcentage}"  />
+                                        <h:inputHidden value="#{typeCoursBean.evaluation.id}"  />
+                                    </h:panelGrid>  
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="OUI"   actionListener="#{typeCoursBean.deleteEvaluationDetails(actionEvent)}" update=":fs1,:f:d" icon="ui-icon-check" oncomplete="PF('dlgDelete1').hide()" /> 
+                                    <p:commandButton value="NON" type="reset"  onclick="PF('dlgDelete1').hide()" update=":fs1" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                    
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog>
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog id="h" message="voulez-vous vraiment supprimer le type de cours #{typeCoursBean.typeCours.nom}?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
+                            <p:commandButton   value="OUI" action="#{typeCoursBean.deleteTypeCours(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
+                            <p:commandButton value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                        </p:confirmDialog>
+                        <p:confirmDialog id="g" 
+                                         message="voulez-vous vraiment supprimer cette evaluation ?"
+                                         header="Initialisation de la suppression" severity="alert"
+                                         widgetVar="c" 
+                                         showEffect="explode" 
+                                         hideEffect="explode"> 
+                            <p:commandButton value="OUI" 
+                                             action="#{typeCoursBean.deleteEvaluationDetails(actionEvent)}" 
+                                             oncomplete="PF('c').hide()" 
+                                             update=":f:d:e" 
+                                             style="margin-left: 30% "/>
+                            <p:commandButton value="NON" 
+                                             type="reset" 
+                                             onclick ="PF('c').hide();" 
+                                             style="margin-left: auto"/>
+                        </p:confirmDialog>
+                        <p:dataGrid id = "d" var="car" emptyMessage="Aucun typeCours n'est enregistré" value="#{typeCoursBean.typeCourss}" columns="2" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"  >              
+                            <f:facet name="footer" >  
+                                <p:commandButton icon="ui-icon-disk" value="Nouveau type de cours" type="button" onclick="PF('dlgSave').show()"/>
+                            </f:facet>
+                            <p:column>  
+                                <p:dataTable id="e"  
+                                             emptyMessage="Aucune Evaluation n'est enregistrée" 
+                                             var="evaluationDetail" 
+                                             value="#{typeCoursBean.findAll(car)}" 
+                                             rowKey="#{evaluationDetail.id}" 
+                                             rows="10"
+                                             sortOrder="ascending" style="height: 100%;" >  
+                                    <f:facet name="header" >  
+                                        <h:outputText value="#{car.nom}" />
+                                    </f:facet>
+                                    <f:facet name="header" >  
+                                        <p:commandButton id="a" onclick="PF('dlgDelete').show()" update=":fs:ds" icon="ui-icon-trash" style="margin-right: 5px;left: 35% ; height: 25px;width: 25px;">
+                                            <f:setPropertyActionListener  value="#{car}" target="#{typeCoursBean.typeCours}"/>
+                                        </p:commandButton>
+                                        <p:tooltip for="a" value="cliquez ici pour supprimer ce type de cours"/>
+                                    </f:facet>                             
+                                    <f:facet name="header">  
+                                        <p:commandButton  id="q" onclick="PF('dlgUpdate').show()" icon="ui-icon-arrowrefresh-1-w"  update=":formUpdate:displayUpdate" style=" left: 35% ; height: 25px;width: 25px;">
+                                            <f:setPropertyActionListener value="#{car}" target="#{typeCoursBean.typeCours}"/>
+                                        </p:commandButton>
+                                        <p:tooltip for="q" value="cliquez ici pour modifier ce type de cours"/>
+                                    </f:facet>
+                                    <p:column headerText="Code " id="code" >  
+                                        #{evaluationDetail.evaluation.code}  
+                                    </p:column> 
+                                    <p:column headerText="pourcentage" id="pour" >  
+                                        #{evaluationDetail.pourcentage}%  
+                                    </p:column>                                                                         
+                                    <p:column headerText="Action">
+                                        <p:commandLink id="delete" value="Supprimer" onclick="PF('dlgDelete1').show()"  update=":fs1:ds1" >  
+                                            <f:setPropertyActionListener  value="#{car}" target="#{typeCoursBean.typeCours}"/>
+                                            <f:setPropertyActionListener value="#{evaluationDetail}" target="#{typeCoursBean.evaluationDetails}"/>
+                                        </p:commandLink> 
+                                        <p:commandLink id="modifier" value="|Modifier" onclick="PF('dlgUpdateEV').show()"  update=":formUpdateEV:displayUpdateEV" >  
+                                            <f:setPropertyActionListener  value="#{car}" target="#{typeCoursBean.typeCours}"/>
+                                            <f:setPropertyActionListener value="#{evaluationDetail}" target="#{typeCoursBean.evaluationDetails}"/>
+                                        </p:commandLink>
+                                    </p:column>        
+                                    <f:facet name="footer" >  
+                                        <p:commandLink id="ajouter" value="Nouvelle Evaluation" type="button" onclick="PF('dlgSaveEV').show()" update=":formSaveEV:displaySaveEV" >
+                                            <f:setPropertyActionListener  value="#{car}" target="#{typeCoursBean.typeCours}"/>
+                                        </p:commandLink>
+                                    </f:facet>                                         
+                                </p:dataTable>                                    
+                            </p:column>
+                        </p:dataGrid>                                                                                     
+                    </h:form>   
+                </p:panel> 
             </ui:define>            
         </ui:composition>
-
     </body>
 </html>

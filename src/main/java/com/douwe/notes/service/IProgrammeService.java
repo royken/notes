@@ -1,5 +1,7 @@
 package com.douwe.notes.service;
 
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
 import java.util.List;
 import javax.ejb.Local;
@@ -19,6 +21,8 @@ public interface IProgrammeService {
     
     public List<Programme> getAllProgrammes() throws ServiceException;
     
-    List<Programme> findProgrammeByParcours(Long niveauId, Long optionId) throws ServiceException;
+
+   public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee,Long idSemestre) throws ServiceException;
+
     
 }

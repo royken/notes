@@ -23,6 +23,8 @@ public interface IEvaluationDetailService {
     
     void addEvaluation(Long typeId, Long evaluationId, int pourcentage) throws ServiceException;
     
+    public List<EvaluationDetails> getAllActive() throws ServiceException;
+    
     void modifierEvaluation(Long typeId, Long evaluationId, int pourcentage) throws ServiceException;
     
     void supprimerEvaluation(Long typeId, Long evaluationId) throws ServiceException;

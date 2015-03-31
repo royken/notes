@@ -153,6 +153,11 @@ public class Etudiant implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "Etudiant{" + "id=" + id + ", version=" + version + ", matricule=" + matricule + ", nom=" + nom + ", dateDeNaissance=" + dateDeNaissance + ", lieuDeNaissance=" + lieuDeNaissance + ", email=" + email + ", numeroTelephone=" + numeroTelephone + ", genre=" + genre + ", active=" + active + '}';
+    }
     
     
 }

@@ -87,7 +87,8 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
             EvaluationDetails details = detailsDao.findById(id);
             if (details != null) {
                 details.setActive(0);
-                detailsDao.update(details);
+                //detailsDao.update(details);
+                detailsDao.delete(details);
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,6 +168,16 @@ public class EvaluationDetailServiceImpl implements IEvaluationDetailService {
         try {
             TypeCours type = typeCoursDao.findById(typeId);
             return evaluationDetailsDao.findByTypeCours(type);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public List<EvaluationDetails> getAllActive() throws ServiceException {
+        try {
+            return evaluationDetailsDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationDetailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");

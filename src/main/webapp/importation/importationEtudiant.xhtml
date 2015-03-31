@@ -9,9 +9,9 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
-                    <h:form enctype="multipart/form-data">                                                    
+                    <h:form id="f">                                                    
                         <h:panelGroup >
-                            <h:panelGrid id="display" columns="2">                                                                                                                      
+                            <h:panelGrid id="d" columns="2">                                                                                                                      
                                 <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
                                 <p:fileUpload   
                                               value="#{importationBean.file}" 
@@ -29,7 +29,7 @@
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
                                 </h:selectOneMenu> 
                                 <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:commandButton ajax="false" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                <p:commandButton ajax="false" update=":f:d" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  
