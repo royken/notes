@@ -8,6 +8,8 @@
     <name>notes</name>
     <url>http://notes.douwe.com</url>
     <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <glassfish.embedded-static-shell.jar>/home/royken/glassfish-4.1/glassfish/lib/embedded/glassfish-embedded-static-shell.jar</glassfish.embedded-static-shell.jar>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>1.2.16</log4j.version>        
         <mysql.version>5.1.2</mysql.version>
@@ -49,6 +51,13 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-static-shell</artifactId>
+            <version>4.0</version>
+            <scope>system</scope>
+            <systemPath>${glassfish.embedded-static-shell.jar}</systemPath>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
@@ -81,6 +90,12 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.10-FINAL</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.1.1</version>
+            
         </dependency>
      
         <!--        <dependency>
