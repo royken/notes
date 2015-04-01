@@ -16,40 +16,50 @@ import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.OutputStreamEncryption;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Path("/notes")
-public class NoteResource implements INoteResource{
-    
+public class NoteResource implements INoteResource {
+
     @EJB
     private INoteService service;
-    
+
     @EJB
     private IOptionService optionService;
-    
+
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-    
+
     @EJB
     private ICoursService coursService;
-    
+
     @EJB
     private INiveauService niveauService;
-    
+
     @EJB
     private IDocumentService documentService;
-    
+    private Object facesContext;
 
     public INoteService getService() {
         return service;
@@ -98,9 +108,6 @@ public class NoteResource implements INoteResource{
     public void setDocumentService(IDocumentService documentService) {
         this.documentService = documentService;
     }
-    
-    
-    
 
     @Override
     public Note createNote(Note note) {
@@ -126,7 +133,7 @@ public class NoteResource implements INoteResource{
     public Note getNote(long id) {
         try {
             Note note = service.findNoteById(id);
-            if(note == null){
+            if (note == null) {
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return note;
@@ -140,7 +147,7 @@ public class NoteResource implements INoteResource{
     public Note updateNote(long id, Note note) {
         try {
             Note note1 = service.findNoteById(id);
-            if(note1 != null){
+            if (note1 != null) {
                 note1.setAnneeAcademique(note.getAnneeAcademique());
                 note1.setCours(note.getCours());
                 note1.setEtudiant(note.getEtudiant());
@@ -164,44 +171,48 @@ public class NoteResource implements INoteResource{
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-/*
-    @Override
-    public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
-        try {
-            Niveau n = niveauService.findNiveauById(niveauid);
-            Option o = optionService.findOptionById(optionid);
-            Cours c = coursService.findCoursById(coursid);
-            AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
-            Session s = Session.values()[ses];
-            List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
-            System.out.println("La liste des notes");
-            for (EtudiantNotes et : ets) {
-                System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
-                for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
-                    System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
-                }
-                System.out.println(String.format("La moyenne : %.2f",et.getMoyenne()));
-            }
-        } catch (ServiceException ex) {
-            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "Hello";
-   }*/
+    /*
+     @Override
+     public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
+     try {
+     Niveau n = niveauService.findNiveauById(niveauid);
+     Option o = optionService.findOptionById(optionid);
+     Cours c = coursService.findCoursById(coursid);
+     AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
+     Session s = Session.values()[ses];
+     List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
+     System.out.println("La liste des notes");
+     for (EtudiantNotes et : ets) {
+     System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
+     for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
+     System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+     }
+     System.out.println(String.format("La moyenne : %.2f",et.getMoyenne()));
+     }
+     } catch (ServiceException ex) {
+     Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     return "Hello";
+     }*/
 
     @Override
-    public Response produirePv(long niveauid, long optionid, long coursid, long anneeid, int session) {
+    public OutputStream produirePv() {
         try {
-            Document doc = documentService.produirePv(niveauid, optionid, coursid, anneeid, coursid);
-            Response.ResponseBuilder response = Response.ok((Object) doc);
-            response.header("Content-Disposition",
-                    "attachment; filename="+doc);
-            return response.build();
-        } catch (ServiceException ex) {
+            // Set response headers
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            Document document = new Document(PageSize.A4, 0, 0, 0, 0);
+            PdfWriter.getInstance(document, baos);
+            document.open();
+            document.add(new Paragraph("Hello world"));
+            document.close();
+            return baos;
+            //return os;
+        } catch (DocumentException ex) {
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw new WebApplicationException(Response.Status.EXPECTATION_FAILED);
         }
-        
+        return null;
+
     }
-    
-    
+
 }

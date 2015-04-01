@@ -31,6 +31,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -104,7 +105,7 @@ public class DocumentServiceImpl implements IDocumentService{
     
     
     @Override
-    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session) throws ServiceException {
+    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session, OutputStream stream) throws ServiceException {
         try {
             Niveau niveau = niveauDao.findById(niveauId);
             
@@ -124,7 +125,9 @@ public class DocumentServiceImpl implements IDocumentService{
             head.setEnseignants(null);
             head.setSession(null);
             head.setNiveau(niveau.getCode());
-            Document pv =docPv(notes, head);
+            String documentName = "pv"+head.getCours()+head.getNiveau()+head.getOption()+head.getDepartement()+head.getAnneeAcademique()+".pdf";
+            
+            Document pv =docPv(notes, head,stream);
             return pv;
             //  head.s
         } catch (DataAccessException ex) {
@@ -138,11 +141,11 @@ public class DocumentServiceImpl implements IDocumentService{
     }
     
     
-    private Document docPv(List<EtudiantNotes> notes, PvHeader head) throws DocumentException, FileNotFoundException, BadElementException, IOException{
+    private Document docPv(List<EtudiantNotes> notes, PvHeader head, OutputStream stream) throws DocumentException, FileNotFoundException, BadElementException, IOException{
         
-        String documentName = "pv"+head.getCours()+head.getNiveau()+head.getOption()+head.getDepartement()+head.getAnneeAcademique()+".pdf";
+        
         Document doc = new Document();
-        PdfWriter.getInstance(doc, new FileOutputStream(documentName));
+        PdfWriter.getInstance(doc, stream);
         doc.open();
         doc.setPageSize(new Rectangle(400, 100));
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 6);

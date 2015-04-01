@@ -1,6 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Note;
+import java.io.OutputStream;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,9 +47,9 @@ public interface INoteResource {
     String afficher(@PathParam(value = "niveauid")long niveauid, @PathParam(value = "optionid")long optionid, @PathParam(value = "coursid")long coursid, @PathParam(value = "anneeid")long anneeid, @PathParam(value = "session")int session);
     */
     @GET
-    @Path(value = "{niveauid : \\d+}/{optionid : \\d+}/{coursid : \\d+}/{anneeid : \\d+}/{session : \\d+}")
+    @Path(value = "/toto")
             @Produces(value = "application/json")
-    Response produirePv(@PathParam(value = "niveauid")long niveauid, @PathParam(value = "optionid")long optionid, @PathParam(value = "coursid")long coursid, @PathParam(value = "anneeid")long anneeid, @PathParam(value = "session")int session);
+    OutputStream produirePv();
     
     
 }
