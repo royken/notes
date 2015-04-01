@@ -10,10 +10,12 @@ import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.resource.INoteResource;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.IDocumentService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
+import com.itextpdf.text.Document;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,6 +46,9 @@ public class NoteResource implements INoteResource{
     
     @EJB
     private INiveauService niveauService;
+    
+    @EJB
+    private IDocumentService documentService;
     
 
     public INoteService getService() {
@@ -85,6 +90,16 @@ public class NoteResource implements INoteResource{
     public void setNiveauService(INiveauService niveauService) {
         this.niveauService = niveauService;
     }
+
+    public IDocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(IDocumentService documentService) {
+        this.documentService = documentService;
+    }
+    
+    
     
 
     @Override
@@ -149,7 +164,7 @@ public class NoteResource implements INoteResource{
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+/*
     @Override
     public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
         try {
@@ -171,7 +186,22 @@ public class NoteResource implements INoteResource{
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "Hello";
-   }
+   }*/
+
+    @Override
+    public Response produirePv(long niveauid, long optionid, long coursid, long anneeid, int session) {
+        try {
+            Document doc = documentService.produirePv(niveauid, optionid, coursid, anneeid, coursid);
+            Response.ResponseBuilder response = Response.ok((Object) doc);
+            response.header("Content-Disposition",
+                    "attachment; filename="+doc);
+            return response.build();
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.EXPECTATION_FAILED);
+        }
+        
+    }
     
     
 }

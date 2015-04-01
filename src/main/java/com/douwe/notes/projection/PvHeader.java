@@ -21,6 +21,10 @@ public class PvHeader {
     private String codeUe;
     
     private String cours;
+    
+    private String session;
+    
+    private String enseignants;
 
     public String getNiveau() {
         return niveau;
@@ -85,4 +89,22 @@ public class PvHeader {
     public void setCours(String cours) {
         this.cours = cours;
     }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
+    public String getEnseignants() {
+        return enseignants;
+    }
+
+    public void setEnseignants(String enseignants) {
+        this.enseignants = enseignants;
+    }
+    
+    
 }
