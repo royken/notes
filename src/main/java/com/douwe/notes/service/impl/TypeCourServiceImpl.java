@@ -1,7 +1,9 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IEvaluationDetailsDao;
 import com.douwe.notes.dao.ITypeCoursDao;
+import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.service.ITypeCoursService;
 import com.douwe.notes.service.ServiceException;
@@ -20,6 +22,9 @@ public class TypeCourServiceImpl implements ITypeCoursService {
 
     @Inject
     private ITypeCoursDao typeCoursDao;
+    
+    @Inject
+    private IEvaluationDetailsDao detailsDao;
 
     public ITypeCoursDao getTypeCoursDao() {
         return typeCoursDao;
@@ -28,6 +33,16 @@ public class TypeCourServiceImpl implements ITypeCoursService {
     public void setTypeCoursDao(ITypeCoursDao typeCoursDao) {
         this.typeCoursDao = typeCoursDao;
     }
+
+    public IEvaluationDetailsDao getDetailsDao() {
+        return detailsDao;
+    }
+
+    public void setDetailsDao(IEvaluationDetailsDao detailsDao) {
+        this.detailsDao = detailsDao;
+    }
+    
+    
 
     @Override
     public TypeCours saveOrUpdateTpyeCours(TypeCours typeCours) throws ServiceException {
@@ -48,7 +63,14 @@ public class TypeCourServiceImpl implements ITypeCoursService {
     public void deleteTypeCours(Long id) throws ServiceException {
         try {
             TypeCours typeCours = typeCoursDao.findById(id);
-            typeCoursDao.delete(typeCours);
+            List<EvaluationDetails> detailses = detailsDao.findByTypeCours(typeCours);
+            for (EvaluationDetails detailse : detailses) {
+                detailse.setActive(0);
+                detailsDao.update(detailse);
+            }
+            typeCours.setActive(0);
+            typeCoursDao.update(typeCours);
+           // typeCoursDao.delete(typeCours);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");
