@@ -1,6 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Etudiant;
+import java.io.InputStream;
 import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -55,9 +56,9 @@ public interface IEtudiantResource {
             @DefaultValue("-1") @QueryParam("niveauId") long niveauId, 
             @DefaultValue("-1") @QueryParam("optionId") long optionId);
     
-//    @GET
-//    @Path("import/{file}-{annee:\\d+}")
-//    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
+    @GET
+    @Path("import/{file}-{annee:\\d+}")
+    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
 
     
 }
