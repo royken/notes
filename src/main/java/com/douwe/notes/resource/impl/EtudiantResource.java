@@ -112,15 +112,8 @@ public class EtudiantResource implements IEtudiantResource {
         }
     }
 
-//    @Override
-//    public void importEtudiant(InputStream stream, Long idAnne) {
-//        try {
-//            etudiantService.importEtudiants(stream, idAnne);
-//        } catch (ServiceException ex) {
-//            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
-//            
-//        }
-//    }
+
+
     @Override
     public List<Etudiant> listeInscrit(long departementId, long anneeId, long niveauId, long optionId) {
         try {

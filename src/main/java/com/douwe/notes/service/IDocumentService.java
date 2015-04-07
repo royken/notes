@@ -7,6 +7,8 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.itextpdf.text.Document;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 /**
  *
@@ -14,6 +16,6 @@ import com.itextpdf.text.Document;
  */
 public interface IDocumentService {
     
-    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session)throws ServiceException;
+    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session,OutputStream stream)throws ServiceException;
     
 }

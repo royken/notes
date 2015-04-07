@@ -28,4 +28,6 @@ public interface INoteDao extends IDao<Note, Long>{
     List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique,Session session) throws DataAccessException;
     
     
+    
+    
 }

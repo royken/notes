@@ -62,10 +62,12 @@ public interface IEtudiantResource {
             @DefaultValue("-1") @QueryParam("niveauId") long niveauId, 
             @DefaultValue("-1") @QueryParam("optionId") long optionId);
     
+
     @POST
     @Path("import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public void importEtudiant(@FormDataParam("fichier") InputStream fichier, @FormDataParam("fichier") FormDataContentDisposition fileDisposition,@FormDataParam("annee")Long annee);
+
 
     
 }

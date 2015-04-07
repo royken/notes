@@ -45,29 +45,31 @@ public class ImportationBean {
     private IInscriptionService inscriptionService;
     @EJB
     private INoteService noteService;
-        @EJB
+    @EJB
     private ICoursService coursService;
-        @EJB
-    private IDepartementService departementService;        
-            @EJB
+    @EJB
+    private IDepartementService departementService;
+    @EJB
     private IEvaluationService evaluationService;
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
     private List<Evaluation> evaluations;
     private List<Cours> courses;
     private List<Departement> departements;
-    Long idAca;Long idC=0L;Long idE=0L;
+    Long idAca;
+    Long idC = 0L;
+    Long idE = 0L;
 
     String nomFeuille = new String();
     List<String> nomFeuilles = new LinkedList<String>();
-    private Long idD=0L;
+    private Long idD = 0L;
 
     public ImportationBean() {
-        etudiant = new Etudiant();        
+        etudiant = new Etudiant();
     }
 
     public UploadedFile getFile() {
-        file=null;
+        file = null;
         return file;
     }
 
@@ -77,40 +79,41 @@ public class ImportationBean {
 
     public String saveData() throws ServiceException, IOException {
         System.out.println("");
-        if (file != null) {            
+        if (file != null) {
             etudiantService.importEtudiants(file.getInputstream(), idAca);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information", "importation reussie "));
             file = null;
             idAca = 0L;
-        }        
+        }
         return "etudiant";
     }
-    
-public void saveNotes() throws ServiceException, IOException {        
-        if (file != null && idC!=null && idC!=0L && idE!=null && idE!=0L) {            
+
+    public void saveNotes() throws ServiceException, IOException {
+        if (file != null && idC != null && idC != 0L && idE != null && idE != 0L) {
             //noteService.importNotes(file.getInputstream(),idC,idE, idAca);
             //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
-            System.out.println("fichier " + file.getFileName()+" id cours "+ idC+" id Evaluation "+idE +" id Annee "+ idAca);
+            System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
             file = null;
             idAca = 0L;
-            idE=null;
-            idC=null;
-        }        
-        
-}
-public void exportNotes() throws ServiceException, IOException {        
-        if (file != null && idD!=null && idD!=0L && idC!=null && idC!=0L && idE!=null && idE!=0L) {            
+            idE = null;
+            idC = null;
+        }
+
+    }
+
+    public void exportNotes() throws ServiceException, IOException {
+        if (file != null && idD != null && idD != 0L && idC != null && idC != 0L && idE != null && idE != 0L) {
             //noteService.exportNotes(file.getInputstream(),idC,idE,idD,idAca);
             //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
-            System.out.println("fichier " + file.getFileName()+" id cours "+ idC+" id Evaluation "+idE +" id Departement "+idD+" id Annee "+ idAca);
+            System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Departement " + idD + " id Annee " + idAca);
             file = null;
             idAca = 0L;
-            idE=null;
-            idC=null;
-            idD=null;
-        }        
-        
-}
+            idE = null;
+            idC = null;
+            idD = null;
+        }
+
+    }
 //    public void handleFileChange(ActionEvent actionEvent) throws IOException, InvalidFormatException {
 //        if (file != null && file.getFileName().equals("")) {
 //            final Workbook workbook = WorkbookFactory.create(file.getInputstream());
@@ -178,7 +181,7 @@ public void exportNotes() throws ServiceException, IOException {
     }
 
     public IAnneeAcademiqueService getAnneeAcademiqueService() {
-        
+
         return anneeAcademiqueService;
     }
 
@@ -192,7 +195,7 @@ public void exportNotes() throws ServiceException, IOException {
 
     public void setNomFeuilles(List<String> nomFeuilles) {
         this.nomFeuilles = nomFeuilles;
-        
+
     }
 
     public INoteService getNoteService() {
@@ -220,7 +223,7 @@ public void exportNotes() throws ServiceException, IOException {
     }
 
     public List<Evaluation> getEvaluations() throws ServiceException {
-        evaluations=evaluationService.getAllEvaluations();
+        evaluations = evaluationService.getAllEvaluations();
         return evaluations;
     }
 
@@ -229,7 +232,7 @@ public void exportNotes() throws ServiceException, IOException {
     }
 
     public List<Cours> getCourses() throws ServiceException {
-        courses=coursService.getAllCours();
+        courses = coursService.getAllCours();
         return courses;
     }
 
@@ -277,5 +280,5 @@ public void exportNotes() throws ServiceException, IOException {
     public void setIdD(Long idD) {
         this.idD = idD;
     }
-    
+
 }

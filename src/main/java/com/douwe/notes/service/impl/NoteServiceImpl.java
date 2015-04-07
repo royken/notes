@@ -1,6 +1,8 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IAnneeAcademiqueDao;
+import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IEtudiantDao;
 import com.douwe.notes.dao.IEvaluationDao;
 import com.douwe.notes.dao.IEvaluationDetailsDao;
@@ -18,6 +20,7 @@ import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,12 @@ public class NoteServiceImpl implements INoteService {
     
     @Inject
     private IEvaluationDetailsDao evaluationDetailsDao;
+    
+    @Inject
+    private ICoursDao coursDao;
+    
+    @Inject
+    private IAnneeAcademiqueDao academiqueDao;
 
     public INoteDao getNoteDao() {
         return noteDao;
@@ -179,6 +188,45 @@ public class NoteServiceImpl implements INoteService {
 //                e.setNote(notes);
         //}
         return result;
+    }
+
+    @Override
+    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId) throws ServiceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private Note insertNote(String etudiantMatricule,String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session){
+        
+        try {
+            Etudiant etudiant = new Etudiant();
+            if(etudiantMatricule != null){
+                etudiant = etudiantDao.findByMatricule(etudiantMatricule);
+            }
+            else{
+                etudiant = etudiantDao.findByName(nomEtudiant);
+            }
+            
+            Evaluation eval= evaluationDao.findByCode(codeEvaluation);
+            
+            Cours cours = coursDao.findByIntitule(coursIntitule);
+            
+            AnneeAcademique academique = academiqueDao.findById(anneeId);
+            
+            Note note = new Note();
+            note.setActive(1);
+            note.setAnneeAcademique(academique);
+            note.setCours(cours);
+            note.setEtudiant(etudiant);
+            note.setEvaluation(eval);
+            Session s = Session.values()[session];
+            note.setSession(s);
+            note.setValeur(valeur);
+            return noteDao.create(note);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
     }
 
 }
