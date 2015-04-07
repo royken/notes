@@ -2,6 +2,7 @@ package org.netbeans.rest.application.config;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
  *
@@ -13,6 +14,7 @@ public class ApplicationConfig extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
+        resources.add(MultiPartFeature.class);
         addRestResourceClasses(resources);
         return resources;
     }
@@ -41,6 +43,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.douwe.notes.resource.impl.OptionResource.class);
         resources.add(com.douwe.notes.resource.impl.ParcoursResource.class);
         resources.add(com.douwe.notes.resource.impl.ProgrammeResource.class);
+        resources.add(com.douwe.notes.resource.impl.RapportResource.class);
         resources.add(com.douwe.notes.resource.impl.SemestreResource.class);
         resources.add(com.douwe.notes.resource.impl.TypeCoursResource.class);
         resources.add(com.douwe.notes.resource.impl.UniteEnseignementResource.class);

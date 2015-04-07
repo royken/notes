@@ -30,6 +30,7 @@ public class TypeCoursResource implements ITypeCoursResource{
         this.typeCoursService = typeCoursService;
     }
 
+    @Override
     public TypeCours createTypeCours(TypeCours typeCours) {
         try {
             return typeCoursService.saveOrUpdateTpyeCours(typeCours);
@@ -39,6 +40,7 @@ public class TypeCoursResource implements ITypeCoursResource{
         }
     }
 
+    @Override
     public TypeCours getTypeCours(long id) {
         try {
             TypeCours typeCours = typeCoursService.findTypeCoursById(id);
@@ -52,6 +54,7 @@ public class TypeCoursResource implements ITypeCoursResource{
         }
     }
 
+    @Override
     public TypeCours updateTypeCours(long id, TypeCours typeCours) {
         try {
             TypeCours typeCours1 = typeCoursService.findTypeCoursById(id);
@@ -66,6 +69,7 @@ public class TypeCoursResource implements ITypeCoursResource{
         }
     }
 
+    @Override
     public List<TypeCours> getAllTypeCours() {
         try {
             return typeCoursService.getAllTypeCours();
@@ -75,6 +79,7 @@ public class TypeCoursResource implements ITypeCoursResource{
         }
     }
 
+    @Override
     public void deleteTypeCours(long id) {
         try {
             typeCoursService.deleteTypeCours(id);

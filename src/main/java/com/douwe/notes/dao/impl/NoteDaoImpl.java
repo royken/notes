@@ -11,10 +11,13 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Etudiant_;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Evaluation_;
+import com.douwe.notes.entities.Inscription;
+import com.douwe.notes.entities.Inscription_;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Note_;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Parcours_;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
 import java.util.ArrayList;
@@ -22,9 +25,12 @@ import java.util.List;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 /**
  *
@@ -100,6 +106,25 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
     @Override
     public List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws DataAccessException {
         //Recuperer la liste des evaluations pour le cours en question
-        return null;
+        //String[] totos = {"CC","TPE","EE"};
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<Etudiant> etudiantRoot = cq.from(Etudiant.class);
+        Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
+        inscriptionRoot.join(Inscription_.etudiant);
+        cq.where(cb.and(cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique), academique)),
+                cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.niveau), niveau),
+                cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.option), option));
+        Subquery<Object> sq = cq.subquery(Object.class);
+        sq.alias("CC");
+        Root<Note> sqRoot = sq.from(Note.class);
+        sqRoot.join(Note_.etudiant, JoinType.RIGHT);
+        sqRoot.join(Note_.cours);
+        Join<Note, Evaluation> ab = sqRoot.join(Note_.evaluation);
+        sq.where(cb.and(cb.equal(sqRoot.get(Note_.anneeAcademique), academique),
+                cb.equal(sqRoot.get(Note_.session), session),
+                cb.equal(ab.get(Evaluation_.code), "CC")));
+        cq.multiselect(etudiantRoot.get(Etudiant_.nom), etudiantRoot.get(Etudiant_.matricule));
+        return getManager().createQuery(cq).getResultList();
     }
 }

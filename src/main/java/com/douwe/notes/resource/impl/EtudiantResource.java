@@ -4,6 +4,7 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.resource.IEtudiantResource;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.ServiceException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,14 +13,15 @@ import javax.ejb.EJB;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 /**
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Path("/etudiants")
-public class EtudiantResource implements IEtudiantResource{
-    
+public class EtudiantResource implements IEtudiantResource {
+
     @EJB
     private IEtudiantService etudiantService;
 
@@ -55,13 +57,13 @@ public class EtudiantResource implements IEtudiantResource{
     public Etudiant getEtudiant(long id) {
         try {
             Etudiant etudiant = etudiantService.findEtudiantById(id);
-            if(etudiant == null){
-                throw  new  WebApplicationException(Response.Status.NOT_FOUND);
+            if (etudiant == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return etudiant;
         } catch (ServiceException ex) {
             Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
-            return  null;
+            return null;
         }
     }
 
@@ -69,7 +71,7 @@ public class EtudiantResource implements IEtudiantResource{
     public Etudiant updateEtudiant(long id, Etudiant etudiant) {
         try {
             Etudiant etud = etudiantService.findEtudiantById(etudiant.getId());
-            if(etud != null){
+            if (etud != null) {
                 etud.setDateDeNaissance(etudiant.getDateDeNaissance());
                 etud.setEmail(etudiant.getEmail());
                 etud.setGenre(etudiant.getGenre());
@@ -99,8 +101,8 @@ public class EtudiantResource implements IEtudiantResource{
     public Etudiant findByMatricule(String matricule) {
         try {
             Etudiant etudiant = etudiantService.findByMatricule(matricule);
-            
-            if(etudiant == null){
+
+            if (etudiant == null) {
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return etudiant;
@@ -109,7 +111,6 @@ public class EtudiantResource implements IEtudiantResource{
             return null;
         }
     }
-
 
 //    @Override
 //    public void importEtudiant(InputStream stream, Long idAnne) {
@@ -120,8 +121,6 @@ public class EtudiantResource implements IEtudiantResource{
 //            
 //        }
 //    }
-
-
     @Override
     public List<Etudiant> listeInscrit(long departementId, long anneeId, long niveauId, long optionId) {
         try {
@@ -131,4 +130,14 @@ public class EtudiantResource implements IEtudiantResource{
         }
         return Collections.EMPTY_LIST;
     }
+
+    @Override
+    public void importEtudiant(InputStream fichier, FormDataContentDisposition fileDisposition,Long annee) {
+        try {
+            etudiantService.importEtudiants(fichier, annee);
+        } catch (ServiceException ex) {
+            Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
