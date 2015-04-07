@@ -30,7 +30,7 @@ import javax.persistence.criteria.Root;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtudiantDao{
+public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtudiantDao {
 
     @Override
     public List<Etudiant> listeEtudiantParDepartement(Departement departement, AnneeAcademique academique) throws DataAccessException {
@@ -49,10 +49,10 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
 
     @Override
     public List<Etudiant> listeEtudiantParDepartementEtParcours(Departement departement, AnneeAcademique academique, Parcours parcours) throws DataAccessException {
-       return etudiantsByCriteria(departement, academique, parcours, null, null);
+        return etudiantsByCriteria(departement, academique, parcours, null, null);
     }
-    
-    private List<Etudiant> etudiantsByCriteria(Departement departement, AnneeAcademique annee, Parcours parcours, Niveau niveau, Option option) throws DataAccessException{
+
+    private List<Etudiant> etudiantsByCriteria(Departement departement, AnneeAcademique annee, Parcours parcours, Niveau niveau, Option option) throws DataAccessException {
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
         Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
@@ -64,23 +64,23 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         Path<Etudiant> etudiantPath = inscriptionRoot.get(Inscription_.etudiant);
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(etudiantPath.get(Etudiant_.active), 1));
-        if(departement != null){
+        if (departement != null) {
             predicates.add(cb.equal(departPath, departement));
             predicates.add(cb.equal(departPath.get(Departement_.active), 1));
         }
-        if(annee != null){
+        if (annee != null) {
             predicates.add(cb.equal(anneePath, annee));
             predicates.add(cb.equal(anneePath.get(AnneeAcademique_.active), 1));
         }
-        if(parcours != null){
+        if (parcours != null) {
             predicates.add(cb.equal(parcoursPath, parcours));
             predicates.add(cb.equal(parcoursPath.get(Parcours_.active), 1));
         }
-        if(niveau != null){
+        if (niveau != null) {
             predicates.add(cb.equal(niveauPath, niveau));
             predicates.add(cb.equal(niveauPath.get(Niveau_.active), 1));
         }
-        if(option != null){
+        if (option != null) {
             predicates.add(cb.equal(optionPath, option));
             predicates.add(cb.equal(optionPath.get(Option_.active), 1));
         }
@@ -104,12 +104,23 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
 
     @Override
     public Etudiant findByMatricule(String matricule) throws DataAccessException {
-        try{
-        return (Etudiant)(getManager().createNamedQuery("Etudiant.findByMatricule").setParameter("param", matricule).getSingleResult());
-        }catch(NoResultException nre){
-            
+        try {
+            return (Etudiant) (getManager().createNamedQuery("Etudiant.findByMatricule").setParameter("param", matricule).getSingleResult());
+        } catch (NoResultException nre) {
+
         }
         return null;
     }
-    
+
+    @Override
+    public Etudiant findByName(String name) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
+        Root<Etudiant> etudiantRoot = cq.from(Etudiant.class);
+        cq.where(cb.and(cb.like(etudiantRoot.get(Etudiant_.nom), name),cb.equal(etudiantRoot.get(Etudiant_.active), 1)));
+        cq.select(etudiantRoot);
+        return getManager().createQuery(cq).getSingleResult();
+
+    }
+
 }

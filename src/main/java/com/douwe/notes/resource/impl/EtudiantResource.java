@@ -113,11 +113,13 @@ public class EtudiantResource implements IEtudiantResource{
 
 
     @Override
-    public void importEtudiant(InputStream stream, Long idAnne) {
+    public String importEtudiant(InputStream stream, Long idAnne) {
         try {
             etudiantService.importEtudiants(stream, idAnne);
+            return "succes";
         } catch (ServiceException ex) {
             Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
             
         }
     }

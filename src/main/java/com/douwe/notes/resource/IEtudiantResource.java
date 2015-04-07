@@ -57,8 +57,8 @@ public interface IEtudiantResource {
             @DefaultValue("-1") @QueryParam("optionId") long optionId);
     
     @GET
-    @Path("import/{file}-{annee:\\d+}")
-    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
+    @Path("import/{file}/{annee:\\d+}")
+    public String importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
 
     
 }

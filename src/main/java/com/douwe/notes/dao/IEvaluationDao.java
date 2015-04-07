@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface IEvaluationDao extends IDao<Evaluation, Long>{
     List<Evaluation> evaluationForCourses(Cours cours) throws DataAccessException;
+    
+    public Evaluation findByCode(String code) throws DataAccessException;
 }

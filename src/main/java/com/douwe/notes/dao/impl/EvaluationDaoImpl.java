@@ -8,6 +8,7 @@ import com.douwe.notes.entities.Cours_;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.entities.EvaluationDetails_;
+import com.douwe.notes.entities.Evaluation_;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.entities.TypeCours_;
 import java.util.List;
@@ -34,6 +35,16 @@ public class EvaluationDaoImpl extends GenericDao<Evaluation, Long> implements I
                 cb.equal(coursRoot, cours)));
         cq.select(evaluationPath);
         return getManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public Evaluation findByCode(String code) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Evaluation> cq = cb.createQuery(Evaluation.class);
+        Root<Evaluation> evaluationRoot = cq.from(Evaluation.class);
+        cq.where(cb.and(cb.like(evaluationRoot.get(Evaluation_.code), code),cb.equal(evaluationRoot.get(Evaluation_.active), 1)));
+        cq.select(evaluationRoot);
+        return getManager().createQuery(cq).getSingleResult();
     }
     
 }
