@@ -25,9 +25,9 @@ public interface INoteDao extends IDao<Note, Long>{
     public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique, com.douwe.notes.entities.Session session)throws DataAccessException;
     
     
-    List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique,Session session) throws DataAccessException;
+  /*  List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique,Session session) throws DataAccessException;
     
-    
+    */
     
     
 }

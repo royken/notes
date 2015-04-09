@@ -45,20 +45,20 @@ import javax.inject.Inject;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Stateless
-public class DocumentServiceImpl implements IDocumentService{
-    
+public class DocumentServiceImpl implements IDocumentService {
+
     @EJB
     private INoteService noteService;
-    
-    @Inject 
-    private INiveauDao niveauDao;
-    
+
     @Inject
-    private  IOptionDao optionDao;
-    
+    private INiveauDao niveauDao;
+
+    @Inject
+    private IOptionDao optionDao;
+
     @Inject
     private ICoursDao coursDao;
-    
+
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
 
@@ -101,34 +101,36 @@ public class DocumentServiceImpl implements IDocumentService{
     public void setAcademiqueDao(IAnneeAcademiqueDao academiqueDao) {
         this.academiqueDao = academiqueDao;
     }
-    
-    
-    
+
     @Override
-    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session, OutputStream stream) throws ServiceException {
+    public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
         try {
             Niveau niveau = niveauDao.findById(niveauId);
-            
+
             Option option = optionDao.findById(optionId);
-            
+
             Cours cours = coursDao.findById(coursId);
-            
+
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
-            
-            List<EtudiantNotes> notes = noteService.getAllNotesEtudiants(niveau, option, cours, null, anne, Session.normale);
-            
+
+            Session s = Session.values()[session];
+
+            List<EtudiantNotes> notes = noteService.getAllNotesEtudiants(niveau, option, cours, null, anne, s);
+
             PvHeader head = new PvHeader();
             head.setAnneeAcademique(anne.toString());
             //head.setCodeUe(cours.);
             head.setCours(cours.getIntitule());
             head.setCredit(cours.getCredit());
             head.setEnseignants(null);
-            head.setSession(null);
+            head.setSession(session+1);
             head.setNiveau(niveau.getCode());
-            String documentName = "pv"+head.getCours()+head.getNiveau()+head.getOption()+head.getDepartement()+head.getAnneeAcademique()+".pdf";
+            String documentName = "pv" + head.getCours() + head.getNiveau() + head.getOption() + head.getDepartement() + head.getAnneeAcademique() + ".pdf";
+
+            System.out.println("FILENAME ============ " + documentName);
+            Document pv = docPv(notes, head, stream);
             
-            Document pv =docPv(notes, head,stream);
-            return pv;
+            return documentName;
             //  head.s
         } catch (DataAccessException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,18 +141,20 @@ public class DocumentServiceImpl implements IDocumentService{
         }
         return null;
     }
-    
-    
-    private Document docPv(List<EtudiantNotes> notes, PvHeader head, OutputStream stream) throws DocumentException, FileNotFoundException, BadElementException, IOException{
-        
-        
+
+    private Document docPv(List<EtudiantNotes> notes, PvHeader head, OutputStream stream) throws DocumentException, FileNotFoundException, BadElementException, IOException {
+
         Document doc = new Document();
         PdfWriter.getInstance(doc, stream);
         doc.open();
         doc.setPageSize(new Rectangle(400, 100));
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
-        
-        
+        int moySup15 = 0;
+        int moySup10Inf15 = 0;
+        int moyInf10 = 0;
+        double maxMoyenne = 0;
+        double minMoyenne = 0;
+
         // Définition de l'entete du document
         String francais = "République du Cameroun\n"
                 + "****\n"
@@ -161,7 +165,7 @@ public class DocumentServiceImpl implements IDocumentService{
                 + "Université de Maroua\n"
                 + "****\n"
                 + "Institut Supérieur du Sahel";
-        Phrase french = new Phrase(francais,bf12);
+        Phrase french = new Phrase(francais, bf12);
         Paragraph frecnch = new Paragraph(french);
         frecnch.setAlignment(Element.ALIGN_CENTER);
         float widths2[] = {3, 7, 3};
@@ -187,8 +191,7 @@ public class DocumentServiceImpl implements IDocumentService{
                 + "University of Maroua\n"
                 + "****\n"
                 + "The Higher Institute of the Sahel";
-        
-        
+
         Phrase zo = new Phrase(english, bf12);
         Paragraph eng = new Paragraph(zo);
         eng.setAlignment(Element.ALIGN_CENTER);
@@ -197,9 +200,8 @@ public class DocumentServiceImpl implements IDocumentService{
         cell1.setBorderColor(BaseColor.WHITE);
         header.addCell(cell1);
         doc.add(header);
-        
+
         // Fin de l'entete
-        
         // Définition du formulaire d'entete
         PdfPTable table2 = new PdfPTable(6);
         PdfPCell cell;
@@ -216,7 +218,7 @@ public class DocumentServiceImpl implements IDocumentService{
         cell.setBorderColor(BaseColor.WHITE);
         cell.setColspan(2);
         table2.addCell(cell);
-        cell = new PdfPCell(new Phrase("Parcours : " + head.getNiveau()+head.getOption(), bf12));
+        cell = new PdfPCell(new Phrase("Parcours : " + head.getNiveau() + head.getOption(), bf12));
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
         table2.addCell(cell);
@@ -244,8 +246,6 @@ public class DocumentServiceImpl implements IDocumentService{
         cell.setBorderColor(BaseColor.WHITE);
         table2.addCell(cell);
 
-
-
         cell = new PdfPCell(new Phrase("Enseignants :" + head.getEnseignants(), bf12));
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
@@ -253,60 +253,90 @@ public class DocumentServiceImpl implements IDocumentService{
 
         doc.add(table2);
         doc.add(new Paragraph("\n\n"));
-        
-        
+
         // Fin du formulaire
-        
         doc.add(new Paragraph("\n\n"));
-        
+
         // Tableau de notes
-        
         Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         float relativeWidths[] = {2, 4, 11, 5, 5, 5, 5, 3};
         Font bf13 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         PdfPTable table = new PdfPTable(relativeWidths);
         table.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-        table.getDefaultCell().setFixedHeight(20);
+        //table.getDefaultCell().setFixedHeight(20);
         //  table.getDefaultCell().set
+        System.out.println("J'ai ==============================" + notes.get(0).getNote().size());
+        /* for (Map.Entry<String, Double> e : notes.get(0).getNote().entrySet()) {
+         //     System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+         System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOO");    
+         System.out.println("J'ai trouvé un "+ e.getKey());
+            
+            
+         table.addCell(new Phrase(String.format("%s/20 ", e.getKey()), bf));
+         }*/
 
         table.addCell(new Phrase("No", bf));
         table.addCell(new Phrase("Matricule", bf));
         table.addCell(new Phrase("NOM(s) et PRENOM(s)", bf));
-        for (Map.Entry<String, Double> e : notes.get(0).getNote().entrySet()) {
-               //     System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
-                    table.addCell(new Phrase(String.format("%s/20 ", e.getKey()), bf));
+        for (Map.Entry<String, Double> e : notes.get(1).getNote().entrySet()) {
+            //     System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+            System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOO");
+            System.out.println("J'ai trouvé un " + e.getKey());
+
+            table.addCell(new Phrase(String.format("%s/20 ", e.getKey()), bf));
         }
       //  table.addCell(new Phrase("CC/20", bf));
-       // table.addCell(new Phrase("TPE/20", bf));
-       // table.addCell(new Phrase("EX/20", bf));
+        //  table.addCell(new Phrase("TPE/20", bf));
+        //  table.addCell(new Phrase("EE/20", bf));
         table.addCell(new Phrase("Moy/20", bf));
         table.addCell(new Phrase("Grade", bf));
         doc.add(table);
+
         // float relativeWidths[] = {2,5,8,5,5,5,5,5};
         PdfPTable table3 = new PdfPTable(relativeWidths);
         table3.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         table3.getDefaultCell().setFixedHeight(20);
+        maxMoyenne = minMoyenne = notes.get(0).getMoyenne();
         for (int i = 0; i < notes.size(); i++) {
-            table3.addCell(new Phrase(String.valueOf(i + 1), bf13));
-            table3.addCell(new Phrase(notes.get(i).getMatricule(), bf13));
-            table3.addCell(new Phrase(notes.get(i).getNom(), bf13));
+            table3.addCell(new Phrase(String.valueOf(i + 1), bf12));
+            table3.addCell(new Phrase(notes.get(i).getMatricule(), bf12));
+            table3.addCell(new Phrase(notes.get(i).getNom(), bf12));
             for (Map.Entry<String, Double> e : notes.get(i).getNote().entrySet()) {
-                   // System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
-                    table3.addCell(new Phrase(String.format("%.2f", e.getValue()), bf13));
-                }
+                // System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+                table3.addCell(new Phrase(String.format("%.2f", e.getValue()), bf12));
+            }
          //   table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("CC")), bf13));
-           // table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("TPE")), bf13));
-           // table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("EE")), bf13));
-            table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne(), bf13)));
+            // table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("TPE")), bf13));
+            // table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("EE")), bf13));
+            if(notes.get(i).getMoyenne() >= 15){
+                moySup15 ++;
+            }
             
-            table3.addCell(new Phrase(transformNoteGrade(notes.get(i).getMoyenne()), bf13));
+            if((notes.get(i).getMoyenne()) < 15 && (notes.get(i).getMoyenne() >= 10)){
+                moySup10Inf15 ++;
+            }
+            
+            if(notes.get(i).getMoyenne() < 10){
+                moyInf10 ++;
+            }
+            
+            if(notes.get(i).getMoyenne() >= maxMoyenne){
+                maxMoyenne = notes.get(i).getMoyenne();
+            }
+            
+            if(notes.get(i).getMoyenne() < minMoyenne){
+                minMoyenne = notes.get(i).getMoyenne();
+            }
+            
+            table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne(), bf12)));
+
+            table3.addCell(new Phrase(transformNoteGrade(notes.get(i).getMoyenne()), bf12));
         }
         doc.add(table3);
         doc.add(new Phrase("\n"));
         // Fin du tableau de notes
-        
+
         // Partie signatures
-        
         float widths[] = {18, 18, 13};
         PdfPTable signature = new PdfPTable(widths);
         PdfPCell celle;
@@ -322,51 +352,109 @@ public class DocumentServiceImpl implements IDocumentService{
         doc.add(signature);
 
         doc.add(new Phrase("\n\n"));
-        // Fin partie signatures
+
+        float widths1[] = {5, 3, 3};
+        PdfPTable pourcentage = new PdfPTable(widths1);
+        //pourcentage.setWidthPercentage(50);
+        PdfPCell cell2;
+        cell2 = new PdfPCell(new Phrase("Moyenne Comprise entre 15 et 20", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(moySup15), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup15*1.0)/notes.size())), bf12)));
+        cell2 = new PdfPCell(new Phrase("Moyenne Comprise entre 14,99 et 10", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(moySup10Inf15), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup10Inf15*1.0)/notes.size())), bf12)));
+        cell2 = new PdfPCell(new Phrase("Moyenne < 10", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(moyInf10), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moyInf10*1.0)/notes.size())), bf12)));
+        cell2 = new PdfPCell(new Phrase("Effectif Total des Etudiants", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(notes.size()), bf12)));
+        PdfPCell cell3 = new PdfPCell();
+        //cell2.setBorderColor(BaseColor.WHITE);
+       /* cell3.setBorderColorLeft(BaseColor.BLACK);
+        cell3.setBorderColorTop(BaseColor.BLACK);
+        cell3.setBorderColorRight(BaseColor.WHITE);
+        cell3.setBorderColorBottom(BaseColor.WHITE);*/
+        pourcentage.addCell(cell3);
+        cell2 = new PdfPCell(new Phrase("Plus Grande MOY (Max)", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(maxMoyenne), bf12)));
+        cell3 = new PdfPCell();
+        //cell2.setBorderColor(BaseColor.WHITE);
+        /*cell3.setBorderColorTop(BaseColor.WHITE);
+        cell3.setBorderColorLeft(BaseColor.BLACK);
+        cell3.setBorderColorRight(BaseColor.WHITE);*/
+        pourcentage.addCell(cell3);
+        cell2 = new PdfPCell(new Phrase("Plus Petite MOY (Min)", bf));
+        pourcentage.addCell(cell2);
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(minMoyenne), bf12)));
+        cell3 = new PdfPCell();
+        //cell2.setBorderColor(BaseColor.WHITE);
+        /*cell3.setBorderColorTop(BaseColor.WHITE);
+        cell3.setBorderColorLeft(BaseColor.WHITE);
+        cell3.setBorderColorRight(BaseColor.WHITE);*/
+        pourcentage.addCell(cell3);
+        doc.add(pourcentage);
+
+        doc.add(new Paragraph("\n"));
+        //float widths1[] = {5, 3, 3};
+        PdfPTable fin = new PdfPTable(widths1);
+        //fin.setWidthPercentage(50);
+        PdfPCell cell4;
+        cell4 = new PdfPCell(new Phrase("Taux de Réussite >=10", bf));
+        cell4.setColspan(2);
+        fin.addCell(cell4);
+        cell4 = new PdfPCell(new Phrase(String.format(String.valueOf(100 * ((moySup15+moySup10Inf15)*1.0/notes.size())), bf12)));
+        //cell4.setColspan(2);
+        fin.addCell(cell4);
+        doc.add(fin);
+        doc.add(new Phrase("\n"));
+
         doc.close();
         return doc;
-        
-    }
-    
-    private static String transformNoteGrade(double note){
-        if(note <= 20 && note >= 16){
-            return "A+";
-        }
-        if(note < 16 && note >= 15){
-            return "A";
-        }
-        if(note < 15 && note >= 14){
-            return "B+";
-        }
-        if(note < 14 && note >= 13){
-            return "B";
-        }
-        if(note < 13 && note >= 12){
-            return "B-";
-        }
-        if(note < 12 && note >= 11){
-            return "C+";
-        }
-        if(note < 11 && note >= 10){
-            return "C";
-        }
-        if(note < 10 && note >= 9){
-            return "C-";
-        }
-        if(note < 9 && note >= 8){
-            return "D+";
-        }
-        if(note < 8 && note >= 7){
-            return "D";
-        }
-        if(note < 7 && note >= 6){
-            return "E";
-        }
-        
-            return "F";
-        
+
     }
 
-    
-    
+    private static String transformNoteGrade(double note) {
+        if (note <= 20 && note >= 16) {
+            return "A+";
+        }
+        if (note < 16 && note >= 15) {
+            return "A";
+        }
+        if (note < 15 && note >= 14) {
+            return "B+";
+        }
+        if (note < 14 && note >= 13) {
+            return "B";
+        }
+        if (note < 13 && note >= 12) {
+            return "B-";
+        }
+        if (note < 12 && note >= 11) {
+            return "C+";
+        }
+        if (note < 11 && note >= 10) {
+            return "C";
+        }
+        if (note < 10 && note >= 9) {
+            return "C-";
+        }
+        if (note < 9 && note >= 8) {
+            return "D+";
+        }
+        if (note < 8 && note >= 7) {
+            return "D";
+        }
+        if (note < 7 && note >= 6) {
+            return "E";
+        }
+
+        return "F";
+
+    }
+
 }

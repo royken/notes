@@ -37,9 +37,11 @@ public class EvaluationDetails implements Serializable {
     private int version;
     
     @ManyToOne
+    @XmlTransient
     private Evaluation evaluation;
     
     @ManyToOne
+    @XmlTransient
     private TypeCours typeCours;
     
     @Column

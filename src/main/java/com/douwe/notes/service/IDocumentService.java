@@ -16,6 +16,6 @@ import java.io.OutputStream;
  */
 public interface IDocumentService {
     
-    public Document produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, Long session,OutputStream stream)throws ServiceException;
+    public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session,OutputStream stream)throws ServiceException;
     
 }

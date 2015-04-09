@@ -102,6 +102,8 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
         }
         return getManager().createQuery(cq).getSingleResult();
     }
+    
+    /*
 
     @Override
     public List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws DataAccessException {
@@ -127,4 +129,6 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
         cq.multiselect(etudiantRoot.get(Etudiant_.nom), etudiantRoot.get(Etudiant_.matricule));
         return getManager().createQuery(cq).getResultList();
     }
+    
+    */
 }

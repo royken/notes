@@ -41,15 +41,19 @@ public class Programme implements Serializable {
     private int version;
     
     @ManyToOne
+    @XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @ManyToOne
+    @XmlTransient
     private UniteEnseignement uniteEnseignement;
     
     @ManyToOne
+    @XmlTransient
     private Parcours parcours;
     
     @ManyToOne
+    @XmlTransient
     private Semestre semestre;
     
      @XmlTransient

@@ -51,6 +51,7 @@ public class Cours implements Serializable {
     private Integer credit;
     
     @ManyToOne
+    @XmlTransient
     private TypeCours typeCours;
     
     @XmlTransient

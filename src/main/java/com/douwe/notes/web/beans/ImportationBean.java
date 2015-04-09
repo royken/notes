@@ -90,8 +90,9 @@ public class ImportationBean {
 
     public void saveNotes() throws ServiceException, IOException {
         if (file != null && idC != null && idC != 0L && idE != null && idE != 0L) {
-            //noteService.importNotes(file.getInputstream(),idC,idE, idAca);
-            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
+            System.out.println("fichier============= " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
+            noteService.importNotes(file.getInputstream(),idC,idE, idAca,0);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
             file = null;
             idAca = 0L;

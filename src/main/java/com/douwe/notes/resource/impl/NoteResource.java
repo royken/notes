@@ -19,21 +19,19 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.OutputStreamEncryption;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import org.apache.commons.codec.binary.Base64;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 /**
  *
@@ -59,7 +57,9 @@ public class NoteResource implements INoteResource {
 
     @EJB
     private IDocumentService documentService;
-    private Object facesContext;
+   
+    @EJB
+    private INoteService noteService;
 
     public INoteService getService() {
         return service;
@@ -108,6 +108,16 @@ public class NoteResource implements INoteResource {
     public void setDocumentService(IDocumentService documentService) {
         this.documentService = documentService;
     }
+
+    public INoteService getNoteService() {
+        return noteService;
+    }
+
+    public void setNoteService(INoteService noteService) {
+        this.noteService = noteService;
+    }
+    
+    
 
     @Override
     public Note createNote(Note note) {
@@ -171,7 +181,7 @@ public class NoteResource implements INoteResource {
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    /*
+    
      @Override
      public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
      try {
@@ -193,7 +203,7 @@ public class NoteResource implements INoteResource {
      Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
      }
      return "Hello";
-     }*/
+     }
 
     @Override
     public OutputStream produirePv() {
@@ -213,6 +223,15 @@ public class NoteResource implements INoteResource {
         }
         return null;
 
+    }
+
+    @Override
+    public void importNotes(InputStream fichier, FormDataContentDisposition fileDisposition, Long coursId, Long evaluationId, Long anneeId, int session) {
+        try {
+            noteService.importNotes(fichier, coursId, evaluationId, anneeId, session);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

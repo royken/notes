@@ -20,6 +20,7 @@ import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,11 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -191,8 +197,54 @@ public class NoteServiceImpl implements INoteService {
     }
 
     @Override
-    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId) throws ServiceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId,int session) throws ServiceException {
+        
+        try {
+            Cours cours = coursDao.findById(coursId);
+            Evaluation evaluation = evaluationDao.findById(evaluationId);
+            AnneeAcademique academique = academiqueDao.findById(anneeId);
+            Workbook workbook = WorkbookFactory.create(stream);
+            final Sheet sheet = workbook.getSheetAt(0);
+            int index = 1;
+            Row row = sheet.getRow(index++);
+            String matricule = new String();
+            String nom = new String();
+            while (row != null) {
+                Etudiant etudiant = new Etudiant();
+                if (row.getCell(1) != null) {
+                    matricule = row.getCell(1).getStringCellValue();
+                    etudiant = etudiantDao.findByMatricule(matricule);
+                }
+                
+                else{
+                    nom = row.getCell(2).getStringCellValue();
+                    etudiant = etudiantDao.findByName(nom);
+                }  
+               
+                Note note = new Note();
+                if(row.getCell(3) != null){
+                    note.setValeur(row.getCell(3).getNumericCellValue());
+                }
+                note.setActive(1);
+                note.setAnneeAcademique(academique);
+                note.setCours(cours);
+                note.setEtudiant(etudiant);
+                note.setEvaluation(evaluation);
+                if(evaluation.isIsExam()){
+                    Session s = Session.values()[session];
+                    note.setSession(s);
+                }
+                noteDao.create(note);
+                row = sheet.getRow(index++);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidFormatException ex) {
+            Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     private Note insertNote(String etudiantMatricule,String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session){

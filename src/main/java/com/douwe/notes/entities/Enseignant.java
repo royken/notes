@@ -43,6 +43,7 @@ public class Enseignant implements Serializable {
     private String nom;
 
     @ManyToMany(mappedBy = "enseignants")
+    @XmlTransient
     private List<Enseignement> enseignements;
 
     @XmlTransient

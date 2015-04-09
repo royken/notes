@@ -22,7 +22,7 @@ public class PvHeader {
     
     private String cours;
     
-    private String session;
+    private int session;
     
     private String enseignants;
 
@@ -90,11 +90,11 @@ public class PvHeader {
         this.cours = cours;
     }
 
-    public String getSession() {
+    public int getSession() {
         return session;
     }
 
-    public void setSession(String session) {
+    public void setSession(int session) {
         this.session = session;
     }
 
