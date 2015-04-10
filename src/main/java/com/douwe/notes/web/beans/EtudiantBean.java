@@ -7,17 +7,17 @@ import com.douwe.notes.entities.Genre;
 import com.douwe.notes.entities.Inscription;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IInscriptionService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
-import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.ServiceException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -53,8 +53,6 @@ public class EtudiantBean {
 
     @EJB
     private IOptionService optionService;
-    @EJB
-    private IParcoursService parcoursService;
 
     @EJB
     private IDepartementService departementService;
@@ -72,73 +70,40 @@ public class EtudiantBean {
     private Inscription inscription;
     private AnneeAcademique anneeAcademique;
     private Genre genre;
+    private Map<String, Long> countries = new HashMap<String, Long>();
+    private Map<String, Long> cities = null;
     private List<String> genres = new LinkedList<String>();
-    private Parcours parcours;
-    private List<Parcours> parcourses = new LinkedList<Parcours>();
-    Long idD = -1L, idN = -1L, idO = -1L, idA = -1L, idP = -1L;
-    int taille = 30;
-
+    Long idD = -1L, idN = -1L, idO = -1L, idA = -1L;
+    
     /**
      * Creates a new instance of EtudiantBean
      */
     public EtudiantBean() {
-
-//        departement = new Departement();
-//        anneeAcademique = new AnneeAcademique();
-//        niveau = new Niveau();
-//        option = new Option();        
-//        parcours = new Parcours();
-//        inscription = new Inscription();
         etudiant = new Etudiant();
     }
 
     public void filtrer() throws ServiceException {
+        etudiants = new LinkedList<Etudiant>();
         etudiants = etudiantService.findByCritiria((idD == null) ? -1 : idD,
                 (idA == null) ? -1 : idA,
                 (idN == null) ? -1 : idN,
-                (idO == null) ? -1 : idO);
-        initTaille();
-        idD = null;
-        idN = null;
-        idO = null;
-    }
-
-    public void update(ActionEvent actionEvent) {
-
+                (idO == null) ? -1 : idO);     
+       
     }
 
     public void saveOrUpdateEtudiant(ActionEvent actionEvent) throws ServiceException {
-        if (etudiant != null && etudiant != null) {
-            etudiantService.saveOrUpdateEtudiant(etudiant);
-            System.out.println("" + etudiant);
-            if (etudiant.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré"));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été mis à jour "));
-            }
-            filtrer();
+        if (etudiant != null && etudiant.getId() != null) {
+            etudiantService.saveOrUpdateEtudiant(etudiant);            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été mis à jour "));
             etudiant = new Etudiant();
-
         }
     }
 
-    public void initTaille() {
-        if (etudiants.isEmpty()) {
-            taille = 30;
-        } else {
-            taille = 300;
-        }
-    }
-
-    public void message(ActionEvent actionEvent) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "teste", "l'étudiant " + etudiant.getNom() + " a été enregistré "));
-    }
 
     public void deleteEtudiant(ActionEvent actionEvent) throws ServiceException {
         if (etudiant != null && etudiant.getId() != null) {
-            System.out.println("" + etudiant);
             etudiantService.deleteEtudiant(etudiant.getId());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été enregistré "));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", "l'étudiant " + etudiant.getNom() + " a été déactivé"));
             etudiant = new Etudiant();
         }
     }
@@ -201,7 +166,8 @@ public class EtudiantBean {
         this.etudiantService = etudiantService;
     }
 
-    public List<Etudiant> getEtudiants() throws ServiceException {
+    public List<Etudiant> getEtudiants() throws ServiceException {             
+        filtrer();
         return etudiants;
     }
 
@@ -306,10 +272,6 @@ public class EtudiantBean {
     }
 
     public Long getIdA() {
-        if (etudiant != null && inscription != null && inscription.getAnneeAcademique() != null) {
-            idP = inscription.getAnneeAcademique().getId();
-        }
-
         return idA;
     }
 
@@ -318,8 +280,6 @@ public class EtudiantBean {
     }
 
     public Etudiant getEtudiant() throws ServiceException {
-//        AnneeAcademique a = anneeAcademiqueService.findAnneeById(idA);
-        // inscription = findIncriptionByEtudiant(etudiant,a);
         return etudiant;
     }
 
@@ -340,55 +300,10 @@ public class EtudiantBean {
         genres.add("masculin");
         return genres;
     }
-
+    public void util(){}
     public void setGenres(List<String> genres) {
         this.genres = genres;
     }
-
-    public Long getIdP() {
-        if (etudiant != null && inscription != null && inscription.getParcours() != null) {
-            idP = inscription.getParcours().getId();
-        }
-        return idP;
-    }
-
-    public void setIdP(Long idP) {
-        this.idP = idP;
-    }
-
-    public IParcoursService getParcoursService() {
-        return parcoursService;
-    }
-
-    public void setParcoursService(IParcoursService parcoursService) {
-        this.parcoursService = parcoursService;
-    }
-
-    public Parcours getParcours() {
-        return parcours;
-    }
-
-    public void setParcours(Parcours parcours) {
-        this.parcours = parcours;
-    }
-
-    public List<Parcours> getParcourses() throws ServiceException {
-        parcourses = parcoursService.getAllParcours();
-        return parcourses;
-    }
-
-    public void setParcourses(List<Parcours> parcourses) {
-        this.parcourses = parcourses;
-    }
-
-    public int getTaille() {
-        return taille;
-    }
-
-    public void setTaille(int taille) {
-        this.taille = taille;
-    }
-
     public IInscriptionService getInscriptionService() {
         return inscriptionService;
     }
@@ -397,4 +312,44 @@ public class EtudiantBean {
         this.inscriptionService = inscriptionService;
     }
 
+    public void handleCountryChange() throws ServiceException {
+        if (idD != null && idD != 0L) {
+            Departement d = departementService.findDepartementById(idD);
+            options = departementService.getAllOptions(d);
+            cities = new HashMap<String, Long>();
+            for (Option opt : options) {
+                cities.put(opt.getCode(), opt.getId());
+            }
+        } else {
+            cities = null;
+        }
+    }
+
+    public Map<String, Long> getCountries() throws ServiceException {
+        departements = departementService.getAllDepartements();
+        for (Departement d : departements) {
+            countries.put(d.getCode(), d.getId());
+        }
+        return countries;
+    }
+
+    public void setCountries(Map<String, Long> countries) {
+        this.countries = countries;
+    }
+
+    public Map<String, Long> getCities() throws ServiceException {
+        if (cities == null) {
+            cities = new HashMap<String, Long>();
+            options = optionService.getAllOptions();
+            for (Option opt : options) {
+                cities.put(opt.getCode(), opt.getId());
+            }
+        }
+
+        return cities;
+    }
+
+    public void setCities(Map<String, Long> cities) {
+        this.cities = cities;
+    }
 }
