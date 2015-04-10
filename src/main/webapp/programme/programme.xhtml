@@ -24,6 +24,10 @@
                                         <h:selectOneMenu value="#{programmeBean.idUE}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
                                             <f:selectItems value="#{programmeBean.uniteEnseignements}" var="UE" itemLabel="#{UE.code}" itemValue="#{UE.id}" />
                                         </h:selectOneMenu> 
+                                        <h:outputText  value="Semestre : " /> 
+                                        <h:selectOneMenu value="#{programmeBean.idS}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{programmeBean.semestres}" var="semestre" itemLabel="#{semestre.intitule}" itemValue="#{semestre.id}" />                                            
+                                        </h:selectOneMenu>  
                                         <h:outputText  value="Année Académique : " /> 
                                         <h:selectOneMenu value="#{programmeBean.idAca}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
                                             <f:selectItems value="#{programmeBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
@@ -52,6 +56,10 @@
                                         <h:selectOneMenu value="#{programmeBean.idUE}" style="margin-top:10px; height: 30px; width: 200px;"  >
                                             <f:selectItems value="#{programmeBean.uniteEnseignements}" var="UE" itemLabel="#{UE.code}" itemValue="#{UE.id}" />
                                         </h:selectOneMenu> 
+                                        <h:outputText  value="Semestre : " /> 
+                                        <h:selectOneMenu value="#{programmeBean.idS}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <f:selectItems value="#{programmeBean.semestres}" var="semestre" itemLabel="#{semestre.intitule}" itemValue="#{semestre.id}" />                                            
+                                        </h:selectOneMenu> 
                                         <h:outputText  value="Année Académique : " /> 
                                         <h:selectOneMenu value="#{programmeBean.idAca}" style="margin-top:10px; height: 30px; width: 200px;"  >
                                             <f:selectItems value="#{programmeBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
@@ -69,50 +77,93 @@
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                    <p:dialog header="Initialisation de la suppression" widgetVar="dlgDelete" hideEffect="explode" showEffect="explode">
+                        <h:form id="formDelete">    
+                            <p:growl  showDetail="true" /> 
+                            <p:panel >
+                                <h:panelGroup >
+                                    <h:panelGrid id="displayDelete" columns="2">                                                                                                                              
+                                        <h:inputHidden value="#{programmeBean.programme.id}"  />
+                                        <h:inputHidden value="#{programmeBean.programme.version}"  />
+                                        <h:inputHidden value="#{programmeBean.programme.active}"  />                                                                                                                        
+                                        <h:outputText value="voulez-vous vraiment desprogrammer cette UE pour #{programmeBean.programme.anneeAcademique} ?"/>
+                                    </h:panelGrid>                                      
+                                </h:panelGroup>
+                                <p:separator/>
+                                <div>
+                                    <p:commandButton value="OUI"  actionListener="#{programmeBean.deleteProgramme(actionEvent)}" update=":formDelete,:f:d" icon="ui-icon-check" oncomplete="PF('dlgDelete').hide()" /> 
+                                    <p:commandButton value="NON" type="reset"  onclick="PF('dlgDelete').hide()" update=":formDelete" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                </div>                     
+                            </p:panel>
+                        </h:form>  
+                    </p:dialog> 
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;  margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
                         <p:confirmDialog message="voulez-vous vraiment supprimer ce programme ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
                             <p:commandButton id="confirm" value="OUI" action="#{programmeBean.deleteProgramme(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
                             <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
                         </p:confirmDialog>
-                         <p:panel>
+                        <p:panel>
                             <h:panelGroup>
-                                <h:panelGrid columns="8" width="100%" >                                                                                                        
-                                    <p:outputLabel value="Niveau"  />
-                                    <h:selectOneMenu value="#{programmeBean.idN}" style="height: 30px; "  id="niveau">
+                                <h:panelGrid columns="4" width="75%" > 
+                                    <h:outputLabel  value="Departement : " /> 
+                                    <h:selectOneMenu value="#{programmeBean.idD}" style="margin-top:10px; height: 30px; width: 150px;"  >
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                        <f:selectItems value="#{programmeBean.countries}" />
+                                        <p:ajax listener="#{programmeBean.handleCountryChange()}"
+                                                event="change" 
+                                                update="option" 
+                                                process="@this"/>
+                                    </h:selectOneMenu>
+                                    <p:outputLabel value="Niveau"  />
+                                    <h:selectOneMenu value="#{programmeBean.idN}" id="niveau" style="margin-top:10px; height: 30px; width: 150px;"  >                                        
                                         <f:selectItems value="#{programmeBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
                                     </h:selectOneMenu>
                                     <p:outputLabel value="Option" />
-                                    <h:selectOneMenu value="#{programmeBean.idO}" style=" height: 30px; "  id="option">
-                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{programmeBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
-                                    </h:selectOneMenu>                                                  
+                                    <h:selectOneMenu value="#{programmeBean.idO}"   id="option" style="margin-top:10px; height: 30px; width: 150px;"  >                                        
+                                        <f:selectItems value="#{programmeBean.cities}" />
+                                    </h:selectOneMenu>   
+                                    <h:outputLabel  value="Année Académique : " /> 
+                                    <h:selectOneMenu value="#{programmeBean.idAca}" style="margin-top:10px; height: 30px; width: 150px;"  >
+                                        <f:selectItems value="#{programmeBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)}/#{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
+                                    </h:selectOneMenu>
+                                    <h:outputLabel  value="Semestre : " /> 
+                                    <h:selectOneMenu value="#{programmeBean.idS}" style="margin-top:10px; height: 30px; width: 150px;"  >
+                                        <f:selectItems value="#{programmeBean.semestres}" var="semestre" itemLabel="#{semestre.intitule}" itemValue="#{semestre.id}" />                                            
+                                    </h:selectOneMenu> 
                                     <p:commandButton type="submit" 
                                                      action="#{programmeBean.filtrer()}"  
                                                      update=":f:d"  
-                                                      value="Filtrer" 
-                                                     style=" height: 30px;"/>                                    
+                                                     value="Filtrer" 
+                                                     style="margin-top:10px; height: 30px; width: 150px;"  />
                                 </h:panelGrid>
                             </h:panelGroup>
                         </p:panel>
-                        <p:dataTable id="d"  emptyMessage="Aucun programme n'a été trouvé" var="programme" value="#{programmeBean.programmes}" rowKey="#{programme.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                        <p:dataTable id="d"  
+                                     emptyMessage="Aucun programme n'a été trouvé" 
+                                     var="programme" 
+                                     value="#{programmeBean.programmes}" 
+                                     rowKey="#{programme.id}" 
+                                     paginator="true" 
+                                     rows="15"   
+                                     paginatorPosition="bottom" 
+                                     paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{programmeBean.programme}" selectionMode="single" >                                        
-                            <p:column headerText="Unité d'Enseignement "  id="UE">  
+                            <p:column headerText="UE" filterBy="#{programme.uniteEnseignement.code}" filterValue="#{programme.uniteEnseignement.code}" id="UE">  
                                 #{programme.uniteEnseignement.code}  
                             </p:column>                                                           
-                             <p:column headerText="Intitulé " >  
+                            <p:column headerText="Intitulé " >  
                                 #{programme.uniteEnseignement.intitule}  #{programmeBean.affiche(programme.uniteEnseignement.courses)} 
                             </p:column>                                                
                             <p:column headerText="crédit "  id="aca">  
                                 #{programmeBean.cout(programme.uniteEnseignement.courses)} 
-                            </p:column> 
+                            </p:column>                             
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouveau programme" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{programmeBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
+                                <p:commandButton id="delete" value="Supprimer"  onclick="PF('dlgDelete').show()" update=":formDelete:displayDelete" icon="ui-icon-trash"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
                                 <p:commandButton id="modifier" value="Modifier" actionListener="#{programmeBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
