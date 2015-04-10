@@ -148,7 +148,7 @@ public class DocumentServiceImpl implements IDocumentService {
         PdfWriter.getInstance(doc, stream);
         doc.open();
         doc.setPageSize(new Rectangle(400, 100));
-        Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+        Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         int moySup15 = 0;
         int moySup10Inf15 = 0;
         int moyInf10 = 0;
@@ -300,6 +300,7 @@ public class DocumentServiceImpl implements IDocumentService {
         for (int i = 0; i < notes.size(); i++) {
             table3.addCell(new Phrase(String.valueOf(i + 1), bf12));
             table3.addCell(new Phrase(notes.get(i).getMatricule(), bf12));
+            
             table3.addCell(new Phrase(notes.get(i).getNom(), bf12));
             for (Map.Entry<String, Double> e : notes.get(i).getNote().entrySet()) {
                 // System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
@@ -328,7 +329,7 @@ public class DocumentServiceImpl implements IDocumentService {
                 minMoyenne = notes.get(i).getMoyenne();
             }
             
-            table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne(), bf12)));
+            table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne()), bf12));
 
             table3.addCell(new Phrase(transformNoteGrade(notes.get(i).getMoyenne()), bf12));
         }
@@ -359,19 +360,19 @@ public class DocumentServiceImpl implements IDocumentService {
         PdfPCell cell2;
         cell2 = new PdfPCell(new Phrase("Moyenne Comprise entre 15 et 20", bf));
         pourcentage.addCell(cell2);
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(moySup15), bf12)));
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup15*1.0)/notes.size())), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(moySup15)), bf12));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup15*1.0)/notes.size()))), bf12));
         cell2 = new PdfPCell(new Phrase("Moyenne Comprise entre 14,99 et 10", bf));
         pourcentage.addCell(cell2);
         pourcentage.addCell(new Phrase(String.format(String.valueOf(moySup10Inf15), bf12)));
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup10Inf15*1.0)/notes.size())), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moySup10Inf15*1.0)/notes.size()))), bf12));
         cell2 = new PdfPCell(new Phrase("Moyenne < 10", bf));
         pourcentage.addCell(cell2);
         pourcentage.addCell(new Phrase(String.format(String.valueOf(moyInf10), bf12)));
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moyInf10*1.0)/notes.size())), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(100*((moyInf10*1.0)/notes.size()))), bf12));
         cell2 = new PdfPCell(new Phrase("Effectif Total des Etudiants", bf));
         pourcentage.addCell(cell2);
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(notes.size()), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(notes.size())), bf12));
         PdfPCell cell3 = new PdfPCell();
         //cell2.setBorderColor(BaseColor.WHITE);
        /* cell3.setBorderColorLeft(BaseColor.BLACK);
@@ -381,7 +382,7 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.addCell(cell3);
         cell2 = new PdfPCell(new Phrase("Plus Grande MOY (Max)", bf));
         pourcentage.addCell(cell2);
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(maxMoyenne), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(maxMoyenne)), bf12));
         cell3 = new PdfPCell();
         //cell2.setBorderColor(BaseColor.WHITE);
         /*cell3.setBorderColorTop(BaseColor.WHITE);
@@ -390,7 +391,7 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.addCell(cell3);
         cell2 = new PdfPCell(new Phrase("Plus Petite MOY (Min)", bf));
         pourcentage.addCell(cell2);
-        pourcentage.addCell(new Phrase(String.format(String.valueOf(minMoyenne), bf12)));
+        pourcentage.addCell(new Phrase(String.format(String.valueOf(minMoyenne)), bf12));
         cell3 = new PdfPCell();
         //cell2.setBorderColor(BaseColor.WHITE);
         /*cell3.setBorderColorTop(BaseColor.WHITE);
@@ -407,7 +408,7 @@ public class DocumentServiceImpl implements IDocumentService {
         cell4 = new PdfPCell(new Phrase("Taux de Réussite >=10", bf));
         cell4.setColspan(2);
         fin.addCell(cell4);
-        cell4 = new PdfPCell(new Phrase(String.format(String.valueOf(100 * ((moySup15+moySup10Inf15)*1.0/notes.size())), bf12)));
+        cell4 = new PdfPCell(new Phrase(String.format(String.valueOf(100 * ((moySup15+moySup10Inf15)*1.0/notes.size()))), bf12));
         //cell4.setColspan(2);
         fin.addCell(cell4);
         doc.add(fin);

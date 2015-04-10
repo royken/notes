@@ -90,7 +90,7 @@ public class TypeCourServiceImpl implements ITypeCoursService {
     @Override
     public List<TypeCours> getAllTypeCours() throws ServiceException {
         try {
-            return typeCoursDao.findAll();
+            return typeCoursDao.findAllActive();
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");
