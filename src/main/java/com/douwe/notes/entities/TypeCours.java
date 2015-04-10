@@ -42,7 +42,6 @@ public class TypeCours implements Serializable {
      
      
     @OneToMany(mappedBy = "typeCours", fetch = FetchType.EAGER)
-    @XmlTransient
      private List<EvaluationDetails> evaluations;
     
     public TypeCours(){
