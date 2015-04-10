@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -23,6 +25,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement(name = "typeCours")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NamedQueries({
+@NamedQuery(name = "TypeCours.findAllActive",query = "SELECT t FROM TypeCours t WHERE t.active =1")
+
+})
 public class TypeCours implements Serializable {
     
     @Id

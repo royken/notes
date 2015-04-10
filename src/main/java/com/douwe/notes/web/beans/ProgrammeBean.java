@@ -7,24 +7,26 @@ package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Enseignant;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.service.IAnneeAcademiqueService;
-import com.douwe.notes.service.IEnseignantService;
-import com.douwe.notes.service.IEnseignementService;
+import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.IProgrammeService;
+import com.douwe.notes.service.ISemestreService;
 import com.douwe.notes.service.IUniteEnseignementService;
 import com.douwe.notes.service.ServiceException;
-import com.douwe.notes.service.impl.OptionServiceImpl;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -54,85 +56,67 @@ public class ProgrammeBean {
     @EJB
     private INiveauService niveauService;
     @EJB
-    private IEnseignantService enseignantService;
+    private IDepartementService departementService;
 
     @EJB
-    private IEnseignementService enseignementService;
+    private ISemestreService semestreService;
+    private List<Semestre> semestres;
     private Programme programme = new Programme();
     private List<Programme> programmes;
     private List<AnneeAcademique> anneeAcademiques;
     private List<UniteEnseignement> uniteEnseignements;
+    private Map<String, Long> countries = new HashMap<String, Long>();
+    private Map<String, Long> cities = null;
     private List<Parcours> parcourses;
-    private List<Enseignant> enseignants = new LinkedList<Enseignant>();
-    private List<Enseignant> enseignantChoisis = new LinkedList<Enseignant>();
-    private String message;
     private List<Option> options;
     private List<Niveau> niveaus;
     Long idO = 0L, idN = 0L;
-    String idAca, idUE, idP;
-    Long[] ide = new Long[10];
+    Long idAca = 0L, idUE = 0L, idP = 0L, idS = 0L, idD = 0L;
 
     public ProgrammeBean() {
     }
 
     public void saveOrUpdateProgramme(ActionEvent actionEvent) throws ServiceException {
-//        if (programme != null) {
-//            if (ide != null) {
-//                int i = 0;
-//                while (i < ide.length) {
-//                    Enseignant e = enseignantService.findEnseignantById(ide[i]);
-//                    enseignantChoisis.add(e);
-//                    i++;
-//                }
-                //enseignement.setAnneeAcademique(anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca)));
-                //enseignement.setEnseignants(enseignantChoisis);
-                //enseignementService.saveOrUpdateEnseignement(enseignement);
-          //  }
-            programme.setAnneeAcademique(anneeAcademiqueService.findAnneeById(Integer.parseInt(idAca)));
-            programme.setParcours(parcoursService.findParcoursById(Integer.parseInt(idP)));
-            programme.setUniteEnseignement(uniteEnseignementService.findUniteEnseignementById(Integer.parseInt(idUE)));
-            programmeService.saveOrUpdateProgramme(programme);
-            if (programme.getId() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " a été programmé en " + programme.getParcours().getNiveau().getCode().toUpperCase() + "/" + programme.getParcours().getOption().getCode().toUpperCase() + " pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length() - 4) + "/" + programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length() - 4)));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " a été programmé en " + programme.getParcours().getNiveau().getCode().toUpperCase() + "/" + programme.getParcours().getOption().getCode().toUpperCase() + " pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length() - 4) + "/" + programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length() - 4)));
-            }
-            idO=programme.getParcours().getOption().getId();
-            idN=programme.getParcours().getNiveau().getId();
-            filtrer();
-            programme = new Programme();
-            idAca = new String();
-            idP = new String();
-            idUE = new String();
-        }
-    
+        programme.setAnneeAcademique(anneeAcademiqueService.findAnneeById(idAca));
+        programme.setParcours(parcoursService.findParcoursById(idP));
+        programme.setUniteEnseignement(uniteEnseignementService.findUniteEnseignementById(idUE));
+        programme.setSemestre(semestreService.findSemestreById(idS));
+        programmeService.saveOrUpdateProgramme(programme);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " a été programmée en " + programme.getParcours().getNiveau().getCode().toUpperCase() + "/" + programme.getParcours().getOption().getCode().toUpperCase() + " pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length() - 4) + "/" + programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length() - 4)));
+        idO = programme.getParcours().getOption().getId();
+        idN = programme.getParcours().getNiveau().getId();
+        programme = new Programme();
+    }
 
     public void filtrer() throws ServiceException {
-        
-        // programmes = programmeService.getAllProgrammes();        
-        programmes = programmeService.findProgrammeByParcours(idN, idO,null, null);
+        programmes = new LinkedList<Programme>();
+        if (idN != 0L && idS != 0L && idAca != 0L && idO != 0L) {
+            programmes = programmeService.findProgrammeByParcours(idN, idO, idAca, idS);
+        }
     }
 
     public void deleteProgramme(ActionEvent actionEvent) throws ServiceException {
         if (programme != null && programme.getId() != null) {
+            programme=programmeService.findProgrammeById(programme.getId());
             programmeService.deleteProgramme(programme.getId());
-            idO=programme.getParcours().getOption().getId();
-            idN=programme.getParcours().getNiveau().getId();
+            idO = programme.getParcours().getOption().getId();
+            idN = programme.getParcours().getNiveau().getId();
+            idAca = programme.getAnneeAcademique().getId();
+            idS = programme.getSemestre().getId();
             filtrer();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " n'est plus programmé en " + programme.getParcours().getNiveau().getCode().toUpperCase() + "/" + programme.getParcours().getOption().getCode().toUpperCase() + " pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length() - 4) + "/" + programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length() - 4)));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", programme.getUniteEnseignement().getCode().toUpperCase() + " n'est plus programmée en " + programme.getParcours().getNiveau().getCode().toUpperCase() + "/" + programme.getParcours().getOption().getCode().toUpperCase() + " pour l'année " + programme.getAnneeAcademique().getDebut().toString().substring(programme.getAnneeAcademique().getDebut().toString().length() - 4) + "/" + programme.getAnneeAcademique().getFin().toString().substring(programme.getAnneeAcademique().getFin().toString().length() - 4)));
             programme = new Programme();
         }
     }
 
     public String affiche(List<Cours> c) {
         String result = "";
-        if (c != null) {
-            System.out.println("" + c);
+        if (c != null && !(c.isEmpty())) {
             result = ": ";
             for (Cours c1 : c) {
                 result += c1.getIntitule() + ";";
             }
-            result=result.substring(0,result.length()-1);
+            result = result.substring(0, result.length() - 1);
         }
         return result;
     }
@@ -161,6 +145,23 @@ public class ProgrammeBean {
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionner un programme avant de supprimer "));
         }
+    }
+
+    public ISemestreService getSemestreService() {
+        return semestreService;
+    }
+
+    public void setSemestreService(ISemestreService semestreService) {
+        this.semestreService = semestreService;
+    }
+
+    public List<Semestre> getSemestres() throws ServiceException {
+        semestres = semestreService.getAllSemestre();
+        return semestres;
+    }
+
+    public void setSemestres(List<Semestre> semestres) {
+        this.semestres = semestres;
     }
 
     public IProgrammeService getProgrammeService() {
@@ -204,6 +205,11 @@ public class ProgrammeBean {
     }
 
     public List<Programme> getProgrammes() throws ServiceException {
+        programmes = new LinkedList<Programme>();
+        programmes = programmeService.getAllProgrammes();
+        if (idN != 0L && idS != 0L && idAca != 0L && idO != 0L) {
+            programmes = programmeService.findProgrammeByParcours(idN, idO, idAca, idS);
+        }
         return programmes;
     }
 
@@ -238,70 +244,37 @@ public class ProgrammeBean {
         this.parcourses = parcourses;
     }
 
-    public String getIdAca() {
+    public Long getIdAca() {
         if (programme != null && programme.getVersion() != 0) {
-            idAca = programme.getAnneeAcademique().getId().toString();
+            idAca = programme.getAnneeAcademique().getId();
         }
         return idAca;
     }
 
-    public void setIdAca(String idAca) {
+    public void setIdAca(Long idAca) {
         this.idAca = idAca;
     }
 
-    public String getIdUE() {
+    public Long getIdUE() {
         if (programme != null && programme.getVersion() != 0) {
-            idUE = programme.getUniteEnseignement().getId().toString();
+            idUE = programme.getUniteEnseignement().getId();
         }
         return idUE;
     }
 
-    public void setIdUE(String idUE) {
+    public void setIdUE(Long idUE) {
         this.idUE = idUE;
     }
 
-    public String getIdP() {
+    public Long getIdP() {
         if (programme != null && programme.getVersion() != 0) {
-            idP = programme.getParcours().getId().toString();
+            idP = programme.getParcours().getId();
         }
         return idP;
     }
 
-    public void setIdP(String idP) {
+    public void setIdP(Long idP) {
         this.idP = idP;
-    }
-
-    public IEnseignantService getEnseignantService() {
-        return enseignantService;
-    }
-
-    public void setEnseignantService(IEnseignantService enseignantService) {
-        this.enseignantService = enseignantService;
-    }
-
-    public List<Enseignant> getEnseignants() throws ServiceException {
-        enseignants = enseignantService.getAllEnseignants();
-        return enseignants;
-    }
-
-    public void setEnseignants(List<Enseignant> enseignants) {
-        this.enseignants = enseignants;
-    }
-
-    public List<Enseignant> getEnseignantChoisis() {
-        return enseignantChoisis;
-    }
-
-    public void setEnseignantChoisis(List<Enseignant> enseignantChoisis) {
-        this.enseignantChoisis = enseignantChoisis;
-    }
-
-    public Long[] getIde() {
-        return ide;
-    }
-
-    public void setIde(Long[] ide) {
-        this.ide = ide;
     }
 
     public IOptionService getOptionService() {
@@ -354,4 +327,71 @@ public class ProgrammeBean {
         this.idN = idN;
     }
 
+    public Long getIdS() {
+        if (programme != null && programme.getSemestre() != null && programme.getId() != null) {
+            idS = programme.getSemestre().getId();
+        }
+        return idS;
+    }
+
+    public void setIdS(Long idS) {
+        this.idS = idS;
+    }
+
+    public IDepartementService getDepartementService() {
+        return departementService;
+    }
+
+    public void setDepartementService(IDepartementService departementService) {
+        this.departementService = departementService;
+    }
+
+    public Long getIdD() {
+        return idD;
+    }
+
+    public void setIdD(Long idD) {
+        this.idD = idD;
+    }
+
+    public void handleCountryChange() throws ServiceException {
+        if (idD != null && idD != 0L) {
+            Departement d = departementService.findDepartementById(idD);
+            options = departementService.getAllOptions(d);
+            cities = new HashMap<String, Long>();
+            for (Option opt : options) {
+                cities.put(opt.getCode(), opt.getId());
+            }
+        } else {
+            cities = null;
+        }
+    }
+
+    public Map<String, Long> getCountries() throws ServiceException {
+        List<Departement> departements = departementService.getAllDepartements();
+        for (Departement d : departements) {
+            countries.put(d.getCode(), d.getId());
+        }
+        return countries;
+    }
+
+    public void setCountries(Map<String, Long> countries) {
+        this.countries = countries;
+    }
+
+    public Map<String, Long> getCities() throws ServiceException {
+        if (cities == null) {
+            cities = new HashMap<String, Long>();
+            options = optionService.getAllOptions();
+            for (Option opt : options) {
+                cities.put(opt.getCode(), opt.getId());
+            }
+        }
+
+        return cities;
+    }
+
+    public void setCities(Map<String, Long> cities) {
+        this.cities = cities;
+    }
 }

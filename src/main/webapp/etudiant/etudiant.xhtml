@@ -52,8 +52,7 @@
                             <p:panel >
                                 <h:panelGroup >
                                     <h:panelGrid id="displayDelete" columns="2">                                                                                                                              
-                                        <h:inputHidden value="#{etudiantBean.etudiant.nom}"/>
-                                        <h:inputHidden value="#{etudiantBean.etudiant.dateDeNaissance}"/>  
+                                        <h:inputHidden value="#{etudiantBean.etudiant.nom}"/>                                        
                                         <h:inputHidden value="#{etudiantBean.etudiant.matricule}"/>
                                         <h:inputHidden value="#{etudiantBean.etudiant.lieuDeNaissance}"/>
                                         <h:inputHidden value="#{etudiantBean.etudiant.numeroTelephone}"/>
@@ -72,66 +71,63 @@
                             </p:panel>
                         </h:form>  
                     </p:dialog> 
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto; text-align: center;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
-                        <p:confirmDialog message="voulez-vous vraiment supprimer ce etudiant ?"
-                                         header="Initialisation de la suppression" severity="alert"
-                                         widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
-                            <p:commandButton id="confirm" value="OUI" action="#{etudiantBean.deleteEtudiant(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
-                        </p:confirmDialog> 
-                        <p:panel>
-                            <h:panelGroup>
-                                <h:panelGrid columns="9" width="100%" >
+                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/>                                                                           
+                                <h:panelGrid id="k" columns="5" width="75%" >
                                     <p:outputLabel value="Departement"  />
-                                    <h:selectOneMenu onchange="#{etudiantBean.update}"  value="#{etudiantBean.idD}" style="height: 30px; "  id="departement">
+                                    <h:selectOneMenu value="#{etudiantBean.idD}" style="height: 30px; width: 150px;"  id="departement">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
-                                    </h:selectOneMenu>
+                                        <f:selectItems value="#{etudiantBean.countries}" />
+                                        <p:ajax listener="#{etudiantBean.handleCountryChange()}"
+                                                event="change" 
+                                                update="option" 
+                                                process="@this"/>
 
+                                    </h:selectOneMenu>                                    
                                     <p:outputLabel value="Année"  />
-                                    <h:selectOneMenu  value="#{etudiantBean.idA}" style=" height: 30px;"  id="annee">
+                                    <h:selectOneMenu  value="#{etudiantBean.idA}" style=" height: 30px; width: 150px;"  id="annee">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                         <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)} - #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
                                     </h:selectOneMenu>
-                                    <p:outputLabel value="Niveau"  />
-                                    <h:selectOneMenu value="#{etudiantBean.idN}" style="height: 30px; "  id="niveau">
+                                     <p:commandButton type="submit" 
+                                                      action="#{etudiantBean.filtrer()}"  
+                                                     update=":f:d"  
+                                                     value="Filtrer"                                                     
+                                                     style=" height: 30px; width: 100px;"/>
+                                     <p:outputLabel value="Niveau"  style="left: 0px;" />
+                                    <h:selectOneMenu value="#{etudiantBean.idN}" style="height: 30px; width: 150px;"  id="niveau">
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                         <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
                                     </h:selectOneMenu>
                                     <p:outputLabel value="Option" />
-                                    <h:selectOneMenu value="#{etudiantBean.idO}" style=" height: 30px; "  id="option">
+                                    <h:selectOneMenu id="option"  value="#{etudiantBean.idO}" style=" height: 30px; width: 150px; " >
                                         <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.options}" var="option" itemLabel="#{option.code}" itemValue="#{option.id}" />
+                                        <f:selectItems value="#{etudiantBean.cities}" />
                                     </h:selectOneMenu>                                                  
-                                    <p:commandButton type="submit" 
-                                                     action="#{etudiantBean.filtrer()}"  
-                                                     update=":f:d"  
-                                                     value="Filtrer" 
-                                                     style=" height: 30px;"/>
-                                </h:panelGrid>
-                            </h:panelGroup>
-                        </p:panel>
+                                   
+                                </h:panelGrid>                                                    
                         <p:separator />
                         <p:dataTable id="d"  
-                                     emptyMessage="Aucun etudiant n'a été trouvé" 
-                                     scrollable="true" 
-                                     scrollHeight="#{etudiantBean.taille}" 
-                                     var="etd" 
+                                     emptyMessage="Aucun etudiant n'a été trouvé"                                      
+                                     var="etd"                                      
                                      value="#{etudiantBean.etudiants}" 
-                                     rowKey="#{etd.id}" >
+                                     rowKey="#{etd.id}"   
+                                     paginator="true" 
+                                     rows="15"    
+                                     paginatorPosition="bottom" 
+                                     paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}">
 
                             <f:facet name="header">
                                 LA LISTE DES ETUDIANTS
                             </f:facet >                           
-                            <p:column headerText="Matricule">
+                            <p:column filterBy="#{etd.matricule}" filterValue="#{etd.matricule}" headerText="Matricule">
                                 #{etd.matricule}
                             </p:column>
-                            <p:column headerText="Nom" >
+                            <p:column headerText="Nom" filterBy="#{etd.nom}" filterValue="#{etd.nom}">
                                 #{etd.nom}
                             </p:column>
                             <p:column headerText="Date De Naissance" >                                
                                 <h:outputText value="#{etd.dateDeNaissance}">
-                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>
                             </p:column>
                             <p:column headerText="Lieu De Naissance" >
@@ -147,7 +143,7 @@
                                 #{etd.genre}
                             </p:column>                                                          
                             <p:column headerText="Action" >
-                                <p:commandLink id="delete" value="Supprimer" actionListener="#{etudiantBean.message(actionEvent)}"  onclick="PF('dlgDelete').show()" update=":formDelete:displayDelete">
+                                <p:commandLink id="delete" value="Supprimer"  onclick="PF('dlgDelete').show()" update=":formDelete:displayDelete" >
                                     <f:setPropertyActionListener value="#{etd}" target="#{etudiantBean.etudiant}"/>                                    
                                 </p:commandLink>
                                 <p:commandLink id="modifier" value="|Modifier" update=":formUpdate:displayUpdate" onclick="PF('dlgUpdate').show()">

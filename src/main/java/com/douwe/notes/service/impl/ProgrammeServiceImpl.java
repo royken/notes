@@ -158,12 +158,12 @@ public class ProgrammeServiceImpl implements IProgrammeService {
             
             AnneeAcademique academique = academiqueDao.findById(idAnnee);
             if(academique == null){
-                throw new ServiceException("");
+                throw new ServiceException("Ressource introuvable");
             }
             
             Semestre semestre = semestreDao.findById(idSemestre);
             if(semestre == null){
-                throw  new ServiceException("");
+                throw  new ServiceException("Ressource introuvable");
             }
             return programmeDao.findByNiveauOption(niveau, option, academique, semestre);
         } catch (DataAccessException ex) {

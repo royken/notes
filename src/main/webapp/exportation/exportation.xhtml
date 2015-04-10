@@ -20,25 +20,38 @@
                                     <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
                                 <h:outputText  value="Note pour l'Année Académique " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
+                                <h:selectOneMenu  value="#{importationBean.idAca}" style=" width:100%; margin-left: 10px;margin-top: 10px;" >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
+                                </h:selectOneMenu>                               
+                                <h:outputText  value="Evaluation : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{importationBean.idE}" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
+                                </h:selectOneMenu>  
+                                <h:outputText value="Departement"  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{importationBean.idD}"   id="departement" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.countries}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                    <p:ajax listener="#{importationBean.handleCountryChange()}"
+                                                event="change" 
+                                                update="option" 
+                                                process="@this"/>
                                 </h:selectOneMenu>
-                                <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:outputText value="Niveau" style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{importationBean.idN}" style=" width:100%; margin-left: 10px;margin-top: 10px;"  id="niveau">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                </h:selectOneMenu>
+                                <h:outputText value="Option" style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu id="option"  value="#{importationBean.idO}" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.cities}" />
+                                </h:selectOneMenu> 
+                                 <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <p:selectOneMenu value="#{importationBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                 </p:selectOneMenu>
-                                <h:outputText  value="Evaluation : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <p:selectOneMenu value="#{importationBean.idE}" style=" width:100%; margin-left: 10px;margin-top: 10px;">
-                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                    <f:selectItems value="#{importationBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
-                                </p:selectOneMenu>  
-                                <h:outputText value="Departement"  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <p:selectOneMenu value="#{importationBean.idD}"   id="departement" style=" width:100%; margin-left: 10px;margin-top: 10px;">
-                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                    <f:selectItems value="#{importationBean.departements}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
-                                </p:selectOneMenu>
-
                                 <h:outputText  value="Cliquer pour exporter dans le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
                                 <p:commandButton ajax="false" value="Cliquer ici !!!" update=":f:d"  action="#{importationBean.exportNotes()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
