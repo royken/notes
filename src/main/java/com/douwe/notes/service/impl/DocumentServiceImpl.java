@@ -200,6 +200,7 @@ public class DocumentServiceImpl implements IDocumentService {
         cell1.setBorderColor(BaseColor.WHITE);
         header.addCell(cell1);
         doc.add(header);
+        doc.add(new Phrase("\n"));
 
         // Fin de l'entete
         // Définition du formulaire d'entete
@@ -252,7 +253,7 @@ public class DocumentServiceImpl implements IDocumentService {
         table2.addCell(cell);
 
         doc.add(table2);
-        doc.add(new Paragraph("\n\n"));
+       
 
         // Fin du formulaire
         doc.add(new Paragraph("\n\n"));
@@ -298,13 +299,24 @@ public class DocumentServiceImpl implements IDocumentService {
         table3.getDefaultCell().setFixedHeight(20);
         maxMoyenne = minMoyenne = notes.get(0).getMoyenne();
         for (int i = 0; i < notes.size(); i++) {
-            table3.addCell(new Phrase(String.valueOf(i + 1), bf12));
+            PdfPCell cellule = new PdfPCell();
+            cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellule = new PdfPCell(new Phrase(String.valueOf(i + 1), bf12));
+            cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table3.addCell(cellule);
             table3.addCell(new Phrase(notes.get(i).getMatricule(), bf12));
-            
-            table3.addCell(new Phrase(notes.get(i).getNom(), bf12));
+            cellule = new PdfPCell(new Phrase(notes.get(i).getNom(), bf12));
+            cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table3.addCell(cellule);
             for (Map.Entry<String, Double> e : notes.get(i).getNote().entrySet()) {
                 // System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
-                table3.addCell(new Phrase(String.format("%.2f", e.getValue()), bf12));
+                cellule = new PdfPCell(new Phrase(String.format("%.2f", e.getValue()), bf12));
+                cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table3.addCell(cellule);
             }
          //   table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("CC")), bf13));
             // table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getNote().get("TPE")), bf13));
@@ -328,10 +340,15 @@ public class DocumentServiceImpl implements IDocumentService {
             if(notes.get(i).getMoyenne() < minMoyenne){
                 minMoyenne = notes.get(i).getMoyenne();
             }
-            
-            table3.addCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne()), bf12));
+            cellule = new PdfPCell(new Phrase(String.format("%.2f", notes.get(i).getMoyenne()), bf12));
+            cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table3.addCell(cellule);
 
-            table3.addCell(new Phrase(transformNoteGrade(notes.get(i).getMoyenne()), bf12));
+            cellule = new PdfPCell(new Phrase(transformNoteGrade(notes.get(i).getMoyenne()), bf12));
+            cellule.setVerticalAlignment(Element.ALIGN_CENTER);
+            //cellule.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table3.addCell(cellule);
         }
         doc.add(table3);
         doc.add(new Phrase("\n"));
