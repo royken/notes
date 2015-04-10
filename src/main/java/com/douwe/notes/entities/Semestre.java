@@ -35,6 +35,7 @@ public class Semestre implements Serializable {
     private String intitule;
     
     @ManyToOne
+    @XmlTransient
     private Niveau niveau;
     
      @XmlTransient

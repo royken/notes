@@ -41,12 +41,15 @@ public class Enseignement implements Serializable {
     private int version;
     
     @ManyToOne
+    @XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @ManyToMany
+    @XmlTransient
     private List<Enseignant> enseignants;
     
     @ManyToOne
+    @XmlTransient
     private Cours cours;
     
      @XmlTransient

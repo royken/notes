@@ -13,6 +13,18 @@ public class EtudiantNotes {
     private String nom;
     
     private Map<String,Double> note;
+    
+    private Map<String, Integer> details;
+    
+    public double getMoyenne(){
+        double res = 0;
+        for (Map.Entry<String, Integer> col : details.entrySet()) {
+            if(note.containsKey(col.getKey())){
+                res += note.get(col.getKey()) * col.getValue();
+            }
+        }
+        return res / 100;
+    }
 
     public String getMatricule() {
         return matricule;
@@ -37,8 +49,13 @@ public class EtudiantNotes {
     public void setNote(Map<String, Double> note) {
         this.note = note;
     }
-    
-    
-    
+
+    public Map<String, Integer> getDetails() {
+        return details;
+    }
+
+    public void setDetails(Map<String, Integer> details) {
+        this.details = details;
+    }
    
 }

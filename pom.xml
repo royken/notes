@@ -8,6 +8,8 @@
     <name>notes</name>
     <url>http://notes.douwe.com</url>
     <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <!--        <glassfish.embedded-static-shell.jar>/home/royken/glassfish-4.1/glassfish/lib/embedded/glassfish-embedded-static-shell.jar</glassfish.embedded-static-shell.jar>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>1.2.16</log4j.version>        
         <mysql.version>5.1.2</mysql.version>
@@ -48,6 +50,13 @@
             <version>3.10-FINAL</version>
             <type>jar</type>
         </dependency>
+        <!--        <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-static-shell</artifactId>
+            <version>4.0</version>
+            <scope>system</scope>
+            <systemPath>${glassfish.embedded-static-shell.jar}</systemPath>
+        </dependency>-->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
@@ -70,17 +79,38 @@
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>5.1</version>
-        </dependency>  
+        </dependency> 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>1.1.1.Final</version>
+        </dependency> 
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>2.17</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.17</version>
+        </dependency>
+        <!--        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
             <version>2.5.1</version>
             <scope>provided</scope>
-        </dependency>  
+        </dependency>  -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.10-FINAL</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.1.1</version>
         </dependency>
      
         <!--        <dependency>
@@ -93,14 +123,25 @@
     <build>
         <finalName>notes</finalName>
         <plugins>
-            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <inherited>true</inherited>
                 <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>-->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <compilerArguments>
+                        <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+                    </compilerArguments>
                 </configuration>
             </plugin>
             <!--            <plugin>

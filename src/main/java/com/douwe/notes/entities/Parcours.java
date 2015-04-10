@@ -43,12 +43,15 @@ public class Parcours implements Serializable {
     private int version;
 
     @ManyToOne
+    @XmlTransient
     private Niveau niveau;
 
     @ManyToOne
+    @XmlTransient
     private Option option;
 
     @ManyToMany
+    @XmlTransient
     private List<UniteEnseignement> uniteEnseignements;
 
     @XmlTransient

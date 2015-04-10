@@ -8,6 +8,7 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.projection.EtudiantNotes;
+import java.io.InputStream;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -27,4 +28,6 @@ public interface INoteService {
     public List<Note> getAllNotes() throws ServiceException;
     
     public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws ServiceException;
+    
+    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId,int session) throws ServiceException;
 }

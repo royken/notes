@@ -48,12 +48,15 @@ public class Note implements Serializable {
     
     //les trois derniers a mettre à l'interface importation
     @ManyToOne
+    @XmlTransient
     private Evaluation evaluation;
     
     @ManyToOne
+    @XmlTransient
     private Cours cours;
     
     @ManyToOne
+    @XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @Column(name = "sessions")

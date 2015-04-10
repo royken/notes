@@ -40,6 +40,7 @@ public class Niveau implements Serializable {
     private String code;
     
     @ManyToOne
+    @XmlTransient
     private Cycle cycle;
     
      @XmlTransient

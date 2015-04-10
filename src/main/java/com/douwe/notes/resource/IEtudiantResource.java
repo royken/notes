@@ -1,9 +1,13 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Etudiant;
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -11,6 +15,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -55,9 +62,12 @@ public interface IEtudiantResource {
             @DefaultValue("-1") @QueryParam("niveauId") long niveauId, 
             @DefaultValue("-1") @QueryParam("optionId") long optionId);
     
-//    @GET
-//    @Path("import/{file}-{annee:\\d+}")
-//    public void importEtudiant(@PathParam(value = "file") InputStream stream, @PathParam(value = "annee") Long idAnne);
+
+    @POST
+    @Path("import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void importEtudiant(@FormDataParam("fichier") InputStream fichier, @FormDataParam("fichier") FormDataContentDisposition fileDisposition,@FormDataParam("annee")Long annee);
+
 
     
 }
