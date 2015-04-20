@@ -93,15 +93,14 @@ public class ImportationBean {
         this.file = file;
     }
 
-    public String saveData() throws ServiceException, IOException {
-        System.out.println("");
+    public void saveData() throws ServiceException, IOException {
+        System.out.println(""+file.getFileName());
         if (file != null) {
             etudiantService.importEtudiants(file.getInputstream(), idAca);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information", "importation reussie "));
             file = null;
             idAca = null;
-        }
-        return "etudiant";
+        }        
     }
 
     public void saveNotes() throws ServiceException, IOException {

@@ -16,8 +16,7 @@
                                 <p:fileUpload required="true"  value="#{importationBean.file}" mode="simple"
                                               auto="true"  
                                               sizeLimit="100000"   
-                                              allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px; width: 100%;" update="feuille" process="@this" invalidFileMessage="fichier invalide" requiredMessage="chargez le fichier" > 
-                                    <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                                              allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px; width: 100%;" update="feuille" process="@this" invalidFileMessage="fichier invalide" requiredMessage="chargez le fichier" >                                     
                                 </p:fileUpload>
                                 <h:outputText  value="Note pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
                                 <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
