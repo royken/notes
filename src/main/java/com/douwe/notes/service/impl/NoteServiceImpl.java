@@ -198,6 +198,7 @@ public class NoteServiceImpl implements INoteService {
 
     @Override
     public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId,int session) throws ServiceException {
+        System.out.println("Je vien importer les notes \n j*****************\n*******\n");
         
         try {
             Cours cours = coursDao.findById(coursId);
