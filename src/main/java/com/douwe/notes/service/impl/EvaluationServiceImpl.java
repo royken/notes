@@ -1,7 +1,9 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IEvaluationDao;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.ServiceException;
@@ -21,6 +23,9 @@ public class EvaluationServiceImpl implements IEvaluationService {
     @Inject
     private IEvaluationDao evaluationDao;
     
+    @Inject
+    private ICoursDao coursDao;
+    
     public IEvaluationDao getEvaluationDao() {
         return evaluationDao;
     }
@@ -28,6 +33,16 @@ public class EvaluationServiceImpl implements IEvaluationService {
     public void setEvaluationDao(IEvaluationDao evaluationDao) {
         this.evaluationDao = evaluationDao;
     }
+
+    public ICoursDao getCoursDao() {
+        return coursDao;
+    }
+
+    public void setCoursDao(ICoursDao coursDao) {
+        this.coursDao = coursDao;
+    }
+    
+    
     
     @Override
     public Evaluation saveOrUpdateEvaluation(Evaluation evaluation) throws ServiceException {
@@ -75,6 +90,17 @@ public class EvaluationServiceImpl implements IEvaluationService {
     public List<Evaluation> getAllEvaluations() throws ServiceException {
         try {
             return evaluationDao.findAll();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EvaluationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationByCours(Long id) throws ServiceException {
+        try {
+            Cours cours = coursDao.findById(id);
+            return evaluationDao.evaluationForCourses(cours);
         } catch (DataAccessException ex) {
             Logger.getLogger(EvaluationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");

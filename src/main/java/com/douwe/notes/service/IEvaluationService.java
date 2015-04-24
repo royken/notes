@@ -20,4 +20,6 @@ public interface IEvaluationService {
     
     public List<Evaluation> getAllEvaluations() throws ServiceException;
     
+    public List<Evaluation> getAllEvaluationByCours(Long id) throws ServiceException;
+    
 }
