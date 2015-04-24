@@ -1,7 +1,9 @@
 package com.douwe.notes.resource.impl;
 
+import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.resource.ITypeCoursResource;
+import com.douwe.notes.service.IEvaluationDetailService;
 import com.douwe.notes.service.ITypeCoursService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -21,10 +23,23 @@ public class TypeCoursResource implements ITypeCoursResource{
     
     @EJB
     private ITypeCoursService typeCoursService;
+    
+    @EJB
+    private IEvaluationDetailService detailService;
 
     public ITypeCoursService getTypeCoursService() {
         return typeCoursService;
     }
+
+    public IEvaluationDetailService getDetailService() {
+        return detailService;
+    }
+
+    public void setDetailService(IEvaluationDetailService detailService) {
+        this.detailService = detailService;
+    }
+    
+    
 
     public void setTypeCoursService(ITypeCoursService typeCoursService) {
         this.typeCoursService = typeCoursService;
@@ -87,4 +102,53 @@ public class TypeCoursResource implements ITypeCoursResource{
             Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
+
+    @Override
+    public List<EvaluationDetails> getEvaluationByTypeCours(long id) {
+        try {
+            return detailService.findEvaluationDetailsByTypeCours(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public EvaluationDetails saveEvaluationByTypeCours(long id, EvaluationDetails details) {
+        try {
+            TypeCours tCours = typeCoursService.findTypeCoursById(id);
+            if(tCours == null){
+                throw  new ServiceException("Ressource non trouvée");
+            }
+            details.setTypeCours(tCours);
+            return detailService.saveOrUpdateEvaluationDetails(details);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public EvaluationDetails updateEvalDetailByTypeCours(long idTCours, long idEvaluation, EvaluationDetails evaluationDetails) {
+        try {
+            EvaluationDetails details = detailService.findEvaluationDetailsById(idEvaluation);
+            if(details == null){
+                throw new ServiceException("Resource not found");
+            }
+            details.setPourcentage(evaluationDetails.getPourcentage());
+            return detailService.saveOrUpdateEvaluationDetails(details);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteEvalDetailByTypeCours(long idTCours, long idEvaluation) {
+        try {
+            detailService.deleteEvaluationDetails(idEvaluation);
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
