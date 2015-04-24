@@ -2,7 +2,9 @@ package com.douwe.notes.dao;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.IDao;
+import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Parcours;
 import java.util.List;
 
 /**
@@ -16,5 +18,7 @@ public interface ICoursDao extends IDao<Cours, Long>{
     public List<Cours> findAllActive() throws DataAccessException;
     
     public Cours findByIntitule(String intitule) throws DataAccessException;
+    
+    public List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique) throws DataAccessException;
     
 }

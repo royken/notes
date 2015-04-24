@@ -3,7 +3,9 @@ package com.douwe.notes.dao.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.ICoursDao;
+import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Parcours;
 import java.util.List;
 
 /**
@@ -24,6 +26,11 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao{
     @Override
     public Cours findByIntitule(String intitule) throws DataAccessException {
         return (Cours)(getManager().createNamedQuery("Cours.findByIntitule").setParameter("param", intitule).getSingleResult());
+    }
+
+    @Override
+    public List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique) throws DataAccessException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

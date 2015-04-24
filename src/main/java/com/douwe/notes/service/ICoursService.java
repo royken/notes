@@ -20,4 +20,6 @@ public interface ICoursService {
     public List<Cours> getAllCours() throws ServiceException;
     
     public Cours findByIntitule(String intitule) throws ServiceException;
+    
+    public List<Cours> findByParcoursAnnee(Long idParcours, Long idAnne) throws ServiceException;
 }
