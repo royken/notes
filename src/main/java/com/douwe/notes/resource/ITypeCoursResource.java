@@ -49,10 +49,16 @@ public interface ITypeCoursResource {
     @PUT
     @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
     @Produces(value = "application/json")
-    EvaluationDetails updateEvalDetailByTypeCours(@PathParam(value = "id")long idTCours,@PathParam(value = "id")long idEvaluation ,EvaluationDetails evaluationDetails);
+    EvaluationDetails updateEvalDetailByTypeCours(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation ,EvaluationDetails evaluationDetails);
 
+    @GET
+    @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
+    @Produces(value = "application/json")
+    EvaluationDetails getEvalDetailById(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation);
+
+    
     @DELETE
     @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
-    void deleteEvalDetailByTypeCours(@PathParam(value = "id")long idTCours,@PathParam(value = "id")long idEvaluation);
+    void deleteEvalDetailByTypeCours(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation);
     
 }

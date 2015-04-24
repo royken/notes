@@ -151,4 +151,18 @@ public class TypeCoursResource implements ITypeCoursResource{
             Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public EvaluationDetails getEvalDetailById(long idTCours, long idEvaluation) {
+        try {
+            EvaluationDetails details = detailService.findEvaluationDetailsById(idEvaluation);
+            if(details == null){
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+            }
+            return details;
+        } catch (ServiceException ex) {
+            Logger.getLogger(TypeCoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }
