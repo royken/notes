@@ -2,7 +2,11 @@ package com.douwe.notes.dao;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.IDao;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.projection.UEnseignementCredit;
 import java.util.List;
 
 /**
@@ -14,5 +18,8 @@ public interface IUniteEnseignementDao extends IDao<UniteEnseignement, Long>{
     public void deleteActive(UniteEnseignement ue) throws DataAccessException;
     
     public List<UniteEnseignement> findAllActive() throws DataAccessException;
+    
+    // Retourne la liste des UEnseignementCredit d'un parcours pour un semestre
+    public List<UEnseignementCredit> findByNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre) throws DataAccessException;
     
 }

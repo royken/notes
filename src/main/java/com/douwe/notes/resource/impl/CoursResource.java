@@ -1,8 +1,10 @@
 package com.douwe.notes.resource.impl;
 
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.resource.ICoursResource;
 import com.douwe.notes.service.ICoursService;
+import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +23,9 @@ public class CoursResource implements ICoursResource {
 
     @EJB
     private ICoursService coursService;
+    
+    @EJB
+    private IEvaluationService evaluationService;
 
     public ICoursService getCoursService() {
         return coursService;
@@ -29,6 +34,16 @@ public class CoursResource implements ICoursResource {
     public void setCoursService(ICoursService coursService) {
         this.coursService = coursService;
     }
+
+    public IEvaluationService getEvaluationService() {
+        return evaluationService;
+    }
+
+    public void setEvaluationService(IEvaluationService evaluationService) {
+        this.evaluationService = evaluationService;
+    }
+    
+    
 
     @Override
     public Cours createCours(Cours cours) {
@@ -98,6 +113,16 @@ public class CoursResource implements ICoursResource {
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return cours;
+        } catch (ServiceException ex) {
+            Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Evaluation> getAllEvaluationsByCours(long id) {
+        try {
+            return evaluationService.getAllEvaluationByCours(id);
         } catch (ServiceException ex) {
             Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;

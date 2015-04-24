@@ -11,26 +11,21 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Etudiant_;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Evaluation_;
-import com.douwe.notes.entities.Inscription;
-import com.douwe.notes.entities.Inscription_;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Note_;
 import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Parcours_;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.projection.EtudiantNotesUe;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 /**
  *
@@ -131,4 +126,16 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
     }
     
     */
+
+   
+
+    @Override
+    public Note getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

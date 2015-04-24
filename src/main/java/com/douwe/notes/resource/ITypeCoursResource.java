@@ -1,5 +1,6 @@
 package com.douwe.notes.resource;
 
+import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.entities.TypeCours;
 import java.util.List;
 import javax.ws.rs.DELETE;
@@ -35,5 +36,29 @@ public interface ITypeCoursResource {
     @DELETE
     @Path(value = "{id : \\d+}")
     void deleteTypeCours(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path(value = "{id : \\d+}/evaluations")
+    @Produces(value = "application/json")
+    List<EvaluationDetails> getEvaluationByTypeCours(@PathParam(value = "id")long id);
+    
+    @POST
+    @Path(value = "{id : \\d+}/evaluations")
+    EvaluationDetails saveEvaluationByTypeCours(@PathParam(value = "id")long id, EvaluationDetails details);
+    
+    @PUT
+    @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
+    @Produces(value = "application/json")
+    EvaluationDetails updateEvalDetailByTypeCours(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation ,EvaluationDetails evaluationDetails);
+
+    @GET
+    @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
+    @Produces(value = "application/json")
+    EvaluationDetails getEvalDetailById(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation);
+
+    
+    @DELETE
+    @Path(value = "{idTCours : \\d+}/evaluations/{idEvaluation : \\d+}")
+    void deleteEvalDetailByTypeCours(@PathParam(value = "idTCours")long idTCours,@PathParam(value = "idEvaluation")long idEvaluation);
     
 }

@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlRootElement(name = "evaluationDetail")
 @XmlAccessorType(XmlAccessType.FIELD)
-@NamedQueries({@NamedQuery(name = "EvaluationDetails.findAllActive",query = "SELECT ed FROM EvaluationDetails ed WHERE ed.active = 1")})
+@NamedQueries({@NamedQuery(name = "EvaluationDetails.findAllActive",query = "SELECT ed FROM EvaluationDetails ed WHERE ed.active = 1"),
+@NamedQuery(name = "EvaluationDetails.findByTypeCours",query = "SELECT ed from EvaluationDetails ed WHERE ed.typeCours = :idParam")})
 public class EvaluationDetails implements Serializable {
     
     @Id
@@ -37,7 +38,6 @@ public class EvaluationDetails implements Serializable {
     private int version;
     
     @ManyToOne
-    @XmlTransient
     private Evaluation evaluation;
     
     @ManyToOne

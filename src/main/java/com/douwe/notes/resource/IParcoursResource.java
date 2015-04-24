@@ -1,5 +1,6 @@
 package com.douwe.notes.resource;
 
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
@@ -46,5 +47,10 @@ public interface IParcoursResource {
     @Path("{idNiveau : \\d+}/{idOption : \\d+}")
     @Produces(value = "application/json")
     public Parcours findByNiveauOption(@PathParam(value = "idNiveau") long idNveau, @PathParam(value = "idOption")long idOption);
+    
+    @GET
+    @Path(value = "{idParcours : \\d+}/cours/{idAnnee : \\d+}")
+    @Produces(value = "application/json")
+    List<Cours> getCoursByParcoursAnnee(@PathParam(value = "idParcours")long idParcours,@PathParam(value = "idAnnee")long idAnnee);
     
 }

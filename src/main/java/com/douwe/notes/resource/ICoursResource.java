@@ -2,6 +2,7 @@ package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.entities.Evaluation;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -43,4 +44,9 @@ public interface ICoursResource {
     @Path(value = "{intitule}")
     @Produces(value = "application/json") 
     public Cours findByIntitule(@PathParam(value = "intitule")String intitule);
+    
+    @GET
+    @Path(value = "{id : \\d+}/evaluations")
+    @Produces(value = "application/json")
+    List<Evaluation> getAllEvaluationsByCours(@PathParam(value = "id")long id);
 }

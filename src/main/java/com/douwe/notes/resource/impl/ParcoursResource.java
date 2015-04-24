@@ -1,10 +1,12 @@
 package com.douwe.notes.resource.impl;
 
 
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.resource.IParcoursResource;
+import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.IParcoursService;
@@ -32,6 +34,9 @@ public class ParcoursResource implements IParcoursResource{
     
     @EJB
     private IOptionService optionService;
+    
+    @EJB
+    private ICoursService coursService;
 
     public IParcoursService getParcoursService() {
         return parcoursService;
@@ -55,6 +60,14 @@ public class ParcoursResource implements IParcoursResource{
 
     public void setOptionService(IOptionService optionService) {
         this.optionService = optionService;
+    }
+
+    public ICoursService getCoursService() {
+        return coursService;
+    }
+
+    public void setCoursService(ICoursService coursService) {
+        this.coursService = coursService;
     }
     
     
@@ -141,6 +154,16 @@ public class ParcoursResource implements IParcoursResource{
         } catch (ServiceException ex) {
             Logger.getLogger(ParcoursResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    @Override
+    public List<Cours> getCoursByParcoursAnnee(long idParcours, long idAnnee) {
+        try {
+            return coursService.findByParcoursAnnee(idParcours, idAnnee);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ParcoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
     
