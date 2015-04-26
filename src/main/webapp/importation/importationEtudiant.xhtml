@@ -9,7 +9,7 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
-                    <h:form id="f">                                                    
+                    <h:form id="f" enctype="multipart/form-data">                                                    
                         <h:panelGroup >
                             <h:panelGrid id="d" columns="2">                                                                                                                      
                                 <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
@@ -19,8 +19,7 @@
                                               auto="true"  
                                               sizeLimit="100000"   
                                               allowTypes="/(\.|\/)(xslx|xsl)$/" 
-                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                               
-                                              invalidFileMessage="fichier invalide" 
+                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                                                                             
                                               requiredMessage="chargez le fichier" > 
 <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
@@ -29,7 +28,7 @@
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
                                 </h:selectOneMenu> 
                                 <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:commandButton ajax="false" update=":f:d" value="Cliquer ici !!!"  action="#{importationBean.saveData()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                <p:commandButton update=":f:d" ajax="false" value="Cliquer ici !!!" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  

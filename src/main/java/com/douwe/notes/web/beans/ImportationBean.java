@@ -1,12 +1,17 @@
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Etudiant;
+
+
+import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Session;
 
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
@@ -28,6 +33,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -75,17 +81,14 @@ public class ImportationBean {
     Long idE = null;
     Long idN = null;
     Long idO = null;
-
-    String nomFeuille = new String();
-    List<String> nomFeuilles = new LinkedList<String>();
-    private Long idD = null;
+    Long idD = null;    
 
     public ImportationBean() {
-        etudiant = new Etudiant();
+        etudiant = new Etudiant();        
     }
 
     public UploadedFile getFile() {
-        file = null;
+        file=null;
         return file;
     }
 
@@ -93,33 +96,35 @@ public class ImportationBean {
         this.file = file;
     }
 
-    public String saveData() throws ServiceException, IOException {
-        System.out.println("");
-        if (file != null) {
-            etudiantService.importEtudiants(file.getInputstream(), idAca);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information", "importation reussie "));
+    public void saveAllEtudiant() throws ServiceException, IOException {        
+        if (file != null) {            
+            System.out.println("**********************"+file.getFileName());
+//            etudiantService.importEtudiants(file.getInputstream(), idAca);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             file = null;
-            idAca = null;
-        }
-        return "etudiant";
+            idAca = 0L;
+        }        
+        
     }
-
-    public void saveNotes() throws ServiceException, IOException {
-        if (file != null && idC != null && idC != 0L && idE != null && idE != 0L) {
-            System.out.println("fichier============= " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
-            noteService.importNotes(file.getInputstream(),idC,idE, idAca,0);
+    
+public void saveNotes() throws ServiceException, IOException {
+        System.out.println("---------------------");
+        if (file != null) {   
+         System.out.println("fichier============= " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
+            //noteService.importNotes(file.getInputstream(),idC,idE, idAca,0);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
             file = null;
             idAca = null;
             idE = null;
             idC = null;
-        }
+        }        
 
     }
 
     public void exportNotes() throws ServiceException, IOException {        
-        if (file != null && idD != null  && idC != null && idAca != null  && idE != null && idN != null  && idO != null ) {
+        if (file != null && idC != null && idAca != null  && idE != null && idN != null  && idO != null ) {
+            //noteService
             //noteService.exportNotes(file.getInputstream(),idC,idE,idD,idAca,idN,idO);
             //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Departement " + idD + " id Annee " + idAca + " id niveau " +idN + " id option "+idO);
@@ -130,26 +135,9 @@ public class ImportationBean {
             idD = null;
             idN = null;
             idO = null;
-        }
-
+        }        
     }
-//    public void handleFileChange(ActionEvent actionEvent) throws IOException, InvalidFormatException {
-//        if (file != null && file.getFileName().equals("")) {
-//            final Workbook workbook = WorkbookFactory.create(file.getInputstream());
-//            int i = 0;
-//            while (workbook.getSheetName(i) != null) {
-//                nomFeuilles.add(workbook.getSheetName(i));
-//                i++;
-//            }
-//             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "chargement reussi","ok"));
-//            System.out.println(""+nomFeuilles);
-//        } else {
-//             nomFeuilles = new LinkedList<String>();
-//            file = null;
-//        }
-//
-//    }
-
+          
     public Etudiant getEtudiant() {
         return etudiant;
     }
@@ -174,14 +162,7 @@ public class ImportationBean {
     public void setIdAca(Long idAca) {
         this.idAca = idAca;
     }
-
-    public String getNomFeuille() {
-        return nomFeuille;
-    }
-
-    public void setNomFeuille(String nomFeuille) {
-        this.nomFeuille = nomFeuille;
-    }
+   
 
     public IEtudiantService getEtudiantService() {
         return etudiantService;
@@ -208,14 +189,6 @@ public class ImportationBean {
         this.anneeAcademiqueService = anneeAcademiqueService;
     }
 
-    public List<String> getNomFeuilles() {
-        return nomFeuilles;
-    }
-
-    public void setNomFeuilles(List<String> nomFeuilles) {
-        this.nomFeuilles = nomFeuilles;
-
-    }
 
     public INoteService getNoteService() {
         return noteService;
@@ -389,5 +362,6 @@ public class ImportationBean {
     public void setIdO(Long idO) {
         this.idO = idO;
     }
+    
     
 }

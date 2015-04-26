@@ -63,7 +63,7 @@ public class TypeCoursBean {
     public void deleteTypeCours(ActionEvent actionEvent) throws ServiceException {
         System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getId() != null) {
-            typeCoursService.deleteTypeCours(typeCours.getId());
+            typeCoursService.deleteTypeCours(typeCours.getId());            
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", typeCours.getNom() + " a été supprimé"));
             typeCours = new TypeCours();
         }

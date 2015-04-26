@@ -9,15 +9,26 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1" header="Exportation DES NOTES">
-                    <h:form id="f">                                                    
+                    <h:form id="f" enctype="multipart/form-data">                                                  
                         <h:panelGroup >
                             <h:panelGrid id="d" columns="2">                                                                                                                      
-                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;text-align: right;"/>  
-                                <p:fileUpload required="true"  value="#{importationBean.file}" mode="simple"
+<!--                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;text-align: right;"/>  -->
+<!--                                <p:fileUpload required="true"  value="" mode="simple"
                                               auto="true"  
                                               sizeLimit="100000"   
                                               allowTypes="/(\.|\/)(xslx|xsl)$/" style="margin-left: 10px;margin-top: 10px; width: 100%; " update="feuille" process="@this" invalidFileMessage="fichier invalide" requiredMessage="chargez le fichier" > 
-                                    <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                                                                        <p:ajax listener="" event="change" update="cities" process="@this"/>
+                                </p:fileUpload>-->
+                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
+                                <p:fileUpload   
+                                              value="#{importationBean.file}" 
+                                              mode="simple"
+                                              auto="true"  
+                                              sizeLimit="100000"   
+                                              allowTypes="/(\.|\/)(xslx|xsl)$/" 
+                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                                                                             
+                                              requiredMessage="chargez le fichier" > 
+<!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
                                 <h:outputText  value="Note pour l'Année Académique " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
                                 <h:selectOneMenu  value="#{importationBean.idAca}" style=" width:100%; margin-left: 10px;margin-top: 10px;" >
