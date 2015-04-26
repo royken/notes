@@ -16,7 +16,7 @@
                             <p:panel >
                                 <h:panelGroup >
                                     <h:panelGrid id="displaydAfficheCours" columns="1">
-                                        <p:dataList emptyMessage="Accune UE enregistré pour le parcours  #{parcoursBean.parcours.niveau.code}/#{parcoursBean.parcours.option.code}" value="#{parcoursBean.parcours.uniteEnseignements}"  var="eu" type="ordered">  
+                                        <p:dataList emptyMessage="Accune UE enregistré pour le parcours  #{parcoursBean.parcours.niveau.code}/#{parcoursBean.parcours.option.code}"  var="eu" type="ordered">  
                                             #{eu.code}  
                                             <p:dataList emptyMessage="Aucun cours n'est enregistré pour l'UE #{eu.code}" value="#{eu.courses}" var="c"  itemType="Disc">  
                                                 #{c.intitule}  

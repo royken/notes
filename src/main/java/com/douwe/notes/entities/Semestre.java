@@ -31,11 +31,10 @@ public class Semestre implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column(unique = true)
     private String intitule;
     
-    @ManyToOne
-    @XmlTransient
+    @ManyToOne(optional = false)
     private Niveau niveau;
     
      @XmlTransient

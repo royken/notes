@@ -33,6 +33,7 @@ public class EvaluationResource implements IEvaluationResource{
     
     
 
+    @Override
     public Evaluation createEvaluation(Evaluation evaluation) {
         try {
             return evaluationService.saveOrUpdateEvaluation(evaluation);
@@ -42,6 +43,7 @@ public class EvaluationResource implements IEvaluationResource{
         }
     }
 
+    @Override
     public List<Evaluation> getAllEvaluations() {
         try {
             return evaluationService.getAllEvaluations();
@@ -51,6 +53,7 @@ public class EvaluationResource implements IEvaluationResource{
         }
     }
 
+    @Override
     public Evaluation getEvaluation(long id) {
         try {
             Evaluation evaluation = evaluationService.findEvaluationById(id);
@@ -64,12 +67,14 @@ public class EvaluationResource implements IEvaluationResource{
         }
     }
 
+    @Override
     public Evaluation updateEvaluation(long id, Evaluation evaluation) {
         try {
             Evaluation evaluation1 = evaluationService.findEvaluationById(id);
             if(evaluation1 != null){
                 evaluation1.setCode(evaluation.getCode());
-                evaluation1.setDescription(evaluation1.getDescription());
+                evaluation1.setDescription(evaluation.getDescription());
+                evaluation1.setIsExam(evaluation.isIsExam());
                 return evaluationService.saveOrUpdateEvaluation(evaluation1);
             }
             return null;

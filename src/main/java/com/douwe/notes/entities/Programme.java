@@ -7,9 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,9 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQuery(name = "Programme.deleteActive",query = "update Programme p set p.active = 0 where p.id = :idParam"),
 @NamedQuery(name = "Programme.findAllActive",query = "select p from Programme p where p.active=1"),
 @NamedQuery(name = "Programme.findByNiveauOption",query = "SELECT p FROM Programme p WHERE p.parcours.niveau = :param1 and p.parcours.option = :param2 and p.anneeAcademique = :param3 and p.semestre = :param4")
-
-
 })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"SEMESTRE_ID","ANNEEACADEMIQUE_ID","PARCOURS_ID","UNITEENSEIGNEMENT_ID"}))
 public class Programme implements Serializable {
     
     @Id
@@ -40,28 +42,29 @@ public class Programme implements Serializable {
     @XmlTransient
     private int version;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ANNEEACADEMIQUE_ID")
     @XmlTransient
     private AnneeAcademique anneeAcademique;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "UNITEENSEIGNEMENT_ID")
     @XmlTransient
     private UniteEnseignement uniteEnseignement;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "PARCOURS_ID")
     @XmlTransient
     private Parcours parcours;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "SEMESTRE_ID")
     @XmlTransient
     private Semestre semestre;
     
      @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    
-    
-    
     
     public Programme(){
         
@@ -131,6 +134,4 @@ public class Programme implements Serializable {
     public String toString() {
         return "Programme{" + "id=" + id + ", version=" + version + ", anneeAcademique=" + anneeAcademique + ", uniteEnseignement=" + uniteEnseignement + ", parcours=" + parcours + ", active=" + active + '}';
     }
-    
-    
 }

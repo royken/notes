@@ -31,8 +31,6 @@ public class ParcoursDaoImpl extends GenericDao<Parcours, Long> implements IParc
 
     @Override
     public Parcours findByNiveauOption(Niveau niveau, Option option) throws DataAccessException {
-        System.out.println("Le niveau "+ niveau);
-        System.out.println("L'option "+option);
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<Parcours> cq = cb.createQuery(Parcours.class);
         Root<Parcours> noteRoot = cq.from(Parcours.class);

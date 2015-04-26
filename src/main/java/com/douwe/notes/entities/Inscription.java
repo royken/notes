@@ -7,9 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,6 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQuery(name = "Inscription.findByEtudiant",query = "SELECT i from Inscription i WHERE i.etudiant = :param1 and i.anneeAcademique = :param")
 
 })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ETUDIANT_ID","ANNEEACADEMIQUE_ID","PARCOURS_ID"}))
 public class Inscription implements Serializable {
     
     @Id
@@ -39,15 +43,18 @@ public class Inscription implements Serializable {
     @XmlTransient
     private int version;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ETUDIANT_ID")
     @XmlTransient
     private Etudiant etudiant;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ANNEEACADEMIQUE_ID")
     @XmlTransient
     private AnneeAcademique anneeAcademique;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "PARCOURS_ID")
     @XmlTransient
     private Parcours parcours;
     
