@@ -39,8 +39,7 @@ public class Niveau implements Serializable {
     @Column(unique = true)
     private String code;
     
-    @ManyToOne
-    @XmlTransient
+    @ManyToOne(optional = false)
     private Cycle cycle;
     
      @XmlTransient

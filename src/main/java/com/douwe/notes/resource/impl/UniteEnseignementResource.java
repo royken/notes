@@ -32,6 +32,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     
     
 
+    @Override
     public UniteEnseignement createUniteEnseignement(UniteEnseignement ue) {
         try {
             return service.saveOrUpdateCours(ue);
@@ -41,6 +42,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
         }
     }
 
+    @Override
     public List<UniteEnseignement> getAllUniteEnseignements() {
         try {
             return service.getAllUniteEnseignements();
@@ -50,6 +52,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
         }
     }
 
+    @Override
     public UniteEnseignement getUniteEnseignement(long id) {
         try {
             UniteEnseignement enseignement = service.findUniteEnseignementById(id);
@@ -63,13 +66,13 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
         }
     }
 
+    @Override
     public UniteEnseignement updateSemestre(long id, UniteEnseignement ue) {
         try {
             UniteEnseignement enseignement = service.findUniteEnseignementById(id);
             if(enseignement != null){
                 enseignement.setCode(ue.getCode());
                 enseignement.setIntitule(ue.getIntitule());
-                enseignement.setParcours(ue.getParcours());
                 return service.saveOrUpdateCours(enseignement);
             }
             return null;
@@ -79,6 +82,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
         }
     }
 
+    @Override
     public void deleteUniteEns(long id) {
         try {
             service.deleteUniteEnseignement(id);

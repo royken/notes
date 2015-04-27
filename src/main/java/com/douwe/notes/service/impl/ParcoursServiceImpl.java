@@ -34,8 +34,9 @@ public class ParcoursServiceImpl implements IParcoursService {
     @Override
     public Parcours saveOrUpdateParcours(Parcours parcours) throws ServiceException{
         try {
+            parcours.setActive(1);
             if (parcours.getId() != null) {
-                parcours.setActive(1);
+                
                 return parcoursDao.create(parcours);
             } else {
                 return parcoursDao.update(parcours);

@@ -39,7 +39,7 @@ public class TypeCours implements Serializable {
     @XmlTransient
     private int version;
     
-    @Column
+    @Column(unique = true)
     private String nom;
     
      @XmlTransient

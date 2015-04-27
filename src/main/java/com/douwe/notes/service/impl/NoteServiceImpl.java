@@ -52,13 +52,13 @@ public class NoteServiceImpl implements INoteService {
 
     @Inject
     private IEtudiantDao etudiantDao;
-    
+
     @Inject
     private IEvaluationDetailsDao evaluationDetailsDao;
-    
+
     @Inject
     private ICoursDao coursDao;
-    
+
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
 
@@ -93,7 +93,6 @@ public class NoteServiceImpl implements INoteService {
     public void setEvaluationDetailsDao(IEvaluationDetailsDao evaluationDetailsDao) {
         this.evaluationDetailsDao = evaluationDetailsDao;
     }
-    
 
     @Override
     public Note saveOrUpdateNote(Note note) throws ServiceException {
@@ -156,7 +155,7 @@ public class NoteServiceImpl implements INoteService {
             }
             // Recuperer toutes les evaluations du cours concerné
             List<Evaluation> evaluations = evaluationDao.evaluationForCourses(cours);
-            
+
             // recuperer les listes des  étudiants du parcours
             List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
             for (Etudiant etudiant : etudiants) {
@@ -181,7 +180,7 @@ public class NoteServiceImpl implements INoteService {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-            // Renvoyer une liste de tuples et transformer ces tuples en EtudiantNotes
+        // Renvoyer une liste de tuples et transformer ces tuples en EtudiantNotes
 //            List<Tuple> tmp = noteDao.getAllNotes(niveau, option, cours, ue, academique, session);
 //            for (Tuple tmp1 : tmp) {
 //                EtudiantNotes e = new EtudiantNotes();
@@ -197,9 +196,7 @@ public class NoteServiceImpl implements INoteService {
     }
 
     @Override
-    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId,int session) throws ServiceException {
-        System.out.println("Je vien importer les notes \n j*****************\n*******\n");
-        
+    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId, int session) throws ServiceException {
         try {
             Cours cours = coursDao.findById(coursId);
             Evaluation evaluation = evaluationDao.findById(evaluationId);
@@ -208,34 +205,31 @@ public class NoteServiceImpl implements INoteService {
             final Sheet sheet = workbook.getSheetAt(0);
             int index = 1;
             Row row = sheet.getRow(index++);
-            String matricule = new String();
-            String nom = new String();
+            String matricule;
+            String nom;
             while (row != null) {
-                Etudiant etudiant = new Etudiant();
+                Etudiant etudiant;
                 if (row.getCell(1) != null) {
                     matricule = row.getCell(1).getStringCellValue();
                     etudiant = etudiantDao.findByMatricule(matricule);
-                }
-                
-                else{
+                } else {
                     nom = row.getCell(2).getStringCellValue();
                     etudiant = etudiantDao.findByName(nom);
-                }  
-               
-                Note note = new Note();
-                if(row.getCell(3) != null){
+                }
+                if (row.getCell(3) != null) {
+                    Note note = new Note();
                     note.setValeur(row.getCell(3).getNumericCellValue());
+                    note.setActive(1);
+                    note.setAnneeAcademique(academique);
+                    note.setCours(cours);
+                    note.setEtudiant(etudiant);
+                    note.setEvaluation(evaluation);
+                    if (evaluation.isIsExam()) {
+                        Session s = Session.values()[session];
+                        note.setSession(s);
+                    }
+                    noteDao.create(note);
                 }
-                note.setActive(1);
-                note.setAnneeAcademique(academique);
-                note.setCours(cours);
-                note.setEtudiant(etudiant);
-                note.setEvaluation(evaluation);
-                if(evaluation.isIsExam()){
-                    Session s = Session.values()[session];
-                    note.setSession(s);
-                }
-                noteDao.create(note);
                 row = sheet.getRow(index++);
             }
         } catch (IOException ex) {
@@ -245,26 +239,25 @@ public class NoteServiceImpl implements INoteService {
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
-    private Note insertNote(String etudiantMatricule,String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session){
-        
+
+    private Note insertNote(String etudiantMatricule, String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session) {
+
         try {
             Etudiant etudiant = new Etudiant();
-            if(etudiantMatricule != null){
+            if (etudiantMatricule != null) {
                 etudiant = etudiantDao.findByMatricule(etudiantMatricule);
-            }
-            else{
+            } else {
                 etudiant = etudiantDao.findByName(nomEtudiant);
             }
-            
-            Evaluation eval= evaluationDao.findByCode(codeEvaluation);
-            
+
+            Evaluation eval = evaluationDao.findByCode(codeEvaluation);
+
             Cours cours = coursDao.findByIntitule(coursIntitule);
-            
+
             AnneeAcademique academique = academiqueDao.findById(anneeId);
-            
+
             Note note = new Note();
             note.setActive(1);
             note.setAnneeAcademique(academique);
@@ -279,7 +272,7 @@ public class NoteServiceImpl implements INoteService {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
+
     }
 
 }

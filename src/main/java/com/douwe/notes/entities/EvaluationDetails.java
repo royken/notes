@@ -7,9 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -27,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({@NamedQuery(name = "EvaluationDetails.findAllActive",query = "SELECT ed FROM EvaluationDetails ed WHERE ed.active = 1"),
 @NamedQuery(name = "EvaluationDetails.findByTypeCours",query = "SELECT ed from EvaluationDetails ed WHERE ed.typeCours = :idParam")})
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"EVALUATION_ID","TYPECOURS_ID"}))
 public class EvaluationDetails implements Serializable {
     
     @Id
@@ -37,10 +41,12 @@ public class EvaluationDetails implements Serializable {
     @XmlTransient
     private int version;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "EVALUATION_ID")
     private Evaluation evaluation;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "TYPECOURS_ID")
     @XmlTransient
     private TypeCours typeCours;
     
