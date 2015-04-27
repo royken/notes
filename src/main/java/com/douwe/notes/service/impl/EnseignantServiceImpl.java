@@ -2,6 +2,7 @@ package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IEnseignantDao;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.service.IEnseignantService;
 import com.douwe.notes.service.ServiceException;
@@ -78,6 +79,11 @@ public class EnseignantServiceImpl implements IEnseignantService{
             Logger.getLogger(EnseignantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
         }
+    }
+
+    @Override
+    public List<Enseignant> findByCours(Cours cours) throws ServiceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

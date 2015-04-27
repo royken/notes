@@ -25,6 +25,8 @@ public class PvHeader {
     private int session;
     
     private String enseignants;
+    
+    private String parcours;
 
     public String getNiveau() {
         return niveau;
@@ -105,6 +107,12 @@ public class PvHeader {
     public void setEnseignants(String enseignants) {
         this.enseignants = enseignants;
     }
-    
-    
+
+    public String getParcours() {
+        return parcours;
+    }
+
+    public void setParcours(String parcours) {
+        this.parcours = parcours;
+    }    
 }

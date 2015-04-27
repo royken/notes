@@ -3,10 +3,12 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
+import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
@@ -61,6 +63,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
+    
+    @Inject
+    private IDepartementDao departementDao;
 
     public INoteService getNoteService() {
         return noteService;
@@ -102,12 +107,26 @@ public class DocumentServiceImpl implements IDocumentService {
         this.academiqueDao = academiqueDao;
     }
 
+    public IDepartementDao getDepartementDao() {
+        return departementDao;
+    }
+
+    public void setDepartementDao(IDepartementDao departementDao) {
+        this.departementDao = departementDao;
+    }
+    
+    
+
     @Override
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
         try {
             Niveau niveau = niveauDao.findById(niveauId);
 
             Option option = optionDao.findById(optionId);
+            
+            System.out.println("\n\n une option *********\n\n "+option+"\n\n");
+            
+            Departement departement = optionDao.findDepartement(option);
 
             Cours cours = coursDao.findById(coursId);
 
@@ -120,6 +139,9 @@ public class DocumentServiceImpl implements IDocumentService {
             PvHeader head = new PvHeader();
             head.setAnneeAcademique(anne.toString());
             //head.setCodeUe(cours.);
+            head.setOption(option.getDescription());
+            head.setParcours(niveau.getCode() + " "+ option.getCode());
+            head.setDepartement(departement.getDescription());
             head.setCours(cours.getIntitule());
             head.setCredit(cours.getCredit());
             head.setEnseignants(null);
@@ -205,6 +227,7 @@ public class DocumentServiceImpl implements IDocumentService {
         // Fin de l'entete
         // Définition du formulaire d'entete
         PdfPTable table2 = new PdfPTable(6);
+        table2.setWidthPercentage(100);
         PdfPCell cell;
         cell = new PdfPCell(new Phrase("Mention : " + head.getDepartement(), bf12));
         cell.setColspan(2);
@@ -219,7 +242,7 @@ public class DocumentServiceImpl implements IDocumentService {
         cell.setBorderColor(BaseColor.WHITE);
         cell.setColspan(2);
         table2.addCell(cell);
-        cell = new PdfPCell(new Phrase("Parcours : " + head.getNiveau() + head.getOption(), bf12));
+        cell = new PdfPCell(new Phrase("Parcours : " + head.getParcours(), bf12));
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
         table2.addCell(cell);
