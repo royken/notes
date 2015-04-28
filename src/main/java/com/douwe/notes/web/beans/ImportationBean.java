@@ -99,7 +99,7 @@ public class ImportationBean {
     public void saveAllEtudiant() throws ServiceException, IOException {        
         if (file != null) {            
             System.out.println("**********************"+file.getFileName());
-//            etudiantService.importEtudiants(file.getInputstream(), idAca);
+            etudiantService.importEtudiants(file.getInputstream(), idAca);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             file = null;
             idAca = 0L;
@@ -111,7 +111,7 @@ public void saveNotes() throws ServiceException, IOException {
         System.out.println("---------------------");
         if (file != null) {   
          System.out.println("fichier============= " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
-            //noteService.importNotes(file.getInputstream(),idC,idE, idAca,0);
+            noteService.importNotes(file.getInputstream(),idC,idE, idAca,0);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             System.out.println("fichier " + file.getFileName() + " id cours " + idC + " id Evaluation " + idE + " id Annee " + idAca);
             file = null;

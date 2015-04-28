@@ -3,11 +3,13 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
+import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -63,6 +65,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
+    
+    @Inject
+    private IDepartementDao departementDao;
 
     @Inject
     private IEvaluationService evaluationService;
@@ -110,6 +115,17 @@ public class DocumentServiceImpl implements IDocumentService {
         this.academiqueDao = academiqueDao;
     }
 
+
+    public IDepartementDao getDepartementDao() {
+        return departementDao;
+    }
+
+    public void setDepartementDao(IDepartementDao departementDao) {
+        this.departementDao = departementDao;
+    }
+    
+    
+
     public IEvaluationService getEvaluationService() {
         return evaluationService;
     }
@@ -135,6 +151,9 @@ public class DocumentServiceImpl implements IDocumentService {
             doc.setPageSize(PageSize.A4);
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
+            Departement departement = optionDao.findDepartement(option);
+
+
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
@@ -282,10 +301,14 @@ public class DocumentServiceImpl implements IDocumentService {
         cell.setBorderColor(BaseColor.WHITE);
         cell.setColspan(2);
         table2.addCell(cell);
+
+    //    cell = new PdfPCell(new Phrase("Parcours : " + head.getParcours(), bf12));
+
         phrase = new Phrase();
         phrase.add(new Chunk("Parcours : ", fontEntete));
         phrase.add(new Chunk(o.getDepartement().getCode(), bf12));
         cell = new PdfPCell(phrase);
+
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
         table2.addCell(cell);
