@@ -3,16 +3,14 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
-import com.douwe.notes.dao.INiveauDao;
-import com.douwe.notes.dao.IOptionDao;
-import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.entities.AnneeAcademique;
 
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IProgrammeDao;
-import com.douwe.notes.dao.impl.NiveauDaoImpl;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
@@ -40,6 +38,9 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     
     @Inject
     private IOptionDao optionDao;
+    
+    @Inject
+    private ICoursDao coursDao;
 
     
     @Inject
@@ -80,9 +81,14 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     public void setSemestreDao(ISemestreDao semestreDao) {
         this.semestreDao = semestreDao;
     }
-    
-    
 
+    public ICoursDao getCoursDao() {
+        return coursDao;
+    }
+
+    public void setCoursDao(ICoursDao coursDao) {
+        this.coursDao = coursDao;
+    }
 
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
@@ -171,5 +177,19 @@ public class ProgrammeServiceImpl implements IProgrammeService {
             throw new ServiceException("");
         }
         }
+
+    @Override
+    public Programme findByCours(long coursId, long niveauId, long optionId, long anneeId) throws ServiceException {
+        try {
+            Cours c = coursDao.findById(coursId);
+            Niveau n = niveauDao.findById(niveauId);
+            Option o = optionDao.findById(optionId);
+            AnneeAcademique a = academiqueDao.findById(anneeId);
+            return programmeDao.findByCours(c, n, o, a);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException(ex);
+        }
+    }
 
 }

@@ -44,22 +44,18 @@ public class Programme implements Serializable {
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "ANNEEACADEMIQUE_ID")
-    @XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "UNITEENSEIGNEMENT_ID")
-    @XmlTransient
     private UniteEnseignement uniteEnseignement;
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "PARCOURS_ID")
-    @XmlTransient
     private Parcours parcours;
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "SEMESTRE_ID")
-    @XmlTransient
     private Semestre semestre;
     
      @XmlTransient

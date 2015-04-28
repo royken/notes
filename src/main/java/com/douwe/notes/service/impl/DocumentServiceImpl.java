@@ -5,11 +5,13 @@ import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
+import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.StatistiquesNote;
@@ -64,6 +66,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IEvaluationService evaluationService;
+    
+    @Inject
+    private IProgrammeDao programmeDao;
 
     public INoteService getNoteService() {
         return noteService;
@@ -113,6 +118,14 @@ public class DocumentServiceImpl implements IDocumentService {
         this.evaluationService = evaluationService;
     }
 
+    public IProgrammeDao getProgrammeDao() {
+        return programmeDao;
+    }
+
+    public void setProgrammeDao(IProgrammeDao programmeDao) {
+        this.programmeDao = programmeDao;
+    }
+    
     @Override
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
         try {
@@ -125,11 +138,12 @@ public class DocumentServiceImpl implements IDocumentService {
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
-            produceHeader(doc, cours, niveau, option, anne, s);
+            Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
+            produceHeader(doc, cours, niveau, option, anne, s, prog);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s);
+            produceHeader(doc, cours, niveau, option, anne, s,prog);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -181,7 +195,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s) throws Exception {
+    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog) throws Exception {
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         Font fontEntete = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         // Définition de l'entete du document
@@ -201,9 +215,9 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("****\n");
         builder.append("Peace -- Work -- Fatherland\n");
         builder.append("****\n");
-        builder.append("Ministry of Higher Education\n");
+        builder.append("The Ministry of Higher Education\n");
         builder.append("****\n");
-        builder.append("University of Maroua\n");
+        builder.append("The University of Maroua\n");
         builder.append("****\n");
         builder.append("The Higher Institute of the Sahel");
         Paragraph eng = new Paragraph(new Phrase(builder.toString(), bf12));
@@ -278,7 +292,7 @@ public class DocumentServiceImpl implements IDocumentService {
         // Il faut retrouver le code de l'UE
         phrase = new Phrase();
         phrase.add(new Chunk("Code de l'UE : ", fontEntete));
-        phrase.add(new Chunk("ITEL 115", bf12));
+        phrase.add(new Chunk(prog.getUniteEnseignement().getCode(), bf12));
         cell = new PdfPCell(phrase);
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
@@ -306,7 +320,7 @@ public class DocumentServiceImpl implements IDocumentService {
         // I faut retrouver le semestre du cours
         phrase = new Phrase();
         phrase.add(new Chunk("Semestre : ", fontEntete));
-        phrase.add(new Chunk("" + 1, bf12));
+        phrase.add(new Chunk(prog.getSemestre().getIntitule(), bf12));
         cell = new PdfPCell(phrase);
         cell.setBorderColor(BaseColor.WHITE);
         table2.addCell(cell);
