@@ -11,7 +11,7 @@
                 <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
                     <h:form id="f" enctype="multipart/form-data">                                                    
                         <h:panelGroup >
-                            <h:panelGrid id="d" columns="2">                                                                                                                      
+                            <h:panelGrid id="d" columns="2" style="text-align: right;">                                                                                                                      
                                 <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
                                 <p:fileUpload   
                                               value="#{importationBean.file}" 
@@ -24,11 +24,10 @@
 <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
                                 <h:outputText  value="Etudiant pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 50%; margin-left: 10px;"  >
+                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 100%; margin-left: 10px;"  >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                </h:selectOneMenu> 
-                                <h:outputText  value="Cliquer pour importer le fichier selectionné"  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:commandButton update=":f:d" ajax="false" value="Cliquer ici !!!" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                </h:selectOneMenu>                                 
+                                <p:commandButton update=":f:d" ajax="false" value="Importer" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  

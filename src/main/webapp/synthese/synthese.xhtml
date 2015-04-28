@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <body>
+        <ui:composition template="./../template/template.xhtml">
+            <ui:define name="content">                
+                <p:panel  id="p1" header="générartion du Procès verbal">
+                    <h:form id="f" enctype="multipart/form-data">                                                  
+                        <h:panelGroup >
+                            <h:panelGrid id="d" columns="2" style="text-align: right;">                                 
+                                <h:outputText  value="Année Académique : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
+                                <h:selectOneMenu  value="#{syntheseBean.idAca}" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;" >
+                                    <f:selectItems value="#{syntheseBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
+                                </h:selectOneMenu>                                                                
+                                <h:outputText value="Departement : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{syntheseBean.idD}"   id="departement" style="height: 30px; width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{syntheseBean.countries}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                    <p:ajax listener="#{syntheseBean.handleCountryChange()}"
+                                                event="change" 
+                                                update="option" 
+                                                process="@this"/>
+                                </h:selectOneMenu>
+                                <h:outputText value="Niveau : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{syntheseBean.idN}" style=" width:100%;height: 30px; margin-left: 10px;margin-top: 10px;"  id="niveau">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{syntheseBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                </h:selectOneMenu>
+                                <h:outputText value="Option : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu id="option"  value="#{syntheseBean.idO}" style="height: 30px; width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{syntheseBean.cities}" />
+                                </h:selectOneMenu> 
+                                 <h:outputText  value="Semestre : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:selectOneMenu value="#{syntheseBean.idS}"  converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{syntheseBean.semestres}" var="semestre" itemLabel="#{semestre.intitule}" itemValue="#{semestre.id}" />
+                                </h:selectOneMenu>
+                            <p:commandButton ajax="false" value="Générer la synthèse" update=":f:d"  action="#{syntheseBean.synthese()}" style="margin-left: 10px; margin-top: 10px;"/>  
+                            </h:panelGrid>
+                            
+                        </h:panelGroup>                        
+                    </h:form>  
+                </p:panel> 
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>
+
+

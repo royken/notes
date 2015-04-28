@@ -9,29 +9,7 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1">    
-                    <h:form id="formAfficheCours">
-                        <p:dialog header="UE du parcours" widgetVar="dlgAfficheCours" hideEffect="explode" showEffect="explode" >                                                   
-                            <p:growl id="growl" showDetail="true" /> 
-                            <p:panel >
-                                <h:panelGroup >
-                                    <h:panelGrid id="displaydAfficheCours" columns="1">
-                                        <p:dataList emptyMessage="Accune UE enregistré pour le parcours  #{parcoursBean.parcours.niveau.code}/#{parcoursBean.parcours.option.code}" value="#{parcoursBean.parcours.uniteEnseignements}"  var="eu" type="ordered">  
-                                            #{eu.code}  
-                                            <p:dataList emptyMessage="Aucun cours n'est enregistré pour l'UE #{eu.code}" value="#{eu.courses}" var="c"  itemType="Disc">  
-                                                #{c.intitule}  
-                                            </p:dataList>
-                                        </p:dataList> 
-                                    </h:panelGrid>
-
-                                </h:panelGroup>
-                                <p:separator/>
-                                <div>                                    
-                                    <p:commandButton value="Fermez"  id="annule1" type="reset" onclick="PF('dlgAfficheCours').hide()" action="#{uniteEnseignementBean.annuler()}" icon="ui-icon-close" style="margin-left: 20px;"/> 
-                                </div>                     
-                            </p:panel>                               
-                        </p:dialog> 
-                    </h:form>
+                <p:panel  id="p1">                        
                     <p:dialog header="AJOUTER UN PARCOURS" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
                         <h:form id="formSave">                                
                             <p:growl id="growl" showDetail="true" /> 
@@ -96,17 +74,18 @@
                             <f:facet name="header">
                                 LA LISTE DES PARCOURS
                             </f:facet>                                                       
-                            <p:column headerText="Niveau "  id="niveau">  
+                            <p:column headerText="Niveau "  id="niveau" >  
                                 #{parcours.niveau.code}
                             </p:column>                              
-                            <p:column headerText="Option "  id="option">  
+                            <p:column headerText="Option "  id="option" >  
                                 #{parcours.option.code}
                             </p:column>      
+                            
                             <p:column                                      
                                 filterOptions="#{parcoursBean.manufacturerOptions}"  
                                 headerText="Departement" 
                                 filterBy="#{parcours.option.departement.code}"   
-                                id="departement" filterStyle="">  
+                                id="departement" styleClass="test"  >  
                                 #{parcours.option.departement.code}  
                             </p:column> 
                             <f:facet name="footer" >  

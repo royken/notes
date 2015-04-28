@@ -1,149 +1,85 @@
 package com.douwe.notes.web.beans;
 
 import com.douwe.notes.entities.AnneeAcademique;
-import com.douwe.notes.entities.Etudiant;
-
-
-import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
-import com.douwe.notes.entities.Etudiant;
-import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
-
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
-import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.IDocumentService;
-import com.douwe.notes.service.IEtudiantService;
-import com.douwe.notes.service.IEvaluationService;
-import com.douwe.notes.service.IInscriptionService;
+import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.FaceletContext;
 import javax.inject.Named;
-import org.primefaces.event.FileUploadEvent;
+import javax.servlet.http.HttpServletResponse;
 import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author root
  */
-@Named(value = "importationBean")
+@Named(value = "procesVerbalBean")
 @RequestScoped
-public class ImportationBean {
-
-    private UploadedFile file;
-
-    private Etudiant etudiant;
-
+public class ProcesVerbalBean {
+    private Session session;
     private List<AnneeAcademique> anneeAcademiques;
-
-    @EJB
-    private IEtudiantService etudiantService;
-
-    @EJB
-    private IInscriptionService inscriptionService;
+    
     @EJB
     private INoteService noteService;
     @EJB
     private ICoursService coursService;
     @EJB
-    private IDepartementService departementService;
-    @EJB
-    private IEvaluationService evaluationService;
+    private IDepartementService departementService;    
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
-        @EJB
+    @EJB
     private IOptionService optionService;
-            @EJB
+    @EJB
     private INiveauService niveauService;
-    private List<Evaluation> evaluations;
+    @EJB
+    private IDocumentService documentService;
+    
     private List<Niveau> niveaus;
-    private List<Option> options;    
+    private List<Option> options;
     private List<Cours> courses;
     private List<Departement> departements;
+    private List<Session> sessions;
     private Map<String, Long> countries = new HashMap<String, Long>();
     private Map<String, Long> cities = null;
-    private List<Session> sessions;
-    private Session session;
     Long idAca = null;
     Long idC = null;
-    Long idE = null;
+    
     Long idN = null;
     Long idO = null;
     Long idD = null;    
-
-    public ImportationBean() {
-        etudiant = new Etudiant();        
-    }
-
-    public UploadedFile getFile() {
-        file=null;
-        return file;
-    }
-
-    public void setFile(UploadedFile file) {
-        this.file = file;
-    }
-
-    public void saveAllEtudiant() throws ServiceException, IOException {        
-        if (file != null) {                        
-            etudiantService.importEtudiants(file.getInputstream(), idAca);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
-            file = null;
-            idAca = 0L;
-        }        
-        
-    }
     
-public void saveNotes() throws ServiceException, IOException {        
-        if (file != null && idC!=null && idE !=null && session!=null) {            
-            noteService.importNotes(file.getInputstream(),idC,idE, idAca,session.ordinal());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));            
-            file = null;
-            idAca = null;
-            idE = null;
-            idC = null;
-        }        
-
+    public void procesVerbal() throws ServiceException, FileNotFoundException {
+        if (idN != null && idO != null && idC!=null && session != null ) {            
+            FileOutputStream out = new FileOutputStream("PV");
+            System.out.println( " id cours " + idC + " session " + session.ordinal() + " id Departement " + idD + " id Annee " + idAca + " id niveau " +idN + " id option "+idO);
+            documentService.produirePv(idN, idO, idC, idAca, session.ordinal() , FacesContext.getCurrentInstance().getResponseStream());
+            
+            //FaceletContext.ge
+            //HttpServletResponse respo
+        }
     }
 
-    public void exportNotes() throws ServiceException, IOException {        
-        if (file != null && idC != null && idAca != null  && idE != null && idN != null  && idO != null ) {
-            //noteService
-            //noteService.exportNotes(file.getInputstream(),idC,idE,idD,idAca,idN,idO);
-            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));            
-            file = null;
-            idAca = null;
-            idE = null;
-            idC = null;
-            idD = null;
-            idN = null;
-            idO = null;
-        }        
-    }
-          
-    public Etudiant getEtudiant() {
-        return etudiant;
-    }
-
-    public void setEtudiant(Etudiant etudiant) {
-        this.etudiant = etudiant;
-    }
 
     public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
         anneeAcademiques = anneeAcademiqueService.getAllAnnee();
@@ -161,23 +97,8 @@ public void saveNotes() throws ServiceException, IOException {
     public void setIdAca(Long idAca) {
         this.idAca = idAca;
     }
-   
 
-    public IEtudiantService getEtudiantService() {
-        return etudiantService;
-    }
 
-    public void setEtudiantService(IEtudiantService etudiantService) {
-        this.etudiantService = etudiantService;
-    }
-
-    public IInscriptionService getInscriptionService() {
-        return inscriptionService;
-    }
-
-    public void setInscriptionService(IInscriptionService inscriptionService) {
-        this.inscriptionService = inscriptionService;
-    }
 
     public IAnneeAcademiqueService getAnneeAcademiqueService() {
 
@@ -187,7 +108,6 @@ public void saveNotes() throws ServiceException, IOException {
     public void setAnneeAcademiqueService(IAnneeAcademiqueService anneeAcademiqueService) {
         this.anneeAcademiqueService = anneeAcademiqueService;
     }
-
 
     public INoteService getNoteService() {
         return noteService;
@@ -203,23 +123,6 @@ public void saveNotes() throws ServiceException, IOException {
 
     public void setCoursService(ICoursService coursService) {
         this.coursService = coursService;
-    }
-
-    public IEvaluationService getEvaluationService() {
-        return evaluationService;
-    }
-
-    public void setEvaluationService(IEvaluationService evaluationService) {
-        this.evaluationService = evaluationService;
-    }
-
-    public List<Evaluation> getEvaluations() throws ServiceException {
-        evaluations = evaluationService.getAllEvaluations();
-        return evaluations;
-    }
-
-    public void setEvaluations(List<Evaluation> evaluations) {
-        this.evaluations = evaluations;
     }
 
     public List<Cours> getCourses() throws ServiceException {
@@ -239,13 +142,6 @@ public void saveNotes() throws ServiceException, IOException {
         this.idC = idC;
     }
 
-    public Long getIdE() {
-        return idE;
-    }
-
-    public void setIdE(Long idE) {
-        this.idE = idE;
-    }
 
     public IDepartementService getDepartementService() {
         return departementService;
@@ -330,7 +226,7 @@ public void saveNotes() throws ServiceException, IOException {
     }
 
     public List<Niveau> getNiveaus() throws ServiceException {
-        niveaus=niveauService.getAllNiveaux();
+        niveaus = niveauService.getAllNiveaux();
         return niveaus;
     }
 
@@ -362,6 +258,14 @@ public void saveNotes() throws ServiceException, IOException {
         this.idO = idO;
     }
 
+    public IDocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(IDocumentService documentService) {
+        this.documentService = documentService;
+    }
+
     public List<Session> getSessions() {
         Session[] ss = new Session[2];
         ss = Session.values();
@@ -383,6 +287,5 @@ public void saveNotes() throws ServiceException, IOException {
     public void setSession(Session session) {
         this.session = session;
     }
-    
-    
+
 }

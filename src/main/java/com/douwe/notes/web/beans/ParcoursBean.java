@@ -61,6 +61,7 @@ public class ParcoursBean {
 
     private void init() throws ServiceException {
         departements = departementService.getAllDepartements();
+        
         manufacturerOptions = new SelectItem[departements.size() + 1];
         manufacturerOptions[0] = new SelectItem("", "Selectionner");
         for (int j = 0; j < departements.size(); j++) {
@@ -216,7 +217,7 @@ public class ParcoursBean {
         this.departementService = departementService;
     }
 
-    public SelectItem[] getManufacturerOptions() {
+    public SelectItem[] getManufacturerOptions() {        
         return manufacturerOptions;
     }
 
