@@ -44,7 +44,7 @@ public class Option implements Serializable {
     @Column
     private String description;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Departement departement;
 
     @XmlTransient

@@ -43,7 +43,7 @@ public class Etudiant implements Serializable {
     @Column(unique = true)
     private String matricule;
     
-    @Column
+    @Column(nullable = false)
     private String nom;
     
     @Column

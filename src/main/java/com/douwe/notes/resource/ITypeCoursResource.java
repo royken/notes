@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
+@Path("/typeCours")
 public interface ITypeCoursResource {
     @POST
     TypeCours createTypeCours(TypeCours typeCours);

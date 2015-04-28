@@ -2,16 +2,17 @@ package com.douwe.notes.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -28,10 +29,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Parcours.deleteActive", query = "update Parcours p set p.active = 0 where p.id = :idParam"),
     @NamedQuery(name = "Parcours.findAllActive", query = "select p from Parcours p where p.active=1"),
-    @NamedQuery(name = "Parcours.findByNiveauOption", query = "SELECT p from Parcours p WHERE p.niveau.id = :param1 and p.option.id = :param2"),
-    @NamedQuery(name = "Parcours.findUniteEnseignements", query = "select ue from UniteEnseignement ue , Parcours p JOIN p.uniteEnseignements pue where p.id = :idParam and pue.id = ue.id")
+    @NamedQuery(name = "Parcours.findByNiveauOption", query = "SELECT p from Parcours p WHERE p.niveau.id = :param1 and p.option.id = :param2")
 
 })
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"NIVEAU_ID","OPTION_ID"}))
 public class Parcours implements Serializable {
 
     @Id
@@ -42,17 +43,17 @@ public class Parcours implements Serializable {
     @XmlTransient
     private int version;
 
-    @ManyToOne
-    @XmlTransient
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "NIVEAU_ID")
     private Niveau niveau;
 
-    @ManyToOne
-    @XmlTransient
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "OPTION_ID")
     private Option option;
 
-    @ManyToMany
-    @XmlTransient
-    private List<UniteEnseignement> uniteEnseignements;
+//    @ManyToMany
+//    @XmlTransient
+//    private List<UniteEnseignement> uniteEnseignements;
 
     @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -86,13 +87,13 @@ public class Parcours implements Serializable {
         this.option = option;
     }
 
-    public List<UniteEnseignement> getUniteEnseignements() {
-        return uniteEnseignements;
-    }
-
-    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
-        this.uniteEnseignements = uniteEnseignements;
-    }
+//    public List<UniteEnseignement> getUniteEnseignements() {
+//        return uniteEnseignements;
+//    }
+//
+//    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
+//        this.uniteEnseignements = uniteEnseignements;
+//    }
 
     @JsonIgnore
     public int getVersion() {
@@ -116,7 +117,7 @@ public class Parcours implements Serializable {
 
     @Override
     public String toString() {
-        return "Parcours{" + "id=" + id + ", version=" + version +  ", option=" + option + ", uniteEnseignements=" + uniteEnseignements + ", active=" + active + '}';
+        return "Parcours{" + "id=" + id + ", version=" + version +  ", option=" + option  + ", active=" + active + '}';
     }
 
 }

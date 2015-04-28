@@ -3,7 +3,6 @@ package com.douwe.notes.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,23 +42,20 @@ public class UniteEnseignement implements Serializable {
     @Column
     private String intitule;
     
-    @Column
+    @Column(unique = true)
     private String code;
     
      @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
     
-     @XmlTransient
-    @ManyToMany(mappedBy = "uniteEnseignements")
-    private List<Parcours> parcours;
+//     @XmlTransient
+//    @ManyToMany(mappedBy = "uniteEnseignements")
+//    private List<Parcours> parcours;
     
      @XmlTransient
     @ManyToMany
     private List<Cours> courses;
-    
-    
-    
     
     public UniteEnseignement(){
         
@@ -89,15 +85,15 @@ public class UniteEnseignement implements Serializable {
         this.code = code;
     }
 
-    @JsonIgnore
-    public List<Parcours> getParcours() {
-        return parcours;
-    }
-
-    @JsonIgnore
-    public void setParcours(List<Parcours> parcours) {
-        this.parcours = parcours;
-    }
+//    @JsonIgnore
+//    public List<Parcours> getParcours() {
+//        return parcours;
+//    }
+//
+//    @JsonIgnore
+//    public void setParcours(List<Parcours> parcours) {
+//        this.parcours = parcours;
+//    }
 
     @JsonIgnore
     public int getVersion() {
@@ -129,11 +125,8 @@ public class UniteEnseignement implements Serializable {
         this.courses = courses;
     }
 
-
     @Override
     public String toString() {
-        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", parcours=" + parcours + ", courses=" + courses + '}';
+        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", courses=" + courses + '}';
     }
- 
-        
 }

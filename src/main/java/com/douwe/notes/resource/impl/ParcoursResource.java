@@ -115,7 +115,6 @@ public class ParcoursResource implements IParcoursResource{
             if(parcours1 != null){
                 parcours1.setNiveau(parcours.getNiveau());
                 parcours1.setOption(parcours.getOption());
-                parcours1.setUniteEnseignements(parcours.getUniteEnseignements());
                 return parcoursService.saveOrUpdateParcours(parcours1);
             }
             return null;

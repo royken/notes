@@ -3,6 +3,7 @@ package com.douwe.notes.dao;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.IDao;
 import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Programme;
@@ -21,6 +22,8 @@ public interface IProgrammeDao extends IDao<Programme, Long>{
     
 
     public List<Programme> findByNiveauOption(Niveau n, Option o, AnneeAcademique academique, Semestre semestre) throws DataAccessException;
+    
+    Programme findByCours(Cours c, Niveau n, Option o, AnneeAcademique a) throws DataAccessException;
 
     
 }
