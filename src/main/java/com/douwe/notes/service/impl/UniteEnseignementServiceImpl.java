@@ -30,7 +30,7 @@ public class UniteEnseignementServiceImpl implements IUniteEnseignementService {
     }
 
     @Override
-    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) throws ServiceException{
+    public UniteEnseignement saveOrUpdateUe(UniteEnseignement uniteEnseignement) throws ServiceException{
         try {
             if (uniteEnseignement.getId() == null) {
                 uniteEnseignement.setActive(1);

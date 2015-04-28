@@ -1,5 +1,6 @@
 package com.douwe.notes.resource;
 
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.UniteEnseignement;
 import java.util.List;
 import javax.ws.rs.DELETE;
@@ -38,5 +39,10 @@ public interface IUniteEnseignementResource {
     @DELETE
     @Path(value = "{id : \\d+}")
     void deleteUniteEns(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path(value = "{id : \\d+}/cours")
+    @Produces(value = "application/json")
+    List<Cours> findAllCoursByUe(@PathParam(value = "id")long id);
     
 }

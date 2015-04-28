@@ -49,7 +49,7 @@ public class UniteEnseignementBean {
 
             uniteEnseignement.setCourses(coursChoisis);
             System.out.println("---" + uniteEnseignement);
-            uniteEnseignementService.saveOrUpdateCours(uniteEnseignement);
+            uniteEnseignementService.saveOrUpdateUe(uniteEnseignement);
             if (uniteEnseignement.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", uniteEnseignement.getCode() + " a été mis à jour "));
             } else {

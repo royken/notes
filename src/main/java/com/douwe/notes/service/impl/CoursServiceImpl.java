@@ -4,9 +4,11 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IParcoursDao;
+import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Parcours;
+import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -30,6 +32,9 @@ public class CoursServiceImpl implements ICoursService {
     
     @Inject
     private IParcoursDao parcoursDao;
+    
+    @Inject
+    private IUniteEnseignementDao enseignementDao;
 
     public ICoursDao getCoursDao() {
         return coursDao;
@@ -45,6 +50,22 @@ public class CoursServiceImpl implements ICoursService {
 
     public void setParcoursDao(IParcoursDao parcoursDao) {
         this.parcoursDao = parcoursDao;
+    }
+
+    public IAnneeAcademiqueDao getAcademiqueDao() {
+        return academiqueDao;
+    }
+
+    public void setAcademiqueDao(IAnneeAcademiqueDao academiqueDao) {
+        this.academiqueDao = academiqueDao;
+    }
+
+    public IUniteEnseignementDao getEnseignementDao() {
+        return enseignementDao;
+    }
+
+    public void setEnseignementDao(IUniteEnseignementDao enseignementDao) {
+        this.enseignementDao = enseignementDao;
     }
     
     
@@ -125,6 +146,20 @@ public class CoursServiceImpl implements ICoursService {
             }
             
             return coursDao.findByParcoursAnnee(parcours, academique);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    @Override
+    public List<Cours> findAllByUe(Long idUe) throws ServiceException {
+        try {
+            UniteEnseignement enseignement = enseignementDao.findById(idUe);
+            if(enseignement == null){
+                throw  new ServiceException("Ressource not found");
+            }
+            return coursDao.findByUe(enseignement);
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;

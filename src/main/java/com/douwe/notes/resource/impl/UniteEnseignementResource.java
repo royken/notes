@@ -1,7 +1,9 @@
 package com.douwe.notes.resource.impl;
 
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.resource.IUniteEnseignementResource;
+import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.IUniteEnseignementService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -21,6 +23,9 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     
     @EJB
     private IUniteEnseignementService service;
+    
+    @EJB
+    private ICoursService coursService;
 
     public IUniteEnseignementService getService() {
         return service;
@@ -29,13 +34,21 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     public void setService(IUniteEnseignementService service) {
         this.service = service;
     }
+
+    public ICoursService getCoursService() {
+        return coursService;
+    }
+
+    public void setCoursService(ICoursService coursService) {
+        this.coursService = coursService;
+    }
     
     
 
     @Override
     public UniteEnseignement createUniteEnseignement(UniteEnseignement ue) {
         try {
-            return service.saveOrUpdateCours(ue);
+            return service.saveOrUpdateUe(ue);
         } catch (ServiceException ex) {
             Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -73,7 +86,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
             if(enseignement != null){
                 enseignement.setCode(ue.getCode());
                 enseignement.setIntitule(ue.getIntitule());
-                return service.saveOrUpdateCours(enseignement);
+                return service.saveOrUpdateUe(enseignement);
             }
             return null;
         } catch (ServiceException ex) {
@@ -88,6 +101,16 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
             service.deleteUniteEnseignement(id);
         } catch (ServiceException ex) {
             Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public List<Cours> findAllCoursByUe(long id) {
+        try {
+            return coursService.findAllByUe(id);
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
     

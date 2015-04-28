@@ -1,6 +1,7 @@
 package com.douwe.notes.service;
 
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.UniteEnseignement;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -22,4 +23,6 @@ public interface ICoursService {
     public Cours findByIntitule(String intitule) throws ServiceException;
     
     public List<Cours> findByParcoursAnnee(Long idParcours, Long idAnne) throws ServiceException;
+    
+    public List<Cours> findAllByUe(Long  idUe) throws ServiceException;
 }

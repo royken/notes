@@ -6,6 +6,7 @@ import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Parcours;
+import com.douwe.notes.entities.UniteEnseignement;
 import java.util.List;
 
 /**
@@ -31,6 +32,11 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao{
     @Override
     public List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique) throws DataAccessException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Cours> findByUe(UniteEnseignement ue) throws DataAccessException {
+        return getManager().createNamedQuery("Cours.findByUE").setParameter("idParam", ue.getId()).getResultList();
     }
     
 }
