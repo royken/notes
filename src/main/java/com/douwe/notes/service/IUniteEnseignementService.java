@@ -11,7 +11,7 @@ import javax.ejb.Local;
 @Local
 public interface IUniteEnseignementService {
     
-    public UniteEnseignement saveOrUpdateCours(UniteEnseignement uniteEnseignement) throws ServiceException;
+    public UniteEnseignement saveOrUpdateUe(UniteEnseignement uniteEnseignement) throws ServiceException;
     
     public void deleteUniteEnseignement(Long id) throws ServiceException;
     
