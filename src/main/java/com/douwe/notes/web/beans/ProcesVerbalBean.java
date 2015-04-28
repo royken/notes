@@ -28,6 +28,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -55,6 +57,8 @@ public class ProcesVerbalBean {
     @EJB
     private IDocumentService documentService;
     
+    private StreamedContent fichier;
+    
     private List<Niveau> niveaus;
     private List<Option> options;
     private List<Cours> courses;
@@ -72,8 +76,9 @@ public class ProcesVerbalBean {
     public void procesVerbal() throws ServiceException, FileNotFoundException {
         if (idN != null && idO != null && idC!=null && session != null ) {            
             FileOutputStream out = new FileOutputStream("PV");
-            System.out.println( " id cours " + idC + " session " + session.ordinal() + " id Departement " + idD + " id Annee " + idAca + " id niveau " +idN + " id option "+idO);
-            documentService.produirePv(idN, idO, idC, idAca, session.ordinal() , FacesContext.getCurrentInstance().getResponseStream());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // TODO Douwe
+            documentService.produirePv(idN, idO, idC, idAca, session.ordinal() , out);
             
             //FaceletContext.ge
             //HttpServletResponse respo
@@ -166,6 +171,14 @@ public class ProcesVerbalBean {
 
     public void setIdD(Long idD) {
         this.idD = idD;
+    }
+
+    public StreamedContent getFichier() {
+        return fichier;
+    }
+
+    public void setFichier(StreamedContent fichier) {
+        this.fichier = fichier;
     }
 
     public void handleCountryChange() throws ServiceException {

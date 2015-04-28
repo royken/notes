@@ -26,9 +26,9 @@
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.countries}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
                                     <p:ajax listener="#{procesVerbalBean.handleCountryChange()}"
-                                                event="change" 
-                                                update="option" 
-                                                process="@this"/>
+                                            event="change" 
+                                            update="option" 
+                                            process="@this"/>
                                 </h:selectOneMenu>
                                 <h:outputText value="Niveau : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <h:selectOneMenu value="#{procesVerbalBean.idN}" style=" width:100%;height: 30px; margin-left: 10px;margin-top: 10px;"  id="niveau">
@@ -40,14 +40,16 @@
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.cities}" />
                                 </h:selectOneMenu> 
-                                 <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
+                                <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <p:selectOneMenu value="#{procesVerbalBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                 </p:selectOneMenu>
-                            <p:commandButton ajax="false" value="Générer le PV" update=":f:d"  action="#{procesVerbalBean.procesVerbal()}" style="margin-left: 10px; margin-top: 10px;"/>  
+                                <p:commandButton ajax="false" value="Générer le PV" update=":f:d" style="margin-left: 10px; margin-top: 10px;" action="#{procesVerbalBean.procesVerbal()}">
+                                    <p:fileDownload value="#{procesVerbalBean.fichier}" />
+                                </p:commandButton>
                             </h:panelGrid>
-                            
+
                         </h:panelGroup>                        
                     </h:form>  
                 </p:panel> 
