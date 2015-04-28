@@ -1,0 +1,30 @@
+A) Dans coursDao
+
+1) la liste des cours d'un parcours pour une année académique donnée
+List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique)
+
+
+B)  EnseignantDao
+1) La list des ensignants donnant un cours
+List<Enseignant> findByCours(Cours cours)
+
+
+
+NoteDao
+
+1) Production des synthèses
+
+a)  Renvoi une liste d'EtudiantNotesUe (nomEtudiant, matricule, Map<UniteEns, note>), la note (moyenne) de chaque étutiant du parcours à toute les unité d'enseignements du parcours, pour un semestre
+
+    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique)
+    
+b) La note d'un étudiant à une unité d'enseignement
+    public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique, Session session)
+
+
+C) UniteEnseignementDao
+
+1) la liste des unité d'enseignement avec leurs crédits, pour un parcours (niveau,option)
+public List<UEnseignementCredit> findByNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre)
+
+
