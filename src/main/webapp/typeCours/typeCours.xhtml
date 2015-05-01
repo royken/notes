@@ -204,10 +204,10 @@
                                               rows="10"
                                               sortOrder="ascending"  >  
                                     <f:facet name="header" >  
-                                        <table >
+                                        <table class="type_cours">
                                             <tr >
-                                                <td style="border:#AFAFAF;"><h:outputText value="#{car.nom}"  /> </td>
-                                                <td style=" width: 20%; border:#AFAFAF; text-align: right;"><p:commandButton id="a" onclick="PF('dlgDelete').show()" update=":fs:ds" icon="ui-icon-trash" style=" height: 25px;width: 25px;">
+                                                <td><h:outputText value="#{car.nom}"  /> </td>
+                                                <td><p:commandButton id="a" onclick="PF('dlgDelete').show()" update=":fs:ds" icon="ui-icon-trash" style=" height: 25px;width: 25px;">
                                                         <f:setPropertyActionListener  value="#{car}" target="#{typeCoursBean.typeCours}"/>
                                                     </p:commandButton>
                                                     <p:tooltip for="a" value="cliquez ici pour supprimer ce type de cours"/>

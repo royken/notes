@@ -31,3 +31,12 @@ footer{
 table{
     border: none;    
 }
+
+table.type_cours td{
+    border: none;
+}
+
+table.type_cours td:last-child{
+    
+    width: 20%;
+}
