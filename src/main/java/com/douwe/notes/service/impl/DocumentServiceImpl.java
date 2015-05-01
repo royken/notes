@@ -69,11 +69,18 @@ public class DocumentServiceImpl implements IDocumentService {
     @Inject
     private IDepartementDao departementDao;
 
+    // TODO Royken I faut eviter les dependances vers les services
     @Inject
     private IEvaluationService evaluationService;
     
     @Inject
     private IProgrammeDao programmeDao;
+    
+//    @Inject
+//    private IUniteEnseignementDao uniteDao;
+//    
+//    @Inject
+//    private ISemestreDao semestreDao;
 
     public INoteService getNoteService() {
         return noteService;
@@ -141,6 +148,22 @@ public class DocumentServiceImpl implements IDocumentService {
     public void setProgrammeDao(IProgrammeDao programmeDao) {
         this.programmeDao = programmeDao;
     }
+
+//    public IUniteEnseignementDao getUniteDao() {
+//        return uniteDao;
+//    }
+//
+//    public void setUniteDao(IUniteEnseignementDao uniteDao) {
+//        this.uniteDao = uniteDao;
+//    }
+//
+//    public ISemestreDao getSemestreDao() {
+//        return semestreDao;
+//    }
+//
+//    public void setSemestreDao(ISemestreDao semestreDao) {
+//        this.semestreDao = semestreDao;
+//    }
     
     @Override
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
@@ -157,6 +180,8 @@ public class DocumentServiceImpl implements IDocumentService {
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
+//            Semestre semestre = semestreDao.findByNiveau(niveau).get(session);
+//            testCompterCredit(niveau, option, semestre, anne);
             Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
             produceHeader(doc, cours, niveau, option, anne, s, prog);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
@@ -174,6 +199,15 @@ public class DocumentServiceImpl implements IDocumentService {
         }
         return null;
     }
+    
+//    private void testCompterCredit(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException{
+//        System.out.println("***************************************************************************************");
+//        List<UEnseignementCredit> results = uniteDao.findByNiveauOptionSemestre(niveau, option, semestre, annee);
+//        for (UEnseignementCredit result : results) {
+//            System.out.println(String.format("Code %s Intitule %s  Credit %d ",result.getCodeUE(), result.getIntituleUE(), result.getCredit()));
+//        }
+//        System.out.println("***************************************************************************************");
+//    }
 
     private static String transformNoteGrade(double note) {
         if (note <= 20 && note >= 16) {

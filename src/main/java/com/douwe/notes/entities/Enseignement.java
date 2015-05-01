@@ -56,6 +56,7 @@ public class Enseignement implements Serializable {
     @Column(columnDefinition = "int default 1")
     private int active;
     
+     // TODO les enseignements dependent des parcours
     public Enseignement(){
         
     }

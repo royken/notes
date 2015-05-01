@@ -145,7 +145,7 @@ public class CoursServiceImpl implements ICoursService {
                 throw  new ServiceException("Resource not found");
             }
             
-            return coursDao.findByParcoursAnnee(parcours, academique);
+            return coursDao.findByParcoursAnnee(parcours, academique, null);
         } catch (DataAccessException ex) {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
