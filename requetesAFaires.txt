@@ -1,0 +1,12 @@
+NoteDao
+
+1) Production des synthèses
+
+a)  Renvoi une liste d'EtudiantNotesUe (nomEtudiant, matricule, Map<UniteEns, note>), la note (moyenne) de chaque étutiant du parcours à toute les unité d'enseignements du parcours, pour un semestre
+
+    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique)
+    
+b) La note d'un étudiant à une unité d'enseignement
+    public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique, Session session)
+
+

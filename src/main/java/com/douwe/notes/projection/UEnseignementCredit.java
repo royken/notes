@@ -1,36 +1,54 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.douwe.notes.projection;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
+@XmlRootElement
 public class UEnseignementCredit {
     
-    private String evaluationName;
+    private String codeUE;
     
-    private int nbreCredit;
+    private String intituleUE;
+    
+    private int credit;
 
-    public String getEvaluationName() {
-        return evaluationName;
+    public UEnseignementCredit() {
     }
 
-    public void setEvaluationName(String evaluationName) {
-        this.evaluationName = evaluationName;
+    public UEnseignementCredit(String codeUE, String intituleUE, int credit) {
+        this.codeUE = codeUE;
+        this.intituleUE = intituleUE;
+        this.credit = credit;
     }
 
-    public int getNbreCredit() {
-        return nbreCredit;
+    public String getCodeUE() {
+        return codeUE;
     }
 
-    public void setNbreCredit(int nbreCredit) {
-        this.nbreCredit = nbreCredit;
+    public void setCodeUE(String codeUE) {
+        this.codeUE = codeUE;
     }
-    
-    
-    
+
+    public String getIntituleUE() {
+        return intituleUE;
+    }
+
+    public void setIntituleUE(String intituleUE) {
+        this.intituleUE = intituleUE;
+    }
+
+    public int getCredit() {
+        return credit;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
+
+   
+
+   
 }
