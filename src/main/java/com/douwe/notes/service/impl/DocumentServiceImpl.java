@@ -152,17 +152,15 @@ public class DocumentServiceImpl implements IDocumentService {
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             Departement departement = optionDao.findDepartement(option);
-
-
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
             Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
-            produceHeader(doc, cours, niveau, option, anne, s, prog);
+            produceHeader(doc, cours, niveau, option, anne, s, prog,null);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s,prog);
+            produceHeader(doc, cours, niveau, option, anne, s,prog,null);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -214,7 +212,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog) throws Exception {
+    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, Departement d) throws Exception {
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         Font fontEntete = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         // Définition de l'entete du document
@@ -282,7 +280,7 @@ public class DocumentServiceImpl implements IDocumentService {
         Phrase phrase;
         phrase = new Phrase();
         phrase.add(new Chunk("Mention : ", fontEntete));
-        phrase.add(new Chunk(o.getDepartement().getDescription(), bf12));
+        phrase.add(new Chunk(o.getDepartement().getFrenchDescription(), bf12));
         cell = new PdfPCell(phrase);
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);

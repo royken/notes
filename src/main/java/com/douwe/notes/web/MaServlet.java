@@ -47,7 +47,7 @@ public class MaServlet extends HttpServlet {
         try {
             Departement dep = new Departement();
             dep.setCode("INFOTEL");
-            dep.setDescription("Informatique et Telecommunications");
+            dep.setFrenchDescription("Informatique et Telecommunications");
             insfrastructureService.saveOrUpdateDepartement(dep);
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
