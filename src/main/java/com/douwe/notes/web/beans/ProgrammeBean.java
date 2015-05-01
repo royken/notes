@@ -112,11 +112,12 @@ public class ProgrammeBean {
     public String affiche(List<Cours> c) {
         String result = "";
         if (c != null && !(c.isEmpty())) {
-            result = ": ";
+            result = "( ";
             for (Cours c1 : c) {
-                result += c1.getIntitule() + ";";
+                result += c1.getIntitule() + "; ";
             }
-            result = result.substring(0, result.length() - 1);
+            result = result.substring(0, result.length() - 2);
+            result += ")";
         }
         return result;
     }

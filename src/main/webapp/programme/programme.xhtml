@@ -145,11 +145,15 @@
                                      var="programme" 
                                      value="#{programmeBean.programmes}" 
                                      rowKey="#{programme.id}" 
+                                     
                                      paginator="true" 
                                      rows="15"   
                                      paginatorPosition="bottom" 
                                      paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{programmeBean.programme}" selectionMode="single" >                                        
+                             <f:facet name="header" >  
+                                LISTES DE PROGRAMMES
+                            </f:facet> 
                             <p:column headerText="UE" filterBy="#{programme.uniteEnseignement.code}" filterValue="#{programme.uniteEnseignement.code}" id="UE">  
                                 #{programme.uniteEnseignement.code}  
                             </p:column>                                                           
