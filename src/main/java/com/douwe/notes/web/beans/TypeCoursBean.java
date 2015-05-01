@@ -7,6 +7,7 @@ import com.douwe.notes.service.IEvaluationDetailService;
 import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.ITypeCoursService;
 import com.douwe.notes.service.ServiceException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -15,12 +16,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.NodeCollapseEvent;
-import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 @Named(value = "typeCoursBean")
 @RequestScoped
@@ -40,10 +35,12 @@ public class TypeCoursBean {
     private TypeCours typeCours = new TypeCours();
     private List<TypeCours> typeCourss;
     private Long idE = 0L;
+    private int max;
 
     public TypeCoursBean() {
         evaluationDetails = new EvaluationDetails();
         evaluation = new Evaluation();
+        max=100;
     }
 
     public void saveOrUpdateTypeCours(ActionEvent actionEvent) throws ServiceException {
@@ -63,7 +60,7 @@ public class TypeCoursBean {
     public void deleteTypeCours(ActionEvent actionEvent) throws ServiceException {
         System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getId() != null) {
-            typeCoursService.deleteTypeCours(typeCours.getId());            
+            typeCoursService.deleteTypeCours(typeCours.getId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", typeCours.getNom() + " a été supprimé"));
             typeCours = new TypeCours();
         }
@@ -86,7 +83,6 @@ public class TypeCoursBean {
     }
 
     public void verifierEtOuvrir(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getId() != null) {
             RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
         } else {
@@ -95,18 +91,22 @@ public class TypeCoursBean {
     }
 
     public void saveEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
-        evaluationDetailService.addEvaluation(typeCours.getId(), idE, evaluationDetails.getPourcentage());
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
-        evaluationDetails = new EvaluationDetails();
-        evaluation = new Evaluation();
-        typeCours = new TypeCours();
-        idE = 0L;
+        if (!isFull(typeCours.getId())) {
+            evaluationDetailService.addEvaluation(typeCours.getId(), idE, evaluationDetails.getPourcentage());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
+            evaluationDetails = new EvaluationDetails();
+            evaluation = new Evaluation();
+            typeCours = new TypeCours();
+            idE = 0L;
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Attention", "la totalité des pourcentages ne doit pas dépassé 100%"));
+        }
     }
 
     public void updateEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
-        int p = evaluationDetails.getPourcentage();        
-        evaluationDetails=evaluationDetailService.findEvaluationDetailsById(evaluationDetails.getId());
-        System.out.println(""+typeCours.getId()+" " +evaluationDetails.getEvaluation().getId()+" "+ p);
+        int p = evaluationDetails.getPourcentage();
+        evaluationDetails = evaluationDetailService.findEvaluationDetailsById(evaluationDetails.getId());
+        System.out.println("" + typeCours.getId() + " " + evaluationDetails.getEvaluation().getId() + " " + p);
         evaluationDetailService.modifierEvaluation(typeCours.getId(), evaluationDetails.getEvaluation().getId(), p);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
         evaluationDetails = new EvaluationDetails();
@@ -165,9 +165,11 @@ public class TypeCoursBean {
     public void setEvaluationDetails(EvaluationDetails evaluationDetails) {
         this.evaluationDetails = evaluationDetails;
     }
-    public List<EvaluationDetails> findAll(TypeCours typeCours) throws ServiceException{
-    return evaluationDetailService.findEvaluationDetailsByTypeCours(typeCours.getId());
+
+    public List<EvaluationDetails> findAll(TypeCours typeCours) throws ServiceException {
+        return evaluationDetailService.findEvaluationDetailsByTypeCours(typeCours.getId());
     }
+
     public List<EvaluationDetails> getEvaluationDetailses() throws ServiceException {
         evaluationDetailses = evaluationDetailService.findEvaluationDetailsByTypeCours(idE);
         return evaluationDetailses;
@@ -186,9 +188,43 @@ public class TypeCoursBean {
     }
 
     public List<Evaluation> getEvaluations() throws ServiceException {
-        evaluations = evaluationService.getAllEvaluations();
+        evaluations = new ArrayList<Evaluation>();
+        List<EvaluationDetails> evls = null;
+        if (typeCours != null && typeCours.getId() != null) {            
+            evls = evaluationDetailService.findEvaluationDetailsByTypeCours(typeCours.getId());
+        }
+        List<Evaluation> evaluationc = evaluationService.getAllEvaluations();
+        int k = 0;
+        int pour=0;
+        for (Evaluation e1 : evaluationc) {
+            if (evls != null) {
+                for (EvaluationDetails e : evls) {
+                    if (e.getEvaluation().getId() == e1.getId()) {
+                        k++;
+                        pour +=e.getPourcentage();
+                    }
+                }
+            }
+            if (k == 0) {
+                evaluations.add(e1);
+            }
+            k = 0;
+        }
+        max -=pour;
+        if(evaluationDetails !=null && evaluationDetails.getId()!=null){
+            max += evaluationDetails.getPourcentage();
+            return evaluationc;            
+        }
+        if (evaluations.size() == 0) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information", "plus d'évaluation pour ce type de cours. enregistrez une nouvelle évaluation ou supprimez|modifiez une évaluation"));
+        }
+
         return evaluations;
     }
+    public List<Evaluation> evals() throws ServiceException{
+     return evaluationService.getAllEvaluations();
+    }
+             
 
     public void setEvaluations(List<Evaluation> evaluations) {
         this.evaluations = evaluations;
@@ -212,4 +248,28 @@ public class TypeCoursBean {
     public void setIdE(Long idE) {
         this.idE = idE;
     }
+
+    public boolean isFull(Long id) throws ServiceException {
+        //typeCours.setId(id);
+        List<EvaluationDetails> evls = evaluationDetailService.findEvaluationDetailsByTypeCours(id);
+        int total = 0;
+        for (EvaluationDetails evl : evls) {
+            total += evl.getPourcentage();
+        }
+        if (total < 100) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+    
 }
