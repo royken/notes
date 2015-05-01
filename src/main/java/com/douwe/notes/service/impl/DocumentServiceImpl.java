@@ -4,15 +4,19 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IDepartementDao;
+import com.douwe.notes.dao.IEnseignantDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
+import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
+import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
+import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
@@ -58,6 +62,9 @@ public class DocumentServiceImpl implements IDocumentService {
     private INiveauDao niveauDao;
 
     @Inject
+    private IEnseignantDao enseignantDao;
+
+    @Inject
     private IOptionDao optionDao;
 
     @Inject
@@ -65,23 +72,25 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
-    
+
     @Inject
     private IDepartementDao departementDao;
 
     // TODO Royken I faut eviter les dependances vers les services
     @Inject
     private IEvaluationService evaluationService;
-    
+
     @Inject
     private IProgrammeDao programmeDao;
-    
+
+    @Inject
+    private IParcoursDao parcoursDao;
+
 //    @Inject
 //    private IUniteEnseignementDao uniteDao;
 //    
 //    @Inject
 //    private ISemestreDao semestreDao;
-
     public INoteService getNoteService() {
         return noteService;
     }
@@ -122,7 +131,6 @@ public class DocumentServiceImpl implements IDocumentService {
         this.academiqueDao = academiqueDao;
     }
 
-
     public IDepartementDao getDepartementDao() {
         return departementDao;
     }
@@ -130,8 +138,14 @@ public class DocumentServiceImpl implements IDocumentService {
     public void setDepartementDao(IDepartementDao departementDao) {
         this.departementDao = departementDao;
     }
-    
-    
+
+    public IEnseignantDao getEnseignantDao() {
+        return enseignantDao;
+    }
+
+    public void setEnseignantDao(IEnseignantDao enseignantDao) {
+        this.enseignantDao = enseignantDao;
+    }
 
     public IEvaluationService getEvaluationService() {
         return evaluationService;
@@ -149,6 +163,14 @@ public class DocumentServiceImpl implements IDocumentService {
         this.programmeDao = programmeDao;
     }
 
+    public IParcoursDao getParcoursDao() {
+        return parcoursDao;
+    }
+
+    public void setParcoursDao(IParcoursDao parcoursDao) {
+        this.parcoursDao = parcoursDao;
+    }
+
 //    public IUniteEnseignementDao getUniteDao() {
 //        return uniteDao;
 //    }
@@ -164,7 +186,6 @@ public class DocumentServiceImpl implements IDocumentService {
 //    public void setSemestreDao(ISemestreDao semestreDao) {
 //        this.semestreDao = semestreDao;
 //    }
-    
     @Override
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
         try {
@@ -181,11 +202,11 @@ public class DocumentServiceImpl implements IDocumentService {
 //            Semestre semestre = semestreDao.findByNiveau(niveau).get(session);
 //            testCompterCredit(niveau, option, semestre, anne);
             Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
-            produceHeader(doc, cours, niveau, option, anne, s, prog,null);
+            produceHeader(doc, cours, niveau, option, anne, s, prog, false);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s,prog,null);
+            produceHeader(doc, cours, niveau, option, anne, s, prog,false);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -197,7 +218,7 @@ public class DocumentServiceImpl implements IDocumentService {
         }
         return null;
     }
-    
+
 //    private void testCompterCredit(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException{
 //        System.out.println("***************************************************************************************");
 //        List<UEnseignementCredit> results = uniteDao.findByNiveauOptionSemestre(niveau, option, semestre, annee);
@@ -206,7 +227,6 @@ public class DocumentServiceImpl implements IDocumentService {
 //        }
 //        System.out.println("***************************************************************************************");
 //    }
-
     private static String transformNoteGrade(double note) {
         if (note <= 20 && note >= 16) {
             return "A+";
@@ -246,7 +266,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, Departement d) throws Exception {
+    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, boolean departement) throws Exception {
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         Font fontEntete = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         // Définition de l'entete du document
@@ -259,9 +279,9 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("Université de Maroua\n");
         builder.append("****\n");
         builder.append("Institut Supérieur du Sahel");
-        if(d != null){
+        if (departement) {
             builder.append("****\n");
-            builder.append(d.getFrenchDescription());
+            builder.append(o.getDepartement().getFrenchDescription());
         }
         Paragraph frecnch = new Paragraph(new Phrase(builder.toString(), bf12));
         frecnch.setAlignment(Element.ALIGN_CENTER);
@@ -275,15 +295,15 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("The University of Maroua\n");
         builder.append("****\n");
         builder.append("The Higher Institute of the Sahel");
-        if(d != null){
+        if (departement) {
             builder.append("****\n");
-            builder.append(d.getEnglishDescription());
+            builder.append(o.getDepartement().getEnglishDescription());
         }
         Paragraph eng = new Paragraph(new Phrase(builder.toString(), bf12));
         eng.setAlignment(Element.ALIGN_CENTER);
         builder = new StringBuilder();
         builder.append("B.P. / P.O. Box: 46 Maroua\n");
-        if(d != null){
+        if (departement) {
             builder.append("Tel : (+237) 22 62 03 76/ (+237) 22 62 08 90");
             builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41");
         }
@@ -320,93 +340,106 @@ public class DocumentServiceImpl implements IDocumentService {
         cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
         header.addCell(cell1);
         doc.add(header);
-        PdfPTable table2 = new PdfPTable(6);
-        table2.setWidthPercentage(100);
-        PdfPCell cell;
-        Phrase phrase;
-        phrase = new Phrase();
-        phrase.add(new Chunk("Mention : ", fontEntete));
-        phrase.add(new Chunk(o.getDepartement().getFrenchDescription(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setColspan(2);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Titre de l'UE : ", fontEntete));
-        phrase.add(new Chunk(c.getIntitule(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setColspan(2);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Année Académique : ", fontEntete));
-        phrase.add(new Chunk(a.toString(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        cell.setColspan(2);
-        table2.addCell(cell);
+        /////////////////////////////
+        if (!departement) {
+            PdfPTable table2 = new PdfPTable(6);
+            table2.setWidthPercentage(100);
+            PdfPCell cell;
+            Phrase phrase;
+            phrase = new Phrase();
+            phrase.add(new Chunk("Mention : ", fontEntete));
+            System.out.println("Bugg " + o.getDepartement());
+            phrase.add(new Chunk(o.getDepartement().getFrenchDescription(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setColspan(2);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Titre de l'UE : ", fontEntete));
+            phrase.add(new Chunk(c.getIntitule(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setColspan(2);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Année Académique : ", fontEntete));
+            phrase.add(new Chunk(a.toString(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            cell.setColspan(2);
+            table2.addCell(cell);
 
     //    cell = new PdfPCell(new Phrase("Parcours : " + head.getParcours(), bf12));
+            phrase = new Phrase();
+            phrase.add(new Chunk("Parcours : ", fontEntete));
+            phrase.add(new Chunk(o.getDepartement().getCode(), bf12));
+            cell = new PdfPCell(phrase);
 
-        phrase = new Phrase();
-        phrase.add(new Chunk("Parcours : ", fontEntete));
-        phrase.add(new Chunk(o.getDepartement().getCode(), bf12));
-        cell = new PdfPCell(phrase);
+            cell.setColspan(2);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            // Il faut retrouver le code de l'UE
+            phrase = new Phrase();
+            phrase.add(new Chunk("Code de l'UE : ", fontEntete));
+            phrase.add(new Chunk(prog.getUniteEnseignement().getCode(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setColspan(2);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Option : ", fontEntete));
+            phrase.add(new Chunk(o.getCode(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Credit : ", fontEntete));
+            phrase.add(new Chunk("" + c.getCredit(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Niveau : ", fontEntete));
+            phrase.add(new Chunk(n.getCode(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            cell.setColspan(2);
+            table2.addCell(cell);
 
-        cell.setColspan(2);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        // Il faut retrouver le code de l'UE
-        phrase = new Phrase();
-        phrase.add(new Chunk("Code de l'UE : ", fontEntete));
-        phrase.add(new Chunk(prog.getUniteEnseignement().getCode(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setColspan(2);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Option : ", fontEntete));
-        phrase.add(new Chunk(o.getCode(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Credit : ", fontEntete));
-        phrase.add(new Chunk("" + c.getCredit(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Niveau : ", fontEntete));
-        phrase.add(new Chunk(n.getCode(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        cell.setColspan(2);
-        table2.addCell(cell);
+            // I faut retrouver le semestre du cours
+            phrase = new Phrase();
+            phrase.add(new Chunk("Semestre : ", fontEntete));
+            phrase.add(new Chunk(prog.getSemestre().getIntitule(), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            phrase = new Phrase();
+            phrase.add(new Chunk("Session : ", fontEntete));
+            phrase.add(new Chunk("" + (s.ordinal() + 1), bf12));
+            cell = new PdfPCell(phrase);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            // il faut retrouver les enseignants du cours
+            Parcours pa = parcoursDao.findByNiveauOption(n, o);
+            List<Enseignant> enseignants = enseignantDao.findByCours(c, a, pa);
+            String ens = "";
+            for (Enseignant enseignant : enseignants) {
+                ens += enseignant.getNom() + " / ";
+            }
+            if (ens.endsWith(" / ")) {
+                ens = ens.substring(0, ens.length() - 3);
+            }
+            phrase = new Phrase();
+            phrase.add(new Chunk("Enseignant(s) : ", fontEntete));
+            phrase.add(new Chunk(ens, bf12));
+            cell = new PdfPCell(phrase);
+            cell.setColspan(2);
+            cell.setBorderColor(BaseColor.WHITE);
+            table2.addCell(cell);
+            table2.setSpacingBefore(2f);
+            doc.add(table2);
 
-        // I faut retrouver le semestre du cours
-        phrase = new Phrase();
-        phrase.add(new Chunk("Semestre : ", fontEntete));
-        phrase.add(new Chunk(prog.getSemestre().getIntitule(), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        phrase = new Phrase();
-        phrase.add(new Chunk("Session : ", fontEntete));
-        phrase.add(new Chunk("" + (s.ordinal() + 1), bf12));
-        cell = new PdfPCell(phrase);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        // il faut retrouver les enseignants du cours
-        phrase = new Phrase();
-        phrase.add(new Chunk("Enseignant(s) : ", fontEntete));
-        phrase.add(new Chunk("Douwe Vincent", bf12));
-        cell = new PdfPCell(phrase);
-        cell.setColspan(2);
-        cell.setBorderColor(BaseColor.WHITE);
-        table2.addCell(cell);
-        table2.setSpacingBefore(2f);
-        doc.add(table2);
+        }
 
     }
 
@@ -429,7 +462,7 @@ public class DocumentServiceImpl implements IDocumentService {
             for (int i = 0; i < taille + 2; i++) {
                 relativeWidths[3 + i] = 2;
             }
-        }else{
+        } else {
             relativeWidths = new float[4 + taille];
             relativeWidths[0] = 1;
             relativeWidths[1] = 3;
@@ -442,8 +475,9 @@ public class DocumentServiceImpl implements IDocumentService {
         table.getDefaultCell().setBorderColor(BaseColor.BLACK);
         table.addCell(createDefaultHeaderCell("No", bf));
         table.addCell(createDefaultHeaderCell("Matricule", bf));
-        if(avecNoms)
+        if (avecNoms) {
             table.addCell(createDefaultHeaderCell("NOM(s) et PRENOM(s)", bf));
+        }
 
         for (Evaluation eval : evals) {
             table.addCell(createDefaultHeaderCell(String.format("%s / 20 ", eval.getCode()), bf));
@@ -451,16 +485,17 @@ public class DocumentServiceImpl implements IDocumentService {
         table.addCell(createDefaultHeaderCell("Moy / 20", bf));
         table.addCell(createDefaultHeaderCell("Grade", bf));
         table.setSpacingBefore(10f);
-        if(avecNoms)
+        if (avecNoms) {
             table.setWidthPercentage(98);
-        else
+        } else {
             table.setWidthPercentage(60);
+        }
         List<EtudiantNotes> notes = noteService.getAllNotesEtudiants(n, o, c, null, a, s);
         int i = 0;
         for (EtudiantNotes note : notes) {
             table.addCell(createDefaultBodyCell(String.valueOf(++i), bf12));
             table.addCell(createDefaultBodyCell(note.getMatricule(), bf12));
-            if(avecNoms){
+            if (avecNoms) {
                 PdfPCell cell = createDefaultBodyCell(note.getNom().toUpperCase(), bf12);
                 cell.setHorizontalAlignment(Element.ALIGN_LEFT);
                 table.addCell(cell);
@@ -473,16 +508,19 @@ public class DocumentServiceImpl implements IDocumentService {
             double moyenne = note.getMoyenne();
             table.addCell(createDefaultBodyCell(String.format("%.2f", moyenne), bf12));
             table.addCell(createDefaultBodyCell(transformNoteGrade(moyenne), bf12));
-            if(moyenne > max)
+            if (moyenne > max) {
                 max = moyenne;
-            if(moyenne < min)
+            }
+            if (moyenne < min) {
                 min = moyenne;
-            if(moyenne >= 15)
+            }
+            if (moyenne >= 15) {
                 sup15++;
-            else if(moyenne >= 10)
+            } else if (moyenne >= 10) {
                 entre1014++;
-            else
+            } else {
                 inf10++;
+            }
         }
 
 //            System.out.println("");
@@ -579,10 +617,10 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.getDefaultCell().setPaddingTop(5f);
         pourcentage.addCell(new Phrase());
         pourcentage.addCell(new Phrase());
-        pourcentage.addCell(new Phrase("Pourcentage(%)",bf));
+        pourcentage.addCell(new Phrase("Pourcentage(%)", bf));
         pourcentage.addCell(new Phrase("Moyenne Comprise entre 15 et 20", bf));
         pourcentage.addCell(new Phrase(String.valueOf(stats.getNombreMoyenneSuperieureQuinze()), bf));
-        pourcentage.addCell(new Phrase(String.format("%.2f",100 * ((stats.getNombreMoyenneSuperieureQuinze() * 1.0) / stats.getEffectif())), bf));
+        pourcentage.addCell(new Phrase(String.format("%.2f", 100 * ((stats.getNombreMoyenneSuperieureQuinze() * 1.0) / stats.getEffectif())), bf));
         pourcentage.addCell(new Phrase("Moyenne Comprise entre 14,99 et 10", bf));
         pourcentage.addCell(new Phrase(String.valueOf(stats.getNombreMoyenneEntre10et15()), bf));
         pourcentage.addCell(new Phrase(String.format("%.2f", 100 * ((stats.getNombreMoyenneEntre10et15() * 1.0) / stats.getEffectif())), bf));
@@ -593,17 +631,17 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.addCell(new Phrase(String.format(String.valueOf(stats.getEffectif())), bf));
         pourcentage.addCell("");
         pourcentage.addCell(new Phrase("Plus Grande MOY (Max)", bf));
-        pourcentage.addCell(new Phrase(String.format("%.2f",stats.getPlusGrandeMoyenne()), bf));
+        pourcentage.addCell(new Phrase(String.format("%.2f", stats.getPlusGrandeMoyenne()), bf));
         pourcentage.addCell("");
         pourcentage.addCell(new Phrase("Plus Petite MOY (Min)", bf));
-        pourcentage.addCell(new Phrase(String.format("%.2f",stats.getPlusPetiteMoyenne()), bf));
+        pourcentage.addCell(new Phrase(String.format("%.2f", stats.getPlusPetiteMoyenne()), bf));
         pourcentage.addCell("");
         pourcentage.addCell(new Phrase());
         pourcentage.addCell(new Phrase());
         pourcentage.addCell(new Phrase());
         pourcentage.addCell(new Phrase("Taux de Réussite >=10", bf));
         pourcentage.addCell(new Phrase());
-        pourcentage.addCell(new Phrase(String.format("%.2f",100 * ((stats.getNombreMoyenneEntre10et15() + stats.getNombreMoyenneSuperieureQuinze()) * 1.0 / stats.getEffectif())), bf));
+        pourcentage.addCell(new Phrase(String.format("%.2f", 100 * ((stats.getNombreMoyenneEntre10et15() + stats.getNombreMoyenneSuperieureQuinze()) * 1.0 / stats.getEffectif())), bf));
         pourcentage.setSpacingBefore(15f);
         doc.add(pourcentage);
     }
