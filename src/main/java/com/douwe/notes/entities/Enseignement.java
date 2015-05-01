@@ -37,19 +37,19 @@ public class Enseignement implements Serializable {
     private Long id;
     
     @Version
-    @XmlTransient
+    //@XmlTransient
     private int version;
     
     @ManyToOne(optional = false)
-    @XmlTransient
+    //@XmlTransient
     private AnneeAcademique anneeAcademique;
     
     @ManyToMany
-    @XmlTransient
+    //@XmlTransient
     private List<Enseignant> enseignants;
     
     @ManyToOne(optional = false)
-    @XmlTransient
+    //@XmlTransient
     private Cours cours;
     
      @XmlTransient
