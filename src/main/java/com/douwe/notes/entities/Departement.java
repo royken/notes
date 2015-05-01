@@ -48,7 +48,11 @@ public class Departement implements Serializable {
     
     @XmlElement
     @Column
-    private String description;
+    private String frenchDescription;
+    
+    @XmlElement
+    @Column
+    private String englishDescription;
     
     @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -74,14 +78,6 @@ public class Departement implements Serializable {
         this.code = code;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @JsonIgnore
     public int getVersion() {
         return version;
@@ -102,10 +98,25 @@ public class Departement implements Serializable {
         this.active = active;
     }
 
+    public String getFrenchDescription() {
+        return frenchDescription;
+    }
+
+    public void setFrenchDescription(String frenchDescription) {
+        this.frenchDescription = frenchDescription;
+    }
+
+    public String getEnglishDescription() {
+        return englishDescription;
+    }
+
+    public void setEnglishDescription(String englishDescription) {
+        this.englishDescription = englishDescription;
+    }
+
     @Override
     public String toString() {
-        return "Departement{" + "id=" + id + ", version=" + version + ", code=" + code + ", description=" + description + ", active=" + active + '}';
+        return "Departement{" + "id=" + id + ", version=" + version + ", code=" + code + ", frenchDescription=" + frenchDescription + ", englishDescription=" + englishDescription + ", active=" + active + '}';
     }
-    
     
 }

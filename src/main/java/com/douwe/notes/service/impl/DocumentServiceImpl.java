@@ -175,19 +175,17 @@ public class DocumentServiceImpl implements IDocumentService {
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             Departement departement = optionDao.findDepartement(option);
-
-
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
 //            Semestre semestre = semestreDao.findByNiveau(niveau).get(session);
 //            testCompterCredit(niveau, option, semestre, anne);
             Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
-            produceHeader(doc, cours, niveau, option, anne, s, prog);
+            produceHeader(doc, cours, niveau, option, anne, s, prog,null);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s,prog);
+            produceHeader(doc, cours, niveau, option, anne, s,prog,null);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -248,7 +246,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog) throws Exception {
+    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, Departement d) throws Exception {
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         Font fontEntete = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         // Définition de l'entete du document
@@ -261,6 +259,10 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("Université de Maroua\n");
         builder.append("****\n");
         builder.append("Institut Supérieur du Sahel");
+        if(d != null){
+            builder.append("****\n");
+            builder.append(d.getFrenchDescription());
+        }
         Paragraph frecnch = new Paragraph(new Phrase(builder.toString(), bf12));
         frecnch.setAlignment(Element.ALIGN_CENTER);
         builder = new StringBuilder();
@@ -273,10 +275,18 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("The University of Maroua\n");
         builder.append("****\n");
         builder.append("The Higher Institute of the Sahel");
+        if(d != null){
+            builder.append("****\n");
+            builder.append(d.getEnglishDescription());
+        }
         Paragraph eng = new Paragraph(new Phrase(builder.toString(), bf12));
         eng.setAlignment(Element.ALIGN_CENTER);
         builder = new StringBuilder();
         builder.append("B.P. / P.O. Box: 46 Maroua\n");
+        if(d != null){
+            builder.append("Tel : (+237) 22 62 03 76/ (+237) 22 62 08 90");
+            builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41");
+        }
         builder.append("Email: institutsupsahel.uma@gmail.com\n");
         builder.append("Site: http://www.uni-maroua.citi.cm");
         Paragraph coordonnees = new Paragraph(new Phrase(builder.toString(), bf12));
@@ -316,7 +326,7 @@ public class DocumentServiceImpl implements IDocumentService {
         Phrase phrase;
         phrase = new Phrase();
         phrase.add(new Chunk("Mention : ", fontEntete));
-        phrase.add(new Chunk(o.getDepartement().getDescription(), bf12));
+        phrase.add(new Chunk(o.getDepartement().getFrenchDescription(), bf12));
         cell = new PdfPCell(phrase);
         cell.setColspan(2);
         cell.setBorderColor(BaseColor.WHITE);
@@ -596,6 +606,11 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.addCell(new Phrase(String.format("%.2f",100 * ((stats.getNombreMoyenneEntre10et15() + stats.getNombreMoyenneSuperieureQuinze()) * 1.0 / stats.getEffectif())), bf));
         pourcentage.setSpacingBefore(15f);
         doc.add(pourcentage);
+    }
+
+    @Override
+    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

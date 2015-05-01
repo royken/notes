@@ -57,7 +57,8 @@ public class DepartementResource implements IDepartementResource {
             }
             //Departement current = readDepartement(in);
             depart.setCode(current.getCode());
-            depart.setDescription(current.getDescription());
+            depart.setFrenchDescription(current.getFrenchDescription());
+            depart.setEnglishDescription(current.getEnglishDescription());
             return departementService.saveOrUpdateDepartement(depart);
         } catch (ServiceException ex) {
             Logger.getLogger(DepartementResource.class.getName()).log(Level.SEVERE, null, ex);
