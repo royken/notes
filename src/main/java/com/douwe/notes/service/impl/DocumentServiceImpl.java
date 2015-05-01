@@ -225,6 +225,10 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("Université de Maroua\n");
         builder.append("****\n");
         builder.append("Institut Supérieur du Sahel");
+        if(d != null){
+            builder.append("****\n");
+            builder.append(d.getFrenchDescription());
+        }
         Paragraph frecnch = new Paragraph(new Phrase(builder.toString(), bf12));
         frecnch.setAlignment(Element.ALIGN_CENTER);
         builder = new StringBuilder();
@@ -237,10 +241,18 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("The University of Maroua\n");
         builder.append("****\n");
         builder.append("The Higher Institute of the Sahel");
+        if(d != null){
+            builder.append("****\n");
+            builder.append(d.getEnglishDescription());
+        }
         Paragraph eng = new Paragraph(new Phrase(builder.toString(), bf12));
         eng.setAlignment(Element.ALIGN_CENTER);
         builder = new StringBuilder();
         builder.append("B.P. / P.O. Box: 46 Maroua\n");
+        if(d != null){
+            builder.append("Tel : (+237) 22 62 03 76/ (+237) 22 62 08 90");
+            builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41");
+        }
         builder.append("Email: institutsupsahel.uma@gmail.com\n");
         builder.append("Site: http://www.uni-maroua.citi.cm");
         Paragraph coordonnees = new Paragraph(new Phrase(builder.toString(), bf12));
@@ -560,6 +572,11 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.addCell(new Phrase(String.format("%.2f",100 * ((stats.getNombreMoyenneEntre10et15() + stats.getNombreMoyenneSuperieureQuinze()) * 1.0 / stats.getEffectif())), bf));
         pourcentage.setSpacingBefore(15f);
         doc.add(pourcentage);
+    }
+
+    @Override
+    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
