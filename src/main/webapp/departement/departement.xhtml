@@ -20,8 +20,10 @@
                                         <p:inputText value="#{departementBean.departement.code}"   style="margin-left: 10px;margin-top: 10px;" >  
                                             <f:validateLength maximum="20"/>  
                                         </p:inputText>
-                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{departementBean.departement.description}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="Description Français: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.frenchDescription}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="English Description: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.englishDescription}"   style="margin-left: 10px;margin-top: 10px;"/>
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
@@ -42,8 +44,10 @@
                                         <p:inputText value="#{departementBean.departement.code}"   style="margin-left: 10px;margin-top: 10px;" >  
                                             <f:validateLength maximum="20"/>  
                                         </p:inputText>
-                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{departementBean.departement.description}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="Description Français: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.frenchDescription}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="English Description: "  style="margin-left: 10px;margin-top: 10px;"/>
+                                        <p:inputText value="#{departementBean.departement.englishDescription}"   style="margin-left: 10px;margin-top: 10px;"/>
                                         <h:inputHidden value="#{departementBean.departement.id}"  />
                                         <h:inputHidden value="#{departementBean.departement.version}"  />
                                         <h:inputHidden value="#{departementBean.departement.active}"  />
@@ -72,9 +76,12 @@
                             <p:column headerText="Code du departement" id="code" >  
                                 #{departement.code}  
                             </p:column>                                                                                
-                             <p:column headerText="Description" id="description" >  
-                                #{departement.description}  
+                            <p:column headerText="Description Français" id="descriptionrancais" >  
+                                #{departement.frenchDescription}  
                             </p:column>
+                            <p:column headerText="English Description" id="englishDescription" >  
+                                #{departement.englishDescription}  
+                            </p:column>                            
                             <f:facet name="footer" >  
                                 <p:commandButton id="ajouter" value="Nouveau departement" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
