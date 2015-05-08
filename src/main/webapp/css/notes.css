@@ -28,15 +28,12 @@ footer{
     font-size: small;
     text-align: center;
 }
-table{
-    border: none;    
-}
 
 table.type_cours td{
     border: none;
 }
 
 table.type_cours td:last-child{
-    
+    text-align: right;
     width: 20%;
 }

@@ -18,6 +18,6 @@ public interface IDocumentService {
     
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session,OutputStream stream)throws ServiceException;
     
-    public String produireSynthese(Long niveauId, Long optionId,Long academiqueId,Long semestreId);
+    public String produireSynthese(Long niveauId, Long optionId,Long academiqueId,Long semestreId, OutputStream stream);
     
 }
