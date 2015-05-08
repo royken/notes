@@ -15,22 +15,22 @@ import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.FaceletContext;
+import javax.faces.webapp.FacesServlet;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -39,15 +39,16 @@ import org.primefaces.model.UploadedFile;
 @Named(value = "procesVerbalBean")
 @RequestScoped
 public class ProcesVerbalBean {
+
     private Session session;
     private List<AnneeAcademique> anneeAcademiques;
-    
+
     @EJB
     private INoteService noteService;
     @EJB
     private ICoursService coursService;
     @EJB
-    private IDepartementService departementService;    
+    private IDepartementService departementService;
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
     @EJB
@@ -56,9 +57,9 @@ public class ProcesVerbalBean {
     private INiveauService niveauService;
     @EJB
     private IDocumentService documentService;
-    
+
     private StreamedContent fichier;
-    
+
     private List<Niveau> niveaus;
     private List<Option> options;
     private List<Cours> courses;
@@ -68,23 +69,30 @@ public class ProcesVerbalBean {
     private Map<String, Long> cities = null;
     Long idAca = null;
     Long idC = null;
-    
+
     Long idN = null;
     Long idO = null;
-    Long idD = null;    
-    
+    Long idD = null;
+
     public void procesVerbal() throws ServiceException, FileNotFoundException {
-        if (idN != null && idO != null && idC!=null && session != null ) {            
-            FileOutputStream out = new FileOutputStream("PV");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            // TODO Douwe
-            documentService.produirePv(idN, idO, idC, idAca, session.ordinal() , out);
-            
-            //FaceletContext.ge
-            //HttpServletResponse respo
+        if (idN != null && idO != null && idC != null && session != null) {
+            FacesContext context = FacesContext.getCurrentInstance();
+
+            Object response = context.getExternalContext().getResponse();
+            if (response instanceof HttpServletResponse) {
+                try {
+                    HttpServletResponse hsr = (HttpServletResponse) response;
+                    hsr.setContentType("application/pdf");
+                    hsr.setHeader("Content-Disposition","attachment; filename=pv.pdf");
+                    documentService.produirePv(idN, idO, idC, idAca, session.ordinal(), ((HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
+                    context.responseComplete();
+                } catch (IOException ex) {
+                    Logger.getLogger(ProcesVerbalBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
         }
     }
-
 
     public List<AnneeAcademique> getAnneeAcademiques() throws ServiceException {
         anneeAcademiques = anneeAcademiqueService.getAllAnnee();
@@ -102,8 +110,6 @@ public class ProcesVerbalBean {
     public void setIdAca(Long idAca) {
         this.idAca = idAca;
     }
-
-
 
     public IAnneeAcademiqueService getAnneeAcademiqueService() {
 
@@ -146,7 +152,6 @@ public class ProcesVerbalBean {
     public void setIdC(Long idC) {
         this.idC = idC;
     }
-
 
     public IDepartementService getDepartementService() {
         return departementService;

@@ -45,6 +45,9 @@ public class UniteEnseignement implements Serializable {
     @Column(unique = true)
     private String code;
     
+    @Column
+    private boolean hasOptionalChoices;
+    
      @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
@@ -124,6 +127,15 @@ public class UniteEnseignement implements Serializable {
     public void setCourses(List<Cours> courses) {
         this.courses = courses;
     }
+
+    public boolean isHasOptionalChoices() {
+        return hasOptionalChoices;
+    }
+
+    public void setHasOptionalChoices(boolean hasOptionalChoices) {
+        this.hasOptionalChoices = hasOptionalChoices;
+    }
+    
 
     @Override
     public String toString() {

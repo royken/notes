@@ -146,6 +146,7 @@ public class NoteServiceImpl implements INoteService {
     @Override
     public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws ServiceException {
         List<EtudiantNotes> result = new ArrayList<EtudiantNotes>();
+        boolean test = false;
         try {
 
             Map<String, Integer> calc = new HashMap<String, Integer>();
@@ -166,14 +167,24 @@ public class NoteServiceImpl implements INoteService {
                 for (Evaluation eval : evaluations) {
                     try {
                         Note n = noteDao.getNoteCours(etudiant, eval, cours, academique, session);
+                        if (eval.isIsExam() == true && n.getValeur() > -1) {
+                            test = true;
+                        }
                         notes.put(eval.getCode(), n.getValeur());
                     } catch (NoResultException nre) {
 
                     }
                 }
-                et.setNote(notes);
-                et.setDetails(calc);
-                result.add(et);
+                if (test && session == Session.rattrapage) {
+                    et.setNote(notes);
+                    et.setDetails(calc);
+                    result.add(et);
+                }
+                if(session == Session.normale){
+                    et.setNote(notes);
+                    et.setDetails(calc);
+                    result.add(et);
+                }
             }
             // pour chaque etudiant recuperer les différentes notes
         } catch (DataAccessException ex) {

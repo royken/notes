@@ -91,4 +91,26 @@ public class RapportResource implements IRapportResource {
                 "attachment; filename="+filename+"pv.pdf").build();
     }
 
+    @Override
+    public Response produireSynthese(final long niveauid, final long optionid, final long anneeid, final long semestreId) {
+        StreamingOutput stream = new StreamingOutput() {
+            @Override
+            public void write(OutputStream output) throws IOException, WebApplicationException {
+                try {
+                    //buildDocument(output);
+                    filename = documentService.produireSynthese(niveauid, optionid, anneeid, semestreId, output);
+            
+                    //fil
+                } catch (Exception e) {
+                    throw new WebApplicationException(e);
+                }
+            }
+        };
+
+        
+        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
+        return Response.ok(stream).header("Content-Disposition",
+                "attachment; filename="+filename+"synthese.pdf").build();
+    }
+
 }
