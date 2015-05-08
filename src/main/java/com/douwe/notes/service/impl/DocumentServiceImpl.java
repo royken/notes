@@ -9,6 +9,7 @@ import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.dao.IProgrammeDao;
+import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
@@ -18,9 +19,12 @@ import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
+import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
+import com.douwe.notes.projection.EtudiantNotesUe;
 import com.douwe.notes.projection.StatistiquesNote;
+import com.douwe.notes.projection.UEnseignementCredit;
 import com.douwe.notes.service.IDocumentService;
 import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.INoteService;
@@ -40,6 +44,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,6 +90,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IParcoursDao parcoursDao;
+
+    @Inject
+    private ISemestreDao semestreDao;
 
 //    @Inject
 //    private IUniteEnseignementDao uniteDao;
@@ -171,6 +179,14 @@ public class DocumentServiceImpl implements IDocumentService {
         this.parcoursDao = parcoursDao;
     }
 
+    public ISemestreDao getSemestreDao() {
+        return semestreDao;
+    }
+
+    public void setSemestreDao(ISemestreDao semestreDao) {
+        this.semestreDao = semestreDao;
+    }
+
 //    public IUniteEnseignementDao getUniteDao() {
 //        return uniteDao;
 //    }
@@ -206,7 +222,7 @@ public class DocumentServiceImpl implements IDocumentService {
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s, prog,false);
+            produceHeader(doc, cours, niveau, option, anne, s, prog, false);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -280,7 +296,7 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("****\n");
         builder.append("Institut Supérieur du Sahel");
         if (departement) {
-            builder.append("****\n");
+            builder.append("\n****\n");
             builder.append(o.getDepartement().getFrenchDescription());
         }
         Paragraph frecnch = new Paragraph(new Phrase(builder.toString(), bf12));
@@ -296,7 +312,7 @@ public class DocumentServiceImpl implements IDocumentService {
         builder.append("****\n");
         builder.append("The Higher Institute of the Sahel");
         if (departement) {
-            builder.append("****\n");
+            builder.append("\n****\n");
             builder.append(o.getDepartement().getEnglishDescription());
         }
         Paragraph eng = new Paragraph(new Phrase(builder.toString(), bf12));
@@ -304,8 +320,8 @@ public class DocumentServiceImpl implements IDocumentService {
         builder = new StringBuilder();
         builder.append("B.P. / P.O. Box: 46 Maroua\n");
         if (departement) {
-            builder.append("Tel : (+237) 22 62 03 76/ (+237) 22 62 08 90");
-            builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41");
+            builder.append("Tel : (+237) 22 62 03 76/ (+237) 22 62 08 90\n");
+            builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41\n");
         }
         builder.append("Email: institutsupsahel.uma@gmail.com\n");
         builder.append("Site: http://www.uni-maroua.citi.cm");
@@ -369,7 +385,7 @@ public class DocumentServiceImpl implements IDocumentService {
             cell.setColspan(2);
             table2.addCell(cell);
 
-    //    cell = new PdfPCell(new Phrase("Parcours : " + head.getParcours(), bf12));
+            //    cell = new PdfPCell(new Phrase("Parcours : " + head.getParcours(), bf12));
             phrase = new Phrase();
             phrase.add(new Chunk("Parcours : ", fontEntete));
             phrase.add(new Chunk(o.getDepartement().getCode(), bf12));
@@ -596,6 +612,21 @@ public class DocumentServiceImpl implements IDocumentService {
         return cell;
     }
 
+    private PdfPCell createSyntheseDefaultHeaderCell(String message, Font bf, boolean color) {
+        PdfPCell cell = new PdfPCell(new Phrase(message, bf));
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPaddingBottom(4f);
+        cell.setPaddingTop(5f);
+        cell.setBorderWidth(0.01f);
+        if (color) {
+            cell.setBorderColor(BaseColor.BLACK);
+        }
+        cell.setRotation(90);
+        return cell;
+    }
+
     private PdfPCell createDefaultBodyCell(String message, Font bf) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
         cell.setBackgroundColor(BaseColor.WHITE);
@@ -647,8 +678,103 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     @Override
-    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) {
+        try {
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, stream);
+            doc.open();
+            doc.setPageSize(PageSize.A4);
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
+            Departement departement = optionDao.findDepartement(option);
+            AnneeAcademique anne = academiqueDao.findById(academiqueId);
+            Semestre semestre = semestreDao.findById(semestreId);
+            produceHeader(doc, null, niveau, option, anne, null, null, true);
+            produceSyntheseBody(doc, niveau, option, semestre, anne);
+            doc.close();
+            //     Session s = Session.values()[session];
+//            Semestre semestre = semestreDao.findByNiveau(niveau).get(session);
+//            testCompterCredit(niveau, option, semestre, anne);
+            //  Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    private void produceSyntheseBody(Document doc, Niveau n, Option o, Semestre s, AnneeAcademique a) {
+        List<UEnseignementCredit> ues = getTrash();
+        double min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
+        int sup15 = 0;
+        int inf10 = 0;
+        int entre1014 = 0;
+        Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
+        Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
+        int taille = ues.size();
+        float relativeWidths[];
+        relativeWidths = new float[6 + taille];
+        relativeWidths[0] = 1;
+        relativeWidths[1] = 10;
+        relativeWidths[2] = 3;
+        for (int i = 0; i < taille + 3; i++) {
+            relativeWidths[3 + i] = 2;
+        }
+        PdfPTable table = new PdfPTable(relativeWidths);
+
+        table.getDefaultCell().setBorderColor(BaseColor.BLACK);
+        table.addCell(createSyntheseDefaultHeaderCell("No", bf,false));
+        table.addCell(createSyntheseDefaultHeaderCell("Noms et Prénoms", bf,false));
+        table.addCell(createSyntheseDefaultHeaderCell("Matricule", bf,false));
+        for (UEnseignementCredit ue : ues) {
+            table.addCell(createSyntheseDefaultHeaderCell(ue.getIntituleUE(), bf,false));
+        }
+        table.addCell(createSyntheseDefaultHeaderCell("Moyenne semestre I", bf,true));
+        table.addCell(createSyntheseDefaultHeaderCell("Crédits S3 validés", bf,true));
+        table.addCell(createSyntheseDefaultHeaderCell("% crédits s3 validés", bf,true));
+        table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
+        table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
+        table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
+        for (UEnseignementCredit ue : ues) {
+            table.addCell(createSyntheseDefaultHeaderCell(String.valueOf(ue.getCredit()), bf,true));
+        }
+        try {
+            doc.add(table);
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private List<UEnseignementCredit> getTrash() {
+        List<UEnseignementCredit> result = new ArrayList<UEnseignementCredit>();
+
+        UEnseignementCredit ue = new UEnseignementCredit("ITEL301", "Mathematiques 3", 4);
+        result.add(ue);
+        UEnseignementCredit ue1 = new UEnseignementCredit("ITEL302", "Architecture des ordinateurs", 4);
+        result.add(ue1);
+        UEnseignementCredit ue2 = new UEnseignementCredit("ITEL303", "Programmation et bases de données", 6);
+        result.add(ue2);
+        UEnseignementCredit ue3 = new UEnseignementCredit("ITEL304", "Electrotechnique", 4);
+        result.add(ue3);
+        UEnseignementCredit ue4 = new UEnseignementCredit("ITEL305", "Signaux et systèmes", 4);
+        result.add(ue4);
+        UEnseignementCredit ue5 = new UEnseignementCredit("ITEL306", "Communication analogique", 4);
+        result.add(ue5);
+        UEnseignementCredit ue6 = new UEnseignementCredit("ITEL307", "Communication technique", 0);
+        result.add(ue6);
+        UEnseignementCredit ue7 = new UEnseignementCredit("ITEL308", "Econimie et droit civil", 4);
+        result.add(ue7);
+
+        return result;
+    }
+
+    private List<EtudiantNotesUe> getTrash2() {
+        List<EtudiantNotesUe> result = new ArrayList<EtudiantNotesUe>();
+        return null;
     }
 
 }

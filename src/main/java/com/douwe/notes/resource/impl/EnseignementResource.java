@@ -30,6 +30,7 @@ public class EnseignementResource implements IEnseignementResource{
         this.service = service;
     }
     
+    @Override
     public Enseignement createEnseignement(Enseignement enseignement) {
         try {
             return service.saveOrUpdateEnseignement(enseignement);
@@ -39,6 +40,7 @@ public class EnseignementResource implements IEnseignementResource{
         }
     }
 
+    @Override
     public List<Enseignement> getAllEnseignements() {
         try {
             return service.getAllEnseignements();
@@ -48,6 +50,7 @@ public class EnseignementResource implements IEnseignementResource{
         }
     }
 
+    @Override
     public Enseignement getEnseignement(long id) {
         try {
             Enseignement enseignement = service.findEnseignementById(id);
@@ -61,6 +64,7 @@ public class EnseignementResource implements IEnseignementResource{
         }
     }
 
+    @Override
     public Enseignement updateEnseignement(long id, Enseignement enseignement) {
         try {
             Enseignement enseignement1 = service.findEnseignementById(id);
@@ -77,6 +81,7 @@ public class EnseignementResource implements IEnseignementResource{
         }
     }
 
+    @Override
     public void deleteEnseignement(long id) {
         try {
             service.deleteEnseignement(id);

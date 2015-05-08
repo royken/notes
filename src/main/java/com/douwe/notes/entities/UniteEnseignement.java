@@ -141,6 +141,4 @@ public class UniteEnseignement implements Serializable {
     public String toString() {
         return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", courses=" + courses + '}';
     }
-    
-    
 }
