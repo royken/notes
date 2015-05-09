@@ -37,3 +37,19 @@ table.type_cours td:last-child{
     text-align: right;
     width: 20%;
 }
+.syntaxe_content{
+    //margin-left: 10px;
+    //margin-top: 10px;
+    width: 100%;    
+    text-align: right;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#center_content_div{
+    text-align: center;
+    //width: ;
+    //margin: auto;
+}
+.cmd_button{
+    width: auto;
+}

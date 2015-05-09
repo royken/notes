@@ -15,15 +15,15 @@
                             <p:growl id="growl" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displaySave" columns="2">
-                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{cycleBean.cycle.nom}"   style="margin-left: 10px;margin-top: 10px;" />                                                                                                                      
+                                    <h:panelGrid id="displaySave" class="syntaxe_content" columns="2">
+                                        <h:outputText  value="Nom: "  class="syntaxe_content"/>
+                                        <p:inputText value="#{cycleBean.cycle.nom}"   class="syntaxe_content" />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{cycleBean.saveOrUpdateCycle(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
-                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton  value="Soumettre" class="cmd_button"  id="ajax1" actionListener ="#{cycleBean.saveOrUpdateCycle(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton  value="Annuler"  class="cmd_button" id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" /> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
@@ -34,28 +34,30 @@
                             <p:panel >
                                 <h:panelGroup >
                                     <h:panelGrid id="displayUpdate" columns="2">
-                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{cycleBean.cycle.nom}" required="true"  style="margin-left: 10px;margin-top: 10px;" />                                           
+                                        <h:outputText  value="Nom: "  class="syntaxe_content"/>
+                                        <p:inputText value="#{cycleBean.cycle.nom}" required="true"  class="syntaxe_content" />                                           
                                         <h:inputHidden value="#{cycleBean.cycle.id}"  />
                                         <h:inputHidden value="#{cycleBean.cycle.version}"  />
                                         <h:inputHidden value="#{cycleBean.cycle.active}"  />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{cycleBean.saveOrUpdateCycle(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax2" actionListener="#{cycleBean.saveOrUpdateCycle(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton class="cmd_button" value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" /> 
                                 </div>                    
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;  margin-left: auto;margin-right: auto;">                             
+                    <h:form id="f">                             
                         <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
                         <p:confirmDialog message="voulez-vous vraiment supprimer ce cycle ?"
                                          header="Initialisation de la suppression" severity="alert"
-                                         widgetVar="confirmation" hideEffect="fade" style=""> 
-                            <p:commandButton id="confirm" value="OUI" action="#{cycleBean.deleteCycle(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                                         widgetVar="confirmation" hideEffect="fade"> 
+                            <div id="center_content_div">
+                            <p:commandButton  id="confirm" value="OUI" action="#{cycleBean.deleteCycle(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d"/>
+                            <p:commandButton  id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" />
+                            </div>
                         </p:confirmDialog>
                         <p:dataTable id="d"  emptyMessage="Aucun cycle n'est enregistré" var="cycle" value="#{cycleBean.cycles}" rowKey="#{cycle.nom}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{cycleBean.cycle}" selectionMode="single" >            
@@ -65,11 +67,11 @@
                             <p:column headerText="Nom du cycle" id="code" >  
                                 #{cycle.nom}  
                             </p:column>                                                                                
-                            <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau Cycle" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
-                            </f:facet>                             
+                             <f:facet name="footer"> 
+                                <p:commandButton  id="ajouter" value="Nouveau Cycle" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>                            
+                             </f:facet>
                             <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{cycleBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-trash"/> 
+                                <p:commandButton  id="delete" value="Supprimer"  actionListener="#{cycleBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-trash"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
                                 <p:commandButton id="modifier" value="Modifier" actionListener="#{cycleBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  

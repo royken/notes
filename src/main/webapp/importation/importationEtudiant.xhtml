@@ -4,12 +4,12 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html">    
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
-                    <h:form id="f" enctype="multipart/form-data">                                                    
+                    <h:form id="f"  enctype="multipart/form-data">                                                    
                         <h:panelGroup >
                             <h:panelGrid id="d" columns="2" style="text-align: right;">                                                                                                                      
                                 <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
@@ -27,7 +27,7 @@
                                 <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 100%; margin-left: 10px;"  >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
                                 </h:selectOneMenu>                                 
-                                <p:commandButton update=":f:d" ajax="false" value="Importer" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                <p:commandButton update=":f:d" type="submit" ajax="false" value="Importer" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  
