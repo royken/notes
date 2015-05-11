@@ -339,7 +339,7 @@ public class DocumentServiceImpl implements IDocumentService {
         cell1.setBorderColor(BaseColor.WHITE);
         cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
         header.addCell(cell1);
-        URL url = new ClassPathResource("logo.png").getURL();
+        URL url = new ClassPathResource("logo4.png").getURL();
         Image logo = Image.getInstance(url);
         logo.scalePercent(65f);
         Paragraph p = new Paragraph();
@@ -727,6 +727,31 @@ public class DocumentServiceImpl implements IDocumentService {
         }
         return null;
     }
+    
+    @Override
+    public String produireSyntheseAnnuelle(OutputStream stream) throws ServiceException {
+        try {
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, stream);
+            doc.open();
+            doc.setPageSize(PageSize.A4.rotate());
+            Niveau niveau = niveauDao.findById(3L);
+            Option option = optionDao.findById(10L);
+            //Departement departement = optionDao.findDepartement(option);
+            AnneeAcademique anne = academiqueDao.findById(29L);
+            //List<Semestre> semestres = semestreDao.findByNiveau(niveau);
+            produceHeader(doc, null, niveau, option, anne, null, null, true);
+            produireSyntheseAnnueleBody(doc, null, null, null, null);
+            doc.close();
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     private void produceSyntheseBody(Document doc, Niveau n, Option o, Semestre s, AnneeAcademique a) {
         try {
@@ -748,7 +773,7 @@ public class DocumentServiceImpl implements IDocumentService {
             table.setWidthPercentage(95);
             
             table.addCell(createSyntheseDefaultHeaderCell("", bf, false));
-             PdfPCell cell = new PdfPCell(new Phrase("Synthese Semestre I",bf));
+             PdfPCell cell = new PdfPCell(new Phrase("Synthese " +s.getIntitule(),bf));
              cell.setColspan(taille+5);
              cell.setHorizontalAlignment(Element.ALIGN_CENTER);
              table.addCell(cell);
@@ -760,7 +785,7 @@ public class DocumentServiceImpl implements IDocumentService {
             for (UEnseignementCredit ue : ues) {
                 table.addCell(createSyntheseDefaultHeaderCell(ue.getIntituleUE(), bf, false));
             }
-            table.addCell(createSyntheseDefaultHeaderCell("Moyenne semestre I", bf, true));
+            table.addCell(createSyntheseDefaultHeaderCell("Moyenne " +s.getIntitule(), bf, true));
             table.addCell(createSyntheseDefaultHeaderCell("Crédits S3 validés", bf, true));
             table.addCell(createSyntheseDefaultHeaderCell("% crédits s3 validés", bf, true));
             table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
@@ -804,6 +829,38 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    private void produireSyntheseAnnueleBody(Document doc, Niveau n, Option o,List<Semestre> s, AnneeAcademique a){
+        try {
+            doc.add(new Phrase("\n"));
+            //Liste des ues du semestre 1
+            List<UEnseignementCredit> ues1 = getTrash();
+            
+            //Liste des ues du semestre 2
+            List<UEnseignementCredit> ues2 = getTrash();
+            Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
+            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
+            int taille1 = ues1.size();
+            int taille2 = ues2.size();
+            float relativeWidths[];
+            relativeWidths = new float[11 + taille1 + taille2];
+            relativeWidths[0] = 1;
+            relativeWidths[1] = 10;
+            relativeWidths[2] = 3;
+            for (int i = 0; i < taille1 + taille2 + 8; i++) {
+                relativeWidths[3 + i] = 2;
+            }
+            PdfPTable table = new PdfPTable(relativeWidths);
+            table.setWidthPercentage(95);
+            for(int i = 0; i < relativeWidths.length; i++){
+                table.addCell(createSyntheseDefaultHeaderCell("aaaa", bf, true));
+            }
+            doc.add(table);
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private List<UEnseignementCredit> getTrash() {
@@ -879,5 +936,7 @@ public class DocumentServiceImpl implements IDocumentService {
         result.add(enue3);
         return result;
     }
+
+    
 
 }
