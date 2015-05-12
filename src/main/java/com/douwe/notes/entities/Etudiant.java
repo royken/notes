@@ -50,6 +50,9 @@ public class Etudiant implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateDeNaissance;
     
+    @Column(columnDefinition = "tinyint(1) default true")
+    private boolean validDate;
+    
     @Column
     private String lieuDeNaissance;
     
@@ -152,6 +155,14 @@ public class Etudiant implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
+    }
+
+    public boolean isValidDate() {
+        return validDate;
+    }
+
+    public void setValidDate(boolean validDate) {
+        this.validDate = validDate;
     }
 
     @Override

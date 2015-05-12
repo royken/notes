@@ -30,7 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -146,7 +145,7 @@ public class NoteServiceImpl implements INoteService {
     @Override
     public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws ServiceException {
         List<EtudiantNotes> result = new ArrayList<EtudiantNotes>();
-        boolean test = false;
+        boolean state = false;
         try {
 
             Map<String, Integer> calc = new HashMap<String, Integer>();
@@ -154,9 +153,7 @@ public class NoteServiceImpl implements INoteService {
             for (EvaluationDetails detail : details) {
                 calc.put(detail.getEvaluation().getCode(), detail.getPourcentage());
             }
-            // Recuperer toutes les evaluations du cours concerné
-            List<Evaluation> evaluations = evaluationDao.evaluationForCourses(cours);
-
+            
             // recuperer les listes des  étudiants du parcours
             List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
             for (Etudiant etudiant : etudiants) {
@@ -164,45 +161,21 @@ public class NoteServiceImpl implements INoteService {
                 et.setMatricule(etudiant.getMatricule());
                 et.setNom(etudiant.getNom());
                 Map<String, Double> notes = new HashMap<String, Double>();
-                for (Evaluation eval : evaluations) {
-                    try {
-                        Note n = noteDao.getNoteCours(etudiant, eval, cours, academique, session);
-                        if (eval.isIsExam() == true && n.getValeur() > -1) {
-                            test = true;
-                        }
-                        notes.put(eval.getCode(), n.getValeur());
-                    } catch (NoResultException nre) {
-
-                    }
+                List<Note> nn = noteDao.listeNoteCours(etudiant, cours, academique, session);
+                for (Note nn1 : nn) {
+                    notes.put(nn1.getEvaluation().getCode(), nn1.getValeur());
+                    state = state || (nn1.getEvaluation().isIsExam() && nn1.getValeur() >= 0);
                 }
-                if (test && session == Session.rattrapage) {
-                    et.setNote(notes);
-                    et.setDetails(calc);
+                et.setNote(notes);
+                et.setDetails(calc);
+                if (state || session == Session.normale) {
                     result.add(et);
                 }
-                if(session == Session.normale){
-                    et.setNote(notes);
-                    et.setDetails(calc);
-                    result.add(et);
-                }
+                state = false;
             }
-            // pour chaque etudiant recuperer les différentes notes
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        // Renvoyer une liste de tuples et transformer ces tuples en EtudiantNotes
-//            List<Tuple> tmp = noteDao.getAllNotes(niveau, option, cours, ue, academique, session);
-//            for (Tuple tmp1 : tmp) {
-//                EtudiantNotes e = new EtudiantNotes();
-//                e.setMatricule(tmp1.get("matricule", String.class));
-//                e.setNom(tmp1.get("nom", String.class));
-//                Map<String, Double> notes = new HashMap<String, Double>();
-//                notes.put("CC", tmp1.get("CC", Double.class));
-//                notes.put("TPE", tmp1.get("CC", Double.class));
-//                notes.put("EE", tmp1.get("CC", Double.class));
-//                e.setNote(notes);
-        //}
         return result;
     }
 
@@ -256,7 +229,7 @@ public class NoteServiceImpl implements INoteService {
     private Note insertNote(String etudiantMatricule, String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session) {
 
         try {
-            Etudiant etudiant = new Etudiant();
+            Etudiant etudiant;
             if (etudiantMatricule != null) {
                 etudiant = etudiantDao.findByMatricule(etudiantMatricule);
             } else {
