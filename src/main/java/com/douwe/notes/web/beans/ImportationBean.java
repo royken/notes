@@ -1,7 +1,5 @@
 package com.douwe.notes.web.beans;
 
-import com.douwe.notes.entities.AnneeAcademique;
-import com.douwe.notes.entities.Etudiant;
 
 
 import com.douwe.notes.entities.AnneeAcademique;
@@ -16,7 +14,6 @@ import com.douwe.notes.entities.Session;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.IDepartementService;
-import com.douwe.notes.service.IDocumentService;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.IInscriptionService;
@@ -27,7 +24,6 @@ import com.douwe.notes.service.ServiceException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -35,7 +31,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -103,11 +98,11 @@ public class ImportationBean {
     public void saveAllEtudiant() throws ServiceException, IOException {        
         if (file != null) {            
             System.out.println("**********************"+file.getFileName());
-            etudiantService.importEtudiants(file.getInputstream(), idAca);
+            //etudiantService.importEtudiants(file.getInputstream(), idAca);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             file = null;
             idAca = 0L;
-        }        
+        }                
         
     }
     

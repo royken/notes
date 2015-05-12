@@ -18,6 +18,19 @@ public class EtudiantNotesUe {
     */
     private Map<String,Double> note;
 
+    public EtudiantNotesUe(String matricule, String nom, Map<String, Double> note) {
+        this.matricule = matricule;
+        this.nom = nom;
+        this.note = note;
+    }
+
+    public EtudiantNotesUe(String matricule, String nom) {
+        this.matricule = matricule;
+        this.nom = nom;
+    }
+    
+    
+
     public String getMatricule() {
         return matricule;
     }
