@@ -4,6 +4,7 @@ import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.service.IAnneeAcademiqueService;
@@ -11,12 +12,11 @@ import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.IDocumentService;
 import com.douwe.notes.service.IDepartementService;
 import com.douwe.notes.service.INiveauService;
+import com.douwe.notes.service.IParcoursService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesServlet;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.model.StreamedContent;
@@ -52,6 +51,8 @@ public class ProcesVerbalBean {
     @EJB
     private IAnneeAcademiqueService anneeAcademiqueService;
     @EJB
+    private IParcoursService parcoursService;
+    @EJB
     private IOptionService optionService;
     @EJB
     private INiveauService niveauService;
@@ -62,7 +63,7 @@ public class ProcesVerbalBean {
 
     private List<Niveau> niveaus;
     private List<Option> options;
-    private List<Cours> courses;
+    private Map<String, Long> courses;
     private List<Departement> departements;
     private List<Session> sessions;
     private Map<String, Long> countries = new HashMap<String, Long>();
@@ -136,14 +137,15 @@ public class ProcesVerbalBean {
         this.coursService = coursService;
     }
 
-    public List<Cours> getCourses() throws ServiceException {
-        courses = coursService.getAllCours();
+    public Map<String, Long> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Cours> courses) {
+    public void setCourses(Map<String, Long> courses) {
         this.courses = courses;
     }
+
+
 
     public Long getIdC() {
         return idC;
@@ -198,6 +200,23 @@ public class ProcesVerbalBean {
             cities = null;
         }
     }
+    public void handleNiveauOptionChange() throws ServiceException{
+        System.out.println("idN-------"+idN);
+        System.out.println("idO-------"+idO);
+        System.out.println("idAca-------"+idAca);
+    if (idN != null && idN != 0L && idO != null && idO != 0L) {
+        Niveau n = niveauService.findNiveauById(idN);
+        Option o = optionService.findOptionById(idO);
+            Parcours p = parcoursService.findByNiveauOption(n, o);
+            List<Cours> cs = coursService.findByParcoursAnnee(p.getId(), idAca);
+            courses = new HashMap<String, Long>();
+            for (Cours c : cs) {
+                courses.put(c.getIntitule(), c.getId());
+            }
+        } else {
+            courses = null;
+        }
+    }
 
     public Map<String, Long> getCountries() throws ServiceException {
         departements = departementService.getAllDepartements();
@@ -212,13 +231,13 @@ public class ProcesVerbalBean {
     }
 
     public Map<String, Long> getCities() throws ServiceException {
-        if (cities == null) {
-            cities = new HashMap<String, Long>();
-            options = optionService.getAllOptions();
-            for (Option opt : options) {
-                cities.put(opt.getCode(), opt.getId());
-            }
-        }
+//        if (cities == null) {
+//            cities = new HashMap<String, Long>();
+//            options = optionService.getAllOptions();
+//            for (Option opt : options) {
+//                cities.put(opt.getCode(), opt.getId());
+//            }
+//        }
 
         return cities;
     }

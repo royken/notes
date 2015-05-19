@@ -14,6 +14,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -23,7 +24,7 @@ import org.primefaces.context.RequestContext;
  *
  * @author root
  */
-@Named(value = "coursBean")
+@ManagedBean
 @RequestScoped
 public class CoursBean {
 
