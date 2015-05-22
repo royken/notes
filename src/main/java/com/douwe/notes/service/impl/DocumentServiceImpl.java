@@ -804,8 +804,8 @@ public class DocumentServiceImpl implements IDocumentService {
             List<EtudiantNotesUe> enues = getTrash2();
             int i = 1;
             for (EtudiantNotesUe enue : enues) {
-                double sumMoyenne = 0.0;
-                int nbrCreditValide = 0;
+                double sumMoyenne = 0.0; //sumMoyenne /30 renvoie à la moyenne trimestrielle
+                int nbrCreditValide = 0; // le nombre de crédits validés
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false));
                 table.addCell(createSyntheseDefaultBodyCell(enue.getNom(), bf1, false));
                 table.addCell(createSyntheseDefaultBodyCell(enue.getMatricule(), bf1, false));
@@ -943,13 +943,8 @@ public class DocumentServiceImpl implements IDocumentService {
                 
                 // SECOND SEMESTRE
                 for (UEnseignementCredit ue : ues2) {
-                     System.out.println("\n\n======= ue.getc  "+ue.getCodeUE() );
-                     System.out.println("\n\n======= ue.getc  "+ue.getCredit() );
-                     System.out.println("\n\n======= note  "+enues2.get(j).getNote().get(ue.getCodeUE()) );
                     double value = enues2.get(j).getNote().get(ue.getCodeUE());
-                    System.out.println("\n value = "+value);
                     sumMoyenne2 += value * ue.getCredit();
-                    System.out.println("\n\n======= ue.getc  "+ue.getCredit() );
                     if (value >= 10) {
                         nbrCreditValide2 += ue.getCredit();
                     }
