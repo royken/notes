@@ -4,6 +4,7 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.resource.IEtudiantResource;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.ImportationResult;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -125,12 +126,14 @@ public class EtudiantResource implements IEtudiantResource {
     }
 
     @Override
-    public void importEtudiant(InputStream fichier, FormDataContentDisposition fileDisposition,Long annee) {
+    public ImportationResult importEtudiant(InputStream fichier, FormDataContentDisposition fileDisposition,Long annee) {
         try {
-            etudiantService.importEtudiants(fichier, annee);
+            return etudiantService.importEtudiants(fichier, annee);
+            
         } catch (ServiceException ex) {
             Logger.getLogger(EtudiantResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
 }

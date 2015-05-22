@@ -41,6 +41,7 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
         Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
         Path<AnneeAcademique> anneePath = noteRoot.get(Note_.anneeAcademique);
         Path<Cours> coursPath = noteRoot.get(Note_.cours);
+        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(noteRoot.get(Note_.active), 1));
         if (etudiant != null) {
@@ -54,6 +55,9 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
         if (cours != null) {
             predicates.add(cb.equal(coursPath, cours));
             predicates.add(cb.equal(coursPath.get(Cours_.active), 1));
+        }
+        if(session != null){
+            predicates.add(cb.or(cb.isFalse(evaluationPath.get(Evaluation_.isExam)), cb.equal(noteRoot.get(Note_.session),session)));
         }
         cq.select(noteRoot);
         if (predicates.size() > 0) {
@@ -130,12 +134,12 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
    
 
     @Override
-    public Note getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException {
+    public double getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    @Override
+//    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }

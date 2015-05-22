@@ -215,7 +215,6 @@ public class DocumentServiceImpl implements IDocumentService {
             doc.setPageSize(PageSize.A4);
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
-            Departement departement = optionDao.findDepartement(option);
             Cours cours = coursDao.findById(coursId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];

@@ -15,8 +15,12 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEtudiantService;
 import com.douwe.notes.service.IInscriptionService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.ImportationError;
+import com.douwe.notes.service.util.ImportationResult;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +29,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,16 +44,16 @@ public class EtudiantServiceImpl implements IEtudiantService {
 
     @Inject
     private IEtudiantDao etudiantDao;
-    
+
     @Inject
     private IDepartementDao departementDao;
-    
+
     @Inject
     private IOptionDao optionDao;
-    
+
     @Inject
     private IAnneeAcademiqueDao anneeAcademiqueDao;
-    
+
     @Inject
     private INiveauDao niveauDao;
 
@@ -94,7 +99,6 @@ public class EtudiantServiceImpl implements IEtudiantService {
     public void setNiveauDao(INiveauDao niveauDao) {
         this.niveauDao = niveauDao;
     }
-    
 
     @Override
     public Etudiant saveOrUpdateEtudiant(Etudiant etudiant) throws ServiceException {
@@ -152,14 +156,18 @@ public class EtudiantServiceImpl implements IEtudiantService {
             AnneeAcademique annee = null;
             Niveau niveau = null;
             Option option = null;
-            if(departementId > 0)
+            if (departementId > 0) {
                 departement = departementDao.findById(departementId);
-            if (anneeId > 0)
+            }
+            if (anneeId > 0) {
                 annee = anneeAcademiqueDao.findById(anneeId);
-            if(niveauId > 0)
+            }
+            if (niveauId > 0) {
                 niveau = niveauDao.findById(niveauId);
-            if (optionId > 0)
+            }
+            if (optionId > 0) {
                 option = optionDao.findById(optionId);
+            }
             return etudiantDao.listeEtudiantParDepartementEtNiveau(departement, annee, niveau, option);
         } catch (DataAccessException ex) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -178,7 +186,10 @@ public class EtudiantServiceImpl implements IEtudiantService {
     }
 
     @Override
-    public void importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException {
+    public ImportationResult importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException {
+        ImportationResult result = new ImportationResult();
+        List<ImportationError> erreurs = new ArrayList<ImportationError>();
+        int count = 0;
         try {
             Workbook workbook = WorkbookFactory.create(stream);
             final Sheet sheet = workbook.getSheetAt(0);
@@ -186,25 +197,56 @@ public class EtudiantServiceImpl implements IEtudiantService {
             Row row = sheet.getRow(index++);
             while (row != null) {
                 Etudiant etudiant = new Etudiant();
+                if(row.getCell(1)== null)
+                    throw new IllegalArgumentException("Le matricule est obligatoire");
                 etudiant.setMatricule(row.getCell(1).getStringCellValue());
+                if(row.getCell(2)== null)
+                    throw new IllegalArgumentException("Le nom est obligatoire");
                 etudiant.setNom(row.getCell(2).getStringCellValue());
-                etudiant.setDateDeNaissance(row.getCell(3).getDateCellValue());
-                etudiant.setLieuDeNaissance(row.getCell(4).getStringCellValue());
+                if (row.getCell(3) != null) {
+                    switch (row.getCell(3).getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            etudiant.setDateDeNaissance(row.getCell(3).getDateCellValue());
+                            etudiant.setValidDate(true);
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            String val = row.getCell(3).getStringCellValue();
+                            int t = val.length();
+                            val = val.substring(t - 4, t);
+                            Calendar cal = Calendar.getInstance();
+                            cal.set(Calendar.YEAR, Integer.valueOf(val));
+                            cal.set(Calendar.MONTH, 1);
+                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                            etudiant.setValidDate(false);
+                            etudiant.setDateDeNaissance(cal.getTime());
+                    }
+                }
+                if (row.getCell(4) != null) {
+                    etudiant.setLieuDeNaissance(row.getCell(4).getStringCellValue());
+                }
                 if (row.getCell(5) != null) {
                     etudiant.setEmail(row.getCell(5).getStringCellValue());
                 }
                 if (row.getCell(6) != null) {
-                    etudiant.setNumeroTelephone(row.getCell(6).getNumericCellValue()+"");
+                    etudiant.setNumeroTelephone(row.getCell(6).getNumericCellValue() + "");
                 }
-                etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
+                try {
+                    etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
+                } catch (IllegalArgumentException ex) {
+
+                }catch (NullPointerException ex) {
+
+                }
+
                 String niveau = row.getCell(10).getStringCellValue();
                 String option = row.getCell(11).getStringCellValue();
                 etudiant.setActive(1);
-                try{
+                try {
                     inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
-                }catch(Exception ex){
-                
-                    System.out.println("L'étudiant " + index + "n'a pas été enregistré");
+                    count++;
+                } catch (Exception ex) {
+                    ImportationError err = new ImportationError(index, ex.getMessage());
+                    erreurs.add(err);
                 }
                 row = sheet.getRow(index++);
             }
@@ -213,7 +255,9 @@ public class EtudiantServiceImpl implements IEtudiantService {
         } catch (InvalidFormatException ex) {
             Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        result.setNombreImporte(count);
+        result.setErreurs(erreurs);
+        return result;
     }
 
     public IInscriptionService getInscriptionService() {
