@@ -24,10 +24,10 @@ public interface INoteDao extends IDao<Note, Long>{
     public List<Note> listeNoteCours(Etudiant etudiant, Cours cours, AnneeAcademique academique, com.douwe.notes.entities.Session session) throws DataAccessException;
     
     // Note d'un étudiant à une unité d'enseignement pour une année académique
-    public Note getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException;
+    public double getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException;
     
     // Renvoir une liste d'EtudiantNotesUe (nomEtudiant, matricule, Map<UniteEns, note>)
-    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException;
+    //public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException;
     
     public Note getNoteCours(Etudiant etudiant, Evaluation evaluation, Cours cours, AnneeAcademique academique, Session session)throws DataAccessException;
     

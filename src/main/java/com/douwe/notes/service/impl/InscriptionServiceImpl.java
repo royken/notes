@@ -160,7 +160,7 @@ public class InscriptionServiceImpl implements IInscriptionService {
             return  inscriptionDao.create(inscription);            
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException(ex.getMessage(), ex);
         }
     }
 
@@ -184,11 +184,11 @@ public class InscriptionServiceImpl implements IInscriptionService {
             if(parcours == null){
                 throw new ServiceException("La ressource demandée est introuvable");
             }
-            return  this.saveEtudiant(etudiant, academique, parcours);
+            return  saveEtudiant(etudiant, academique, parcours);
             
         } catch (DataAccessException ex) {
             Logger.getLogger(InscriptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ServiceException("La ressource demandée est introuvable");
+            throw new ServiceException(ex.getMessage(), ex);
         }
    
     }

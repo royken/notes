@@ -1,6 +1,7 @@
 package com.douwe.notes.service;
 
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.service.util.ImportationResult;
 import java.io.InputStream;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,6 +25,6 @@ public interface IEtudiantService {
     
     public Etudiant findByMatricule(String matricule) throws ServiceException;
     
-    public void importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException;
+    public ImportationResult importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException;
     
 }

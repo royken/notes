@@ -134,12 +134,12 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
    
 
     @Override
-    public Note getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException {
+    public double getNoteEtudiantUe(Etudiant etudiant, UniteEnseignement enseignement, AnneeAcademique academique) throws DataAccessException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    @Override
+//    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }
