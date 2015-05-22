@@ -92,6 +92,16 @@ public class UniteEnseignementBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Attention", "selectionnez l'unité d'enseignement donc vous voulez affichez la listes des cours"));
         }
     }
+    public String afficherCours(List<Cours> cs){
+     String result = "";
+        if (cs != null && !(cs.isEmpty())) {            
+            for (Cours c : cs) {
+                result += c.getIntitule()+ "; ";
+            }
+            result = result.substring(0, result.length() - 2);            
+        }
+        return result;
+    }
 
     public void annuler() {
         uniteEnseignement = new UniteEnseignement();

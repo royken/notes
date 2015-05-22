@@ -15,6 +15,10 @@
                                 <h:outputText  value="PV de l'Année Académique : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
                                 <h:selectOneMenu  value="#{procesVerbalBean.idAca}" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;" >
                                     <f:selectItems value="#{procesVerbalBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
+                                    <p:ajax listener="#{procesVerbalBean.handleNiveauOptionChange()}"
+                                            event="change" 
+                                            update="selectCours" 
+                                            process="@this"/>
                                 </h:selectOneMenu>                               
                                 <h:outputText  value="Session : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <h:selectOneMenu value="#{procesVerbalBean.session}" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;">
@@ -34,14 +38,22 @@
                                 <h:selectOneMenu value="#{procesVerbalBean.idN}" style=" width:100%;height: 30px; margin-left: 10px;margin-top: 10px;"  id="niveau">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                                    <p:ajax listener="#{procesVerbalBean.handleNiveauOptionChange()}"
+                                            event="change" 
+                                            update="selectCours" 
+                                            process="@this"/>
                                 </h:selectOneMenu>
                                 <h:outputText value="Option : " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
                                 <h:selectOneMenu id="option"  value="#{procesVerbalBean.idO}" style="height: 30px; width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.cities}" />
+                                    <p:ajax listener="#{procesVerbalBean.handleNiveauOptionChange()}"
+                                            event="change" 
+                                            update="selectCours" 
+                                            process="@this"/>
                                 </h:selectOneMenu> 
                                 <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <p:selectOneMenu value="#{procesVerbalBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
+                                <p:selectOneMenu id="selectCours" value="#{procesVerbalBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; margin-left: 10px;margin-top: 10px;">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{procesVerbalBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                 </p:selectOneMenu>
