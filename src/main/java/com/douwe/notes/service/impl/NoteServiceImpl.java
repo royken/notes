@@ -20,6 +20,8 @@ import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.ImportationError;
+import com.douwe.notes.service.util.ImportationResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -153,7 +155,7 @@ public class NoteServiceImpl implements INoteService {
             for (EvaluationDetails detail : details) {
                 calc.put(detail.getEvaluation().getCode(), detail.getPourcentage());
             }
-            
+
             // recuperer les listes des  étudiants du parcours
             List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
             for (Etudiant etudiant : etudiants) {
@@ -181,6 +183,9 @@ public class NoteServiceImpl implements INoteService {
 
     @Override
     public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId, int session) throws ServiceException {
+        ImportationResult result = new ImportationResult();
+        List<ImportationError> erreurs = new ArrayList<ImportationError>();
+        int count = 0;
         try {
             Cours cours = coursDao.findById(coursId);
             Evaluation evaluation = evaluationDao.findById(evaluationId);
@@ -212,7 +217,13 @@ public class NoteServiceImpl implements INoteService {
                         Session s = Session.values()[session];
                         note.setSession(s);
                     }
-                    noteDao.create(note);
+                    try {
+                        noteDao.create(note);
+                        count++;
+                    } catch (Exception ex) {
+                        ImportationError err = new ImportationError(index, ex.getMessage());
+                        erreurs.add(err);
+                    }
                 }
                 row = sheet.getRow(index++);
             }
