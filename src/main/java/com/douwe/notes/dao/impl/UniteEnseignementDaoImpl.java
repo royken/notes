@@ -29,7 +29,7 @@ import javax.persistence.criteria.Root;
  *
  * @author Vincent Douwe <douwevincent@yahoo.fr>
  */
-public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long> implements IUniteEnseignementDao{
+public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long> implements IUniteEnseignementDao {
 
     @Override
     public void deleteActive(UniteEnseignement ue) throws DataAccessException {
@@ -40,8 +40,6 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
     public List<UniteEnseignement> findAllActive() throws DataAccessException {
         return getManager().createNamedQuery("UE.findAllActive").getResultList();
     }
-
-   
 
     @Override
     public List<UEnseignementCredit> findByNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException {
@@ -93,5 +91,32 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         cq.select(unitePath);
         return getManager().createQuery(cq).getSingleResult();
     }
-    
+
+    @Override
+    public List<UniteEnseignement> findByUniteNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<UniteEnseignement> cq = cb.createQuery(UniteEnseignement.class);
+        Root<Programme> programmeRoot = cq.from(Programme.class);
+        Root<Cours> coursRoot = cq.from(Cours.class);
+        Path<Parcours> parcoursPath = programmeRoot.get(Programme_.parcours);
+        Path<Semestre> semestrePath = programmeRoot.get(Programme_.semestre);
+        Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
+        //Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
+        ListJoin<Cours, UniteEnseignement> ab = coursRoot.join(Cours_.uniteEnseignements);
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(anneePath, annee));
+        //predicates.add(cb.equal(ab, unitePath));
+        predicates.add(cb.equal(semestrePath, semestre));
+        predicates.add(cb.equal(parcoursPath.get(Parcours_.niveau), niveau));
+        predicates.add(cb.equal(parcoursPath.get(Parcours_.option), option));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), ab));
+        if (predicates.size() > 0) {
+            cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
+        }
+        cq.groupBy(ab.get(UniteEnseignement_.code));
+        cq.orderBy(cb.asc(ab.get(UniteEnseignement_.code)));
+        cq.select(ab);
+        return getManager().createQuery(cq).getResultList();
+    }
+
 }

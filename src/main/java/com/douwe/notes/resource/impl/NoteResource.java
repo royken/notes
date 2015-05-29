@@ -7,6 +7,7 @@ import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
+import com.douwe.notes.projection.MoyenneUniteEnseignement;
 import com.douwe.notes.resource.INoteResource;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
@@ -15,6 +16,7 @@ import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.ImportationResult;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
@@ -226,12 +228,45 @@ public class NoteResource implements INoteResource {
     }
 
     @Override
-    public void importNotes(InputStream fichier, FormDataContentDisposition fileDisposition, Long coursId, Long evaluationId, Long anneeId, int session) {
+    public ImportationResult importNotes(InputStream fichier, FormDataContentDisposition fileDisposition, Long coursId, Long evaluationId, Long anneeId, int session) {
         try {
-            noteService.importNotes(fichier, coursId, evaluationId, anneeId, session);
+            return noteService.importNotes(fichier, coursId, evaluationId, anneeId, session);
         } catch (ServiceException ex) {
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
+
+    @Override
+    public EtudiantNotes noteEtudiant(String matricule, long coursId) {
+        try {
+            return noteService.getNoteEtudiant(matricule, coursId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public MoyenneUniteEnseignement moyenneEtudiant(String matricule, long ueId, long annee) {
+        try {
+            return noteService.getMoyenneUEEtudiant(matricule, ueId, annee);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long niveauId, long optionId, long semestreId, long anneeId) {
+        try {
+            return noteService.listeNoteUniteEnseignement(matricule, niveauId, optionId, semestreId, anneeId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    
 
 }

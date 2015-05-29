@@ -6,13 +6,9 @@ import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
-import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
-import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
-import com.douwe.notes.projection.EtudiantNotesUe;
 import java.util.List;
 
 /**
@@ -35,6 +31,9 @@ public interface INoteDao extends IDao<Note, Long>{
   /*  List<Tuple> getAllNotes(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique,Session session) throws DataAccessException;
     
     */
+    
+    // For test purpose only
+    List<Note> getNoteCours(Etudiant etudiant, Cours c, AnneeAcademique annee) throws DataAccessException;
     
     
 }

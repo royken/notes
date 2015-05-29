@@ -11,14 +11,10 @@ import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Etudiant_;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Evaluation_;
-import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Note_;
-import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
-import com.douwe.notes.projection.EtudiantNotesUe;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -142,4 +138,18 @@ public class NoteDaoImpl extends GenericDao<Note, Long> implements INoteDao {
 //    public List<EtudiantNotesUe> findAllByUe(Niveau niveau, Option option, Semestre semestre, AnneeAcademique academique) throws DataAccessException {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
+
+    @Override
+    public List<Note> getNoteCours(Etudiant etudiant, Cours c, AnneeAcademique annee) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Note> cq = cb.createQuery(Note.class);
+        Root<Note> rootNote = cq.from(Note.class);
+        Path<Cours> coursPath = rootNote.get(Note_.cours);
+        Path<Etudiant> etudiantPath = rootNote.get(Note_.etudiant);
+        Path<AnneeAcademique> anneePath = rootNote.get(Note_.anneeAcademique);
+        cq.where(cb.and(cb.equal(etudiantPath, etudiant),
+                cb.equal(coursPath, c),
+                cb.equal(anneePath, annee)));
+        return getManager().createQuery(cq).getResultList();
+    }
 }
