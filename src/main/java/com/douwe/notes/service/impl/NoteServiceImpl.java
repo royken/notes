@@ -182,7 +182,7 @@ public class NoteServiceImpl implements INoteService {
     }
 
     @Override
-    public void importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId, int session) throws ServiceException {
+    public ImportationResult importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId, int session) throws ServiceException {
         ImportationResult result = new ImportationResult();
         List<ImportationError> erreurs = new ArrayList<ImportationError>();
         int count = 0;
@@ -234,7 +234,9 @@ public class NoteServiceImpl implements INoteService {
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        result.setNombreImporte(count);
+        result.setErreurs(erreurs);
+        return result;
     }
 
     private Note insertNote(String etudiantMatricule, String nomEtudiant, String codeEvaluation, String coursIntitule, Long anneeId, double valeur, int session) {
