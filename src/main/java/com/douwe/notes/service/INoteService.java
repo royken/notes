@@ -2,7 +2,6 @@ package com.douwe.notes.service;
 
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.entities.Option;
@@ -42,4 +41,5 @@ public interface INoteService {
     MoyenneUniteEnseignement getMoyenneUEEtudiant(String matricule, long ueId, long anneeId) throws ServiceException;
 
     Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long niveauId, long optionId, long semestreId, long anneeId) throws ServiceException;
+
 }

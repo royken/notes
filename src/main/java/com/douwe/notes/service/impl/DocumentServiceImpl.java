@@ -5,11 +5,13 @@ import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.IEnseignantDao;
+import com.douwe.notes.dao.IEvaluationDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.dao.ISemestreDao;
+import com.douwe.notes.dao.impl.EvaluationDaoImpl;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
@@ -86,8 +88,10 @@ public class DocumentServiceImpl implements IDocumentService {
     private IDepartementDao departementDao;
 
     // TODO Royken I faut eviter les dependances vers les services
+   
+    
     @Inject
-    private IEvaluationService evaluationService;
+    private IEvaluationDao EvaluationDao;
 
     @Inject
     private IProgrammeDao programmeDao;
@@ -159,13 +163,6 @@ public class DocumentServiceImpl implements IDocumentService {
         this.enseignantDao = enseignantDao;
     }
 
-    public IEvaluationService getEvaluationService() {
-        return evaluationService;
-    }
-
-    public void setEvaluationService(IEvaluationService evaluationService) {
-        this.evaluationService = evaluationService;
-    }
 
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
@@ -190,6 +187,16 @@ public class DocumentServiceImpl implements IDocumentService {
     public void setSemestreDao(ISemestreDao semestreDao) {
         this.semestreDao = semestreDao;
     }
+
+    public IEvaluationDao getEvaluationDao() {
+        return EvaluationDao;
+    }
+
+    public void setEvaluationDao(IEvaluationDao EvaluationDao) {
+        this.EvaluationDao = EvaluationDao;
+    }
+    
+    
 
 //    public IUniteEnseignementDao getUniteDao() {
 //        return uniteDao;
@@ -472,7 +479,8 @@ public class DocumentServiceImpl implements IDocumentService {
         int entre1014 = 0;
         Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
-        List<Evaluation> evals = evaluationService.getAllEvaluationByCours(c.getId());
+        List<Evaluation> evals = EvaluationDao.evaluationForCourses(c);
+       // List<Evaluation> evals = evaluationService.getAllEvaluationByCours(c.getId());
         int taille = evals.size();
         float relativeWidths[];
         if (avecNoms) {
@@ -648,12 +656,13 @@ public class DocumentServiceImpl implements IDocumentService {
         return cell;
     }
 
-    private PdfPCell createSyntheseDefaultBodyCell(String message, Font bf, boolean color) {
+    private PdfPCell createSyntheseDefaultBodyCell(String message, Font bf, boolean color, boolean isCentered) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
         if (color) {
             cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         }
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        if(isCentered)
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setPaddingBottom(1f);
         cell.setPaddingTop(1f);
@@ -807,20 +816,21 @@ public class DocumentServiceImpl implements IDocumentService {
             for (EtudiantNotesUe enue : enues) {
                 double sumMoyenne = 0.0; //sumMoyenne /30 renvoie à la moyenne trimestrielle
                 int nbrCreditValide = 0; // le nombre de crédits validés
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false));
-                table.addCell(createSyntheseDefaultBodyCell(enue.getNom(), bf1, false));
-                table.addCell(createSyntheseDefaultBodyCell(enue.getMatricule(), bf1, false));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(enue.getNom(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(enue.getMatricule(), bf1, false, true));
                 for (UEnseignementCredit ue : ues) {
                     Double value = enue.getNote().get(ue.getCodeUE());
                     sumMoyenne += value * ue.getCredit();
                     if (value >= 10) {
                         nbrCreditValide += ue.getCredit();
                     }
-                    table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false));
+                    table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne / 30)), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide * 1.0 / 30)) * 100)), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", Math.ceil(sumMoyenne * 100/ 30)/100), bf1, true, true));
+                System.out.println(Math.ceil(sumMoyenne * 100/ 30)/100);
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide * 1.0 / 30)) * 100)), bf1, true, true));
             }
 
             try {
@@ -844,8 +854,8 @@ public class DocumentServiceImpl implements IDocumentService {
             //Liste des ues du semestre 2
             List<UEnseignementCredit> ues2 = getTrash4();
             Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
-            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
-            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 5);
             int taille1 = ues1.size();
             int taille2 = ues2.size();
             float relativeWidths[];
@@ -927,20 +937,21 @@ public class DocumentServiceImpl implements IDocumentService {
                 int nbrCreditValide1 = 0;
                 double sumMoyenne2 = 0.0;
                 int nbrCreditValide2 = 0;
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(j+1), bf1, false));
-                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getNom(), bf1, false));
-                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getMatricule(), bf1, false));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(j+1), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getNom(), bf1, false, false));
+                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getMatricule(), bf1, false, true));
+                // PREMIER SEMESTRE
                 for (UEnseignementCredit ue : ues1) {
                     Double value = enues1.get(j).getNote().get(ue.getCodeUE());
                     sumMoyenne1 += value * ue.getCredit();
                     if (value >= 10) {
                         nbrCreditValide1 += ue.getCredit();
                     }
-                    table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false));
+                    table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne1 / 30)), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide1), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / 30)) * 100)), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne1 / 30)), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide1), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / 30)) * 100)), bf1, true, true));
                 
                 // SECOND SEMESTRE
                 for (UEnseignementCredit ue : ues2) {
@@ -949,15 +960,15 @@ public class DocumentServiceImpl implements IDocumentService {
                     if (value >= 10) {
                         nbrCreditValide2 += ue.getCredit();
                     }
-                    table.addCell(createSyntheseDefaultBodyCell((value == 0) ? "" : String.format("%.2f", value), bf1, false));
+                    table.addCell(createSyntheseDefaultBodyCell((value == 0) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne2 / 30)), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide2), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide2 * 1.0 / 30)) * 100)), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne2 / 30)), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide2), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide2 * 1.0 / 30)) * 100)), bf1, true, true));
                 
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((sumMoyenne1 + sumMoyenne2)/ 60)), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((sumMoyenne1 + sumMoyenne2)/ 60)), bf1, true, true));
                // table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((((nbrCreditValide1 + nbrCreditValide2)*1.0 / 60)) * 100)), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((((nbrCreditValide1 + nbrCreditValide2)*1.0 / 60)) * 100)), bf1, true, true));
             }
             
             
