@@ -214,8 +214,6 @@ public class DocumentServiceImpl implements IDocumentService {
     public void setUniteEnsDao(IUniteEnseignementDao uniteEnsDao) {
         this.uniteEnsDao = uniteEnsDao;
     }
-    
-    
 
 //    public IUniteEnseignementDao getUniteDao() {
 //        return uniteDao;
@@ -237,9 +235,9 @@ public class DocumentServiceImpl implements IDocumentService {
         try {
             Document doc = new Document();
             PdfWriter.getInstance(doc, stream);
-            doc.setPageSize(PageSize.A4.rotate());
+            doc.setPageSize(PageSize.A4);
             doc.open();
-            
+
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             Cours cours = coursDao.findById(coursId);
@@ -729,20 +727,17 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.setSpacingBefore(15f);
         doc.add(pourcentage);
     }
-    
-    
+
     @Override
     public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) throws ServiceException {
-        if(semestreId == null){
+        if (semestreId == null) {
             produireSyntheseAnnuelle(stream, niveauId, optionId, academiqueId);
-        }
-        else{
+        } else {
             produireSyntheseSemestrielle(niveauId, optionId, academiqueId, semestreId, stream);
         }
         return null;
     }
 
-    
     private String produireSyntheseSemestrielle(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) {
         try {
             Document doc = new Document();
@@ -771,7 +766,6 @@ public class DocumentServiceImpl implements IDocumentService {
         return null;
     }
 
-    
     private String produireSyntheseAnnuelle(OutputStream stream, Long niveauId, Long optionId, Long academiqueId) throws ServiceException {
         try {
             Document doc = new Document();
@@ -785,7 +779,7 @@ public class DocumentServiceImpl implements IDocumentService {
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             //List<Semestre> semestres = semestreDao.findByNiveau(niveau);
             produceHeader(doc, null, niveau, option, anne, null, null, true);
-            produireSyntheseAnnueleBody(doc,niveau, option, anne);
+            produireSyntheseAnnueleBody(doc, niveau, option, anne);
             doc.close();
         } catch (DocumentException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -820,10 +814,10 @@ public class DocumentServiceImpl implements IDocumentService {
             table.setWidthPercentage(100);
 
             table.addCell(createSyntheseDefaultHeaderCell("", bf, false));
-            
+
             // Entete de synthese
-            System.out.println("============= \n =========== \n "+s);
-            PdfPCell cell = new PdfPCell(new Phrase( s.getIntitule(), bf));
+            System.out.println("============= \n =========== \n " + s);
+            PdfPCell cell = new PdfPCell(new Phrase(s.getIntitule(), bf));
             cell.setColspan(taille + 5);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
@@ -1009,7 +1003,7 @@ public class DocumentServiceImpl implements IDocumentService {
                 double sumMoyenne1 = 0.0; // (sumMoyenne /nombreCredit1) renvoie à la moyenne trimestrielle
                 int nbrCreditValide1 = 0; // le nombre de  crédits validés
                 int nbrCreditValide2 = 0;
-                int sumMoyenne2 = 0;
+                double sumMoyenne2 = 0;
                 double nbreCreditValide2 = 0;
                 Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(etudiant.getMatricule(), n.getId(), o.getId(), semestres.get(0).getId(), a.getId());
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
@@ -1035,10 +1029,13 @@ public class DocumentServiceImpl implements IDocumentService {
                 // Le second semestre
                 for (UEnseignementCredit ue : ues2) {
                     MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
-                    Double value = mue.getMoyenne();
-                    sumMoyenne2 += value * ue.getCredit();
-                    if (value >= 10) {
-                        nbrCreditValide2 += ue.getCredit();
+                    double value = 0;
+                    if (mue != null) {
+                        value = mue.getMoyenne();
+                        sumMoyenne2 += value * ue.getCredit();
+                        if (value >= 10) {
+                            nbrCreditValide2 += ue.getCredit();
+                        }
                     }
                     table.addCell(createSyntheseDefaultBodyCell((value == 0) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
@@ -1257,7 +1254,5 @@ public class DocumentServiceImpl implements IDocumentService {
         result.add(enue3);
         return result;
     }
-
-    
 
 }
