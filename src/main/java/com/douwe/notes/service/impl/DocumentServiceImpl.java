@@ -5,17 +5,19 @@ import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.IEnseignantDao;
+import com.douwe.notes.dao.IEtudiantDao;
 import com.douwe.notes.dao.IEvaluationDao;
 import com.douwe.notes.dao.INiveauDao;
 import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.dao.ISemestreDao;
-import com.douwe.notes.dao.impl.EvaluationDaoImpl;
+import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Enseignant;
+import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -25,10 +27,10 @@ import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.EtudiantNotesUe;
+import com.douwe.notes.projection.MoyenneUniteEnseignement;
 import com.douwe.notes.projection.StatistiquesNote;
 import com.douwe.notes.projection.UEnseignementCredit;
 import com.douwe.notes.service.IDocumentService;
-import com.douwe.notes.service.IEvaluationService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
 import com.itextpdf.text.BaseColor;
@@ -44,7 +46,6 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.io.File;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,7 +56,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import org.springframework.core.io.ClassPathResource;
 
@@ -76,6 +76,9 @@ public class DocumentServiceImpl implements IDocumentService {
     private IEnseignantDao enseignantDao;
 
     @Inject
+    private IEtudiantDao etudiantDao;
+
+    @Inject
     private IOptionDao optionDao;
 
     @Inject
@@ -88,8 +91,6 @@ public class DocumentServiceImpl implements IDocumentService {
     private IDepartementDao departementDao;
 
     // TODO Royken I faut eviter les dependances vers les services
-   
-    
     @Inject
     private IEvaluationDao EvaluationDao;
 
@@ -101,6 +102,17 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private ISemestreDao semestreDao;
+
+    @Inject
+    private IUniteEnseignementDao uniteEnsDao;
+
+    public IEtudiantDao getEtudiantDao() {
+        return etudiantDao;
+    }
+
+    public void setEtudiantDao(IEtudiantDao etudiantDao) {
+        this.etudiantDao = etudiantDao;
+    }
 
 //    @Inject
 //    private IUniteEnseignementDao uniteDao;
@@ -163,7 +175,6 @@ public class DocumentServiceImpl implements IDocumentService {
         this.enseignantDao = enseignantDao;
     }
 
-
     public IProgrammeDao getProgrammeDao() {
         return programmeDao;
     }
@@ -195,6 +206,14 @@ public class DocumentServiceImpl implements IDocumentService {
     public void setEvaluationDao(IEvaluationDao EvaluationDao) {
         this.EvaluationDao = EvaluationDao;
     }
+
+    public IUniteEnseignementDao getUniteEnsDao() {
+        return uniteEnsDao;
+    }
+
+    public void setUniteEnsDao(IUniteEnseignementDao uniteEnsDao) {
+        this.uniteEnsDao = uniteEnsDao;
+    }
     
     
 
@@ -218,8 +237,9 @@ public class DocumentServiceImpl implements IDocumentService {
         try {
             Document doc = new Document();
             PdfWriter.getInstance(doc, stream);
+            doc.setPageSize(PageSize.A4.rotate());
             doc.open();
-            doc.setPageSize(PageSize.A4);
+            
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             Cours cours = coursDao.findById(coursId);
@@ -480,7 +500,7 @@ public class DocumentServiceImpl implements IDocumentService {
         Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         List<Evaluation> evals = EvaluationDao.evaluationForCourses(c);
-       // List<Evaluation> evals = evaluationService.getAllEvaluationByCours(c.getId());
+        // List<Evaluation> evals = evaluationService.getAllEvaluationByCours(c.getId());
         int taille = evals.size();
         float relativeWidths[];
         if (avecNoms) {
@@ -661,8 +681,9 @@ public class DocumentServiceImpl implements IDocumentService {
         if (color) {
             cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         }
-        if(isCentered)
+        if (isCentered) {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        }
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setPaddingBottom(1f);
         cell.setPaddingTop(1f);
@@ -708,21 +729,33 @@ public class DocumentServiceImpl implements IDocumentService {
         pourcentage.setSpacingBefore(15f);
         doc.add(pourcentage);
     }
-
+    
+    
     @Override
-    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) {
+    public String produireSynthese(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) throws ServiceException {
+        if(semestreId == null){
+            produireSyntheseAnnuelle(stream, niveauId, optionId, academiqueId);
+        }
+        else{
+            produireSyntheseSemestrielle(niveauId, optionId, academiqueId, semestreId, stream);
+        }
+        return null;
+    }
+
+    
+    private String produireSyntheseSemestrielle(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) {
         try {
             Document doc = new Document();
             PdfWriter.getInstance(doc, stream);
+            doc.setPageSize(PageSize.A4.rotate());
             doc.open();
-            doc.setPageSize(PageSize.A4);
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             Departement departement = optionDao.findDepartement(option);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Semestre semestre = semestreDao.findById(semestreId);
             produceHeader(doc, null, niveau, option, anne, null, null, true);
-            produceSyntheseBody(doc, niveau, option, semestre, anne);
+            produceSyntheseSemestrielleBody(doc, niveau, option, semestre, anne);
             doc.close();
             //     Session s = Session.values()[session];
 //            Semestre semestre = semestreDao.findByNiveau(niveau).get(session);
@@ -738,23 +771,21 @@ public class DocumentServiceImpl implements IDocumentService {
         return null;
     }
 
-    @Override
-    public String produireSyntheseAnnuelle(OutputStream stream) throws ServiceException {
+    
+    private String produireSyntheseAnnuelle(OutputStream stream, Long niveauId, Long optionId, Long academiqueId) throws ServiceException {
         try {
             Document doc = new Document();
             PdfWriter.getInstance(doc, stream);
             doc.setPageSize(PageSize.A4.rotate());
             doc.open();
-            
-            
-            
-            Niveau niveau = niveauDao.findById(3L);
-            Option option = optionDao.findById(10L);
+
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
             //Departement departement = optionDao.findDepartement(option);
-            AnneeAcademique anne = academiqueDao.findById(29L);
+            AnneeAcademique anne = academiqueDao.findById(academiqueId);
             //List<Semestre> semestres = semestreDao.findByNiveau(niveau);
             produceHeader(doc, null, niveau, option, anne, null, null, true);
-            produireSyntheseAnnueleBody(doc, null, null, null, null);
+            produireSyntheseAnnueleBody(doc,niveau, option, anne);
             doc.close();
         } catch (DocumentException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -766,10 +797,13 @@ public class DocumentServiceImpl implements IDocumentService {
         return null;
     }
 
-    private void produceSyntheseBody(Document doc, Niveau n, Option o, Semestre s, AnneeAcademique a) {
+    private void produceSyntheseSemestrielleBody(Document doc, Niveau n, Option o, Semestre s, AnneeAcademique a) {
         try {
             doc.add(new Phrase("\n"));
-            List<UEnseignementCredit> ues = getTrash();
+            List<UEnseignementCredit> ues = uniteEnsDao.findByNiveauOptionSemestre(n, o, s, a);
+            Parcours p = parcoursDao.findByNiveauOption(n, o);
+
+            List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtParcours(o.getDepartement(), a, p);
             Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
             Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
             Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
@@ -786,7 +820,10 @@ public class DocumentServiceImpl implements IDocumentService {
             table.setWidthPercentage(100);
 
             table.addCell(createSyntheseDefaultHeaderCell("", bf, false));
-            PdfPCell cell = new PdfPCell(new Phrase("Synthese " + s.getIntitule(), bf));
+            
+            // Entete de synthese
+            System.out.println("============= \n =========== \n "+s);
+            PdfPCell cell = new PdfPCell(new Phrase( s.getIntitule(), bf));
             cell.setColspan(taille + 5);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
@@ -811,28 +848,55 @@ public class DocumentServiceImpl implements IDocumentService {
             table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
             table.addCell(createSyntheseDefaultHeaderCell("", bf, true));
 
-            List<EtudiantNotesUe> enues = getTrash2();
             int i = 1;
-            for (EtudiantNotesUe enue : enues) {
+            for (Etudiant etudiant : etudiants) {
+
+                int nombreCredit = 0;
                 double sumMoyenne = 0.0; //sumMoyenne /30 renvoie à la moyenne trimestrielle
                 int nbrCreditValide = 0; // le nombre de crédits validés
+                Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(etudiant.getMatricule(), n.getId(), o.getId(), s.getId(), a.getId());
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
-                table.addCell(createSyntheseDefaultBodyCell(enue.getNom(), bf1, false, true));
-                table.addCell(createSyntheseDefaultBodyCell(enue.getMatricule(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(etudiant.getNom(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(etudiant.getMatricule(), bf1, false, true));
                 for (UEnseignementCredit ue : ues) {
-                    Double value = enue.getNote().get(ue.getCodeUE());
+                    // Double value = enue.getNote().get(ue.getCodeUE());
+                    //Double value = notes.get(ue)
+                    MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+                    Double value = mue.getMoyenne();
                     sumMoyenne += value * ue.getCredit();
+                    nombreCredit += ue.getCredit();
                     if (value >= 10) {
                         nbrCreditValide += ue.getCredit();
                     }
                     table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", Math.ceil(sumMoyenne * 100/ 30)/100), bf1, true, true));
-                System.out.println(Math.ceil(sumMoyenne * 100/ 30)/100);
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", Math.ceil(sumMoyenne * 100 / nombreCredit) / 100), bf1, true, true));
+                System.out.println(Math.ceil(sumMoyenne * 100 / nombreCredit) / 100);
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide * 1.0 / 30)) * 100)), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide * 1.0 / nombreCredit)) * 100)), bf1, true, true));
             }
-
+            /*           List<EtudiantNotesUe> enues = getTrash2();
+             int i = 1;
+             for (EtudiantNotesUe enue : enues) {
+             double sumMoyenne = 0.0; //sumMoyenne /30 renvoie à la moyenne trimestrielle
+             int nbrCreditValide = 0; // le nombre de crédits validés
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
+             table.addCell(createSyntheseDefaultBodyCell(enue.getNom(), bf1, false, true));
+             table.addCell(createSyntheseDefaultBodyCell(enue.getMatricule(), bf1, false, true));
+             for (UEnseignementCredit ue : ues) {
+             Double value = enue.getNote().get(ue.getCodeUE());
+             sumMoyenne += value * ue.getCredit();
+             if (value >= 10) {
+             nbrCreditValide += ue.getCredit();
+             }
+             table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
+             }
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", Math.ceil(sumMoyenne * 100/ 30)/100), bf1, true, true));
+             System.out.println(Math.ceil(sumMoyenne * 100/ 30)/100);
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide * 1.0 / 30)) * 100)), bf1, true, true));
+             }
+             */
             try {
                 doc.add(table);
             } catch (DocumentException ex) {
@@ -841,18 +905,30 @@ public class DocumentServiceImpl implements IDocumentService {
 
         } catch (DocumentException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServiceException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    private void produireSyntheseAnnueleBody(Document doc, Niveau n, Option o, List<Semestre> s, AnneeAcademique a) {
+    private void produireSyntheseAnnueleBody(Document doc, Niveau n, Option o, AnneeAcademique a) {
         try {
             doc.add(new Phrase("\n"));
+
+            List<Semestre> semestres = semestreDao.findByNiveau(n);
+
             //Liste des ues du semestre 1
-            List<UEnseignementCredit> ues1 = getTrash();
+            List<UEnseignementCredit> ues1 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
 
             //Liste des ues du semestre 2
-            List<UEnseignementCredit> ues2 = getTrash4();
+            List<UEnseignementCredit> ues2 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(1), a);
+
+            // La liste des étudiants du parcours
+            Parcours p = parcoursDao.findByNiveauOption(n, o);
+
+            List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtParcours(o.getDepartement(), a, p);
             Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
             Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
             Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 5);
@@ -924,38 +1000,42 @@ public class DocumentServiceImpl implements IDocumentService {
             table.addCell(createDefaultBodyCell("", bf, true));
             table.addCell(createDefaultBodyCell("", bf, true));
             table.addCell(createDefaultBodyCell("", bf, true));
-         //   table.addCell(createDefaultBodyCell("", bf, true));
+            //   table.addCell(createDefaultBodyCell("", bf, true));
 
-            List<EtudiantNotesUe> enues1 = getTrash2();
-            List<EtudiantNotesUe> enues2 = getTrash3();
-            double sumMoyenn[] = new double[enues1.size()];
-            int nbrCreditValide[] = new int[enues1.size()];
-            int i = 0;
-            
-            for (int j = 0; j < enues1.size(); j++) {
-                double sumMoyenne1 = 0.0;
-                int nbrCreditValide1 = 0;
-                double sumMoyenne2 = 0.0;
+            int i = 1;
+            for (Etudiant etudiant : etudiants) {
+
+                int nombreCredit1 = 0;  // Nombre de crédit du premier semestre
+                double sumMoyenne1 = 0.0; // (sumMoyenne /nombreCredit1) renvoie à la moyenne trimestrielle
+                int nbrCreditValide1 = 0; // le nombre de  crédits validés
                 int nbrCreditValide2 = 0;
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(j+1), bf1, false, true));
-                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getNom(), bf1, false, false));
-                table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getMatricule(), bf1, false, true));
-                // PREMIER SEMESTRE
+                int sumMoyenne2 = 0;
+                double nbreCreditValide2 = 0;
+                Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(etudiant.getMatricule(), n.getId(), o.getId(), semestres.get(0).getId(), a.getId());
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(etudiant.getNom(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(etudiant.getMatricule(), bf1, false, true));
                 for (UEnseignementCredit ue : ues1) {
-                    Double value = enues1.get(j).getNote().get(ue.getCodeUE());
+                    // Double value = enue.getNote().get(ue.getCodeUE());
+                    //Double value = notes.get(ue)
+                    MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+                    Double value = mue.getMoyenne();
                     sumMoyenne1 += value * ue.getCredit();
+                    nombreCredit1 += ue.getCredit();
                     if (value >= 10) {
                         nbrCreditValide1 += ue.getCredit();
                     }
                     table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
                 }
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne1 / 30)), bf1, true, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", Math.ceil(sumMoyenne1 * 100 / nombreCredit1) / 100), bf1, true, true));
+                System.out.println(Math.ceil(sumMoyenne1 * 100 / nombreCredit1) / 100);
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide1), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / 30)) * 100)), bf1, true, true));
-                
-                // SECOND SEMESTRE
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / nombreCredit1)) * 100)), bf1, true, true));
+
+                // Le second semestre
                 for (UEnseignementCredit ue : ues2) {
-                    double value = enues2.get(j).getNote().get(ue.getCodeUE());
+                    MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+                    Double value = mue.getMoyenne();
                     sumMoyenne2 += value * ue.getCredit();
                     if (value >= 10) {
                         nbrCreditValide2 += ue.getCredit();
@@ -965,16 +1045,63 @@ public class DocumentServiceImpl implements IDocumentService {
                 table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne2 / 30)), bf1, true, true));
                 table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide2), bf1, true, true));
                 table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide2 * 1.0 / 30)) * 100)), bf1, true, true));
-                
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((sumMoyenne1 + sumMoyenne2)/ 60)), bf1, true, true));
-               // table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((((nbrCreditValide1 + nbrCreditValide2)*1.0 / 60)) * 100)), bf1, true, true));
-            }
-            
-            
 
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((sumMoyenne1 + sumMoyenne2) / 60)), bf1, true, true));
+                // table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((((nbrCreditValide1 + nbrCreditValide2) * 1.0 / 60)) * 100)), bf1, true, true));
+            }
+
+            /*            List<EtudiantNotesUe> enues1 = getTrash2();
+             List<EtudiantNotesUe> enues2 = getTrash3();
+             double sumMoyenn[] = new double[enues1.size()];
+             int nbrCreditValide[] = new int[enues1.size()];
+             int i = 0;
+            
+             for (int j = 0; j < enues1.size(); j++) {
+             double sumMoyenne1 = 0.0;
+             int nbrCreditValide1 = 0;
+             double sumMoyenne2 = 0.0;
+             int nbrCreditValide2 = 0;
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(j+1), bf1, false, true));
+             table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getNom(), bf1, false, false));
+             table.addCell(createSyntheseDefaultBodyCell(enues1.get(j).getMatricule(), bf1, false, true));
+             // PREMIER SEMESTRE
+             for (UEnseignementCredit ue : ues1) {
+             Double value = enues1.get(j).getNote().get(ue.getCodeUE());
+             sumMoyenne1 += value * ue.getCredit();
+             if (value >= 10) {
+             nbrCreditValide1 += ue.getCredit();
+             }
+             table.addCell(createSyntheseDefaultBodyCell((value == null) ? "" : String.format("%.2f", value), bf1, false, true));
+             }
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne1 / 30)), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide1), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / 30)) * 100)), bf1, true, true));
+                
+             // SECOND SEMESTRE
+             for (UEnseignementCredit ue : ues2) {
+             double value = enues2.get(j).getNote().get(ue.getCodeUE());
+             sumMoyenne2 += value * ue.getCredit();
+             if (value >= 10) {
+             nbrCreditValide2 += ue.getCredit();
+             }
+             table.addCell(createSyntheseDefaultBodyCell((value == 0) ? "" : String.format("%.2f", value), bf1, false, true));
+             }
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (sumMoyenne2 / 30)), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide2), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide2 * 1.0 / 30)) * 100)), bf1, true, true));
+                
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((sumMoyenne1 + sumMoyenne2)/ 60)), bf1, true, true));
+             // table.addCell(createSyntheseDefaultBodyCell(String.valueOf(nbrCreditValide), bf1, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", ((((nbrCreditValide1 + nbrCreditValide2)*1.0 / 60)) * 100)), bf1, true, true));
+             }
+             */
             doc.add(table);
         } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ServiceException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1130,5 +1257,7 @@ public class DocumentServiceImpl implements IDocumentService {
         result.add(enue3);
         return result;
     }
+
+    
 
 }

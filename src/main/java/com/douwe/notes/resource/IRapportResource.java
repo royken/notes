@@ -5,11 +5,15 @@
  */
 package com.douwe.notes.resource;
 
+import java.io.InputStream;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -29,9 +33,14 @@ public interface IRapportResource {
     Response produirePv(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "coursid") long coursid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "session") int session);
     
     @GET
-    @Path(value = "synthese/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}/{semestre : \\d+}")
+    @Path(value = "synthese/semestre/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}/{semestre : \\d+}")
     @Produces("text/pdf")
-    Response produireSynthese(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "semestre") long semestreid);
+    Response produireSyntheseSemestrielle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "semestre") long semestreid);
+    
+     @GET
+    @Path(value = "synthese/annuelle/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}")
+    @Produces("text/pdf")
+    Response produireSyntheseAnnuelle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid);
     
     
     @GET

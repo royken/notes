@@ -92,13 +92,34 @@ public class RapportResource implements IRapportResource {
     }
 
     @Override
-    public Response produireSynthese(final long niveauid, final long optionid, final long anneeid, final long semestreId) {
+    public Response produireSyntheseSemestrielle(final long niveauid, final long optionid, final long anneeid, final long semestreId) {
         StreamingOutput stream = new StreamingOutput() {
             @Override
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
+                //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
                     filename = documentService.produireSynthese(niveauid, optionid, anneeid, semestreId, output);
+            
+                    //fil
+                } catch (Exception e) {
+                    throw new WebApplicationException(e);
+                }
+            }
+        };      
+        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
+        return Response.ok(stream).header("Content-Disposition",
+                "attachment; filename="+filename+"synthese.pdf").build();
+    }
+
+    @Override
+    public Response produire() {
+        StreamingOutput stream = new StreamingOutput() {
+            @Override
+            public void write(OutputStream output) throws IOException, WebApplicationException {
+                try {
+                    //buildDocument(output);
+               //     filename = documentService.produireSyntheseAnnuelle(output, null, null, null) ;
             
                     //fil
                 } catch (Exception e) {
@@ -113,23 +134,23 @@ public class RapportResource implements IRapportResource {
                 "attachment; filename="+filename+"synthese.pdf").build();
     }
 
+
     @Override
-    public Response produire() {
+    public Response produireSyntheseAnnuelle(final long niveauid, final long optionid, final long anneeid) {
         StreamingOutput stream = new StreamingOutput() {
             @Override
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
-                    filename = documentService.produireSyntheseAnnuelle(output) ;
+                //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
+                    filename = documentService.produireSynthese(niveauid, optionid, anneeid, null, output);
             
                     //fil
                 } catch (Exception e) {
                     throw new WebApplicationException(e);
                 }
             }
-        };
-
-        
+        };      
         System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename="+filename+"synthese.pdf").build();
