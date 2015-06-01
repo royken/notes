@@ -44,7 +44,6 @@ public class TypeCoursBean {
     }
 
     public void saveOrUpdateTypeCours(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getNom() != null) {
             typeCoursService.saveOrUpdateTpyeCours(typeCours);
             if (typeCours.getId() == null) {
@@ -58,7 +57,6 @@ public class TypeCoursBean {
     }
 
     public void deleteTypeCours(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("" + typeCours);
         if (typeCours != null && typeCours.getId() != null) {
             typeCoursService.deleteTypeCours(typeCours.getId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", typeCours.getNom() + " a été supprimé"));
@@ -106,7 +104,6 @@ public class TypeCoursBean {
     public void updateEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
         int p = evaluationDetails.getPourcentage();
         evaluationDetails = evaluationDetailService.findEvaluationDetailsById(evaluationDetails.getId());
-        System.out.println("" + typeCours.getId() + " " + evaluationDetails.getEvaluation().getId() + " " + p);
         evaluationDetailService.modifierEvaluation(typeCours.getId(), evaluationDetails.getEvaluation().getId(), p);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Operation reussie", "l'évaluation a été enregistrée"));
         evaluationDetails = new EvaluationDetails();
@@ -116,7 +113,6 @@ public class TypeCoursBean {
     }
 
     public void deleteEvaluationDetails(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("deleteEvaluationDetails" + evaluationDetails + typeCours + " idE " + idE);
         if (evaluationDetails != null && evaluationDetails.getId() != null) {
             //evaluationDetailService.supprimerEvaluation(typeCours.getId(), evaluation.getId());
             evaluationDetailService.deleteEvaluationDetails(evaluationDetails.getId());

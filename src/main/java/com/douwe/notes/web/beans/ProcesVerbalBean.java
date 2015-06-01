@@ -201,10 +201,7 @@ public class ProcesVerbalBean {
         }
     }
     public void handleNiveauOptionChange() throws ServiceException{
-        System.out.println("idN-------"+idN);
-        System.out.println("idO-------"+idO);
-        System.out.println("idAca-------"+idAca);
-    if (idN != null && idN != 0L && idO != null && idO != 0L) {
+        if (idN != null && idN != 0L && idO != null && idO != 0L) {
         Niveau n = niveauService.findNiveauById(idN);
         Option o = optionService.findOptionById(idO);
             Parcours p = parcoursService.findByNiveauOption(n, o);

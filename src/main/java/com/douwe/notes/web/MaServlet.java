@@ -25,8 +25,7 @@ public class MaServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        /*System.out.println("Hello de la part d'un connard");
-         ApplicationContext cxt = new ClassPathXmlApplicationContext("classpath:config/spring-config.xml");
+        /*ApplicationContext cxt = new ClassPathXmlApplicationContext("classpath:config/spring-config.xml");
          IAnneeAcademiqueDao an = cxt.getBean(IAnneeAcademiqueDao.class);*/
     }
 

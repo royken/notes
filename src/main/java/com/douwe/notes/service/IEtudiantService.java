@@ -23,6 +23,8 @@ public interface IEtudiantService {
     
     public List<Etudiant> findByCritiria(long departement, long annee, long niveau, long option) throws ServiceException;
     
+    public List<Etudiant> listeEtudiantInscritCours(long annee, long niveau, long option, long cours) throws ServiceException;
+    
     public Etudiant findByMatricule(String matricule) throws ServiceException;
     
     public ImportationResult importEtudiants(InputStream stream, Long idAnneeAcademique) throws ServiceException;

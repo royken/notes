@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class EnseignementDaoImpl extends GenericDao<Enseignement, Long> implements IEnseignementDao{
 
+    @Override
     public void deleteActive(Enseignement enseignement) throws DataAccessException {
         getManager().createNamedQuery("Enseignement.deleteActive").setParameter("idParam", enseignement.getId());
     }

@@ -66,9 +66,9 @@ public interface INoteResource {
     OutputStream produirePv();
     
     @GET
-    @Path(value = "/salut/{matricule}/{coursId: \\d+}")
+    @Path(value = "/salut/{matricule}/{coursId: \\d+}/{anneeId: \\d+}")
     @Produces(value = "application/json")
-    EtudiantNotes noteEtudiant(@PathParam(value = "matricule")String matricule, @PathParam(value = "coursId")long coursId);
+    EtudiantNotes noteEtudiant(@PathParam(value = "matricule")String matricule, @PathParam(value = "coursId")long coursId, @PathParam(value = "anneeId")long anneeId);
     
     @GET
     @Path(value = "/bonsoir/{matricule}/{ueId: \\d+}/{annee: \\d+}")

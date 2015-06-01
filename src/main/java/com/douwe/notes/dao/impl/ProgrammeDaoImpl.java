@@ -4,6 +4,7 @@ import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IProgrammeDao;
 import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.AnneeAcademique_;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -60,12 +61,12 @@ public class ProgrammeDaoImpl extends GenericDao<Programme, Long> implements IPr
         predicates.add(unitePath.get(UniteEnseignement_.courses).in(c));
         predicates.add(cb.equal(niveauPath, n));
         predicates.add(cb.equal(optionPath, o));
-        predicates.add(cb.equal(anneePath, a));
+        predicates.add(cb.greaterThanOrEqualTo(anneePath.get(AnneeAcademique_.debut), a.getDebut()));
         if (predicates.size() > 0) {
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
         cq.select(programmeRoot);
-        return getManager().createQuery(cq).getSingleResult();
+        return getManager().createQuery(cq).setMaxResults(1).getSingleResult();
     }
     
 }

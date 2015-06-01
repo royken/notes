@@ -193,7 +193,6 @@ public class NoteResource implements INoteResource {
      AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
      Session s = Session.values()[ses];
      List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
-     System.out.println("La liste des notes");
      for (EtudiantNotes et : ets) {
      System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
      for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
@@ -238,9 +237,9 @@ public class NoteResource implements INoteResource {
     }
 
     @Override
-    public EtudiantNotes noteEtudiant(String matricule, long coursId) {
+    public EtudiantNotes noteEtudiant(String matricule, long coursId, long anneeId) {
         try {
-            return noteService.getNoteEtudiant(matricule, coursId);
+            return noteService.getNoteEtudiant(matricule, coursId, anneeId);
         } catch (ServiceException ex) {
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }

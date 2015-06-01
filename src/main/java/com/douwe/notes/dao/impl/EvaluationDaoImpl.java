@@ -10,7 +10,6 @@ import com.douwe.notes.entities.EvaluationDetails;
 import com.douwe.notes.entities.EvaluationDetails_;
 import com.douwe.notes.entities.Evaluation_;
 import com.douwe.notes.entities.TypeCours;
-import com.douwe.notes.entities.TypeCours_;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
