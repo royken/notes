@@ -8,10 +8,10 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" header="IMPORTER DES NOTES">
+                <p:panel  id="p1" header="IMPORTER DES NOTES" style="text-align: center">
                     <h:form enctype="multipart/form-data">                                                    
                         <h:panelGroup >
-                            <h:panelGrid id="display" columns="2"  >                                                                                                                      
+                            <h:panelGrid id="display" columns="2" width="100%" class="rightPosition" >                                                                                                                      
                                 <h:outputText  value="Selectionner le fichier excel " />  
                                 <p:fileUpload required="true"  value="#{importationBean.file}" mode="simple"
                                               auto="true"  
@@ -20,25 +20,25 @@
                                     <!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
                                 </p:fileUpload>
                                 <h:outputText  value="Note pour l'Année Académique " class="syntaxe_content"/>                                  
-                                <h:selectOneMenu  value="#{importationBean.idAca}"  class="syntaxe_content" >
+                                <p:selectOneMenu filter="true" filterMatchMode="startsWith"   value="#{importationBean.idAca}"  class="syntaxe_content" >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                </h:selectOneMenu> 
+                                </p:selectOneMenu> 
                                 <h:outputText  value="Session : "  class="syntaxe_content"/>  
-                                <h:selectOneMenu value="#{importationBean.session}" class="syntaxe_content">
+                                <p:selectOneMenu filter="true" filterMatchMode="startsWith"  value="#{importationBean.session}" class="syntaxe_content">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.sessions}" var="ses" itemLabel="#{ses}" itemValue="#{ses}" />
-                                </h:selectOneMenu> 
-                                <h:outputText  value="Cours : "  class="syntaxe_content"/>  
-                                <p:selectOneMenu value="#{importationBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" class="syntaxe_content"=" width:100%; margin-left: 10px;margin-top: 10px;">
-                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                    <f:selectItems value="#{importationBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
-                                </p:selectOneMenu>
+                                </p:selectOneMenu>                                
                                 <h:outputText  value="Evaluation : "  class="syntaxe_content"/>  
-                                <p:selectOneMenu value="#{importationBean.idE}" class="syntaxe_content">
+                                <p:selectOneMenu filter="true" filterMatchMode="startsWith"  value="#{importationBean.idE}" class="syntaxe_content">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
                                 </p:selectOneMenu>                                  
-                                <p:commandButton ajax="false" value="Importer"  action="#{importationBean.saveNotes()}" class="syntaxe_content" update=":f:d"/>  
+                                <h:outputText  value="Cours : "  class="syntaxe_content"/>  
+                                <p:selectOneMenu filter="true" filterMatchMode="startsWith"  value="#{importationBean.idC}"  label="Liste des cours" converter="javax.faces.Long" class="syntaxe_content">
+                                    <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                    <f:selectItems value="#{importationBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
+                                </p:selectOneMenu><br/><br/>
+                                <p:commandButton ajax="false" value="Importer"  action="#{importationBean.saveNotes()}" class="cmd_button" update=":f:d"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  

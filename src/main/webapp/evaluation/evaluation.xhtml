@@ -10,59 +10,62 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1">                            
-                    <p:dialog header="AJOUTER UNE EVALUATION" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                    <p:dialog modal="true" header="AJOUTER UNE EVALUATION" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
                         <h:form id="formSave">                                
                             <p:growl id="growl" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displaySave" columns="2">
-                                        <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                        <p:inputText value="#{evaluationBean.evaluation.code}"   style="margin-left: 10px;margin-top: 10px;" >  
+                                    <h:panelGrid  class="rightPosition"  id="displaySave" columns="2">
+                                        <h:outputText  value="Code: "  class="syntaxe_content" />  
+                                        <p:inputText value="#{evaluationBean.evaluation.code}"   class="syntaxe_content" >  
                                             <f:validateLength maximum="20"/>  
                                         </p:inputText>
-                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{evaluationBean.evaluation.description}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="Description: "  class="syntaxe_content" />
+                                        <p:inputText value="#{evaluationBean.evaluation.description}"   class="syntaxe_content" />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{evaluationBean.saveOrUpdateEvaluation(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
-                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax1" actionListener ="#{evaluationBean.saveOrUpdateEvaluation(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton class="cmd_button" value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" /> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
                     </p:dialog>                    
-                    <p:dialog header="MODIFIER L'EVALUATION" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                    <p:dialog modal="true" header="MODIFIER L'EVALUATION" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
                         <h:form id="formUpdate">    
                             <p:growl id="growl1" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displayUpdate" columns="2">                                        
-                                        <h:outputText  value="Code: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                        <p:inputText value="#{evaluationBean.evaluation.code}"   style="margin-left: 10px;margin-top: 10px;" >  
+                                    <h:panelGrid  class="rightPosition"  id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Code: "  class="syntaxe_content" />  
+                                        <p:inputText value="#{evaluationBean.evaluation.code}"   class="syntaxe_content">  
                                             <f:validateLength maximum="20"/>  
                                         </p:inputText>
-                                        <h:outputText value="Description: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:inputText value="#{evaluationBean.evaluation.description}"   style="margin-left: 10px;margin-top: 10px;"/>
+                                        <h:outputText value="Description: "  class="syntaxe_content" />
+                                        <p:inputText value="#{evaluationBean.evaluation.description}"   class="syntaxe_content" />
                                         <h:inputHidden value="#{evaluationBean.evaluation.id}"  />
                                         <h:inputHidden value="#{evaluationBean.evaluation.version}"  />
                                         <h:inputHidden value="#{evaluationBean.evaluation.active}"  />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{evaluationBean.saveOrUpdateEvaluation(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax2" actionListener="#{evaluationBean.saveOrUpdateEvaluation(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton class="cmd_button" value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" /> 
                                 </div>                    
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;  margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                    <h:form id="f" class="syntaxe_content" > 
+                            <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
                         <p:confirmDialog message="voulez-vous vraiment supprimer cette evaluation ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
-                            <p:commandButton id="confirm" value="OUI" action="#{evaluationBean.deleteEvaluation(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                            <div id="center_content_div">   
+                                <p:commandButton class="cmd_button" id="confirm" value="OUI" action="#{evaluationBean.deleteEvaluation(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" />
+                                <p:commandButton class="cmd_button" id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();"/>
+                            </div> 
                         </p:confirmDialog>
                         <p:dataTable id="d"  emptyMessage="Aucune evaluation n'est enregistré" var="evaluation" value="#{evaluationBean.evaluations}" rowKey="#{evaluation.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{evaluationBean.evaluation}" selectionMode="single" >            
@@ -72,17 +75,17 @@
                             <p:column headerText="Code de l'evaluation" id="code" >  
                                 #{evaluation.code}  
                             </p:column>                                                                                
-                             <p:column headerText="Description de l'evaluation" id="description" >  
+                            <p:column headerText="Description de l'evaluation" id="description" >  
                                 #{evaluation.description}  
                             </p:column>
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouvelle Evaluation" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
+                                <p:commandButton class="cmd_button" id="ajouter" value="Nouvelle Evaluation" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{evaluationBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
+                                <p:commandButton class="cmd_button" id="delete" value="Supprimer"  actionListener="#{evaluationBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-close"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" actionListener="#{evaluationBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                                <p:commandButton class="cmd_button" id="modifier" value="Modifier" actionListener="#{evaluationBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                              
                         </p:dataTable>                                                              
                     </h:form>   
