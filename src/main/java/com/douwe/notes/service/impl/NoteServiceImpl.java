@@ -223,7 +223,7 @@ public class NoteServiceImpl implements INoteService {
             // recuperer les listes des  étudiants du parcours
             //List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
             List<Etudiant> etudiants = etudiantDao.listeEtudiantAvecNotes(academique, niveau, option, cours, session);
-            System.out.println("Bravo j'ai trouve "+etudiants.size()+ " etudiants");
+            System.out.println("Bravo j'ai trouve " + etudiants.size() + " etudiants");
             for (Etudiant etudiant : etudiants) {
                 EtudiantNotes et = new EtudiantNotes();
                 et.setMatricule(etudiant.getMatricule());
@@ -238,9 +238,9 @@ public class NoteServiceImpl implements INoteService {
                 et.setDetails(calc);
                 result.add(et);
                 /*if (state || session == Session.normale) {
-                    result.add(et);
-                }
-                state = false;*/
+                 result.add(et);
+                 }
+                 state = false;*/
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -274,39 +274,44 @@ public class NoteServiceImpl implements INoteService {
             String nom;
             while (row != null) {
                 Etudiant etudiant;
+                System.out.println("La valeur de l'index donne " + index);
                 if (row.getCell(1) != null) {
                     matricule = row.getCell(1).getStringCellValue();
                     etudiant = etudiantDao.findByMatricule(matricule);
-                } else {
-                    nom = row.getCell(2).getStringCellValue();
-                    etudiant = etudiantDao.findByName(nom);
-                }
-                if (row.getCell(3) != null) {
-                    if (row.getCell(3).getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        Note note = new Note();
-                        note.setValeur(row.getCell(3).getNumericCellValue());
-                        note.setActive(1);
-                        note.setAnneeAcademique(academique);
-                        note.setCours(cours);
-                        note.setEtudiant(etudiant);
-                        note.setEvaluation(evaluation);
-                        if (evaluation.isIsExam()) {
-                            Session s = Session.values()[session];
-                            note.setSession(s);
-                        }
-                        try {
-                            noteDao.create(note);
-                            count++;
-                        } catch (Exception ex) {
-                            ImportationError err = new ImportationError(index, ex.getMessage());
+                    /*} else {
+                     nom = row.getCell(2).getStringCellValue();
+                     etudiant = etudiantDao.findByName(nom);
+                     }*/
+                    if (row.getCell(3) != null) {
+                        if (row.getCell(3).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                            Note note = new Note();
+                            note.setValeur(row.getCell(3).getNumericCellValue());
+                            note.setActive(1);
+                            note.setAnneeAcademique(academique);
+                            note.setCours(cours);
+                            note.setEtudiant(etudiant);
+                            note.setEvaluation(evaluation);
+                            if (evaluation.isIsExam()) {
+                                Session s = Session.values()[session];
+                                note.setSession(s);
+                            }
+                            try {
+                                noteDao.create(note);
+                                count++;
+                            } catch (Exception ex) {
+                                ImportationError err = new ImportationError(index, ex.getMessage());
+                                erreurs.add(err);
+                            }
+                        } else {
+                            ImportationError err = new ImportationError(index, "Note invalide");
                             erreurs.add(err);
                         }
                     } else {
-                        ImportationError err = new ImportationError(index, "Note invalide");
+                        ImportationError err = new ImportationError(index, "Note indisponible");
                         erreurs.add(err);
                     }
                 } else {
-                    ImportationError err = new ImportationError(index, "Note indisponible");
+                    ImportationError err = new ImportationError(index, "Matricule indisponible");
                     erreurs.add(err);
                 }
                 row = sheet.getRow(index++);
@@ -442,28 +447,29 @@ public class NoteServiceImpl implements INoteService {
             UniteEnseignement ue = uniteEnseignementDao.findById(ueId);
             // TODO I need to come back here and figure out something
             AnneeAcademique annee = null;
-            if(anneeId > 0){
+            if (anneeId > 0) {
                 annee = academiqueDao.findById(ueId);
             }
             result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
             for (Cours cours : ue.getCourses()) {
-                EtudiantNotes n = getNoteEtudiant(matricule, cours.getId(),anneeId);
+                EtudiantNotes n = getNoteEtudiant(matricule, cours.getId(), anneeId);
                 if (n != null) {
                     result.getCredits().put(cours.getIntitule(), cours.getCredit());
                     result.getSessions().add(n.getSession());
                     result.getNotes().put(cours.getIntitule(), n.getMoyenne());
                     result.getAnnees().add(n.getAnnee());
-                }else{
+                } else {
                     result.getCredits().put(cours.getIntitule(), cours.getCredit());
                     result.getSessions().add(Session.normale);
                     result.getNotes().put(cours.getIntitule(), 0.0);
-                    if(annee != null)
+                    if (annee != null) {
                         result.getAnnees().add(annee);
+                    }
                 }
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
         return result;
     }
 

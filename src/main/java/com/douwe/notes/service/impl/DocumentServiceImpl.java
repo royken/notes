@@ -579,7 +579,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     private PdfPCell createDefaultHeaderCell(String message, Font bf) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setBackgroundColor(new BaseColor(230, 230, 230));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setPaddingBottom(4f);
@@ -592,7 +592,7 @@ public class DocumentServiceImpl implements IDocumentService {
     private PdfPCell createSyntheseDefaultHeaderCell(String message, Font bf, boolean color) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
         if (color) {
-            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setBackgroundColor(new BaseColor(230, 230, 230));
         }
         // cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -623,7 +623,7 @@ public class DocumentServiceImpl implements IDocumentService {
     private PdfPCell createSyntheseDefaultBodyCell(String message, Font bf, boolean color, boolean isCentered) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
         if (color) {
-            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setBackgroundColor(new BaseColor(230, 230, 230));
         }
         if (isCentered) {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -687,8 +687,9 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     private String produireSyntheseSemestrielle(Long niveauId, Long optionId, Long academiqueId, Long semestreId, OutputStream stream) {
+        Document doc = null;
         try {
-            Document doc = new Document();
+            doc = new Document();
             PdfWriter.getInstance(doc, stream);
             doc.setPageSize(PageSize.A4.rotate());
             doc.open();
@@ -706,6 +707,8 @@ public class DocumentServiceImpl implements IDocumentService {
         } catch (Exception ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(doc != null)
+            doc.close();
         return null;
     }
 
@@ -736,7 +739,6 @@ public class DocumentServiceImpl implements IDocumentService {
         try {
             doc.add(new Phrase("\n"));
             List<UEnseignementCredit> ues = uniteEnsDao.findByNiveauOptionSemestre(n, o, s, a);
-            Parcours p = parcoursDao.findByNiveauOption(n, o);
             List<Etudiant> etudiants = etudiantDao.listeEtudiantAvecNotes(a, n, o, s);
             Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.BOLD);
             Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 10);
