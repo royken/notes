@@ -3,11 +3,14 @@ package com.douwe.notes.dao;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.IDao;
 import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
+import com.douwe.notes.entities.Semestre;
+import com.douwe.notes.entities.Session;
 import java.util.List;
 
 /**
@@ -36,5 +39,10 @@ public interface IEtudiantDao extends IDao<Etudiant, Long>{
     // List des étudiants d'un parcours d'un département pour une année académique
     // TODO Je crois que le departement ne sert à rien parce que le parcours a deja le departement
     public List<Etudiant> listeEtudiantParDepartementEtParcours(Departement departement, AnneeAcademique academique,Parcours parcours) throws DataAccessException;
+    
+    public List<Etudiant> listeEtudiantInscritParcours(AnneeAcademique academique, Parcours parcours) throws DataAccessException;
+    
+    public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option,  Cours cours, Session session) throws DataAccessException;
+    public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option, Semestre semestre) throws DataAccessException;
     
 }

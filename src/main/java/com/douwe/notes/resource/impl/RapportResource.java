@@ -86,7 +86,6 @@ public class RapportResource implements IRapportResource {
         };
 
         
-        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename="+filename+"pv.pdf").build();
     }
@@ -107,7 +106,6 @@ public class RapportResource implements IRapportResource {
                 }
             }
         };      
-        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename="+filename+"synthese.pdf").build();
     }
@@ -129,7 +127,6 @@ public class RapportResource implements IRapportResource {
         };
 
         
-        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename="+filename+"synthese.pdf").build();
     }
@@ -151,7 +148,6 @@ public class RapportResource implements IRapportResource {
                 }
             }
         };      
-        System.out.println("ssssssdddddddddddddddd\n Final  sssssssssssssssddddddddddddd \n  "+ filename);
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename="+filename+"synthese.pdf").build();
     }

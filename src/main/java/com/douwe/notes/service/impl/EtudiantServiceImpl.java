@@ -268,4 +268,12 @@ public class EtudiantServiceImpl implements IEtudiantService {
         this.inscriptionService = inscriptionService;
     }
 
+    @Override
+    public List<Etudiant> listeEtudiantInscritCours(long annee, long niveau, long option, long cours) throws ServiceException {
+        // Je prends la liste de tous les etudiants qui ont été déjà inscrits dans le parcours
+        // qui sont inscrits l'annee en cours et qui n'ont jamais validé le cours en question avant
+        
+        return null;
+    }
+
 }

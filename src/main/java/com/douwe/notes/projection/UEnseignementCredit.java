@@ -14,14 +14,18 @@ public class UEnseignementCredit {
     private String intituleUE;
     
     private int credit;
+    private int minCredit;
+    private boolean type;
 
     public UEnseignementCredit() {
     }
 
-    public UEnseignementCredit(String codeUE, String intituleUE, int credit) {
+    public UEnseignementCredit(String codeUE, String intituleUE, int credit, int mCredit, boolean  type) {
         this.codeUE = codeUE;
         this.intituleUE = intituleUE;
         this.credit = credit;
+        this.minCredit = mCredit;
+        this.type = type;
     }
 
     public String getCodeUE() {
@@ -41,7 +45,7 @@ public class UEnseignementCredit {
     }
 
     public int getCredit() {
-        return credit;
+        return (type) ? minCredit:credit;
     }
 
     public void setCredit(int credit) {

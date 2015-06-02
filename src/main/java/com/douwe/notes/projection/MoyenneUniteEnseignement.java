@@ -67,21 +67,32 @@ public class MoyenneUniteEnseignement {
 
     public double getMoyenne() {
         double result = 0.0;
-        int creditTotal = 0;
+        int creditTotal = getNombreCredit();
         for (Map.Entry<String, Double> entrySet : notes.entrySet()) {
             String key = entrySet.getKey();
             Double value = entrySet.getValue();
             int credit = credits.get(key);
             if(avecComposantesOptionnelles){
-                creditTotal = credit;
                 if(result < value)
                     result = value * credit;
             }else{
                 result += value  * credit;
-                creditTotal += credit;
             }
         }
         return (creditTotal != 0)? result / creditTotal: result;
+    }
+    
+    private int getNombreCredit(){
+        int result = 0;
+        for (Map.Entry<String, Integer> entrySet : credits.entrySet()) {
+            Integer value = entrySet.getValue();
+            if(avecComposantesOptionnelles){
+                result = value;
+                break;
+            }
+            result += value;
+        }
+        return result;
     }
     
     public int getCredit(){

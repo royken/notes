@@ -80,7 +80,6 @@ public class TypeCourServiceImpl implements ITypeCoursService {
     @Override
     public TypeCours findTypeCoursById(long id) throws ServiceException {
         try {
-            System.out.println("Une autre execution en cours");
             return typeCoursDao.findById(id);
         } catch (DataAccessException ex) {
             Logger.getLogger(TypeCourServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

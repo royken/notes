@@ -95,7 +95,6 @@ public class NiveauResource implements INiveauResource {
 
     @Override
     public List<Semestre> getAllSemestre(long niveauId) {
-        System.out.println("Un autre toto est entre en jeu");
         try {
             return service.getAllSemestre(niveauId);
         } catch (ServiceException ex) {

@@ -130,11 +130,8 @@ public class OptionServiceImpl implements IOptionService{
     @Override
     public List<Option> findByDepartementNiveau(long departementId, long niveauId) throws ServiceException {
         try {
-            System.out.println("Departement id "+departementId+" niveauID "+ niveauId);
             Departement dep = departementDao.findById(departementId);
             Niveau niv = niveauDao.findById(niveauId);
-            System.out.println("Departement "+dep);
-            System.out.println("Niveau "+ niv);
             if((dep != null) && (niv != null))
                 return optionDao.findByDepartementNiveau(dep, niv);            
         } catch (DataAccessException ex) {

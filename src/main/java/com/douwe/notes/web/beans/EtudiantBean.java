@@ -117,7 +117,6 @@ public class EtudiantBean {
     }
 
     public void verifierEtSupprimer(ActionEvent actionEvent) throws ServiceException {
-        System.out.println("verifierEtSupprimer-------" + etudiant);
         if (etudiant != null && etudiant.getId() != null) {
             RequestContext.getCurrentInstance().execute("PF('confirmation').show()");
         } else {

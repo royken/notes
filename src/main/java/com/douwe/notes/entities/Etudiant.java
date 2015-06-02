@@ -166,6 +166,33 @@ public class Etudiant implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + (this.matricule != null ? this.matricule.hashCode() : 0);
+        hash = 23 * hash + (this.nom != null ? this.nom.hashCode() : 0);
+        return hash;
+    }
+
+    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Etudiant other = (Etudiant) obj;
+        if ((this.matricule == null) ? (other.matricule != null) : !this.matricule.equals(other.matricule)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+
+    @Override
     public String toString() {
         return "Etudiant{" + "id=" + id + ", version=" + version + ", matricule=" + matricule + ", nom=" + nom + ", dateDeNaissance=" + dateDeNaissance + ", lieuDeNaissance=" + lieuDeNaissance + ", email=" + email + ", numeroTelephone=" + numeroTelephone + ", genre=" + genre + ", active=" + active + '}';
     }

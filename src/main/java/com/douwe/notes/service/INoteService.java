@@ -34,7 +34,7 @@ public interface INoteService {
     
     //public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours) throws ServiceException;
     
-    public EtudiantNotes getNoteEtudiant(String matricule, long  coursId) throws ServiceException;
+    public EtudiantNotes getNoteEtudiant(String matricule, long  coursId, long anneeId) throws ServiceException;
     
     public ImportationResult importNotes(InputStream stream, Long coursId, Long evaluationId, Long anneeId,int session) throws ServiceException;
     

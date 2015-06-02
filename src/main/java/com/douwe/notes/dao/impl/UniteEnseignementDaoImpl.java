@@ -64,9 +64,17 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         }
         cq.groupBy(ab.get(UniteEnseignement_.code));
         cq.orderBy(cb.asc(ab.get(UniteEnseignement_.code)));
+        // I need to figure out one day why it is not working
+//        cq.multiselect(ab.get(UniteEnseignement_.code),
+//                ab.get(UniteEnseignement_.intitule),
+//                cb.selectCase()
+//                        .when(cb.equal(ab.get(UniteEnseignement_.hasOptionalChoices), true), cb.min(coursRoot.get(Cours_.credit)).as(Integer.class))
+//                        .otherwise(cb.sum(coursRoot.get(Cours_.credit)).as(Integer.class)));
         cq.multiselect(ab.get(UniteEnseignement_.code),
                 ab.get(UniteEnseignement_.intitule),
-                cb.sum(coursRoot.get(Cours_.credit)));
+                cb.sum(coursRoot.get(Cours_.credit)),
+                cb.min(coursRoot.get(Cours_.credit)),
+                ab.get(UniteEnseignement_.hasOptionalChoices));
         return getManager().createQuery(cq).getResultList();
     }
 
