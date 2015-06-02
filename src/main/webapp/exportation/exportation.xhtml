@@ -8,55 +8,53 @@
     <body>
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
-                <p:panel  id="p1" header="Exportation DES NOTES">
+                <p:panel  id="p1" header="Exportation DES NOTES" style="text-align: center;">
                     <h:form id="f" enctype="multipart/form-data">                                                  
                         <h:panelGroup >
-                            <h:panelGrid id="d" columns="2" style="text-align: right;">                                                                                                                      
-                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:fileUpload   
-                                              value="#{importationBean.file}" 
-                                              mode="simple"
-                                              auto="true"  
-                                              sizeLimit="100000"   
-                                              allowTypes="/(\.|\/)(xslx|xsl)$/" 
-                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                                                                             
-                                              requiredMessage="chargez le fichier" > 
-<!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                            <h:panelGrid id="d" columns="2" class="rightPosition">
+                                <h:outputText  value="Selectionner le fichier excel :"   />  
+                                <p:fileUpload   value="#{importationBean.file}" 
+                             mode="simple"
+                             auto="true"  
+                             sizeLimit="100000"   
+                             allowTypes="/(\.|\/)(xslx|xsl)$/" 
+                             class="syntaxe_content"
+                             requiredMessage="chargez le fichier" > 
                                 </p:fileUpload>
-                                <h:outputText  value="Note pour l'Année Académique " style="text-align: right;margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:selectOneMenu  value="#{importationBean.idAca}" style=" width:100%; margin-left: 10px; height: 30px; margin-top: 10px;" >
+                                <h:outputText  value="Année Académique :" class="syntaxe_content" />                                  
+                                <p:selectOneMenu  value="#{importationBean.idAca}" class="syntaxe_content"  >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                </h:selectOneMenu>                               
-                                <h:outputText  value="Evaluation : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <h:selectOneMenu value="#{importationBean.idE}" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;">
+                                </p:selectOneMenu>                               
+                                <h:outputText  value="Evaluation : "  class="syntaxe_content" />  
+                                <p:selectOneMenu value="#{importationBean.idE}" class="syntaxe_content" >
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.evaluations}" var="evd" itemLabel="#{evd.code}" itemValue="#{evd.id}" />
-                                </h:selectOneMenu>  
-                                <h:outputText value="Departement"  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <h:selectOneMenu value="#{importationBean.idD}"   id="departement" style=" width:100%;height: 30px; margin-left: 10px;margin-top: 10px;">
+                                </p:selectOneMenu>  
+                                <h:outputText value="Departement :"  class="syntaxe_content" />  
+                                <p:selectOneMenu value="#{importationBean.idD}"   id="departement" class="syntaxe_content">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                    <f:selectItems value="#{importationBean.countries}" var="departement" itemLabel="#{departement.code}" itemValue="#{departement.id}" />
+                                    <f:selectItems value="#{importationBean.countries}" var="departement" itemLabel="#{departement}"  itemValue="#{departement.id}" />
                                     <p:ajax listener="#{importationBean.handleCountryChange()}"
                                                 event="change" 
                                                 update="option" 
                                                 process="@this"/>
-                                </h:selectOneMenu>
-                                <h:outputText value="Niveau" style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <h:selectOneMenu value="#{importationBean.idN}" style=" width:100%; margin-left: 10px; height: 30px; margin-top: 10px;"  id="niveau">
+                                </p:selectOneMenu>
+                                <h:outputText value="Niveau :" class="syntaxe_content" />  
+                                <p:selectOneMenu value="#{importationBean.idN}" class="syntaxe_content"  id="niveau">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
-                                </h:selectOneMenu>
-                                <h:outputText value="Option" style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <h:selectOneMenu id="option"  value="#{importationBean.idO}" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;">
+                                </p:selectOneMenu>
+                                <h:outputText value="Option :" class="syntaxe_content"/>  
+                                <p:selectOneMenu id="option"  value="#{importationBean.idO}" class="syntaxe_content" >
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.cities}" />
-                                </h:selectOneMenu> 
-                                 <h:outputText  value="Cours : "  style="text-align: right;margin-left: 10px;margin-top: 10px;"/>  
-                                <p:selectOneMenu value="#{importationBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" style=" width:100%; height: 30px; margin-left: 10px;margin-top: 10px;">
+                                </p:selectOneMenu> 
+                                 <h:outputText  value="Cours : "  class="syntaxe_content" />  
+                                <p:selectOneMenu value="#{importationBean.idC}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" class="syntaxe_content">
                                     <f:selectItem value="#{null}" itemLabel="Selectionner"/>
                                     <f:selectItems value="#{importationBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                 </p:selectOneMenu>                                
-                                <p:commandButton ajax="false" value="Exporter" update=":f:d"  action="#{importationBean.exportNotes()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                 <p:commandButton class="cmd_button" ajax="false" value="Exporter" update=":f:d"  action="#{importationBean.exportNotes()}"/>  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  

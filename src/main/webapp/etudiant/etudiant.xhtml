@@ -11,26 +11,26 @@
             <ui:define name="content">                
                 <p:panel  id="p1">             
 
-                    <p:dialog header="MODIFIER LE ETUDIANT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                    <p:dialog modal="true" header="MODIFIER L' ETUDIANT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
                         <h:form id="formUpdate">    
                             <p:growl id="growl1" showDetail="true" /> 
-                            <p:panel >
-                                <h:panelGroup >
-                                    <h:panelGrid id="displayUpdate" columns="2">                                                                                  
-                                        <h:outputText  value="Nom : "  style="width: 100%;width: 100%;margin-left: 10px;margin-top: 10px;"/>  
-                                        <h:inputText value="#{etudiantBean.etudiant.nom}"   style=" width: 100%;margin-left: 10px;margin-top: 10px;" />
-                                        <h:outputText value="Date de Naissance: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <p:calendar value="#{etudiantBean.etudiant.dateDeNaissance}" id="cal"    style="width: 100%;margin-left: 10px;margin-top: 10px;" />                                         
-                                        <h:outputText value="Matricule: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <h:inputText value="#{etudiantBean.etudiant.matricule}"   style="width: 100%;margin-left: 10px;margin-top: 10px;"/>
-                                        <h:outputText value="Lieu de Naissance: "  style="margin-left: 10px;margin-top: 10px;"/>                                          
-                                        <h:inputText value="#{etudiantBean.etudiant.lieuDeNaissance}"   style="width: 100%;margin-left: 10px;margin-top: 10px;"/>                                        
-                                        <h:outputText value="Numero de Téléphone: "  style="margin-left: 10px;margin-top: 10px;"/>                                        
-                                        <h:inputText value="#{etudiantBean.etudiant.numeroTelephone}"   style="width: 100%;margin-left: 10px;margin-top: 10px;"/>
-                                        <h:outputText value="Email: "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <h:inputText value="#{etudiantBean.etudiant.email}"   style="width: 100%;margin-left: 10px;margin-top: 10px;"/>                                           
-                                        <h:outputText value="Genre : "  style="margin-left: 10px;margin-top: 10px;"/>
-                                        <h:selectOneMenu value="#{etudiantBean.etudiant.genre}"   style="height: 30px;width: 100%;margin-left: 10px;margin-top: 10px;">
+                            <p:panel >                                
+                                <h:panelGroup >                                                                              
+                                    <h:panelGrid id="displayUpdate" class="rightPosition" columns="4">                                                                                  
+                                        <h:outputText  value="Nom : " />  
+                                        <h:inputText value="#{etudiantBean.etudiant.nom}"   class="syntaxe_content" />
+                                        <h:outputText value="Date de Naissance: "  class="syntaxe_content"/>
+                                        <p:calendar value="#{etudiantBean.etudiant.dateDeNaissance}" id="cal"    class="syntaxe_content"  />                                         
+                                        <h:outputText value="Matricule: "  class="syntaxe_content" />
+                                        <h:inputText value="#{etudiantBean.etudiant.matricule}"   class="syntaxe_content" />
+                                        <h:outputText value="Lieu de Naissance: "  class="syntaxe_content" />                                          
+                                        <h:inputText value="#{etudiantBean.etudiant.lieuDeNaissance}"   class="syntaxe_content" />                                                                                
+                                        <h:outputText value="Email: "  class="syntaxe_content" />
+                                        <h:inputText value="#{etudiantBean.etudiant.email}"   class="syntaxe_content" />                                           
+                                        <h:outputText value="Numero de Téléphone: "  class="syntaxe_content" />                                        
+                                        <h:inputText value="#{etudiantBean.etudiant.numeroTelephone}"   class="syntaxe_content"/>
+                                        <h:outputText value="Genre : "  class="syntaxe_content" />
+                                        <h:selectOneMenu value="#{etudiantBean.etudiant.genre}"   class="syntaxe_content" >
                                             <f:selectItems value="#{etudiantBean.genres}" var ="g" itemLabel="#{g}" itemValue="#{g}" />
                                         </h:selectOneMenu>                                            
                                         <h:inputHidden value="#{etudiantBean.etudiant.id}"  />
@@ -39,9 +39,9 @@
                                     </h:panelGrid>                                      
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{etudiantBean.saveOrUpdateEtudiant(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax2" actionListener="#{etudiantBean.saveOrUpdateEtudiant(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton class="cmd_button" value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close"/> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
@@ -64,47 +64,48 @@
                                     </h:panelGrid>                                      
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="OUI"  actionListener="#{etudiantBean.deleteEtudiant(actionEvent)}" update=":formDelete,:f:d" icon="ui-icon-check" oncomplete="PF('dlgDelete').hide()" /> 
-                                    <p:commandButton value="NON" type="reset"  onclick="PF('dlgDelete').hide()" update=":formDelete" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="OUI"  actionListener="#{etudiantBean.deleteEtudiant(actionEvent)}" update=":formDelete,:f:d" icon="ui-icon-check" oncomplete="PF('dlgDelete').hide()" /> 
+                                    <p:commandButton class="cmd_button" value="NON" type="reset"  onclick="PF('dlgDelete').hide()" update=":formDelete" icon="ui-icon-close"/> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
                     </p:dialog> 
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/>                                                                           
-                                <h:panelGrid id="k" columns="5" width="75%" >
-                                    <p:outputLabel value="Departement"  />
-                                    <h:selectOneMenu value="#{etudiantBean.idD}" style="height: 30px; width: 150px;"  id="departement">
-                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.countries}" />
-                                        <p:ajax listener="#{etudiantBean.handleCountryChange()}"
-                                                event="change" 
-                                                update="option" 
-                                                process="@this"/>
+                    <h:form id="f" class="syntaxe_content" >                        
+                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/>                                                                           
+                        <p:panelGrid id="k" class="rightPosition" columns="5" >
+                            <p:outputLabel value="Departement"  />
+                            <h:selectOneMenu value="#{etudiantBean.idD}" class="syntaxe_content" >
+                                <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                <f:selectItems value="#{etudiantBean.countries}" />
+                                <p:ajax listener="#{etudiantBean.handleCountryChange()}"
+                                        event="change" 
+                                        update="option" 
+                                        process="@this"/>
 
-                                    </h:selectOneMenu>                                    
-                                    <p:outputLabel value="Année"  />
-                                    <h:selectOneMenu  value="#{etudiantBean.idA}" style=" height: 30px; width: 150px;"  id="annee">
-                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)} - #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
-                                    </h:selectOneMenu>
-                                     <p:commandButton type="submit" 
-                                                      action="#{etudiantBean.filtrer()}"  
-                                                     update=":f:d"  
-                                                     value="Filtrer"                                                     
-                                                     style=" height: 30px; width: 100px;"/>
-                                     <p:outputLabel value="Niveau"  style="left: 0px;" />
-                                    <h:selectOneMenu value="#{etudiantBean.idN}" style="height: 30px; width: 150px;"  id="niveau">
-                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
-                                    </h:selectOneMenu>
-                                    <p:outputLabel value="Option" />
-                                    <h:selectOneMenu id="option"  value="#{etudiantBean.idO}" style=" height: 30px; width: 150px; " >
-                                        <f:selectItem value="#{null}" itemLabel="Selectionner"/>
-                                        <f:selectItems value="#{etudiantBean.cities}" />
-                                    </h:selectOneMenu>                                                  
-                                   
-                                </h:panelGrid>                                                    
+                            </h:selectOneMenu>                                    
+                            <p:outputLabel value="Année"  />
+                            <h:selectOneMenu  value="#{etudiantBean.idA}" class="syntaxe_content" >
+                                <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                <f:selectItems value="#{etudiantBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique.debut.toString().substring(anneeAcademique.debut.toString().length()-4)} - #{anneeAcademique.fin.toString().substring(anneeAcademique.fin.toString().length()-4)}" itemValue="#{anneeAcademique.id}" />                                            
+                            </h:selectOneMenu>
+                            <p:commandButton class="syntaxe_content" type="submit" 
+                                             action="#{etudiantBean.filtrer()}"  
+                                             update=":f:d"  
+                                             value="Filtrer"                                                     
+                                             />
+                            <p:outputLabel value="Niveau"  class="syntaxe_content" />
+                            <h:selectOneMenu value="#{etudiantBean.idN}" class="syntaxe_content"   id="niveau">
+                                <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                <f:selectItems value="#{etudiantBean.niveaus}" var="niveau" itemLabel="#{niveau.code}" itemValue="#{niveau.id}" />
+                            </h:selectOneMenu>
+                            <p:outputLabel value="Option" />
+                            <h:selectOneMenu id="option"  value="#{etudiantBean.idO}" class="syntaxe_content" >
+                                <f:selectItem value="#{null}" itemLabel="Selectionner"/>
+                                <f:selectItems value="#{etudiantBean.cities}" />
+                            </h:selectOneMenu>                                                  
+
+                        </p:panelGrid>                                                    
                         <p:separator />
                         <p:dataTable id="d"  
                                      emptyMessage="Aucun etudiant n'a été trouvé"                                      
@@ -146,7 +147,7 @@
                                 <p:commandLink id="delete" value="Supprimer"  onclick="PF('dlgDelete').show()" update=":formDelete:displayDelete" >
                                     <f:setPropertyActionListener value="#{etd}" target="#{etudiantBean.etudiant}"/>                                    
                                 </p:commandLink>
-                                <p:commandLink id="modifier" value="|Modifier" update=":formUpdate:displayUpdate" onclick="PF('dlgUpdate').show()">
+                                <p:commandLink id="modifier" value="|Modifier" update=":formUpdate" onclick="PF('dlgUpdate').show()">
                                     <f:setPropertyActionListener value="#{etd}" target="#{etudiantBean.etudiant}"/>
                                 </p:commandLink> 
                             </p:column>

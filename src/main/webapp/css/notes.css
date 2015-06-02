@@ -14,9 +14,9 @@ body{
     display: inline-flex;
     width: 100%;
     height: 100%;
-   margin: 0px 0px 0px 0px;
-       
-    
+    margin: 0px 0px 0px 0px;
+
+
 }
 .page-header .text-center{
     padding-top: 95px; 
@@ -37,11 +37,23 @@ table.type_cours td:last-child{
     text-align: right;
     width: 20%;
 }
+.type_cours_menuClass{
+    height: 25px;width: 25px;
+}
+.type_cours_datatable_in_datadgrid{    
+    height: 250px;
+    //margin-top: 0px;
+    width: 100%;
+}
+#aa,#ab,#ac{
+    text-align: right;
+}
+
 .syntaxe_content{
     //margin-left: 10px;
     //margin-top: 10px;
     width: 100%;    
-    text-align: right;
+
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -52,4 +64,17 @@ table.type_cours td:last-child{
 }
 .cmd_button{
     width: auto;
+}
+.selectClass{
+    height: 70px;
+    width: 100%;
+
+}
+
+table.rightPosition tr td{
+    text-align: left;
+}
+
+table.rightPosition tr td:first-child {
+    text-align: right;
 }

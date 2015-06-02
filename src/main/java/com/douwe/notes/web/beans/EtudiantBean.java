@@ -167,7 +167,7 @@ public class EtudiantBean {
     }
 
     public List<Etudiant> getEtudiants() throws ServiceException {             
-        filtrer();
+       // filtrer();
         return etudiants;
     }
 

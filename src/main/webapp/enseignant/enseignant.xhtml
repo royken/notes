@@ -10,55 +10,58 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1">                            
-                    <p:dialog header="AJOUTER UN ENSEIGNANT" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                    <p:dialog header="AJOUTER UN ENSEIGNANT" widgetVar="dlgSave" hideEffect="explode" showEffect="explode" modal="true">
                         <h:form id="formSave">                                
                             <p:growl id="growl" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displaySave" columns="2">
-                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:inputText value="#{enseignantBean.enseignant.nom}"   style="margin-left: 10px;margin-top: 10px;" >  
-                                    <f:validateLength minimum="2" />  
-                                </p:inputText>
+                                    <h:panelGrid class="rightPosition" id="displaySave" columns="2">
+                                        <h:outputText  value="Nom: "  class="syntaxe_content" />  
+                                        <p:inputText value="#{enseignantBean.enseignant.nom}"   class="syntaxe_content" >  
+                                            <f:validateLength minimum="2" />  
+                                        </p:inputText>
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{enseignantBean.saveOrUpdateEnseignant(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
-                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax1" actionListener ="#{enseignantBean.saveOrUpdateEnseignant(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton class="cmd_button" value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" /> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
                     </p:dialog>                    
-                    <p:dialog header="MODIFIER L' ENSEIGNANT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                    <p:dialog header="MODIFIER L' ENSEIGNANT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode" modal="true">
                         <h:form id="formUpdate">    
                             <p:growl id="growl1" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displayUpdate" columns="2">                                        
-                                        <h:outputText  value="Nom: "  style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:inputText value="#{enseignantBean.enseignant.nom}"   style="margin-left: 10px;margin-top: 10px;" >  
-                                    <f:validateLength minimum="2" />  
-                                </p:inputText>
+                                    <h:panelGrid class="rightPosition" id="displayUpdate" columns="2">                                        
+                                        <h:outputText  value="Nom: "  class="syntaxe_content" />  
+                                        <p:inputText value="#{enseignantBean.enseignant.nom}"   class="syntaxe_content">  
+                                            <f:validateLength minimum="2" />  
+                                        </p:inputText>
                                         <h:inputHidden value="#{enseignantBean.enseignant.id}"  />
                                         <h:inputHidden value="#{enseignantBean.enseignant.version}"  />
                                         <h:inputHidden value="#{enseignantBean.enseignant.active}"  />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{enseignantBean.saveOrUpdateEnseignant(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div">
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax2" actionListener="#{enseignantBean.saveOrUpdateEnseignant(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton class="cmd_button" value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close"/> 
                                 </div>                    
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;  margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                    <h:form id="f" class="syntaxe_content" >
+                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
                         <p:confirmDialog message="voulez-vous vraiment supprimer cet enseignant ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
-                            <p:commandButton id="confirm" value="OUI" action="#{enseignantBean.deleteEnseignant(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
+                            <div id="center_content_div"> 
+                                <p:commandButton class="cmd_button" id="confirm" value="OUI" action="#{enseignantBean.deleteEnseignant(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d"/>
+                                <p:commandButton class="cmd_button" id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" />
+                            </div>
                         </p:confirmDialog>
                         <p:dataTable id="d"  emptyMessage="Aucun enseignant n'est enregistré" var="enseignant" value="#{enseignantBean.enseignants}" rowKey="#{enseignant.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{enseignantBean.enseignant}" selectionMode="single" >            

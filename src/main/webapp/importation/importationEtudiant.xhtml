@@ -7,27 +7,25 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">    
     <body>
         <ui:composition template="./../template/template.xhtml">
-            <ui:define name="content">                
-                <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS">
+            <ui:define name="content" >                
+                <p:panel  id="p1" header="IMPORTER UNE LISTE D'ETUDIANTS" style="text-align: center;">
                     <h:form id="f"  enctype="multipart/form-data">                                                    
                         <h:panelGroup >
-                            <h:panelGrid id="d" columns="2" style="text-align: right;">                                                                                                                      
-                                <h:outputText  value="Selectionner le fichier excel "   style="margin-left: 10px;margin-top: 10px;"/>  
-                                <p:fileUpload   
-                                              value="#{importationBean.file}" 
-                                              mode="simple"
-                                              auto="true"  
-                                              sizeLimit="100000"   
-                                              allowTypes="/(\.|\/)(xslx|xsl)$/" 
-                                              style="margin-left: 10px;margin-top: 10px; width: 100%;"                                                                                             
-                                              requiredMessage="chargez le fichier" > 
-<!--                                    <p:ajax listener="" event="change" update="cities" process="@this"/>-->
+                            <h:panelGrid id="d" width="100%" columns="2" class="rightPosition">                                                                                                                      
+                                <h:outputText  value="Selectionner le fichier excel : " class="syntaxe_content"/>  
+                                <p:fileUpload  value="#{importationBean.file}" 
+                            mode="simple"
+                            auto="true"  
+                            sizeLimit="100000"   
+                            allowTypes="/(\.|\/)(xslx|xsl)$/" 
+                            class="syntaxe_content"
+                            requiredMessage="chargez le fichier" > 
                                 </p:fileUpload>
-                                <h:outputText  value="Etudiant pour l'Année Académique " style="margin-left: 10px;margin-top: 10px;"/>                                  
-                                <h:selectOneMenu  value="#{importationBean.idAca}" style="margin-top:10px; height: 30px; width: 100%; margin-left: 10px;"  >
+                                <h:outputText  value="Etudiants de l'Année Académique : " />                                  
+                                <p:selectOneMenu     filter="true" filterMatchMode="startsWith" value="#{importationBean.idAca}" class="syntaxe_content" >
                                     <f:selectItems value="#{importationBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                </h:selectOneMenu>                                 
-                                <p:commandButton update=":f:d" type="submit" ajax="false" value="Importer" action="#{importationBean.saveAllEtudiant()}" style="margin-left: 10px;margin-top: 10px; width: 50%;"/>  
+                                </p:selectOneMenu><br/><br/>                                                                 
+                                <p:commandButton update=":f:d" type="submit" ajax="false" value="Importer" action="#{importationBean.saveAllEtudiant()}" />  
                             </h:panelGrid>
                         </h:panelGroup>                        
                     </h:form>  
