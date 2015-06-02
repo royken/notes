@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Version;
@@ -25,43 +26,41 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "unites")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
-@NamedQuery(name = "UE.deleteActive",query = "update UniteEnseignement ue set ue.active = 0 where ue.id = :idParam"),
-@NamedQuery(name = "UE.findAllActive",query = "select ue from UniteEnseignement ue where ue.active=1")    
+    @NamedQuery(name = "UE.deleteActive", query = "update UniteEnseignement ue set ue.active = 0 where ue.id = :idParam"),
+    @NamedQuery(name = "UE.findAllActive", query = "select ue from UniteEnseignement ue where ue.active=1")
 
 })
 public class UniteEnseignement implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Version
     @XmlTransient
     private int version;
 
     @Column
     private String intitule;
-    
+
     @Column(unique = true)
     private String code;
-    
+
     @Column
     private boolean hasOptionalChoices;
-    
-     @XmlTransient
+  
+    @ManyToOne
+    private Parcours parcours;
+
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    
+
 //     @XmlTransient
 //    @ManyToMany(mappedBy = "uniteEnseignements")
 //    private List<Parcours> parcours;
-    
-     @XmlTransient
-    @ManyToMany
-    private List<Cours> courses;
-    
-    public UniteEnseignement(){
-        
+    public UniteEnseignement() {
+
     }
 
     public Long getId() {
@@ -97,7 +96,6 @@ public class UniteEnseignement implements Serializable {
 //    public void setParcours(List<Parcours> parcours) {
 //        this.parcours = parcours;
 //    }
-
     @JsonIgnore
     public int getVersion() {
         return version;
@@ -118,16 +116,6 @@ public class UniteEnseignement implements Serializable {
         this.active = active;
     }
 
-    @JsonIgnore
-    public List<Cours> getCourses() {
-        return courses;
-    }
-
-    @JsonIgnore
-    public void setCourses(List<Cours> courses) {
-        this.courses = courses;
-    }
-
     public boolean isHasOptionalChoices() {
         return hasOptionalChoices;
     }
@@ -135,10 +123,17 @@ public class UniteEnseignement implements Serializable {
     public void setHasOptionalChoices(boolean hasOptionalChoices) {
         this.hasOptionalChoices = hasOptionalChoices;
     }
-    
+
+    public Parcours getParcours() {
+        return parcours;
+    }
+
+    public void setParcours(Parcours parcours) {
+        this.parcours = parcours;
+    }
 
     @Override
     public String toString() {
-        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + ", courses=" + courses + '}';
+        return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + '}';
     }
 }

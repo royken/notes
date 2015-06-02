@@ -54,9 +54,7 @@ public class Cours implements Serializable {
     @ManyToOne(optional = false)
     private TypeCours typeCours;
     
-    @XmlTransient
-    @ManyToMany(mappedBy = "courses")
-    private List<UniteEnseignement> uniteEnseignements;
+  
     
     @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -117,18 +115,7 @@ public class Cours implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }   
-
-    @JsonIgnore
-    public List<UniteEnseignement> getUniteEnseignements() {
-        return uniteEnseignements;
-    }
-
-    @JsonIgnore
-    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
-        this.uniteEnseignements = uniteEnseignements;
-    }
-    
-    
+ 
 
     @Override
     public String toString() {
