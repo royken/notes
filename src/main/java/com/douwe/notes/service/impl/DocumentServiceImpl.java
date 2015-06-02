@@ -916,9 +916,17 @@ public class DocumentServiceImpl implements IDocumentService {
             //Liste des ues du semestre 1
             List<UEnseignementCredit> ues1 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
 
+            for (UEnseignementCredit ues11 : ues1) {
+                System.out.println(ues11);
+            }
+            
             //Liste des ues du semestre 2
             List<UEnseignementCredit> ues2 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(1), a);
 
+            for (UEnseignementCredit ues21 : ues2) {
+                System.out.println(ues21);
+            }
+            
             // La liste des étudiants du parcours
             Parcours p = parcoursDao.findByNiveauOption(n, o);
 
@@ -1027,8 +1035,9 @@ public class DocumentServiceImpl implements IDocumentService {
                 table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", (((nbrCreditValide1 * 1.0 / nombreCredit1)) * 100)), bf1, true, true));
 
                 // Le second semestre
+                Map<String, MoyenneUniteEnseignement> notes2 = noteService.listeNoteUniteEnseignement(etudiant.getMatricule(), n.getId(), o.getId(), semestres.get(1).getId(), a.getId());
                 for (UEnseignementCredit ue : ues2) {
-                    MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+                    MoyenneUniteEnseignement mue = notes2.get(ue.getCodeUE());
                     double value = 0;
                     if (mue != null) {
                         value = mue.getMoyenne();

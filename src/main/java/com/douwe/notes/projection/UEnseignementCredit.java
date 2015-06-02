@@ -48,6 +48,11 @@ public class UEnseignementCredit {
         this.credit = credit;
     }
 
+    @Override
+    public String toString() {
+        return "UEnseignementCredit{" + "codeUE=" + codeUE + ", intituleUE=" + intituleUE + ", credit=" + credit + '}';
+    }
+
    
 
    
