@@ -10,73 +10,77 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1">                            
-                    <p:dialog header="AJOUTER UN INSCRIPTION" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                    <p:dialog  modal="true" header="AJOUTER UNE INSCRIPTION" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
                         <h:form id="formSave">                                
                             <p:growl id="growl" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displaySave" columns="2">
-                                        <h:outputText  value="Parcours : " /> 
-                                        <h:selectOneMenu value="#{inscriptionBean.idP}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                            <f:selectItems value="#{inscriptionBean.parcourses}" var="parcours" itemLabel="#{parcours.niveau.code} - #{parcours.option.code}" itemValue="#{parcours.id}" />
-                                        </h:selectOneMenu>                                   
-                                        <h:outputText  value="ETUDIANT : " /> 
-                                        <p:selectOneMenu value="#{inscriptionBean.idE}" filter="true" filterMatchMode="startsWith" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                            <f:selectItems value="#{inscriptionBean.etudiants}" var="etudiant" itemLabel="#{etudiant.nom}" itemValue="#{etudiant.id}" />
-                                        </p:selectOneMenu> 
+                                    <h:panelGrid id="displaySave" class="rightPosition" columns="2">
+                                         
                                         <h:outputText  value="Année Académique : " /> 
-                                        <h:selectOneMenu value="#{inscriptionBean.idA}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                            <p:selectOneMenu filter="true" filterMatchMode="startsWith" value="#{inscriptionBean.idA}" class="syntaxe_content"  >
                                             <f:selectItems value="#{inscriptionBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                        </h:selectOneMenu>                                        
+                                        </p:selectOneMenu>  
+                                        <h:outputText  value="Parcours : " /> 
+                                            <p:selectOneMenu filter="true" filterMatchMode="startsWith" value="#{inscriptionBean.idP}" class="syntaxe_content"   >
+                                            <f:selectItems value="#{inscriptionBean.parcourses}" var="parcours" itemLabel="#{parcours.niveau.code} - #{parcours.option.code}" itemValue="#{parcours.id}" />
+                                        </p:selectOneMenu>                                   
+                                        <h:outputText  value="Etudiant : " /> 
+                                            <p:selectOneMenu value="#{inscriptionBean.idE}" filter="true" filterMatchMode="startsWith" class="syntaxe_content" >
+                                            <f:selectItems value="#{inscriptionBean.etudiants}" var="etudiant" itemLabel="#{etudiant.nom}" itemValue="#{etudiant.id}" />
+                                        </p:selectOneMenu>
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{inscriptionBean.saveOrUpdateInscription(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
-                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div"> 
+                                    <p:commandButton class="cmd_button"  value="Soumettre"  id="ajax1" actionListener ="#{inscriptionBean.saveOrUpdateInscription(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" styleClass="ui-priority-primary"/> 
+                                    <p:commandButton class="cmd_button"  value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close"/> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
                     </p:dialog>                    
-                    <p:dialog header="MODIFIER LE INSCRIPTION" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                    <p:dialog  modal="true" header="MODIFIER L' INSCRIPTION" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
                         <h:form id="formUpdate">    
                             <p:growl id="growl1" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displayUpdate" columns="2">                                        
-                                        <h:outputText  value="Parcours : " /> 
-                                        <h:selectOneMenu value="#{inscriptionBean.idP}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                    <h:panelGrid id="displayUpdate" class="rightPosition" columns="2">                                        
+                                       
+                                        <h:outputText  value="Année Académique : " /> 
+                                            <p:selectOneMenu filter="true" filterMatchMode="startsWith" value="#{inscriptionBean.idA}" class="syntaxe_content">
+                                            <f:selectItems value="#{inscriptionBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
+                                        </p:selectOneMenu> 
+                                         <h:outputText  value="Parcours : " /> 
+                                            <p:selectOneMenu filter="true" filterMatchMode="startsWith" value="#{inscriptionBean.idP}" class="syntaxe_content"  >
                                             <f:selectItems value="#{inscriptionBean.parcourses}" var="parcours" itemLabel="#{parcours.niveau.code} - #{parcours.option.code}" itemValue="#{parcours.id}" />
-                                        </h:selectOneMenu>                                   
-                                        <h:outputText  value="ETUDIANT : " /> 
-                                        <p:selectOneMenu value="#{inscriptionBean.idE}" filter="true" filterMatchMode="startsWith" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
+                                        </p:selectOneMenu>                                   
+                                        <h:outputText  value="ETtudiant : " /> 
+                                            <p:selectOneMenu value="#{inscriptionBean.idE}" filter="true" filterMatchMode="startsWith" class="syntaxe_content"  >
                                             <f:selectItems value="#{inscriptionBean.etudiants}" var="etudiant" itemLabel="#{etudiant.nom}" itemValue="#{etudiant.id}" />
                                         </p:selectOneMenu> 
-                                        <h:outputText  value="Année Académique : " /> 
-                                        <h:selectOneMenu value="#{inscriptionBean.idA}" style="margin-top:10px; margin-left: 10px; height: 30px; width: 100%;"  >
-                                            <f:selectItems value="#{inscriptionBean.anneeAcademiques}" var="anneeAcademique" itemLabel="#{anneeAcademique}" itemValue="#{anneeAcademique.id}" />                                            
-                                        </h:selectOneMenu> 
                                         <h:inputHidden value="#{inscriptionBean.inscription.id}"  />
                                         <h:inputHidden value="#{inscriptionBean.inscription.version}"  />
                                         <h:inputHidden value="#{inscriptionBean.inscription.active}"  />
                                     </h:panelGrid>  
                                 </h:panelGroup>
                                 <p:separator/>
-                                <div>
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{inscriptionBean.saveOrUpdateInscription(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close" style="margin-left: 20px;"/> 
+                                <div id="center_content_div"> 
+                                    <p:commandButton class="cmd_button"  value="Soumettre"  id="ajax2" actionListener="#{inscriptionBean.saveOrUpdateInscription(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton class="cmd_button"  value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close"/> 
                                 </div>                    
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" style="margin-bottom:auto; margin-top: auto;  margin-left: auto;margin-right: auto;">                        <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
-                        <p:confirmDialog message="voulez-vous vraiment supprimer ce inscription ?"
+                    <h:form id="f" class="syntaxe_content"  >                       
+                            <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
+                        <p:confirmDialog message="voulez-vous vraiment supprimer cette inscription ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
-                            <p:commandButton id="confirm" value="OUI" action="#{inscriptionBean.deleteInscription(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" style="margin-left: 30% "/>
-                            <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" style="margin-left: auto"/>
-                        </p:confirmDialog>
-                        <p:dataTable id="d"  emptyMessage="Aucun inscription n'est enregistré" var="inscription" value="#{inscriptionBean.inscriptions}" rowKey="#{inscription.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
+                            <div id="center_content_div">  
+                                <p:commandButton class="cmd_button"  id="confirm" value="OUI" action="#{inscriptionBean.deleteInscription(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d"/>
+                                <p:commandButton class="cmd_button"  id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" />
+                            </div></p:confirmDialog>
+                        <p:dataTable id="d"  emptyMessage="Aucune inscription n'est enregistrée" var="inscription" value="#{inscriptionBean.inscriptions}" rowKey="#{inscription.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
                                      sortOrder="ascending" selection="#{inscriptionBean.inscription}" selectionMode="single" >            
                             <f:facet name="header">
                                 LA LISTE DES INSCRIPTIONS
@@ -91,13 +95,13 @@
                                 #{inscription.anneeAcademique}
                             </p:column> 
                             <f:facet name="footer" >  
-                                <p:commandButton id="ajouter" value="Nouveau inscription" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
+                                <p:commandButton class="cmd_button"  id="ajouter" value="Nouveau inscription" type="button" onclick="PF('dlgSave').show()" icon="ui-icon-disk"/>
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="delete" value="Supprimer"  actionListener="#{inscriptionBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-trash"/> 
+                                <p:commandButton class="cmd_button"  id="delete" value="Supprimer"  actionListener="#{inscriptionBean.verifierEtSupprimer(actionEvent)}" icon="ui-icon-trash"/> 
                             </f:facet>                             
                             <f:facet name="footer">  
-                                <p:commandButton id="modifier" value="Modifier" actionListener="#{inscriptionBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
+                                <p:commandButton class="cmd_button"  id="modifier" value="Modifier" actionListener="#{inscriptionBean.verifierEtUpdate(actionEvent)}"  update=":formUpdate:displayUpdate" icon="ui-icon-arrowrefresh-1-w"/>  
                             </f:facet>                              
                         </p:dataTable>                                                              
                     </h:form>   

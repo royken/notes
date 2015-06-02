@@ -10,19 +10,19 @@
         <ui:composition template="./../template/template.xhtml">
             <ui:define name="content">                
                 <p:panel  id="p1">                      
-                    <p:dialog header="AJOUTER UNE UNITE D'ENSEIGNEMENT" widgetVar="dlgSave" hideEffect="explode" showEffect="explode">
+                    <p:dialog header="AJOUTER UNE UNITE D'ENSEIGNEMENT" widgetVar="dlgSave" hideEffect="explode" showEffect="explode" modal="true">
                         <h:form id="formSave">                                
                             <p:growl id="growl" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displaySave" columns="2" class="syntaxe_content">
+                                    <h:panelGrid id="displaySave" columns="2" class="rightPosition">
                                         <h:outputText  value="Code de l'UE: "  class="syntaxe_content"/>  
                                         <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.code}"   class="syntaxe_content">  
                                             <f:validateLength maximum="20"/>  
                                         </p:inputText>
                                         <h:outputText value="Intitulé de l'UE: "  class="syntaxe_content"/>
                                         <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.intitule}"   class="syntaxe_content"/>
-                                        <h:outputText  value="Selectionnez les cours de UE: "  class="syntaxe_content"/>  
+                                        <h:outputText  value="Selectionnez les cours de l'UE: "  class="syntaxe_content"/>  
                                         <p:selectCheckboxMenu value="#{uniteEnseignementBean.ids}"  label="Liste des cours" filter="true" filterMatchMode="startsWith" converter="javax.faces.Long" class="syntaxe_content">
                                             <f:selectItems value="#{uniteEnseignementBean.courses}" var="cours" itemLabel="#{cours.intitule}" itemValue="#{cours.id}" />
                                         </p:selectCheckboxMenu>
@@ -31,18 +31,18 @@
                                 </h:panelGroup>
                                 <p:separator/>
                                 <div id="center_content_div">
-                                    <p:commandButton value="Soumettre"  id="ajax1" actionListener ="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" /> 
-                                    <p:commandButton value="Annuler"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" /> 
+                                    <p:commandButton value="Soumettre" class="cmd_button" id="ajax1" actionListener ="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formSave,:f:d" icon="ui-icon-check" oncomplete="PF('dlgSave').hide()" /> 
+                                    <p:commandButton value="Annuler" class="cmd_button"  id="annule1" type="reset" onclick="PF('dlgSave').hide()" update=":formSave" icon="ui-icon-close" /> 
                                 </div>                     
                             </p:panel>
                         </h:form>  
                     </p:dialog>                    
-                    <p:dialog header="MODIFIER L' UNITE D'ENSEIGNEMENT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode">
+                    <p:dialog header="MODIFIER L' UNITE D'ENSEIGNEMENT" widgetVar="dlgUpdate" hideEffect="explode" showEffect="explode" modal="true">
                         <h:form id="formUpdate">    
                             <p:growl id="growl1" showDetail="true" /> 
                             <p:panel >
                                 <h:panelGroup >
-                                    <h:panelGrid id="displayUpdate" columns="2" class="syntaxe_content">                                        
+                                    <h:panelGrid id="displayUpdate" columns="2" class="rightPosition">                                        
                                         <h:outputText  value="Code de l'UE: "  class="syntaxe_content"/>  
                                         <p:inputText value="#{uniteEnseignementBean.uniteEnseignement.code}"   class="syntaxe_content" >  
                                             <f:validateLength maximum="20"/>  
@@ -60,20 +60,20 @@
                                 </h:panelGroup>
                                 <p:separator/>
                                 <div id="center_content_div">
-                                    <p:commandButton value="Soumettre"  id="ajax2" actionListener="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
-                                    <p:commandButton value="Annuler" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close"/> 
+                                    <p:commandButton class="cmd_button" value="Soumettre"  id="ajax2" actionListener="#{uniteEnseignementBean.saveOrUpdateUniteEnseignement(actionEvent)}" update=":formUpdate,:f:d" icon="ui-icon-check" oncomplete="PF('dlgUpdate').hide()" /> 
+                                    <p:commandButton value="Annuler" class="cmd_button" type="reset"  id="annule2" onclick="PF('dlgUpdate').hide()" update=":formUpdate" icon="ui-icon-close"/> 
                                 </div>                    
                             </p:panel>
                         </h:form>  
                     </p:dialog>
-                    <h:form id="f" >
+                    <h:form id="f" class="syntaxe_content" >
                         <p:growl id="growl3" showDetail="true" autoUpdate="true"/> 
                         <p:confirmDialog message="voulez-vous vraiment supprimer cette unité d'enseignement ?"
                                          header="Initialisation de la suppression" severity="alert"
                                          widgetVar="confirmation" showEffect="explode" hideEffect="explode"> 
                             <div id="center_content_div">
-                                <p:commandButton id="confirm" value="OUI" action="#{uniteEnseignementBean.deleteUniteEnseignement(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" />
-                                <p:commandButton id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" />
+                                <p:commandButton class="cmd_button" id="confirm" value="OUI" action="#{uniteEnseignementBean.deleteUniteEnseignement(actionEvent)}" oncomplete="PF('confirmation').hide()" update=":f:d" />
+                                <p:commandButton class="cmd_button" id="decline" value="NON" type="reset" onclick ="PF('confirmation').hide();" />
                             </div>
                         </p:confirmDialog>
                         <p:dataTable id="d"  emptyMessage="Aucune unité d'enseignement n'est enregistré" var="uniteEnseignement" value="#{uniteEnseignementBean.uniteEnseignements}" rowKey="#{uniteEnseignement.id}" paginator="true" rows="15"   paginatorPosition="bottom" paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"
