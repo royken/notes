@@ -20,6 +20,7 @@ public interface IDocumentService {
     
     public String produireSynthese(Long niveauId, Long optionId,Long academiqueId,Long semestreId, OutputStream stream) throws ServiceException;
     
-    public String produireSyntheseAnnuelle(OutputStream stream)throws ServiceException;
+    
+    
     
 }

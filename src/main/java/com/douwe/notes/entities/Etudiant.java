@@ -50,6 +50,9 @@ public class Etudiant implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateDeNaissance;
     
+    @Column(columnDefinition = "tinyint(1) default true")
+    private boolean validDate;
+    
     @Column
     private String lieuDeNaissance;
     
@@ -153,6 +156,41 @@ public class Etudiant implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
+
+    public boolean isValidDate() {
+        return validDate;
+    }
+
+    public void setValidDate(boolean validDate) {
+        this.validDate = validDate;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + (this.matricule != null ? this.matricule.hashCode() : 0);
+        hash = 23 * hash + (this.nom != null ? this.nom.hashCode() : 0);
+        return hash;
+    }
+
+    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Etudiant other = (Etudiant) obj;
+        if ((this.matricule == null) ? (other.matricule != null) : !this.matricule.equals(other.matricule)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
     @Override
     public String toString() {

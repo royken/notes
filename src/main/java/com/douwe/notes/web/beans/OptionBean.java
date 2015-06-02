@@ -65,7 +65,6 @@ public class OptionBean {
 
     public void deleteOption(ActionEvent actionEvent) throws ServiceException {
         if (option != null && option.getId() != null) {
-            System.out.println("--------------" + option);                        
             optionService.deleteOption(option.getId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Operation reussie", option.getCode() + " a été supprimé"));
             option = new Option();

@@ -5,23 +5,34 @@ import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IEtudiantDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.AnneeAcademique_;
+import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Departement_;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Etudiant_;
+import com.douwe.notes.entities.Evaluation;
+import com.douwe.notes.entities.Evaluation_;
 import com.douwe.notes.entities.Inscription;
 import com.douwe.notes.entities.Inscription_;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Niveau_;
+import com.douwe.notes.entities.Note;
+import com.douwe.notes.entities.Note_;
 import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Option_;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Parcours_;
+import com.douwe.notes.entities.Programme;
+import com.douwe.notes.entities.Programme_;
+import com.douwe.notes.entities.Semestre;
+import com.douwe.notes.entities.Session;
+import com.douwe.notes.entities.UniteEnseignement_;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -122,5 +133,101 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         return getManager().createQuery(cq).getSingleResult();
 
     }
+
+    @Override
+    public List<Etudiant> listeEtudiantInscritParcours(AnneeAcademique academique, Parcours parcours) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
+        Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
+        Root<Inscription> inscriptionRoot2 = cq.from(Inscription.class);
+        Path<Etudiant> etudiantPath = inscriptionRoot.get(Inscription_.etudiant);
+        Path<AnneeAcademique> anneePath = inscriptionRoot.get(Inscription_.anneeAcademique);  
+        Path<Parcours> parcoursPath = inscriptionRoot2.get(Inscription_.parcours);
+        // L'etudiant est inscrit en ce moment
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.lessThanOrEqualTo(anneePath.get(AnneeAcademique_.debut), academique.getDebut()));
+        predicates.add(cb.equal(parcoursPath, parcours));
+        predicates.add(cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant)));
+        predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.anneeAcademique),academique));        
+        cq.select(etudiantPath);
+        cq.distinct(true);
+        cq.orderBy(cb.asc(etudiantPath.get(Etudiant_.nom)));
+        if (predicates.size() > 0) {
+            cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
+        }
+        return getManager().createQuery(cq).getResultList();
+               
+    }
+
+    @Override
+    public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option, Cours cours, Session session) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
+        Root<Note> noteRoot = cq.from(Note.class);
+        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
+        Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
+        Root<Inscription> inscriptionRoot2 = cq.from(Inscription.class);
+        Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant)));
+        predicates.add(cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant)));
+        predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
+        predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.option), option));
+        predicates.add(cb.lessThanOrEqualTo(inscriptionRoot2.get(Inscription_.anneeAcademique).get(AnneeAcademique_.debut),academique.getDebut()));
+        predicates.add(cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique),academique));
+        predicates.add(cb.equal(noteRoot.get(Note_.cours),cours));
+        predicates.add(cb.equal(noteRoot.get(Note_.anneeAcademique),academique));
+        if(session == Session.rattrapage){
+            predicates.add(cb.isTrue(evaluationPath.get(Evaluation_.isExam)));
+            predicates.add(cb.equal(noteRoot.get(Note_.session), session));
+        }
+        if (predicates.size() > 0) {
+            cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
+        }
+        cq.distinct(true);
+        cq.orderBy(cb.asc(etudiantPath.get(Etudiant_.nom)));
+        cq.select(etudiantPath);
+        return getManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option, Semestre semestre) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
+        Root<Note> noteRoot = cq.from(Note.class);
+        Root<Cours> coursRoot = cq.from(Cours.class);
+        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
+        Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
+        Root<Inscription> inscriptionRoot2 = cq.from(Inscription.class);
+        Root<Programme> programmeRoot = cq.from(Programme.class);
+        Expression<List<Cours>> totoPath = programmeRoot.get(Programme_.uniteEnseignement).get(UniteEnseignement_.courses);
+        Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
+        List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant)));
+        predicates.add(cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant)));
+        predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
+        predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.option), option));
+        predicates.add(cb.lessThanOrEqualTo(inscriptionRoot2.get(Inscription_.anneeAcademique).get(AnneeAcademique_.debut),academique.getDebut()));
+        predicates.add(cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique),academique));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.anneeAcademique),academique));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.niveau),niveau));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.option),option));
+        predicates.add(cb.isMember(coursRoot, totoPath));
+        predicates.add(cb.equal(noteRoot.get(Note_.cours), coursRoot));
+        predicates.add(cb.equal(noteRoot.get(Note_.evaluation), evaluationPath));
+        if(semestre != null){
+            predicates.add(cb.equal(programmeRoot.get(Programme_.semestre), semestre));
+        }
+        predicates.add(cb.equal(noteRoot.get(Note_.anneeAcademique),academique));
+        if (predicates.size() > 0) {
+            cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
+        }
+        cq.distinct(true);
+        cq.orderBy(cb.asc(etudiantPath.get(Etudiant_.nom)));
+        cq.select(etudiantPath);
+        return getManager().createQuery(cq).getResultList();
+    }
+    
+    
 
 }

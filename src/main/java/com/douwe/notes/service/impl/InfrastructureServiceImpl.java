@@ -36,14 +36,12 @@ public class InfrastructureServiceImpl implements IInsfrastructureService {
     @Inject
     private IAnneeAcademiqueDao anneeAcademiqueDao;
 
+    @Override
     public Departement saveOrUpdateDepartement(Departement departement) {
-        System.out.println("Exécution de la methode saveOrUpdate");
         try {
             if (departement.getId() == null) {
-                System.out.println("Exécution de la methode save");
                 return departementDao.create(departement);
             } else {
-                System.out.println("Exécution de la methode update");
                 return departementDao.update(departement);                              
             }
         } catch (DataAccessException dae) {

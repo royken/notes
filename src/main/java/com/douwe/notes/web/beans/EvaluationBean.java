@@ -31,7 +31,6 @@ public class EvaluationBean {
 
 public void saveOrUpdateEvaluation(ActionEvent actionEvent) throws ServiceException {
         if (evaluation != null && evaluation.getCode() != null) {
-            System.out.println("------"+evaluation);
             evaluationService.saveOrUpdateEvaluation(evaluation);
             if (evaluation.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", evaluation.getCode() + " a été enregistré"));

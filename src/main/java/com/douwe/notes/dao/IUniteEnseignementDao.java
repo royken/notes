@@ -26,4 +26,6 @@ public interface IUniteEnseignementDao extends IDao<UniteEnseignement, Long>{
     // Retourne la liste des UEnseignementCredit d'un parcours pour un semestre
     public List<UEnseignementCredit> findByNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException;
     
+    public List<UniteEnseignement> findByUniteNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException;
+    
 }

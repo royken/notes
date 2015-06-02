@@ -21,7 +21,6 @@ public class SemestreDaoImpl extends GenericDao<Semestre, Long> implements ISeme
 
     @Override
     public List<Semestre> findByNiveau(Niveau n) throws DataAccessException {
-        System.out.println("Toto est de retour");
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<Semestre> cq = cb.createQuery(Semestre.class);
         Root<Semestre> semestreRoot = cq.from(Semestre.class);

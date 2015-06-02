@@ -1,6 +1,7 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Etudiant;
+import com.douwe.notes.service.util.ImportationResult;
 import java.io.InputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -64,7 +65,7 @@ public interface IEtudiantResource {
     @POST
     @Path("import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void importEtudiant(@FormDataParam("fichier") InputStream fichier, @FormDataParam("fichier") FormDataContentDisposition fileDisposition,@FormDataParam("annee")Long annee);
+    public ImportationResult importEtudiant(@FormDataParam("fichier") InputStream fichier, @FormDataParam("fichier") FormDataContentDisposition fileDisposition,@FormDataParam("annee")Long annee);
 
 
     

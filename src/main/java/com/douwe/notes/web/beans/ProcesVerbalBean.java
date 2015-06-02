@@ -63,11 +63,12 @@ public class ProcesVerbalBean {
 
     private List<Niveau> niveaus;
     private List<Option> options;
-    private Map<String, Long> courses;
+    //private Map<String, Long> courses;
+    private List<Cours> courses;
     private List<Departement> departements;
     private List<Session> sessions;
-    private Map<String, Long> countries = new HashMap<String, Long>();
-    private Map<String, Long> cities = null;
+    //private Map<String, Long> countries = new HashMap<String, Long>();
+    //private Map<String, Long> cities = null;
     Long idAca = null;
     Long idC = null;
 
@@ -84,7 +85,7 @@ public class ProcesVerbalBean {
                 try {
                     HttpServletResponse hsr = (HttpServletResponse) response;
                     hsr.setContentType("application/pdf");
-                    hsr.setHeader("Content-Disposition","attachment; filename=pv.pdf");
+                    hsr.setHeader("Content-Disposition", "attachment; filename=pv.pdf");
                     documentService.produirePv(idN, idO, idC, idAca, session.ordinal(), ((HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
                     context.responseComplete();
                 } catch (IOException ex) {
@@ -137,15 +138,13 @@ public class ProcesVerbalBean {
         this.coursService = coursService;
     }
 
-    public Map<String, Long> getCourses() {
+    public List<Cours> getCourses() {
         return courses;
     }
 
-    public void setCourses(Map<String, Long> courses) {
+    public void setCourses(List<Cours> courses) {
         this.courses = courses;
     }
-
-
 
     public Long getIdC() {
         return idC;
@@ -192,45 +191,58 @@ public class ProcesVerbalBean {
         if (idD != null && idD != 0L) {
             Departement d = departementService.findDepartementById(idD);
             options = departementService.getAllOptions(d);
-            cities = new HashMap<String, Long>();
-            for (Option opt : options) {
-                cities.put(opt.getCode(), opt.getId());
-            }
+
         } else {
-            cities = null;
+
+            options = null;
         }
     }
-    public void handleNiveauOptionChange() throws ServiceException{
-        System.out.println("idN-------"+idN);
-        System.out.println("idO-------"+idO);
-        System.out.println("idAca-------"+idAca);
-    if (idN != null && idN != 0L && idO != null && idO != 0L) {
-        Niveau n = niveauService.findNiveauById(idN);
-        Option o = optionService.findOptionById(idO);
-            Parcours p = parcoursService.findByNiveauOption(n, o);
-            List<Cours> cs = coursService.findByParcoursAnnee(p.getId(), idAca);
-            courses = new HashMap<String, Long>();
-            for (Cours c : cs) {
-                courses.put(c.getIntitule(), c.getId());
+
+    public void handleNiveauOptionChange() throws ServiceException {
+        System.out.println("Les valeurs sont "+idD + " et alors "+ idN + " ou alors "+idO);
+        if (idN != null && idN != 0L) {
+            // Le niveau n'est pas null
+            if (idO != null && idO != 0L) {
+                // l'option n'est pas null alors il faut charger les cours du parcours
+                Niveau n = niveauService.findNiveauById(idN);
+                Option o = optionService.findOptionById(idO);
+                Parcours p = parcoursService.findByNiveauOption(n, o);
+                courses = coursService.findByParcoursAnnee(p.getId(), idAca);   
+                System.out.println("La liste des cours");
+                for (Cours c : courses) {
+                    System.out.println(c.getIntitule());
+                }
+            } else {
+                // Il faut charger les options 
+                options = optionService.findByDepartementNiveau(idD, idN);
             }
-        } else {
-            courses = null;
         }
+//        if (idN != null && idN != 0L && idO != null && idO != 0L) {
+//        Niveau n = niveauService.findNiveauById(idN);
+//        Option o = optionService.findOptionById(idO);            
+//            Parcours p = parcoursService.findByNiveauOption(n, o);
+//            List<Cours> cs = coursService.findByParcoursAnnee(p.getId(), idAca);
+//            courses = new HashMap<String, Long>();
+//            for (Cours c : cs) {
+//                courses.put(c.getIntitule(), c.getId());
+//            }
+//        } else {
+//            courses = null;
+//        }
     }
 
-    public Map<String, Long> getCountries() throws ServiceException {
-        departements = departementService.getAllDepartements();
-        for (Departement d : departements) {
-            countries.put(d.getCode(), d.getId());
-        }
-        return countries;
-    }
-
-    public void setCountries(Map<String, Long> countries) {
-        this.countries = countries;
-    }
-
-    public Map<String, Long> getCities() throws ServiceException {
+//    public Map<String, Long> getCountries() throws ServiceException {
+//        departements = departementService.getAllDepartements();
+//        for (Departement d : departements) {
+//            countries.put(d.getCode(), d.getId());
+//        }
+//        return countries;
+//    }
+//
+//    public void setCountries(Map<String, Long> countries) {
+//        this.countries = countries;
+//    }
+    //public Map<String, Long> getCities() throws ServiceException {
 //        if (cities == null) {
 //            cities = new HashMap<String, Long>();
 //            options = optionService.getAllOptions();
@@ -238,14 +250,11 @@ public class ProcesVerbalBean {
 //                cities.put(opt.getCode(), opt.getId());
 //            }
 //        }
-
-        return cities;
-    }
-
-    public void setCities(Map<String, Long> cities) {
-        this.cities = cities;
-    }
-
+//        return cities;
+//    }
+//    public void setCities(Map<String, Long> cities) {
+//        this.cities = cities;
+//    }
     public IOptionService getOptionService() {
         return optionService;
     }
@@ -304,7 +313,7 @@ public class ProcesVerbalBean {
     }
 
     public List<Session> getSessions() {
-        Session[] ss = new Session[2];
+        Session[] ss;
         ss = Session.values();
         sessions = new ArrayList<Session>();
         for (int i = 0; i < 2; i++) {

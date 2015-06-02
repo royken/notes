@@ -1,5 +1,7 @@
 package com.douwe.notes.projection;
 
+import com.douwe.notes.entities.AnneeAcademique;
+import com.douwe.notes.entities.Session;
 import java.util.Map;
 
 /**
@@ -13,6 +15,10 @@ public class EtudiantNotes {
     private String nom;
     
     private Map<String,Double> note;
+    
+    private Session session;
+    
+    private AnneeAcademique annee;
     
     private Map<String, Integer> details;
     
@@ -57,5 +63,23 @@ public class EtudiantNotes {
     public void setDetails(Map<String, Integer> details) {
         this.details = details;
     }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public AnneeAcademique getAnnee() {
+        return annee;
+    }
+
+    public void setAnnee(AnneeAcademique annee) {
+        this.annee = annee;
+    }
+    
+    
    
 }

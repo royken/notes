@@ -58,7 +58,6 @@ public class TypeCoursResource implements ITypeCoursResource{
     @Override
     public TypeCours getTypeCours(long id) {
         try {
-            System.out.println("Exeuction en cours");
             TypeCours typeCours = typeCoursService.findTypeCoursById(id);
             if(typeCours == null){
                 throw  new WebApplicationException(Response.Status.NOT_FOUND);

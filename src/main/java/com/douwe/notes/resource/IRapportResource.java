@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.douwe.notes.resource;
 
 import javax.ws.rs.GET;
@@ -29,9 +24,14 @@ public interface IRapportResource {
     Response produirePv(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "coursid") long coursid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "session") int session);
     
     @GET
-    @Path(value = "synthese/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}/{semestre : \\d+}")
+    @Path(value = "synthese/semestre/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}/{semestre : \\d+}")
     @Produces("text/pdf")
-    Response produireSynthese(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "semestre") long semestreid);
+    Response produireSyntheseSemestrielle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "semestre") long semestreid);
+    
+     @GET
+    @Path(value = "synthese/annuelle/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}")
+    @Produces("text/pdf")
+    Response produireSyntheseAnnuelle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid);
     
     
     @GET

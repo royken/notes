@@ -4,6 +4,7 @@ package com.douwe.notes.projection;
  *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
+@Deprecated
 public class PvHeader {
     
     private String niveau;

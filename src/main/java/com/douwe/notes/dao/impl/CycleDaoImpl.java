@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class CycleDaoImpl extends GenericDao<Cycle, Long> implements ICycleDao{
 
+    @Override
     public void deleteActive(Cycle cycle) throws DataAccessException {
         getManager().createNamedQuery("Cycle.deleteActive").setParameter("idParam", cycle.getId());
     }

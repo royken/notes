@@ -97,8 +97,6 @@ public class ImportationBean {
 
     public void saveAllEtudiant() throws ServiceException, IOException {        
         if (file != null) {            
-            System.out.println("**********************"+file.getFileName());
-            //etudiantService.importEtudiants(file.getInputstream(), idAca);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "information","importation reussie "));
             file = null;
             idAca = 0L;
