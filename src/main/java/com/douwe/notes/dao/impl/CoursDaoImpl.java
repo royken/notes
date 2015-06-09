@@ -5,7 +5,8 @@ import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.ICoursDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Cours_;
+import com.douwe.notes.entities.CoursUEAnnee;
+import com.douwe.notes.entities.CoursUEAnnee_;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Programme_;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -45,23 +45,36 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao {
     public List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique, Semestre semestre) throws DataAccessException {
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<Cours> cq = cb.createQuery(Cours.class);
+        Root<CoursUEAnnee> coursUERoot = cq.from(CoursUEAnnee.class);
         Root<Programme> programmeRoot = cq.from(Programme.class);
-        Root<Cours> coursRoot = cq.from(Cours.class);
-        Path<Parcours> parcoursPath = programmeRoot.get(Programme_.parcours);
-        Path<Semestre> semestrePath = programmeRoot.get(Programme_.semestre);
-        Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
-        ListJoin<Cours, UniteEnseignement> ab = coursRoot.join(Cours_.uniteEnseignements);
         List<Predicate> predicates = new ArrayList<Predicate>();
-        predicates.add(cb.equal(anneePath, academique));
-        predicates.add(cb.equal(parcoursPath, parcours));
+        predicates.add(cb.equal(coursUERoot.get(CoursUEAnnee_.anneeAcademique), academique));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.anneeAcademique), academique));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.parcours), parcours));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), coursUERoot.get(CoursUEAnnee_.uniteEnseignements)));
+        Path<Cours> coursPath = coursUERoot.get(CoursUEAnnee_.cours);
         if (semestre != null) {
-            predicates.add(cb.equal(semestrePath, semestre));
+            predicates.add(cb.equal(programmeRoot.get(Programme_.semestre), semestre));
         }
-        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement),ab));
+//        Root<Programme> programmeRoot = cq.from(Programme.class);
+//        Root<Cours> coursRoot = cq.from(Cours.class);
+//        Root<CoursUEAnnee> anneeRoot = cq.from(CoursUEAnnee.class);
+//        Path<Parcours> parcoursPath = programmeRoot.get(Programme_.parcours);
+//        Path<Semestre> semestrePath = programmeRoot.get(Programme_.semestre);
+//        Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
+//        Expression<List<Cours>> listeCoursPath = anneeRoot.get(CoursUEAnnee_.cours);
+//        Expression<List<UniteEnseignement>> listeUEPath = anneeRoot.get(CoursUEAnnee_.uniteEnseignements);
+//        List<Predicate> predicates = new ArrayList<Predicate>();
+//        predicates.add(cb.equal(anneePath, academique));
+//        predicates.add(cb.equal(parcoursPath, parcours));
+//        predicates.add(cb.equal(anneeRoot.get(CoursUEAnnee_.anneeAcademique), academique));
+//        predicates.add(cb.isMember(coursRoot, listeCoursPath));
+//        predicates.add(cb.isMember(coursRoot, listeCoursPath));
+        
         if (predicates.size() > 0) {
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
-        cq.select(coursRoot);
+        cq.select(coursPath);
         return getManager().createQuery(cq).getResultList();
     }
 

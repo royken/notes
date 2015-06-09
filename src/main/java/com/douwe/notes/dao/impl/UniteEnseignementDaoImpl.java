@@ -5,6 +5,8 @@ import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.CoursUEAnnee;
+import com.douwe.notes.entities.CoursUEAnnee_;
 import com.douwe.notes.entities.Cours_;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -20,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -51,30 +52,33 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         Path<Semestre> semestrePath = programmeRoot.get(Programme_.semestre);
         Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
         //Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
-        ListJoin<Cours, UniteEnseignement> ab = coursRoot.join(Cours_.uniteEnseignements);
+        //ListJoin<Cours, UniteEnseignement> ab = coursRoot.join(Cours_.uniteEnseignements);
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(anneePath, annee));
         //predicates.add(cb.equal(ab, unitePath));
         predicates.add(cb.equal(semestrePath, semestre));
         predicates.add(cb.equal(parcoursPath.get(Parcours_.niveau), niveau));
         predicates.add(cb.equal(parcoursPath.get(Parcours_.option), option));
-        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), ab));
+        //predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), ab));
         if (predicates.size() > 0) {
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
-        cq.groupBy(ab.get(UniteEnseignement_.code));
-        cq.orderBy(cb.asc(ab.get(UniteEnseignement_.code)));
+       // cq.groupBy(ab.get(UniteEnseignement_.code));
+        //cq.orderBy(cb.asc(ab.get(UniteEnseignement_.code)));
         // I need to figure out one day why it is not working
 //        cq.multiselect(ab.get(UniteEnseignement_.code),
 //                ab.get(UniteEnseignement_.intitule),
 //                cb.selectCase()
 //                        .when(cb.equal(ab.get(UniteEnseignement_.hasOptionalChoices), true), cb.min(coursRoot.get(Cours_.credit)).as(Integer.class))
 //                        .otherwise(cb.sum(coursRoot.get(Cours_.credit)).as(Integer.class)));
-        cq.multiselect(ab.get(UniteEnseignement_.code),
-                ab.get(UniteEnseignement_.intitule),
+        cq.multiselect(
+                //ab.get(UniteEnseignement_.code),
+                //ab.get(UniteEnseignement_.intitule),
                 cb.sum(coursRoot.get(Cours_.credit)),
-                cb.min(coursRoot.get(Cours_.credit)),
-                ab.get(UniteEnseignement_.hasOptionalChoices));
+                cb.min(coursRoot.get(Cours_.credit))
+                //,
+                //ab.get(UniteEnseignement_.hasOptionalChoices)
+        );
         return getManager().createQuery(cq).getResultList();
     }
 
@@ -83,13 +87,16 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<UniteEnseignement> cq = cb.createQuery(UniteEnseignement.class);
         Root<Programme> programmeRoot = cq.from(Programme.class);
+        Root<CoursUEAnnee> ueRoot = cq.from(CoursUEAnnee.class);
         Path<Parcours> parcoursPath = programmeRoot.get(Programme_.parcours);
         Path<Niveau> niveauPath = parcoursPath.get(Parcours_.niveau);
         Path<Option> optionPath = parcoursPath.get(Parcours_.option);
         Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
         Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
         List<Predicate> predicates = new ArrayList<Predicate>();
-        predicates.add(unitePath.get(UniteEnseignement_.courses).in(c));
+        predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.anneeAcademique), a));
+        predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.cours), c));
+        predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.uniteEnseignements), unitePath));
         predicates.add(cb.equal(niveauPath, n));
         predicates.add(cb.equal(optionPath, o));
         predicates.add(cb.equal(anneePath, a));
@@ -105,25 +112,21 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
         CriteriaQuery<UniteEnseignement> cq = cb.createQuery(UniteEnseignement.class);
         Root<Programme> programmeRoot = cq.from(Programme.class);
-        Root<Cours> coursRoot = cq.from(Cours.class);
         Path<Parcours> parcoursPath = programmeRoot.get(Programme_.parcours);
         Path<Semestre> semestrePath = programmeRoot.get(Programme_.semestre);
         Path<AnneeAcademique> anneePath = programmeRoot.get(Programme_.anneeAcademique);
-        //Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
-        ListJoin<Cours, UniteEnseignement> ab = coursRoot.join(Cours_.uniteEnseignements);
+        
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(anneePath, annee));
         //predicates.add(cb.equal(ab, unitePath));
         predicates.add(cb.equal(semestrePath, semestre));
         predicates.add(cb.equal(parcoursPath.get(Parcours_.niveau), niveau));
         predicates.add(cb.equal(parcoursPath.get(Parcours_.option), option));
-        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), ab));
         if (predicates.size() > 0) {
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
-        cq.groupBy(ab.get(UniteEnseignement_.code));
-        cq.orderBy(cb.asc(ab.get(UniteEnseignement_.code)));
-        cq.select(ab);
+        cq.orderBy(cb.asc(programmeRoot.get(Programme_.uniteEnseignement).get(UniteEnseignement_.code)));
+        cq.select(programmeRoot.get(Programme_.uniteEnseignement));
         return getManager().createQuery(cq).getResultList();
     }
 

@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -19,6 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement(name = "credit")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ANNEEACADEMIQUE_ID","PARCOURS_ID","COURS_ID"}))
 public class Credit implements Serializable {
 
     @Id
@@ -29,12 +32,15 @@ public class Credit implements Serializable {
     private Integer valeur;
 
     @ManyToOne
+    @JoinColumn(name = "ANNEEACADEMIQUE_ID")
     private AnneeAcademique academique;
 
     @ManyToOne
+    @JoinColumn(name = "PARCOURS_ID")
     private Parcours parcours;
 
-    @ManyToOne
+    @ManyToOne    
+    @JoinColumn(name = "COURS_ID")
     private Cours cours;
 
     public Long getId() {

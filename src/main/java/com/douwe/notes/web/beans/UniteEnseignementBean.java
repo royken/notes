@@ -47,7 +47,7 @@ public class UniteEnseignementBean {
 
             }
 
-            uniteEnseignement.setCourses(coursChoisis);
+            //uniteEnseignement.setCourses(coursChoisis);
             uniteEnseignementService.saveOrUpdateUe(uniteEnseignement);
             if (uniteEnseignement.getId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Operation reussie", uniteEnseignement.getCode() + " a été mis à jour "));
@@ -149,14 +149,14 @@ public class UniteEnseignementBean {
     }
 
     public Long[] getIds() {
-        if (uniteEnseignement != null && uniteEnseignement.getCourses() != null) {
-            int i = 0;
-            for (Iterator<Cours> iterator = uniteEnseignement.getCourses().iterator(); iterator.hasNext();) {
-                Cours next = iterator.next();
-                ids[i] = next.getId();
-                i++;
-            }
-        }
+//        if (uniteEnseignement != null && uniteEnseignement.getCourses() != null) {
+//            int i = 0;
+//            for (Iterator<Cours> iterator = uniteEnseignement.getCourses().iterator(); iterator.hasNext();) {
+//                Cours next = iterator.next();
+//                ids[i] = next.getId();
+//                i++;
+//            }
+//        }
         return ids;
     }
 

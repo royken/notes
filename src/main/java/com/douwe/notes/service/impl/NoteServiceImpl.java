@@ -451,22 +451,22 @@ public class NoteServiceImpl implements INoteService {
                 annee = academiqueDao.findById(ueId);
             }
             result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
-            for (Cours cours : ue.getCourses()) {
-                EtudiantNotes n = getNoteEtudiant(matricule, cours.getId(), anneeId);
-                if (n != null) {
-                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
-                    result.getSessions().add(n.getSession());
-                    result.getNotes().put(cours.getIntitule(), n.getMoyenne());
-                    result.getAnnees().add(n.getAnnee());
-                } else {
-                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
-                    result.getSessions().add(Session.normale);
-                    result.getNotes().put(cours.getIntitule(), 0.0);
-                    if (annee != null) {
-                        result.getAnnees().add(annee);
-                    }
-                }
-            }
+//            for (Cours cours : ue.getCourses()) {
+//                EtudiantNotes n = getNoteEtudiant(matricule, cours.getId(), anneeId);
+//                if (n != null) {
+//                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
+//                    result.getSessions().add(n.getSession());
+//                    result.getNotes().put(cours.getIntitule(), n.getMoyenne());
+//                    result.getAnnees().add(n.getAnnee());
+//                } else {
+//                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
+//                    result.getSessions().add(Session.normale);
+//                    result.getNotes().put(cours.getIntitule(), 0.0);
+//                    if (annee != null) {
+//                        result.getAnnees().add(annee);
+//                    }
+//                }
+//            }
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

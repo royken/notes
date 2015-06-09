@@ -6,8 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,20 +19,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Entity
-@XmlRootElement(name = "courUeAnnee")
+@XmlRootElement(name = "coursUeAnnee")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CourUEAnnee implements Serializable {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ANNEEACADEMIQUE_ID","UNITEENSEIGNEMENT_ID","COURS_ID"}))
+public class CoursUEAnnee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
-    private List<Cours> cours;
-    
-    @OneToMany
-    private List<UniteEnseignement> uniteEnseignements;
+    @ManyToOne
+    @JoinColumn(name = "COURS_ID")
+    private Cours cours;
     
     @ManyToOne
+    @JoinColumn(name = "UNITEENSEIGNEMENT_ID")
+    private UniteEnseignement uniteEnseignements;
+    
+    @ManyToOne
+    @JoinColumn(name = "ANNEEACADEMIQUE_ID")
     private AnneeAcademique anneeAcademique;
 
     public Long getId() {
@@ -41,21 +47,23 @@ public class CourUEAnnee implements Serializable {
         this.id = id;
     }
 
-    public List<Cours> getCours() {
+    public Cours getCours() {
         return cours;
     }
 
-    public void setCours(List<Cours> cours) {
+    public void setCours(Cours cours) {
         this.cours = cours;
     }
 
-    public List<UniteEnseignement> getUniteEnseignements() {
+    public UniteEnseignement getUniteEnseignements() {
         return uniteEnseignements;
     }
 
-    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
+    public void setUniteEnseignements(UniteEnseignement uniteEnseignements) {
         this.uniteEnseignements = uniteEnseignements;
     }
+
+    
 
     public AnneeAcademique getAnneeAcademique() {
         return anneeAcademique;
