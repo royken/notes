@@ -113,5 +113,4 @@ public class Enseignement implements Serializable {
         this.active = active;
     }
     
-    
 }
