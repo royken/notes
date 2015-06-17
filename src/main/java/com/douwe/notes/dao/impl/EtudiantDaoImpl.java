@@ -205,7 +205,7 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.anneeAcademique), academique));
-        predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.uniteEnseignements), programmeRoot.get(Programme_.uniteEnseignement)));
+        predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.uniteEnseignement), programmeRoot.get(Programme_.uniteEnseignement)));
         predicates.add(cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant)));
         predicates.add(cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant)));
         predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau));

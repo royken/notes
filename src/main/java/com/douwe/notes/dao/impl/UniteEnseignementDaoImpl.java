@@ -96,7 +96,7 @@ public class UniteEnseignementDaoImpl extends GenericDao<UniteEnseignement, Long
         List<Predicate> predicates = new ArrayList<Predicate>();
         predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.anneeAcademique), a));
         predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.cours), c));
-        predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.uniteEnseignements), unitePath));
+        predicates.add(cb.equal(ueRoot.get(CoursUEAnnee_.uniteEnseignement), unitePath));
         predicates.add(cb.equal(niveauPath, n));
         predicates.add(cb.equal(optionPath, o));
         predicates.add(cb.equal(anneePath, a));

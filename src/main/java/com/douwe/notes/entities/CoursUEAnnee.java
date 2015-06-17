@@ -33,7 +33,7 @@ public class CoursUEAnnee implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "UNITEENSEIGNEMENT_ID")
-    private UniteEnseignement uniteEnseignements;
+    private UniteEnseignement uniteEnseignement;
     
     @ManyToOne
     @JoinColumn(name = "ANNEEACADEMIQUE_ID")
@@ -55,12 +55,12 @@ public class CoursUEAnnee implements Serializable {
         this.cours = cours;
     }
 
-    public UniteEnseignement getUniteEnseignements() {
-        return uniteEnseignements;
+    public UniteEnseignement getUniteEnseignement() {
+        return uniteEnseignement;
     }
 
-    public void setUniteEnseignements(UniteEnseignement uniteEnseignements) {
-        this.uniteEnseignements = uniteEnseignements;
+    public void setUniteEnseignement(UniteEnseignement uniteEnseignements) {
+        this.uniteEnseignement = uniteEnseignements;
     }
 
     
@@ -72,7 +72,4 @@ public class CoursUEAnnee implements Serializable {
     public void setAnneeAcademique(AnneeAcademique anneeAcademique) {
         this.anneeAcademique = anneeAcademique;
     }
-    
-    
-    
 }
