@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQuery(name = "Cours.deleteActive",query = "update Cours c set c.active = 0 where c.id = :idParam"),
 @NamedQuery(name = "Cours.findAllActive",query = "select c from Cours c WHERE c.active=1"),
 @NamedQuery(name = "Cours.findByIntitule",query = "SELECT c FROM Cours c WHERE c.intitule like :param"),
-@NamedQuery(name = "Cours.findByUE",query = "select co from Cours co, UniteEnseignement ue JOIN ue.courses c_e where ue.id = :idParam and c_e.id =co.id")
+//@NamedQuery(name = "Cours.findByUE",query = "select co from Cours co, UniteEnseignement ue JOIN ue.courses c_e where ue.id = :idParam and c_e.id =co.id")
 })
 public class Cours implements Serializable {
     
