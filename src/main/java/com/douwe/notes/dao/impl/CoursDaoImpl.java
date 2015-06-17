@@ -51,7 +51,7 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao {
         predicates.add(cb.equal(coursUERoot.get(CoursUEAnnee_.anneeAcademique), academique));
         predicates.add(cb.equal(programmeRoot.get(Programme_.anneeAcademique), academique));
         predicates.add(cb.equal(programmeRoot.get(Programme_.parcours), parcours));
-        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), coursUERoot.get(CoursUEAnnee_.uniteEnseignements)));
+        predicates.add(cb.equal(programmeRoot.get(Programme_.uniteEnseignement), coursUERoot.get(CoursUEAnnee_.uniteEnseignement)));
         Path<Cours> coursPath = coursUERoot.get(CoursUEAnnee_.cours);
         if (semestre != null) {
             predicates.add(cb.equal(programmeRoot.get(Programme_.semestre), semestre));
