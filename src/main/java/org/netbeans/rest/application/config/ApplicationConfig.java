@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.douwe.notes.resource.JAXBMarshaller.class);
         resources.add(com.douwe.notes.resource.impl.AnneeResource.class);
         resources.add(com.douwe.notes.resource.impl.CoursResource.class);
+        resources.add(com.douwe.notes.resource.impl.CreditResource.class);
         resources.add(com.douwe.notes.resource.impl.CycleResource.class);
         resources.add(com.douwe.notes.resource.impl.DepartementResource.class);
         resources.add(com.douwe.notes.resource.impl.EnseignantResource.class);

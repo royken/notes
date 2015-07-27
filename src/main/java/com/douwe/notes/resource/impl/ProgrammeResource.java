@@ -50,7 +50,7 @@ public class ProgrammeResource implements IProgrammeResource{
         try {
             Niveau n = programme.getParcours().getNiveau();
             Option o = programme.getParcours().getOption();
-            Parcours p = parcoursService.findByNiveauOption(n, o);
+            Parcours p = parcoursService.findByNiveauOption(n.getId(), o.getId());
             programme.setParcours(p);
             return service.saveOrUpdateProgramme(programme);
         } catch (ServiceException ex) {
@@ -106,6 +106,44 @@ public class ProgrammeResource implements IProgrammeResource{
             service.deleteProgramme(id);
         } catch (ServiceException ex) {
             Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Programme createProgramme(long niveauId, long optionId, Programme programme) {
+        try {
+            Parcours p = parcoursService.findByNiveauOption(niveauId, optionId);
+            programme.setParcours(p);
+            return service.saveOrUpdateProgramme(programme);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        }        
+    }
+
+    @Override
+    public List<Programme> getAllProgrammes(long anneeId, long niveauId, long optionId, long semestreId) {
+        try {
+            return service.findByOptionAnnee(anneeId, niveauId, optionId, semestreId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public Programme updateProgramme(long niveauId, long optionId, long id, Programme programme) {
+        try {
+            Parcours parcours = parcoursService.findByNiveauOption(niveauId, optionId);
+            Programme prog = service.findProgrammeById(id);
+            prog.setParcours(parcours);
+            prog.setAnneeAcademique(programme.getAnneeAcademique());
+            prog.setSemestre(programme.getSemestre());
+            prog.setUniteEnseignement(programme.getUniteEnseignement());
+            return service.saveOrUpdateProgramme(prog);
+        } catch (ServiceException ex) {
+            Logger.getLogger(ProgrammeResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 }

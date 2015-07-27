@@ -2,11 +2,13 @@ package com.douwe.notes.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -46,13 +48,12 @@ public class Cours implements Serializable {
     @Column(unique = true)
     private String intitule;
     
-    @Column
-    private Integer credit;
-    
     @ManyToOne(optional = false)
     private TypeCours typeCours;
     
-  
+    @XmlTransient
+    @ManyToMany(mappedBy = "cours")
+    private List<UniteEnseignement> uniteEnseignements;
     
     @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -86,14 +87,6 @@ public class Cours implements Serializable {
         this.typeCours = typeCours;
     }
 
-    public Integer getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Integer credit) {
-        this.credit = credit;
-    }
-
     @JsonIgnore
     public int getVersion() {
         return version;
@@ -112,12 +105,19 @@ public class Cours implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
-    }   
- 
+    }  
 
+    public List<UniteEnseignement> getUniteEnseignements() {
+        return uniteEnseignements;
+    }
+
+    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
+        this.uniteEnseignements = uniteEnseignements;
+    }
+    
     @Override
     public String toString() {
-        return "Cours{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", credit=" + credit + ", typeCours=" + typeCours + ", active=" + active + '}';
+        return "Cours{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", typeCours=" + typeCours + ", active=" + active + '}';
     }
     
     

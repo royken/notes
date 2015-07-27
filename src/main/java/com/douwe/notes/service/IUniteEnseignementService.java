@@ -19,5 +19,9 @@ public interface IUniteEnseignementService {
     
     public List<UniteEnseignement> getAllUniteEnseignements() throws ServiceException;
     
+    public List<UniteEnseignement> findByParcours(long niveauId, long optionId) throws ServiceException;
+
+    public UniteEnseignement addUniteEnseignement(Long niveauId, Long optionId, UniteEnseignement ue) throws ServiceException;
+    
     
 }

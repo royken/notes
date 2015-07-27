@@ -7,6 +7,7 @@ import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.projection.CoursCredit;
 import java.util.List;
 
 /**
@@ -24,5 +25,10 @@ public interface ICoursDao extends IDao<Cours, Long>{
     public List<Cours> findByParcoursAnnee(Parcours parcours, AnneeAcademique academique, Semestre semestre) throws DataAccessException;
     
     public List<Cours> findByUe(UniteEnseignement ue) throws DataAccessException;
+    
+    public List<CoursCredit> findCoursCreditByUe(UniteEnseignement ue, AnneeAcademique annee) throws DataAccessException;
+
+    public List<Cours> findByParcours(Parcours parcours)  throws DataAccessException;
+    
     
 }

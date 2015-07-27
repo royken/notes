@@ -2,6 +2,7 @@ package com.douwe.notes.resource.impl;
 
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.Evaluation;
+import com.douwe.notes.entities.TypeCours;
 import com.douwe.notes.resource.ICoursResource;
 import com.douwe.notes.service.ICoursService;
 import com.douwe.notes.service.IEvaluationService;
@@ -23,7 +24,7 @@ public class CoursResource implements ICoursResource {
 
     @EJB
     private ICoursService coursService;
-    
+
     @EJB
     private IEvaluationService evaluationService;
 
@@ -42,8 +43,6 @@ public class CoursResource implements ICoursResource {
     public void setEvaluationService(IEvaluationService evaluationService) {
         this.evaluationService = evaluationService;
     }
-    
-    
 
     @Override
     public Cours createCours(Cours cours) {
@@ -84,7 +83,6 @@ public class CoursResource implements ICoursResource {
         try {
             Cours cours1 = coursService.findCoursById(id);
             if (cours1 != null) {
-                cours1.setCredit(cours.getCredit());
                 cours1.setIntitule(cours.getIntitule());
                 cours1.setTypeCours(cours.getTypeCours());
                 return coursService.saveOrUpdateCours(cours1);
@@ -108,7 +106,7 @@ public class CoursResource implements ICoursResource {
     @Override
     public Cours findByIntitule(String intitule) {
         try {
-            Cours cours = coursService.findByIntitule(intitule);           
+            Cours cours = coursService.findByIntitule(intitule);
             if (cours == null) {
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
@@ -126,6 +124,16 @@ public class CoursResource implements ICoursResource {
         } catch (ServiceException ex) {
             Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    @Override
+    public List<Cours> getByParcours(long niveauId, long optionId) {
+        try {
+            return coursService.findByParcours(niveauId, optionId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(CoursResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 

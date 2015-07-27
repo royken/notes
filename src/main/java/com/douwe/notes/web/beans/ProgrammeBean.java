@@ -124,11 +124,11 @@ public class ProgrammeBean {
 
     public int cout(List<Cours> c) {
         int t = 0;
-        if (c != null) {
-            for (Cours c1 : c) {
-                t += c1.getCredit();
-            }
-        }
+//        if (c != null) {
+//            for (Cours c1 : c) {
+//                t += c1.getCredit();
+//            }
+//        }
         return t;
     }
 

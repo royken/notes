@@ -135,17 +135,9 @@ public class ParcoursResource implements IParcoursResource{
 
     @Override
     public Parcours findByNiveauOption(long idNveau, long idOption) {
-        try {
-            Niveau niveau = niveauService.findNiveauById(idNveau);
-            if(niveau == null){
-                throw  new WebApplicationException(Response.Status.NOT_FOUND);
-            }
-            Option option = optionService.findOptionById(idOption);
-            if(option == null){
-                throw  new WebApplicationException(Response.Status.NOT_FOUND);
-            }
+        try {       
             
-            Parcours parcours = parcoursService.findByNiveauOption(niveau, option);
+            Parcours parcours = parcoursService.findByNiveauOption(idNveau, idOption);
             if(parcours == null){
                 throw  new WebApplicationException(Response.Status.NOT_FOUND);
             }

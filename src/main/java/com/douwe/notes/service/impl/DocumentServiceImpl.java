@@ -3,6 +3,7 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
+import com.douwe.notes.dao.ICreditDao;
 import com.douwe.notes.dao.IDepartementDao;
 import com.douwe.notes.dao.IEnseignantDao;
 import com.douwe.notes.dao.IEtudiantDao;
@@ -15,6 +16,7 @@ import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Credit;
 import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
@@ -87,6 +89,9 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Inject
     private IDepartementDao departementDao;
+    
+    @Inject
+    private ICreditDao creditDao;
 
     // TODO Royken I faut eviter les dependances vers les services
     @Inject
@@ -213,6 +218,14 @@ public class DocumentServiceImpl implements IDocumentService {
         this.uniteEnsDao = uniteEnsDao;
     }
 
+    public ICreditDao getCreditDao() {
+        return creditDao;
+    }
+
+    public void setCreditDao(ICreditDao creditDao) {
+        this.creditDao = creditDao;
+    }
+    
     @Override
     public String produirePv(Long niveauId, Long optionId, Long coursId, Long academiqueId, int session, OutputStream stream) throws ServiceException {
         try {
@@ -227,11 +240,12 @@ public class DocumentServiceImpl implements IDocumentService {
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Session s = Session.values()[session];
             Programme prog = programmeDao.findByCours(cours, niveau, option, anne);
-            produceHeader(doc, cours, niveau, option, anne, s, prog, false);
+            Credit credit = creditDao.findByCours(cours, niveau, option, anne);
+            produceHeader(doc, cours, niveau, option, anne, s, prog, credit, false);
             StatistiquesNote stats = produceBody(doc, cours, niveau, option, anne, s, true);
             produceFooter(doc, stats);
             doc.newPage();
-            produceHeader(doc, cours, niveau, option, anne, s, prog, false);
+            produceHeader(doc, cours, niveau, option, anne, s, prog, credit,false);
             produceBody(doc, cours, niveau, option, anne, s, false);
             doc.close();
         } catch (DataAccessException ex) {
@@ -283,7 +297,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, boolean departement) throws Exception {
+    private void produceHeader(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, Programme prog, Credit credit, boolean departement) throws Exception {
         Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 8);
         Font fontEntete = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
         // Définition de l'entete du document
@@ -325,7 +339,7 @@ public class DocumentServiceImpl implements IDocumentService {
             builder.append("Fax : (+237) 22 29 31 12 / (+237) 22 29 15 41\n");
         }
         builder.append("Email: institutsupsahel.uma@gmail.com\n");
-        builder.append("Site: http://www.uni-maroua.citi.cm");
+        builder.append("Site: http://www.uni-maroua.com");
         Paragraph coordonnees = new Paragraph(new Phrase(builder.toString(), bf12));
         coordonnees.setAlignment(Element.ALIGN_CENTER);
         float widths2[] = {3, 4, 3};
@@ -405,7 +419,7 @@ public class DocumentServiceImpl implements IDocumentService {
             table2.addCell(cell);
             phrase = new Phrase();
             phrase.add(new Chunk("Credit : ", fontEntete));
-            phrase.add(new Chunk("" + c.getCredit(), bf12));
+            phrase.add(new Chunk(String.valueOf(credit.getValeur()), bf12));
             cell = new PdfPCell(phrase);
             cell.setBorderColor(BaseColor.WHITE);
             table2.addCell(cell);
@@ -699,7 +713,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Option option = optionDao.findById(optionId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
             Semestre semestre = semestreDao.findById(semestreId);
-            produceHeader(doc, null, niveau, option, anne, null, null, true);
+            produceHeader(doc, null, niveau, option, anne, null, null,null, true);
             produceSyntheseSemestrielleBody(doc, niveau, option, semestre, anne);
             doc.close();
         } catch (DocumentException ex) {
@@ -725,7 +739,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Niveau niveau = niveauDao.findById(niveauId);
             Option option = optionDao.findById(optionId);
             AnneeAcademique anne = academiqueDao.findById(academiqueId);
-            produceHeader(doc, null, niveau, option, anne, null, null, true);
+            produceHeader(doc, null, niveau, option, anne, null, null, null, true);
             produireSyntheseAnnueleBody(doc, niveau, option, anne);
             doc.close();
         } catch (DocumentException ex) {
@@ -741,6 +755,9 @@ public class DocumentServiceImpl implements IDocumentService {
     private void produceSyntheseSemestrielleBody(Document doc, Niveau n, Option o, Semestre s, AnneeAcademique a) {
         try {
             doc.add(new Phrase("\n"));
+            // Je dois optimiser un peu les choses ici
+            // Je recupere les différentes années
+            // Pour chaque année, je produit un tableau
             List<UEnseignementCredit> ues = uniteEnsDao.findByNiveauOptionSemestre(n, o, s, a);
             List<Etudiant> etudiants = etudiantDao.listeEtudiantAvecNotes(a, n, o, s);
             Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.BOLD);
@@ -1065,7 +1082,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Niveau n = niveauDao.findById(niveauId);
             Option o = optionDao.findById(optionId);
             AnneeAcademique a = academiqueDao.findById(anneeId);
-            produceHeader(doc, null, n, o, a, null, null, true);
+            produceHeader(doc, null, n, o, a, null, null, null,true);
             StringBuilder str = new StringBuilder();
             str.append("RELEVE DE NOTES / ACADEMIC TRANSCRIPT             ");
             str.append("N°");

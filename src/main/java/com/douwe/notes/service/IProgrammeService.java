@@ -23,5 +23,7 @@ public interface IProgrammeService {
 
    public List<Programme> findProgrammeByParcours(Long niveauId, Long optionId, Long idAnnee,Long idSemestre) throws ServiceException;
 
+    public List<Programme> findByOptionAnnee(long anneeId, long niveauId, long optionId, long semestreId) throws ServiceException;
+
     
 }

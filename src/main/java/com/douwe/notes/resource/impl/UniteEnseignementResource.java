@@ -19,11 +19,11 @@ import javax.ws.rs.core.Response;
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Path("/uniteEns")
-public class UniteEnseignementResource implements IUniteEnseignementResource{
-    
+public class UniteEnseignementResource implements IUniteEnseignementResource {
+
     @EJB
     private IUniteEnseignementService service;
-    
+
     @EJB
     private ICoursService coursService;
 
@@ -42,8 +42,6 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     public void setCoursService(ICoursService coursService) {
         this.coursService = coursService;
     }
-    
-    
 
     @Override
     public UniteEnseignement createUniteEnseignement(UniteEnseignement ue) {
@@ -69,8 +67,8 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     public UniteEnseignement getUniteEnseignement(long id) {
         try {
             UniteEnseignement enseignement = service.findUniteEnseignementById(id);
-            if(enseignement == null){
-                throw  new WebApplicationException(Response.Status.NOT_FOUND);
+            if (enseignement == null) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             return enseignement;
         } catch (ServiceException ex) {
@@ -83,7 +81,7 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
     public UniteEnseignement updateSemestre(long id, UniteEnseignement ue) {
         try {
             UniteEnseignement enseignement = service.findUniteEnseignementById(id);
-            if(enseignement != null){
+            if (enseignement != null) {
                 enseignement.setCode(ue.getCode());
                 enseignement.setIntitule(ue.getIntitule());
                 return service.saveOrUpdateUe(enseignement);
@@ -113,5 +111,47 @@ public class UniteEnseignementResource implements IUniteEnseignementResource{
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
-    
+
+    @Override
+    public List<UniteEnseignement> findByParcours(long niveauId, long optionId) {
+        try {
+            return service.findByParcours(niveauId, optionId);
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public UniteEnseignement addUniteEnseignement(Long niveauId, Long optionId, UniteEnseignement ue) {
+        try {
+            return service.addUniteEnseignement(niveauId, optionId, ue);
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public UniteEnseignement miseAJourUniteEnseignement(Long niveauId, Long optionId, Long id, UniteEnseignement ue) {
+        try {
+            if (id != null) {
+
+                UniteEnseignement nue = service.findUniteEnseignementById(id);
+                if (nue != null) {
+                    nue.setCode(ue.getCode());
+                    nue.setHasOptionalChoices(ue.isHasOptionalChoices());
+                    nue.setIntitule(ue.getIntitule());
+                    nue.setActive(1);
+                    nue.setCours(ue.getCours());
+                    return service.addUniteEnseignement(niveauId, optionId, nue);
+                }
+            }
+        } catch (ServiceException ex) {
+            Logger.getLogger(UniteEnseignementResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        throw new WebApplicationException(Response.Status.NOT_FOUND);
+    }
+
 }

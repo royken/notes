@@ -3,10 +3,14 @@ package com.douwe.notes.service.impl;
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.ICoursDao;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.service.ICoursService;
@@ -32,6 +36,13 @@ public class CoursServiceImpl implements ICoursService {
     
     @Inject
     private IParcoursDao parcoursDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
+    
+    @Inject
+    private IOptionDao optionDao;
+            
     
     @Inject
     private IUniteEnseignementDao enseignementDao;
@@ -67,7 +78,22 @@ public class CoursServiceImpl implements ICoursService {
     public void setEnseignementDao(IUniteEnseignementDao enseignementDao) {
         this.enseignementDao = enseignementDao;
     }
-    
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
     
 
     @Override
@@ -164,5 +190,19 @@ public class CoursServiceImpl implements ICoursService {
             Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public List<Cours> findByParcours(long niveauId, long optionId) throws ServiceException {
+        try {
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
+            Parcours parcours = parcoursDao.findByNiveauOption(niveau, option);
+            return coursDao.findByParcours(parcours);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(CoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw  new ServiceException(ex.getMessage(),ex);
+        }
+        
     }
 }

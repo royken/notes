@@ -19,10 +19,20 @@ public interface IEnseignementResource {
     @POST
     @Produces(value = "application/json") 
     Enseignement createEnseignement(Enseignement enseignement);
+    
+    @POST
+    @Path(value = "{anneeId : \\d+}/{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json") 
+    Enseignement createEnseignementOption(@PathParam(value = "anneeId")Long anneeId, @PathParam(value = "niveauId")Long niveauId, @PathParam(value = "optionId")Long optionId, Enseignement enseignement);
 
     @GET
     @Produces(value = "application/json")
     List<Enseignement> getAllEnseignements();
+    
+    @GET
+    @Path(value = "{anneeId : \\d+}/{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json")
+    List<Enseignement> getEnseignementsOptions(@PathParam(value = "anneeId")Long anneeId, @PathParam(value = "niveauId")Long niveauId, @PathParam(value = "optionId")Long optionId);
 
     @GET
     @Path(value = "{id : \\d+}")
@@ -33,6 +43,11 @@ public interface IEnseignementResource {
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
     Enseignement updateEnseignement(@PathParam(value = "id")long id, Enseignement enseignement);
+    
+    @PUT
+    @Path(value = "{anneeId : \\d+}/{niveauId : \\d+}/{optionId : \\d+}/{id : \\d+}")
+    @Produces(value = "application/json")
+    Enseignement updateEnseignementOption(@PathParam(value = "anneeId")Long anneeId, @PathParam(value = "niveauId")Long niveauId, @PathParam(value = "optionId")Long optionId,@PathParam(value = "id")long id, Enseignement enseignement);
 
     @DELETE
     @Path(value = "{id : \\d+}")

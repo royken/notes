@@ -15,9 +15,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * I really think we don't need this class
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
+@Deprecated
 @Entity
 @XmlRootElement(name = "coursUeAnnee")
 @XmlAccessorType(XmlAccessType.FIELD)

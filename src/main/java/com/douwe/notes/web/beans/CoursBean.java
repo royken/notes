@@ -42,7 +42,7 @@ public class CoursBean {
 
     public void saveOrUpdateCours(ActionEvent actionEvent) throws ServiceException {
         if (cours != null && cours.getIntitule() != null) {
-            cours.setCredit(Integer.parseInt(credit));
+            //cours.setCredit(Integer.parseInt(credit));
             cours.setTypeCours(typeCoursService.findTypeCoursById(Integer.parseInt(id)));
             coursService.saveOrUpdateCours(cours);
             id = new String();
@@ -141,15 +141,15 @@ public class CoursBean {
         this.id = id;
     }
 
-    public String getCredit() {
-        if (cours != null && cours.getVersion() != 0)
-            credit = cours.getCredit().toString();
-        return credit;
-    }
-
-    public void setCredit(String credit) {
-        this.credit = credit;
-    }
+//    public String getCredit() {
+//        if (cours != null && cours.getVersion() != 0)
+//            credit = cours.getCredit().toString();
+//        return credit;
+//    }
+//
+//    public void setCredit(String credit) {
+//        this.credit = credit;
+//    }
 
     private boolean isInterger(String elt) {
         int i=0;

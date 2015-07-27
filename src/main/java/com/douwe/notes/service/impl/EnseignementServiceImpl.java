@@ -1,8 +1,14 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.IAnneeAcademiqueDao;
 import com.douwe.notes.dao.IEnseignementDao;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
+import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Enseignement;
+import com.douwe.notes.entities.Niveau;
+import com.douwe.notes.entities.Option;
 import com.douwe.notes.service.IEnseignementService;
 import com.douwe.notes.service.ServiceException;
 import java.util.List;
@@ -20,6 +26,15 @@ public class EnseignementServiceImpl implements IEnseignementService {
 
     @Inject
     private IEnseignementDao enseignementDao;
+    
+    @Inject
+    private IAnneeAcademiqueDao  anneeDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
+    
+    @Inject
+    private IOptionDao optionDao;
 
     public IEnseignementDao getEnseignementDao() {
         return enseignementDao;
@@ -27,6 +42,30 @@ public class EnseignementServiceImpl implements IEnseignementService {
 
     public void setEnseignementDao(IEnseignementDao enseignementDao) {
         this.enseignementDao = enseignementDao;
+    }
+
+    public IAnneeAcademiqueDao getAnneeDao() {
+        return anneeDao;
+    }
+
+    public void setAnneeDao(IAnneeAcademiqueDao anneeDao) {
+        this.anneeDao = anneeDao;
+    }
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
     }
 
     @Override
@@ -73,6 +112,19 @@ public class EnseignementServiceImpl implements IEnseignementService {
     public List<Enseignement> getAllEnseignements() throws ServiceException {
         try {
             return enseignementDao.findAllActive();
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException("La ressource demandée est introuvable");
+        }
+    }
+
+    @Override
+    public List<Enseignement> getEnseignementByOption(Long anneeId, Long niveauId, Long optionId) throws ServiceException {
+        try {
+            AnneeAcademique annee = anneeDao.findById(anneeId);
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
+            return enseignementDao.findByOption(annee, niveau, option);
         } catch (DataAccessException ex) {
             Logger.getLogger(EnseignementServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException("La ressource demandée est introuvable");

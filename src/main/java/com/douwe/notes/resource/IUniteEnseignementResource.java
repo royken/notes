@@ -21,6 +21,16 @@ public interface IUniteEnseignementResource {
     @POST
     @Produces(value = "application/json") 
     UniteEnseignement createUniteEnseignement(UniteEnseignement ue);
+    
+    @POST
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json")
+    UniteEnseignement addUniteEnseignement(@PathParam(value ="niveauId")Long niveauId, @PathParam(value ="optionId")Long optionId, UniteEnseignement ue);
+    
+    @PUT
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}/{id : \\d+}")
+    @Produces(value = "application/json")
+    UniteEnseignement miseAJourUniteEnseignement(@PathParam(value ="niveauId")Long niveauId, @PathParam(value ="optionId")Long optionId, @PathParam(value ="id")Long id, UniteEnseignement ue);
 
     @GET
     @Produces(value = "application/json")
@@ -44,5 +54,10 @@ public interface IUniteEnseignementResource {
     @Path(value = "{id : \\d+}/cours")
     @Produces(value = "application/json")
     List<Cours> findAllCoursByUe(@PathParam(value = "id")long id);
+    
+    @GET
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json")
+    List<UniteEnseignement> findByParcours(@PathParam(value = "niveauId")long niveauId, @PathParam(value = "optionId")long optionId);
     
 }

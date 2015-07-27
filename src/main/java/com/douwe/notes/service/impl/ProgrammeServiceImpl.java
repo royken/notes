@@ -41,7 +41,6 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     
     @Inject
     private ICoursDao coursDao;
-
     
     @Inject
     private IAnneeAcademiqueDao academiqueDao;
@@ -117,10 +116,11 @@ public class ProgrammeServiceImpl implements IProgrammeService {
     public void deleteProgramme(Long id) throws ServiceException{
         try {
             Programme programme = programmeDao.findById(id);
-            if(programme != null){
+            /*if(programme != null){
                 programme.setActive(0);
                 programmeDao.update(programme);
-            }
+            }*/
+            programmeDao.delete(programme);
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw  new ServiceException("La ressource demandée est introuvable");
@@ -186,6 +186,20 @@ public class ProgrammeServiceImpl implements IProgrammeService {
             Option o = optionDao.findById(optionId);
             AnneeAcademique a = academiqueDao.findById(anneeId);
             return programmeDao.findByCours(c, n, o, a);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException(ex);
+        }
+    }
+
+    @Override
+    public List<Programme> findByOptionAnnee(long anneeId, long niveauId, long optionId, long semestreId) throws ServiceException {
+        try {
+            AnneeAcademique annee = academiqueDao.findById(anneeId);
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
+            Semestre semestre = semestreDao.findById(semestreId);
+            return programmeDao.findByNiveauOption(niveau, option, annee, semestre);
         } catch (DataAccessException ex) {
             Logger.getLogger(ProgrammeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             throw new ServiceException(ex);

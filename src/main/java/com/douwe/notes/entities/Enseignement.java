@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,39 +27,39 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement(name = "enseignement")
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQueries({
-@NamedQuery(name = "Enseignement.deleteActive",query = "update Enseignement e set e.active = 0 where e.id = :idParam"),
-@NamedQuery(name = "Enseignement.findAllActive",query = "select e from Enseignement e where e.active=1")    
+    @NamedQuery(name = "Enseignement.deleteActive", query = "update Enseignement e set e.active = 0 where e.id = :idParam"),
+    @NamedQuery(name = "Enseignement.findAllActive", query = "select e from Enseignement e where e.active=1")
 
 })
 public class Enseignement implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Version
-    //@XmlTransient
+    @XmlTransient
     private int version;
-    
+
     @ManyToOne(optional = false)
-    //@XmlTransient
     private AnneeAcademique anneeAcademique;
-    
-    @ManyToMany
-    //@XmlTransient
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Enseignant> enseignants;
-    
+
     @ManyToOne(optional = false)
-    //@XmlTransient
     private Cours cours;
-    
-     @XmlTransient
+
+    @ManyToOne(optional = false)
+    private Parcours parcours;
+
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    
-     // TODO les enseignements dependent des parcours
-    public Enseignement(){
-        
+
+    // TODO les enseignements dependent des parcours
+    public Enseignement() {
+
     }
 
     public Long getId() {
@@ -93,6 +94,14 @@ public class Enseignement implements Serializable {
         this.cours = cours;
     }
 
+    public Parcours getParcours() {
+        return parcours;
+    }
+
+    public void setParcours(Parcours parcours) {
+        this.parcours = parcours;
+    }
+
     @JsonIgnore
     public int getVersion() {
         return version;
@@ -112,5 +121,5 @@ public class Enseignement implements Serializable {
     public void setActive(int active) {
         this.active = active;
     }
-    
+
 }

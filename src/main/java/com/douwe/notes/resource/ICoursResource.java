@@ -1,10 +1,9 @@
 package com.douwe.notes.resource;
 
 import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
+import com.douwe.notes.entities.TypeCours;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -25,6 +24,11 @@ public interface ICoursResource {
     @GET
     @Produces(value = "application/json")
     List<Cours> getAllCours();
+    
+    @GET
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json")
+    List<Cours> getByParcours(@PathParam(value = "niveauId")long niveauId, @PathParam(value = "optionId")long optionId);
 
     @GET
     @Path(value = "{id : \\d+}")
@@ -49,4 +53,5 @@ public interface ICoursResource {
     @Path(value = "{id : \\d+}/evaluations")
     @Produces(value = "application/json")
     List<Evaluation> getAllEvaluationsByCours(@PathParam(value = "id")long id);
+    
 }

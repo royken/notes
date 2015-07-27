@@ -204,9 +204,9 @@ public class ProcesVerbalBean {
             // Le niveau n'est pas null
             if (idO != null && idO != 0L) {
                 // l'option n'est pas null alors il faut charger les cours du parcours
-                Niveau n = niveauService.findNiveauById(idN);
-                Option o = optionService.findOptionById(idO);
-                Parcours p = parcoursService.findByNiveauOption(n, o);
+                //Niveau n = niveauService.findNiveauById(idN);
+                //Option o = optionService.findOptionById(idO);
+                Parcours p = parcoursService.findByNiveauOption(idN, idO);
                 courses = coursService.findByParcoursAnnee(p.getId(), idAca);   
                 System.out.println("La liste des cours");
                 for (Cours c : courses) {

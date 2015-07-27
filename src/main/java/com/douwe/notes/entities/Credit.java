@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,6 +31,9 @@ public class Credit implements Serializable {
 
     @Column
     private Integer valeur;
+    
+    @Version
+    private Integer version;
 
     @ManyToOne
     @JoinColumn(name = "ANNEEACADEMIQUE_ID")
@@ -82,7 +86,13 @@ public class Credit implements Serializable {
     public void setCours(Cours cours) {
         this.cours = cours;
     }
-    
-    
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
 }

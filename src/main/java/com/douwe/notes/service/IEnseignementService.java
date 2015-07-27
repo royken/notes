@@ -19,5 +19,7 @@ public interface IEnseignementService {
     public Enseignement findEnseignementById(long id) throws ServiceException;
     
     public List<Enseignement> getAllEnseignements() throws ServiceException;
+
+    public List<Enseignement> getEnseignementByOption(Long anneeId, Long niveauId, Long optionId)throws ServiceException;
     
 }

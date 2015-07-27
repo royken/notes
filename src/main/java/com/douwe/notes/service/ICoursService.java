@@ -25,4 +25,6 @@ public interface ICoursService {
     public List<Cours> findByParcoursAnnee(Long idParcours, Long idAnne) throws ServiceException;
     
     public List<Cours> findAllByUe(Long  idUe) throws ServiceException;
+
+    public List<Cours> findByParcours(long niveauId, long optionId) throws ServiceException;
 }

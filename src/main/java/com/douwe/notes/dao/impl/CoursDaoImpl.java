@@ -7,15 +7,22 @@ import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
 import com.douwe.notes.entities.CoursUEAnnee;
 import com.douwe.notes.entities.CoursUEAnnee_;
+import com.douwe.notes.entities.Cours_;
+import com.douwe.notes.entities.Credit;
+import com.douwe.notes.entities.Credit_;
 import com.douwe.notes.entities.Parcours;
 import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Programme_;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.entities.UniteEnseignement_;
+import com.douwe.notes.projection.CoursCredit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -81,6 +88,39 @@ public class CoursDaoImpl extends GenericDao<Cours, Long> implements ICoursDao {
     @Override
     public List<Cours> findByUe(UniteEnseignement ue) throws DataAccessException {
         return getManager().createNamedQuery("Cours.findByUE").setParameter("idParam", ue.getId()).getResultList();
+    }
+
+    @Override
+    public List<Cours> findByParcours(Parcours parcours) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Cours> cq = cb.createQuery(Cours.class);
+        Root<UniteEnseignement> uniteRoot = cq.from(UniteEnseignement.class);
+        ListJoin<UniteEnseignement, Cours> hello = uniteRoot.join(UniteEnseignement_.cours);
+        Path<Parcours> parcoursPath = uniteRoot.get(UniteEnseignement_.parcours);
+        cq.where(cb.and(cb.equal(parcoursPath, parcours), 
+                cb.ge(uniteRoot.get(UniteEnseignement_.active), 1)));
+        cq.select(hello);
+        cq.distinct(true);
+        cq.orderBy(cb.asc(hello.get(Cours_.intitule)));
+        return getManager().createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<CoursCredit> findCoursCreditByUe(UniteEnseignement ue, AnneeAcademique annee) throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<CoursCredit> cq = cb.createQuery(CoursCredit.class);
+        Root<UniteEnseignement> uniteRoot = cq.from(UniteEnseignement.class);
+        Root<Credit> creditRoot = cq.from(Credit.class);
+        Join<Credit, Cours> coursPath = creditRoot.join(Credit_.cours);
+        
+        cq.where(cb.and(cb.equal(uniteRoot, ue), 
+                cb.equal(creditRoot.get(Credit_.academique), annee),
+                cb.equal(creditRoot.get(Credit_.cours), coursPath),
+                cb.equal(creditRoot.get(Credit_.parcours), ue.getParcours()),
+                cb.isMember(coursPath, uniteRoot.get(UniteEnseignement_.cours))));
+        cq.multiselect(coursPath,creditRoot.get(Credit_.valeur));  
+        
+        return getManager().createQuery(cq).getResultList();
     }
 
 }

@@ -28,4 +28,6 @@ public interface IUniteEnseignementDao extends IDao<UniteEnseignement, Long>{
     
     public List<UniteEnseignement> findByUniteNiveauOptionSemestre(Niveau niveau, Option option, Semestre semestre, AnneeAcademique annee) throws DataAccessException;
     
+    public List<UniteEnseignement> findUniteByNiveauOption(Niveau niveau, Option option) throws DataAccessException;
+    
 }

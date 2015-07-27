@@ -53,13 +53,10 @@ public class Parcours implements Serializable {
     @JoinColumn(name = "OPTION_ID")
     private Option option;
 
-//    @ManyToMany
-//    @XmlTransient
-//    private List<UniteEnseignement> uniteEnseignements;
-
     @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
+    
     @OneToMany(mappedBy = "parcours")
     private List<UniteEnseignement> uniteEnseignements;
 
@@ -90,14 +87,6 @@ public class Parcours implements Serializable {
     public void setOption(Option option) {
         this.option = option;
     }
-
-//    public List<UniteEnseignement> getUniteEnseignements() {
-//        return uniteEnseignements;
-//    }
-//
-//    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
-//        this.uniteEnseignements = uniteEnseignements;
-//    }
 
     @JsonIgnore
     public int getVersion() {

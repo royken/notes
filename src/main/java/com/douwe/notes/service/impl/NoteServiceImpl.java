@@ -22,6 +22,7 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.projection.CoursCredit;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
 import com.douwe.notes.service.INoteService;
@@ -232,15 +233,10 @@ public class NoteServiceImpl implements INoteService {
                 List<Note> nn = noteDao.listeNoteCours(etudiant, cours, academique, session);
                 for (Note nn1 : nn) {
                     notes.put(nn1.getEvaluation().getCode(), nn1.getValeur());
-                    //state = state || (nn1.getEvaluation().isIsExam() && nn1.getValeur() >= 0);
                 }
                 et.setNote(notes);
                 et.setDetails(calc);
                 result.add(et);
-                /*if (state || session == Session.normale) {
-                 result.add(et);
-                 }
-                 state = false;*/
             }
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -274,7 +270,7 @@ public class NoteServiceImpl implements INoteService {
             String nom;
             while (row != null) {
                 Etudiant etudiant;
-                System.out.println("La valeur de l'index donne " + index);
+                System.out.println("Index +++++++ "+index);
                 if (row.getCell(1) != null) {
                     matricule = row.getCell(1).getStringCellValue();
                     etudiant = etudiantDao.findByMatricule(matricule);
@@ -448,25 +444,28 @@ public class NoteServiceImpl implements INoteService {
             // TODO I need to come back here and figure out something
             AnneeAcademique annee = null;
             if (anneeId > 0) {
-                annee = academiqueDao.findById(ueId);
+                annee = academiqueDao.findById(anneeId);
             }
-            result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
-//            for (Cours cours : ue.getCourses()) {
-//                EtudiantNotes n = getNoteEtudiant(matricule, cours.getId(), anneeId);
-//                if (n != null) {
-//                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
-//                    result.getSessions().add(n.getSession());
-//                    result.getNotes().put(cours.getIntitule(), n.getMoyenne());
-//                    result.getAnnees().add(n.getAnnee());
-//                } else {
-//                    result.getCredits().put(cours.getIntitule(), cours.getCredit());
-//                    result.getSessions().add(Session.normale);
-//                    result.getNotes().put(cours.getIntitule(), 0.0);
-//                    if (annee != null) {
-//                        result.getAnnees().add(annee);
-//                    }
-//                }
-//            }
+             result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
+             List<CoursCredit> liste =coursDao.findCoursCreditByUe(ue, annee);
+             System.out.println("La taille donne "+liste.size());
+            for (CoursCredit cours :liste ) {
+                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);
+                System.out.println(String.format("Le cours %s et le credit %d \n", cours.getCours().getIntitule(), cours.getCredit()));
+                if (n != null) {
+                    result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
+                    result.getSessions().add(n.getSession());
+                    result.getNotes().put(cours.getCours().getIntitule(), n.getMoyenne());
+                    result.getAnnees().add(n.getAnnee());
+                } else {
+                    result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
+                    result.getSessions().add(Session.normale);
+                    result.getNotes().put(cours.getCours().getIntitule(), 0.0);
+                    if (annee != null) {
+                        result.getAnnees().add(annee);
+                    }
+                }
+            }
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

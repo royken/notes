@@ -1,6 +1,8 @@
 package com.douwe.notes.service.impl;
 
 import com.douwe.generic.dao.DataAccessException;
+import com.douwe.notes.dao.INiveauDao;
+import com.douwe.notes.dao.IOptionDao;
 import com.douwe.notes.dao.IParcoursDao;
 import com.douwe.notes.entities.Niveau;
 import com.douwe.notes.entities.Option;
@@ -22,6 +24,12 @@ public class ParcoursServiceImpl implements IParcoursService {
 
     @Inject
     private IParcoursDao parcoursDao;
+    
+    @Inject
+    private INiveauDao niveauDao;
+    
+    @Inject
+    private IOptionDao optionDao;
 
     public IParcoursDao getParcoursDao() {
         return parcoursDao;
@@ -30,6 +38,23 @@ public class ParcoursServiceImpl implements IParcoursService {
     public void setParcoursDao(IParcoursDao parcoursDao) {
         this.parcoursDao = parcoursDao;
     }
+
+    public INiveauDao getNiveauDao() {
+        return niveauDao;
+    }
+
+    public void setNiveauDao(INiveauDao niveauDao) {
+        this.niveauDao = niveauDao;
+    }
+
+    public IOptionDao getOptionDao() {
+        return optionDao;
+    }
+
+    public void setOptionDao(IOptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
+    
 
     @Override
     public Parcours saveOrUpdateParcours(Parcours parcours) throws ServiceException{
@@ -83,8 +108,10 @@ public class ParcoursServiceImpl implements IParcoursService {
     }
 
     @Override
-    public Parcours findByNiveauOption(Niveau niveau, Option option) throws ServiceException {
+    public Parcours findByNiveauOption(long niveauId, long optionId) throws ServiceException {
         try {
+            Niveau niveau = niveauDao.findById(niveauId);
+            Option option = optionDao.findById(optionId);
             return parcoursDao.findByNiveauOption(niveau, option);
         } catch (DataAccessException ex) {
             Logger.getLogger(ParcoursServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

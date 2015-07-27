@@ -28,11 +28,14 @@ import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Programme_;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
+import com.douwe.notes.entities.UniteEnseignement;
+import com.douwe.notes.entities.UniteEnseignement_;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -196,16 +199,20 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
         Root<Note> noteRoot = cq.from(Note.class);
         Root<Cours> coursRoot = cq.from(Cours.class);
-        Root<CoursUEAnnee> coursUeRoot = cq.from(CoursUEAnnee.class);
-        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
+        //Root<CoursUEAnnee> coursUeRoot = cq.from(CoursUEAnnee.class);        
         Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
         Root<Inscription> inscriptionRoot2 = cq.from(Inscription.class);
         Root<Programme> programmeRoot = cq.from(Programme.class);
+        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
+        Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
+        Expression<List<Cours>> coursPath = unitePath.get(UniteEnseignement_.cours);
         //Expression<List<Cours>> totoPath = programmeRoot.get(Programme_.uniteEnseignement).get(UniteEnseignement_.courses);
         Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
         List<Predicate> predicates = new ArrayList<Predicate>();
-        predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.anneeAcademique), academique));
-        predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.uniteEnseignement), programmeRoot.get(Programme_.uniteEnseignement)));
+        // Les étudiants inscrits dans le parcours ou inscript par le passe et inscrit l'annee en cours et ainsi obtenu une note 
+        // a un cours du parcours et semestre l'annee en cours
+        //predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.anneeAcademique), academique));
+        //predicates.add(cb.equal(coursUeRoot.get(CoursUEAnnee_.uniteEnseignement), programmeRoot.get(Programme_.uniteEnseignement)));
         predicates.add(cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant)));
         predicates.add(cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant)));
         predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
@@ -215,8 +222,9 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
         predicates.add(cb.equal(programmeRoot.get(Programme_.anneeAcademique),academique));
         predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.niveau),niveau));
         predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.option),option));
-        predicates.add(cb.equal(coursRoot, coursUeRoot.get(CoursUEAnnee_.cours)));
-        predicates.add(cb.equal(noteRoot.get(Note_.cours), coursRoot));
+        predicates.add(cb.isMember(coursRoot, coursPath));
+        //predicates.add(cb.equal(coursRoot, coursUeRoot.get(CoursUEAnnee_.cours)));
+        //predicates.add(cb.equal(noteRoot.get(Note_.cours), coursRoot));
         predicates.add(cb.equal(noteRoot.get(Note_.evaluation), evaluationPath));
         if(semestre != null){
             predicates.add(cb.equal(programmeRoot.get(Programme_.semestre), semestre));

@@ -20,10 +20,20 @@ public interface IProgrammeResource {
     @POST
     @Produces(value = "application/json") 
     Programme createProgramme(Programme programme);
+    
+    @POST
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}")
+    @Produces(value = "application/json") 
+    Programme createProgramme(@PathParam(value = "niveauId")long niveauId,@PathParam(value = "optionId")long optionId, Programme programme);
 
     @GET
     @Produces(value = "application/json")
     List<Programme> getAllProgrammes();
+    
+    @GET
+    @Path(value = "{anneeId : \\d+}/{niveauId : \\d+}/{optionId : \\d+}/{semestreId : \\d+}")
+    @Produces(value = "application/json")
+    List<Programme> getAllProgrammes(@PathParam(value = "anneeId")long anneeId,@PathParam(value = "niveauId")long niveauId,@PathParam(value = "optionId")long optionId,@PathParam(value = "semestreId")long semestreId);
 
     @GET
     @Path(value = "{id : \\d+}")
@@ -34,6 +44,11 @@ public interface IProgrammeResource {
     @Path(value = "{id : \\d+}")
     @Produces(value = "application/json")
     Programme updateProgramme(@PathParam(value = "id")long id, Programme programme);
+    
+    @PUT
+    @Path(value = "{niveauId : \\d+}/{optionId : \\d+}/{id : \\d+}")
+    @Produces(value = "application/json")
+    Programme updateProgramme(@PathParam(value = "niveauId")long niveauId,@PathParam(value = "optionId")long optionId,@PathParam(value = "id")long id, Programme programme);
 
     @DELETE
     @Path(value = "{id : \\d+}")
