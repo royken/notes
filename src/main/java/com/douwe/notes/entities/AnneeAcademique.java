@@ -38,11 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
 })
 public class AnneeAcademique implements Serializable {
     
-
-    @Transient
-    @XmlTransient
-    private DateFormat df;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -59,17 +54,16 @@ public class AnneeAcademique implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fin;
     
-//    @Column(unique = true)
-//    private String dateString;
+    @Column(unique = true, nullable = false)
+    private Integer numeroDebut;
     
-     @XmlTransient
+  
+    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
    
     
-    public AnneeAcademique(){
-        df = new SimpleDateFormat("yyyy");
-        //dateString = "";
+    public AnneeAcademique(){     
     }
 
     public Long getId() {
@@ -116,20 +110,38 @@ public class AnneeAcademique implements Serializable {
         this.active = active;
     }
 
-//    public String getDateString() {
-//        return dateString;
-//    }
-//
-//    public void setDateString(String dateString) {
-//        this.dateString = dateString;
-//    }
-    
-    
+    public Integer getNumeroDebut() {
+        return numeroDebut;
+    }
 
+    public void setNumeroDebut(Integer numeroDebut) {
+        this.numeroDebut = numeroDebut;
+    }
+ 
     @Override
     public String toString() {
-        return String.format("%s - %s",df.format(debut), df.format(fin));
+        return String.format("%s - %s",numeroDebut, numeroDebut + 1);
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AnneeAcademique other = (AnneeAcademique) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
+    
     
     
 }

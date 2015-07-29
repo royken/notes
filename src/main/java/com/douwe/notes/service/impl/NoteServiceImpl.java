@@ -447,11 +447,9 @@ public class NoteServiceImpl implements INoteService {
                 annee = academiqueDao.findById(anneeId);
             }
              result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
-             List<CoursCredit> liste =coursDao.findCoursCreditByUe(ue, annee);
-             System.out.println("La taille donne "+liste.size());
+             List<CoursCredit> liste =coursDao.findCoursCreditByUe(ue, annee);             
             for (CoursCredit cours :liste ) {
-                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);
-                System.out.println(String.format("Le cours %s et le credit %d \n", cours.getCours().getIntitule(), cours.getCredit()));
+                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);                
                 if (n != null) {
                     result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
                     result.getSessions().add(n.getSession());

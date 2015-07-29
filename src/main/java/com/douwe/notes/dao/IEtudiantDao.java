@@ -43,6 +43,9 @@ public interface IEtudiantDao extends IDao<Etudiant, Long>{
     public List<Etudiant> listeEtudiantInscritParcours(AnneeAcademique academique, Parcours parcours) throws DataAccessException;
     
     public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option,  Cours cours, Session session) throws DataAccessException;
+    
     public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique academique, Niveau niveau, Option option, Semestre semestre) throws DataAccessException;
+    
+    public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique debutInscription,AnneeAcademique encours, Niveau niveau, Option option, Semestre semestre) throws DataAccessException;
     
 }

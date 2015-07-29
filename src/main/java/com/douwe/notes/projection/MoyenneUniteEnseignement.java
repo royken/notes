@@ -73,7 +73,7 @@ public class MoyenneUniteEnseignement {
             Double value = entrySet.getValue();
             int credit = credits.get(key);
             if(avecComposantesOptionnelles){
-                if(result < value)
+                if(result < value * credit)
                     result = value * credit;
             }else{
                 result += value  * credit;

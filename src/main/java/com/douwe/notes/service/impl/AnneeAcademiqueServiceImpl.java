@@ -47,6 +47,7 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
     @Override
     public AnneeAcademique saveOrUpdateAnnee(AnneeAcademique anneeAcademique) throws ServiceException{
         try {
+            anneeAcademique.setNumeroDebut(Integer.valueOf(df.format(anneeAcademique.getDebut())));
             if (anneeAcademique.getId() == null) {
                 anneeAcademique.setActive(1);
                 
@@ -98,23 +99,6 @@ public class AnneeAcademiqueServiceImpl implements IAnneeAcademiqueService{
         }
     }
 
-
-//    @Override
-//    public AnneeAcademique findAnneeByString(String annee) throws ServiceException {
-//        try {
-//            AnneeAcademique anneeA= academiqueDao.findByString(annee);
-//            if(anneeA != null){
-//                return anneeA;
-//            }
-//            else{
-//                throw new ServiceException("La ressource demandée est introuvable");
-//                
-//            }
-//        } catch (DataAccessException ex) {
-//            Logger.getLogger(AnneeAcademiqueServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
-//    }
 
     
 }
