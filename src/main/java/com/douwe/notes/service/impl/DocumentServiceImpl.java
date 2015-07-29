@@ -1009,7 +1009,9 @@ public class DocumentServiceImpl implements IDocumentService {
             AnneeAcademique a = academiqueDao.findById(anneeId);
             produceHeader(doc, null, n, o, a, null, null, true);
             Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+            doc.add(new Phrase("\n"));
             StringBuilder str = new StringBuilder();
+            
             str.append("RELEVE DE NOTES / ACADEMIC TRANSCRIPT             ");
             str.append("N°");
             str.append("/_______/");
@@ -1018,9 +1020,10 @@ public class DocumentServiceImpl implements IDocumentService {
             str.append("DISS\n");
             Phrase phrase = new Phrase(str.toString(), font);
             doc.add(phrase);
-            doc.add(new Chunk("\n"));
+           // doc.add(new Chunk("\n"));
             produireRelevetHeader(null, null, null, null, doc);
             produceRelevetTable(doc, null, null, null, null);
+            doc.add(new Chunk("\n"));
             produceRelevetFooter(doc);
 
             doc.close();
@@ -1036,6 +1039,7 @@ public class DocumentServiceImpl implements IDocumentService {
     private void produireRelevetHeader(Etudiant e, Departement d, Niveau n, Option o, Document doc) {
 
         try {
+            
             Font french = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
             Font english = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.BOLDITALIC);
             Font french2 = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
@@ -1326,18 +1330,19 @@ public class DocumentServiceImpl implements IDocumentService {
             
             Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
             Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.ITALIC);
-            Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+            Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.NORMAL);
             Font font4 = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.ITALIC);
             
             float relativewidhts[] = new float[2];
-            relativewidhts[0] = 3;
-            relativewidhts[1] = 6;
+            relativewidhts[0] = 6;
+            relativewidhts[1] = 5;
             PdfPTable date = new PdfPTable(relativewidhts);
+            date.setTotalWidth(100);
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(new Phrase("En foi de quoi ce relevé de notes lui est délivré pour servir et valoir ce que de droit.", font3));
-            cell1.addElement(new Phrase("En foi de quoi ce relevé de notes lui est délivré pour servir et valoir ce que de droit.", font4));
-            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell1.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell1.addElement(new Phrase("This academic transcript is issued to serve where and when ever neccessary.", font4));
+            cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell1.setVerticalAlignment(Element.ALIGN_LEFT);
             cell1.setBorderColor(BaseColor.WHITE);
             date.addCell(cell1);
             
@@ -1345,8 +1350,28 @@ public class DocumentServiceImpl implements IDocumentService {
             cell2.addElement(new Phrase("Maroua, le : ____________", font2));
             cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell2.setBorderColor(BaseColor.WHITE);
             date.addCell(cell2);
             doc.add(date);
+            doc.add(new Phrase("\n"));
+            
+            PdfPTable cachet = new PdfPTable(2);
+            cachet.setWidthPercentage(80);
+            PdfPCell cell3 = new PdfPCell();
+            cell3.addElement(new Phrase("Le Chef de Département", font1));
+            cell3.addElement(new Phrase("The Head of Department", font2));
+            cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell3.setBorderColor(BaseColor.WHITE);
+            cachet.addCell(cell3);
+            PdfPCell cell4 = new PdfPCell();
+            cell4.addElement(new Phrase("Le Directeur", font1));
+            cell4.addElement(new Phrase("The Director", font2));
+            cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell4.setBorderColor(BaseColor.WHITE);
+            cachet.addCell(cell4);
+            doc.add(cachet);
+            
+            
         } catch (DocumentException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
