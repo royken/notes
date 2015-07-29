@@ -32,6 +32,7 @@ public class SemestreResource implements ISemestreResource{
     
     
 
+    @Override
     public Semestre createSemestre(Semestre semestre) {
         try {
             return semestreService.saveOrUpdateSemestre(semestre);
@@ -41,6 +42,7 @@ public class SemestreResource implements ISemestreResource{
         }
     }
 
+    @Override
     public List<Semestre> getAllSemestres() {
         try {
             return semestreService.getAllSemestre();
@@ -50,6 +52,7 @@ public class SemestreResource implements ISemestreResource{
         }
     }
 
+    @Override
     public Semestre getSemestre(long id) {
         try {
             Semestre semestre = semestreService.findSemestreById(id);
@@ -63,6 +66,7 @@ public class SemestreResource implements ISemestreResource{
         }
     }
 
+    @Override
     public Semestre updateSemestre(long id, Semestre semestre) {
         try {
             Semestre semestre1 = semestreService.findSemestreById(id);
@@ -78,6 +82,7 @@ public class SemestreResource implements ISemestreResource{
         }
     }
 
+    @Override
     public void deleteSemestre(long id) {
         try {
             semestreService.deleteSemestre(id);

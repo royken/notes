@@ -20,6 +20,8 @@ public interface IDocumentService {
     
     public String produireSynthese(Long niveauId, Long optionId,Long academiqueId,Long semestreId, OutputStream stream) throws ServiceException;
     
+    public void produireRelevet(Long niveauId, Long optionId, Long anneeId, OutputStream stream);
+    
     
     
     

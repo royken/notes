@@ -45,6 +45,11 @@ public class Semestre implements Serializable {
         
     }
 
+    public Semestre(String intitule) {
+        this.intitule = intitule;
+    }
+
+    
     public Long getId() {
         return id;
     }

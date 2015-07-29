@@ -28,10 +28,15 @@ public interface IRapportResource {
     @Produces("text/pdf")
     Response produireSyntheseSemestrielle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid, @PathParam(value = "semestre") long semestreid);
     
-     @GET
+    @GET
     @Path(value = "synthese/annuelle/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}")
     @Produces("text/pdf")
     Response produireSyntheseAnnuelle(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid);
+    
+    @GET
+    @Path(value = "relevet/{niveauid : \\d+}/{optionid : \\d+}/{anneeid : \\d+}")
+    @Produces("text/pdf")
+    Response produireRelevet(@PathParam(value = "niveauid") long niveauid, @PathParam(value = "optionid") long optionid, @PathParam(value = "anneeid") long anneeid);
     
     
     @GET

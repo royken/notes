@@ -15,6 +15,7 @@ import com.douwe.notes.dao.ISemestreDao;
 import com.douwe.notes.dao.IUniteEnseignementDao;
 import com.douwe.notes.entities.AnneeAcademique;
 import com.douwe.notes.entities.Cours;
+import com.douwe.notes.entities.Departement;
 import com.douwe.notes.entities.Enseignant;
 import com.douwe.notes.entities.Etudiant;
 import com.douwe.notes.entities.Evaluation;
@@ -25,6 +26,7 @@ import com.douwe.notes.entities.Programme;
 import com.douwe.notes.entities.Semestre;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
+import com.douwe.notes.projection.MoyenneTrashData;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
 import com.douwe.notes.projection.StatistiquesNote;
 import com.douwe.notes.projection.UEnseignementCredit;
@@ -46,8 +48,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -457,7 +461,6 @@ public class DocumentServiceImpl implements IDocumentService {
 
     // TODO I need to change something here because this method is called twice and every times it needs to load the data from the database
     // Can we load the data only once ?
-
     private StatistiquesNote produceBody(Document doc, Cours c, Niveau n, Option o, AnneeAcademique a, Session s, boolean avecNoms) throws Exception {
         StatistiquesNote result = new StatistiquesNote();
         double min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
@@ -619,6 +622,23 @@ public class DocumentServiceImpl implements IDocumentService {
         cell.setPaddingTop(5f);
         cell.setBorderWidth(0.01f);
         cell.setBorderColor(BaseColor.BLACK);
+        return cell;
+    }
+
+    private PdfPCell createRelevetFootBodyCell(String message, Font bf, boolean border, int rowspan, int colspan) {
+        PdfPCell cell = new PdfPCell(new Phrase(message, bf));
+        if (border) {
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+
+        }
+        cell.setRowspan(rowspan);
+        cell.setColspan(colspan);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPaddingBottom(4f);
+        cell.setPaddingTop(5f);
+        cell.setBorderWidth(0.01f);
+        cell.setBorderColor(BaseColor.WHITE);
         return cell;
     }
 
@@ -976,85 +996,10 @@ public class DocumentServiceImpl implements IDocumentService {
         }
     }
 
-    public void produceRelevetForm(Document doc,Niveau n, Option o, Etudiant e){
-        
-    }
+
     
-    public void produceRelevetTable(Document doc,Etudiant e, Niveau n, Option o , AnneeAcademique a){
-        try {
-            List<Semestre> semestres = semestreDao.findByNiveau(n);
-            
-            //Liste des ues du semestre 1
-            List<UEnseignementCredit> ues1 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
-            List<UEnseignementCredit> ues2 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
-            Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
-            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
-            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 5);
-            int taille1 = ues1.size();
-            int taille2 = ues2.size();
-            float relativeWidths[];
-            relativeWidths = new float[8];
-            relativeWidths[0] = 3;
-            relativeWidths[1] = 10;
-            relativeWidths[2] = 3;
-            for (int i = 0; i <  8; i++) {
-                relativeWidths[3 + i] = 3;
-            }
-            PdfPTable table = new PdfPTable(relativeWidths);
-            table.setWidthPercentage(100);
-            table.addCell(createSyntheseDefaultHeaderCell("Code UE", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Intitulé de l'Unité d'Enseignement", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Crédit", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Moyenne/20", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Moy/Grade", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Grade", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Semestre", bf, false));
-            table.addCell(createSyntheseDefaultHeaderCell("Session", bf, false));
-         
-            
-            Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(e.getMatricule(), n.getId(), o.getId(), semestres.get(0).getId(), a.getId());
-           /* table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
-            table.addCell(createSyntheseDefaultBodyCell(e.getNom(), bf1, false, false));
-            table.addCell(createSyntheseDefaultBodyCell(e.getMatricule(), bf1, false, true));
-           */
-            for (UEnseignementCredit ue : ues1) {
-                MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
-                Double value = mue.getMoyenne();
-                table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("II", bf1, true, true));
-                
-            }
-            for (UEnseignementCredit ue : ues2) {
-                MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
-                Double value = mue.getMoyenne();
-                table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, true, true));
-                table.addCell(createSyntheseDefaultBodyCell("II", bf1, true, true));
-            }
-            
-            doc.add(table);
-            
-        } catch (DataAccessException ex) {
-            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ServiceException ex) {
-            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DocumentException ex) {
-            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
+
+    @Override
     public void produireRelevet(Long niveauId, Long optionId, Long anneeId, OutputStream stream) {
 
         try {
@@ -1066,6 +1011,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Option o = optionDao.findById(optionId);
             AnneeAcademique a = academiqueDao.findById(anneeId);
             produceHeader(doc, null, n, o, a, null, null, true);
+            Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
             StringBuilder str = new StringBuilder();
             str.append("RELEVE DE NOTES / ACADEMIC TRANSCRIPT             ");
             str.append("N°");
@@ -1073,13 +1019,388 @@ public class DocumentServiceImpl implements IDocumentService {
             str.append("INFOTEL/");
             str.append("DAACR/");
             str.append("DISS\n");
-            
+            Phrase phrase = new Phrase(str.toString(), font);
+            doc.add(phrase);
+            doc.add(new Chunk("\n"));
+            produireRelevetHeader(null, null, null, null, doc);
+            produceRelevetTable(doc, null, null, null, null);
+
+            doc.close();
         } catch (DataAccessException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void produireRelevetHeader(Etudiant e, Departement d, Niveau n, Option o, Document doc) {
+
+        try {
+            Font french = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+            Font english = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.BOLDITALIC);
+            Font french2 = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
+            Font english2 = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.ITALIC);
+            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 5);
+
+            float relativeWidths[];
+            relativeWidths = new float[3];
+            relativeWidths[0] = 3;
+            relativeWidths[1] = 6;
+            relativeWidths[2] = 3;
+            PdfPTable table = new PdfPTable(relativeWidths);
+            table.setWidthPercentage(100);
+            
+            Phrase cyclef = new Phrase("Cycle : ", french2);
+            Phrase valuecyclef = new Phrase("Ingénieur des travaux en Informatique et Télécommunication" + "\n", french);
+            Phrase cyclee = new Phrase("cycle : ", english2);
+            Phrase valuecyclee = new Phrase("Bachelor in Enginneering degree in Computer science and telecommunication", english);
+            Phrase cycle = new Phrase();
+            cycle.add(cyclef);
+            cycle.add(valuecyclef);
+            cycle.add(cyclee);
+            cycle.add(valuecyclee);
+            PdfPCell cell1 = new PdfPCell(cycle);
+            cell1.setColspan(2);
+            cell1.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell1);
+            
+            Phrase niveauf = new Phrase("Niveau : ", french2);
+            Phrase valueniveauf = new Phrase("Licence 1" + "\n", french);
+            Phrase niveaue = new Phrase("Level", english2);
+            Phrase niveau = new Phrase();
+            niveau.add(niveauf);
+            niveau.add(valueniveauf);
+            niveau.add(niveaue);
+            PdfPCell cell2 = new PdfPCell(niveau);
+            cell2.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell2);
+            
+            
+            Phrase spf = new Phrase(new Chunk("Spécialité : ", french2));
+            Phrase valuespf = new Phrase(new Chunk("Informatique et Télécommunications" + "\n", french));
+            Phrase spe = new Phrase(new Chunk("Speciality : ", english2));
+            Phrase valuespe = new Phrase(new Chunk("Computer Science and Telecommunications", english));
+  
+ /*         cell3.addElement(new Chunk("Spécialité : ", french2));
+            cell3.addElement(new Chunk("Informatique et Télécommunications" + "\n", french));
+            cell3.addElement(new Chunk("Speciality", english2));
+            cell3.addElement(new Chunk("Computer Science and Telecommunications", english));
+*/
+            Phrase specialite = new Phrase();
+            specialite.add(spf);
+            specialite.add(valuespf);
+            specialite.add(spe);
+            specialite.add(valuespe);
+            PdfPCell cell3 = new PdfPCell(specialite);
+            cell3.setColspan(3);
+            cell3.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell3);
+            
+            
+            Phrase nomf = new Phrase(new Chunk("Nom(s) et Prénom(s) :", french2));
+            Phrase valuenomf = new Phrase(new Chunk("ROYKEN IS ROY" + "\n", french));
+            Phrase nome = new Phrase(new Chunk("Name and surename", english2));
+            Phrase nom = new Phrase();
+            nom.add(nomf);
+            nom.add(valuenomf);
+            nom.add(nome);
+            PdfPCell cell4 = new PdfPCell(nom);
+            cell4.setBorderColor(BaseColor.WHITE);
+            cell4.setColspan(2);
+            table.addCell(cell4);
+            
+            
+            Phrase matf = new Phrase(new Chunk("Matricule : ", french2));
+            Phrase valuematf = new Phrase(new Chunk("18Z764S" + "\n", french));
+            Phrase mate = new Phrase(new Chunk("Registration number", english2));
+            Phrase matricule = new Phrase();
+            matricule.add(matf);
+            matricule.add(valuematf);
+            matricule.add(mate);
+            PdfPCell cell5 = new PdfPCell(matricule);
+            cell5.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell5);
+            
+            Phrase datef = new Phrase(new Chunk("Né(e) le : ", french2));
+            Phrase valuedatef = new Phrase(new Chunk("45/76/2018" + "\n", french));
+            Phrase datee = new Phrase(new Chunk("Born on", english2));
+            Phrase date = new Phrase();
+            date.add(datef);
+            date.add(valuedatef);
+            date.add(datee);
+            PdfPCell cell6 = new PdfPCell(date);
+            cell6.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell6);
+            
+            Phrase lieuf = new Phrase(new Chunk("à : ", french2));
+            Phrase valuelieuf = new Phrase(new Chunk("sofo wètchè" + "\n", french));
+            Phrase lieue = new Phrase(new Chunk("at", english2));
+            Phrase lieu = new Phrase();
+            lieu.add(lieuf);
+            lieu.add(valuelieuf);
+            lieu.add(lieue);
+            PdfPCell cell7 = new PdfPCell(lieu);
+            cell7.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell7);
+
+            Phrase sexef = new Phrase(new Chunk("Sexe : ", french2));
+            Phrase valuesexef = new Phrase(new Chunk("Masculin" + "\n", french));
+            Phrase sexee = new Phrase(new Chunk("Sexe", english2));
+            Phrase sexe = new Phrase();
+            sexe.add(lieuf);
+            sexe.add(valuelieuf);
+            sexe.add(lieue);
+            PdfPCell cell8 = new PdfPCell(sexe);
+            cell8.setBorderColor(BaseColor.WHITE);
+            table.addCell(cell8);
+
+       
+            doc.add(table);
+
+            /*
+             PdfPCell cell = new PdfPCell();
+             cell.addElement(new Phrase("Created Date : ", grayFont));
+             cell.addElement(new Phrase(theDate, blackFont));
+             */
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void produceRelevetTable(Document doc, Etudiant e, Niveau n, Option o, AnneeAcademique a) {
+        try {
+          //  List<Semestre> semestres = semestreDao.findByNiveau(n);
+
+            //Liste des ues du semestre 1
+//            List<UEnseignementCredit> ues1 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
+//            List<UEnseignementCredit> ues2 = uniteEnsDao.findByNiveauOptionSemestre(n, o, semestres.get(0), a);
+            List<UEnseignementCredit> ues1 = getTrash1();
+            List<UEnseignementCredit> ues2 = getTrash2();
+            Font bf = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
+            Font bf1 = new Font(Font.FontFamily.TIMES_ROMAN, 6);
+            Font bf12 = new Font(Font.FontFamily.TIMES_ROMAN, 5);
+            int taille1 = ues1.size();
+            int taille2 = ues2.size();
+            int nombreCredit = 0;
+            int nombreCreditValide = 0;
+            double produit = 0.0; /*produit : credit * moyenne */
+
+            float relativeWidths[];
+            relativeWidths = new float[8];
+            relativeWidths[0] = 3;
+            relativeWidths[1] = 10;
+            relativeWidths[2] = 3;
+            for (int i = 0; i < 5; i++) {
+                relativeWidths[3 + i] = 3;
+            }
+            PdfPTable table = new PdfPTable(relativeWidths);
+            table.setWidthPercentage(100);
+            table.addCell(createDefaultBodyCell("Code UE", bf, false));
+            table.addCell(createDefaultBodyCell("Intitulé de l'Unité d'Enseignement", bf, false));
+            table.addCell(createDefaultBodyCell("Crédit", bf, false));
+            table.addCell(createDefaultBodyCell("Moyenne/20", bf, false));
+            table.addCell(createDefaultBodyCell("Moy/Grade", bf, false));
+            table.addCell(createDefaultBodyCell("Grade", bf, false));
+            table.addCell(createDefaultBodyCell("Semestre", bf, false));
+            table.addCell(createDefaultBodyCell("Session", bf, false));
+
+//            Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(e.getMatricule(), n.getId(), o.getId(), semestres.get(0).getId(), a.getId());
+            Map<String, MoyenneTrashData> notes = getTrash3();
+            System.out.println("code à : " +notes.containsKey("ITEL 110"));
+
+            /* table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
+             table.addCell(createSyntheseDefaultBodyCell(e.getNom(), bf1, false, false));
+             table.addCell(createSyntheseDefaultBodyCell(e.getMatricule(), bf1, false, true));
+             */
+            /*            for (UEnseignementCredit ue : ues1) {
+             MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+             Double value = mue.getMoyenne();
+             table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("II", bf1, true, true));
+
+             }
+             for (UEnseignementCredit ue : ues2) {
+             MoyenneUniteEnseignement mue = notes.get(ue.getCodeUE());
+             Double value = mue.getMoyenne();
+             table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, true, true));
+             table.addCell(createSyntheseDefaultBodyCell("II", bf1, true, true));
+             }            
+             */
+            for (UEnseignementCredit ue : ues1) {
+                System.out.println("code : " +ue.getCodeUE());
+                MoyenneTrashData mue = notes.get(ue.getCodeUE());
+               
+                Double value = mue.getMoyenne();
+                produit += value * ue.getCredit();
+                nombreCredit += ue.getCredit();
+                if (value >= 10) {
+                    nombreCreditValide += ue.getCredit();
+                }
+                table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(sessionToString(mue.getSession()), bf1, false, true));
+
+            }
+            for (UEnseignementCredit ue : ues2) {
+                MoyenneTrashData mue = notes.get(ue.getCodeUE());
+                Double value = mue.getMoyenne();
+                nombreCredit += ue.getCredit();
+                produit += value * ue.getCredit();
+                if (value >= 10) {
+                    nombreCreditValide += ue.getCredit();
+                }
+                table.addCell(createSyntheseDefaultBodyCell(ue.getCodeUE(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(ue.getIntituleUE(), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.valueOf(ue.getCredit()), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(String.format("%.2f", value), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell("3,4", bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(transformNoteGrade(value), bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell("I(2023)", bf1, false, true));
+                table.addCell(createSyntheseDefaultBodyCell(sessionToString(mue.getSession()), bf1, false, true));
+            }
+            PdfPCell cell = new PdfPCell();
+//                 float relativeWidths2[];
+//            relativeWidths2 = new float[8];
+//            relativeWidths2[0] = 3;
+//            relativeWidths[1] = 10;
+//            relativeWidths[2] = 3;
+//            for (int i = 0; i < 8; i++) {
+//                relativeWidths2[3 + i] = 3;
+//            }
+            PdfPTable table2 = new PdfPTable(8);
+            table2.setWidthPercentage(90);
+            table2.addCell(createRelevetFootBodyCell("Rang", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Crédit Capitalisé", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Moy /20", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Moy / Grad", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Grade général", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Décision", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Mention", bf, false, 1, 2));
+           
+            table2.addCell(createRelevetFootBodyCell("Rank", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Total Credit", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Average /20", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("GPA", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("General Grade", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("Decision", bf1, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("", bf1, false, 1, 2));
+            /*Les valeurs   */
+
+            // Sais pas comment obtenir le rang
+            table2.addCell(createRelevetFootBodyCell("6", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell(String.valueOf(nombreCreditValide), bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell(String.format("%.2f", (produit * 1.0 / nombreCredit)), bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("2,70", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell(transformNoteGrade(produit * 1.0 / nombreCredit), bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("AD", bf, false, 1, 1));
+            table2.addCell(createRelevetFootBodyCell("ASSEZ-Bien", bf, false, 2, 2));
+
+            cell.addElement(table2);
+            cell.setColspan(8);
+            cell.setRowspan(6);
+            table.addCell(cell);
+            doc.add(table);
+
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void produceRelevetFooter(Document doc){
+        
+    }
+
+    public List<UEnseignementCredit> getTrash1() {
+        List<UEnseignementCredit> result = new ArrayList<UEnseignementCredit>();
+        result.add(new UEnseignementCredit("ITEL 110", "Mathematiques 1", 4));
+        result.add(new UEnseignementCredit("ITEL 111", "Circuit Logique 1", 4));
+        result.add(new UEnseignementCredit("ITEL 112", "Electronique de Base", 4));
+        result.add(new UEnseignementCredit("ITEL 113", "Circuits Electriques", 2));
+        result.add(new UEnseignementCredit("ITEL 114", "Electromagnetisme", 4));
+        result.add(new UEnseignementCredit("ITEL 115", "Algorithme et Programmation", 6));
+        result.add(new UEnseignementCredit("ITEL 116", "Mecanique du Point Materiel", 2));
+        result.add(new UEnseignementCredit("ITEL 117", "Communication Technique 1", 4));
+        return result;
+    }
+
+    public List<UEnseignementCredit> getTrash2() {
+        List<UEnseignementCredit> result = new ArrayList<UEnseignementCredit>();
+        result.add(new UEnseignementCredit("ITEL 120", "Mathématiques 2", 4));
+        result.add(new UEnseignementCredit("ITEL 121", "Circuits Logiques 2", 4));
+        result.add(new UEnseignementCredit("ITEL 122", "Système d’Exploitation 1", 4));
+        result.add(new UEnseignementCredit("ITEL 123", "Programmation Avancée en C", 2));
+        result.add(new UEnseignementCredit("ITEL 124", "Programmation et Technologies Web", 4));
+        result.add(new UEnseignementCredit("ITEL 125", "Électromagnétisme 2", 4));
+        result.add(new UEnseignementCredit("ITEL 126", "Dessin Technique et Fabrication Mécanique", 2));
+        result.add(new UEnseignementCredit("ITEL 127", "Communication Technique II", 4));
+        result.add(new UEnseignementCredit("ITEL 128", "Stage", 2));
+        return result;
+    }
+
+    public Map<String, MoyenneTrashData> getTrash3() {
+        Map<String, MoyenneTrashData> result = new HashMap<String, MoyenneTrashData>();
+        MoyenneTrashData data1 = new MoyenneTrashData(12.14, Session.normale, new Semestre("1"));
+        result.put("ITEL 110", data1);
+        MoyenneTrashData data2 = new MoyenneTrashData(13.20, Session.normale, new Semestre("1"));
+        result.put("ITEL 111", data2);
+        MoyenneTrashData data3 = new MoyenneTrashData(13.75, Session.normale, new Semestre("1"));
+        result.put("ITEL 112", data3);
+        MoyenneTrashData data4 = new MoyenneTrashData(11.30, Session.normale, new Semestre("1"));
+        result.put("ITEL 113", data4);
+        MoyenneTrashData data5 = new MoyenneTrashData(14.01, Session.normale, new Semestre("1"));
+        result.put("ITEL 114", data5);
+        MoyenneTrashData data6 = new MoyenneTrashData(10.20, Session.normale, new Semestre("1"));
+        result.put("ITEL 115", data6);
+        MoyenneTrashData data7 = new MoyenneTrashData(16.65, Session.normale, new Semestre("1"));
+        result.put("ITEL 116", data7);
+        MoyenneTrashData data8 = new MoyenneTrashData(10.05, Session.normale, new Semestre("1"));
+        result.put("ITEL 117", data8);
+        MoyenneTrashData data9 = new MoyenneTrashData(11.46, Session.rattrapage, new Semestre("II"));
+        result.put("ITEL 120", data9);
+        MoyenneTrashData data10 = new MoyenneTrashData(12.30, Session.normale, new Semestre("II"));
+        result.put("ITEL 121", data10);
+        MoyenneTrashData data11 = new MoyenneTrashData(11.55, Session.normale, new Semestre("II"));
+        result.put("ITEL 122", data11);
+        MoyenneTrashData data12 = new MoyenneTrashData(10.19, Session.normale, new Semestre("II"));
+        result.put("ITEL 123", data12);
+        MoyenneTrashData data13 = new MoyenneTrashData(12.60, Session.rattrapage, new Semestre("II"));
+        result.put("ITEL 124", data13);
+        MoyenneTrashData data14 = new MoyenneTrashData(11.18, Session.rattrapage, new Semestre("II"));
+        result.put("ITEL 125", data14);
+        MoyenneTrashData data15 = new MoyenneTrashData(11.05, Session.normale, new Semestre("II"));
+        result.put("ITEL 126", data15);
+        MoyenneTrashData data16 = new MoyenneTrashData(16.00, Session.normale, new Semestre("II"));
+        result.put("ITEL 127", data16);
+        MoyenneTrashData data17 = new MoyenneTrashData(16.00, Session.normale, new Semestre("II"));
+        result.put("ITEL 128", data17);
+        return result;
+    }
+
+    public String sessionToString(Session session) {
+        if (session == Session.normale) {
+            return "1";
+        } else {
+            return "2";
         }
     }
 }
