@@ -996,9 +996,6 @@ public class DocumentServiceImpl implements IDocumentService {
         }
     }
 
-
-    
-
     @Override
     public void produireRelevet(Long niveauId, Long optionId, Long anneeId, OutputStream stream) {
 
@@ -1024,6 +1021,7 @@ public class DocumentServiceImpl implements IDocumentService {
             doc.add(new Chunk("\n"));
             produireRelevetHeader(null, null, null, null, doc);
             produceRelevetTable(doc, null, null, null, null);
+            produceRelevetFooter(doc);
 
             doc.close();
         } catch (DataAccessException ex) {
@@ -1052,7 +1050,7 @@ public class DocumentServiceImpl implements IDocumentService {
             relativeWidths[2] = 3;
             PdfPTable table = new PdfPTable(relativeWidths);
             table.setWidthPercentage(100);
-            
+
             Phrase cyclef = new Phrase("Cycle : ", french2);
             Phrase valuecyclef = new Phrase("Ingénieur des travaux en Informatique et Télécommunication" + "\n", french);
             Phrase cyclee = new Phrase("cycle : ", english2);
@@ -1066,7 +1064,7 @@ public class DocumentServiceImpl implements IDocumentService {
             cell1.setColspan(2);
             cell1.setBorderColor(BaseColor.WHITE);
             table.addCell(cell1);
-            
+
             Phrase niveauf = new Phrase("Niveau : ", french2);
             Phrase valueniveauf = new Phrase("Licence 1" + "\n", french);
             Phrase niveaue = new Phrase("Level", english2);
@@ -1077,18 +1075,17 @@ public class DocumentServiceImpl implements IDocumentService {
             PdfPCell cell2 = new PdfPCell(niveau);
             cell2.setBorderColor(BaseColor.WHITE);
             table.addCell(cell2);
-            
-            
+
             Phrase spf = new Phrase(new Chunk("Spécialité : ", french2));
             Phrase valuespf = new Phrase(new Chunk("Informatique et Télécommunications" + "\n", french));
             Phrase spe = new Phrase(new Chunk("Speciality : ", english2));
             Phrase valuespe = new Phrase(new Chunk("Computer Science and Telecommunications", english));
-  
- /*         cell3.addElement(new Chunk("Spécialité : ", french2));
-            cell3.addElement(new Chunk("Informatique et Télécommunications" + "\n", french));
-            cell3.addElement(new Chunk("Speciality", english2));
-            cell3.addElement(new Chunk("Computer Science and Telecommunications", english));
-*/
+
+            /*         cell3.addElement(new Chunk("Spécialité : ", french2));
+             cell3.addElement(new Chunk("Informatique et Télécommunications" + "\n", french));
+             cell3.addElement(new Chunk("Speciality", english2));
+             cell3.addElement(new Chunk("Computer Science and Telecommunications", english));
+             */
             Phrase specialite = new Phrase();
             specialite.add(spf);
             specialite.add(valuespf);
@@ -1098,8 +1095,7 @@ public class DocumentServiceImpl implements IDocumentService {
             cell3.setColspan(3);
             cell3.setBorderColor(BaseColor.WHITE);
             table.addCell(cell3);
-            
-            
+
             Phrase nomf = new Phrase(new Chunk("Nom(s) et Prénom(s) :", french2));
             Phrase valuenomf = new Phrase(new Chunk("ROYKEN IS ROY" + "\n", french));
             Phrase nome = new Phrase(new Chunk("Name and surename", english2));
@@ -1111,8 +1107,7 @@ public class DocumentServiceImpl implements IDocumentService {
             cell4.setBorderColor(BaseColor.WHITE);
             cell4.setColspan(2);
             table.addCell(cell4);
-            
-            
+
             Phrase matf = new Phrase(new Chunk("Matricule : ", french2));
             Phrase valuematf = new Phrase(new Chunk("18Z764S" + "\n", french));
             Phrase mate = new Phrase(new Chunk("Registration number", english2));
@@ -1123,7 +1118,7 @@ public class DocumentServiceImpl implements IDocumentService {
             PdfPCell cell5 = new PdfPCell(matricule);
             cell5.setBorderColor(BaseColor.WHITE);
             table.addCell(cell5);
-            
+
             Phrase datef = new Phrase(new Chunk("Né(e) le : ", french2));
             Phrase valuedatef = new Phrase(new Chunk("45/76/2018" + "\n", french));
             Phrase datee = new Phrase(new Chunk("Born on", english2));
@@ -1134,7 +1129,7 @@ public class DocumentServiceImpl implements IDocumentService {
             PdfPCell cell6 = new PdfPCell(date);
             cell6.setBorderColor(BaseColor.WHITE);
             table.addCell(cell6);
-            
+
             Phrase lieuf = new Phrase(new Chunk("à : ", french2));
             Phrase valuelieuf = new Phrase(new Chunk("sofo wètchè" + "\n", french));
             Phrase lieue = new Phrase(new Chunk("at", english2));
@@ -1157,7 +1152,6 @@ public class DocumentServiceImpl implements IDocumentService {
             cell8.setBorderColor(BaseColor.WHITE);
             table.addCell(cell8);
 
-       
             doc.add(table);
 
             /*
@@ -1169,7 +1163,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void produceRelevetTable(Document doc, Etudiant e, Niveau n, Option o, AnneeAcademique a) {
         try {
           //  List<Semestre> semestres = semestreDao.findByNiveau(n);
@@ -1209,7 +1203,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
 //            Map<String, MoyenneUniteEnseignement> notes = noteService.listeNoteUniteEnseignement(e.getMatricule(), n.getId(), o.getId(), semestres.get(0).getId(), a.getId());
             Map<String, MoyenneTrashData> notes = getTrash3();
-            System.out.println("code à : " +notes.containsKey("ITEL 110"));
+            System.out.println("code à : " + notes.containsKey("ITEL 110"));
 
             /* table.addCell(createSyntheseDefaultBodyCell(String.valueOf(i++), bf1, false, true));
              table.addCell(createSyntheseDefaultBodyCell(e.getNom(), bf1, false, false));
@@ -1242,9 +1236,9 @@ public class DocumentServiceImpl implements IDocumentService {
              }            
              */
             for (UEnseignementCredit ue : ues1) {
-                System.out.println("code : " +ue.getCodeUE());
+                System.out.println("code : " + ue.getCodeUE());
                 MoyenneTrashData mue = notes.get(ue.getCodeUE());
-               
+
                 Double value = mue.getMoyenne();
                 produit += value * ue.getCredit();
                 nombreCredit += ue.getCredit();
@@ -1296,7 +1290,7 @@ public class DocumentServiceImpl implements IDocumentService {
             table2.addCell(createRelevetFootBodyCell("Grade général", bf, false, 1, 1));
             table2.addCell(createRelevetFootBodyCell("Décision", bf, false, 1, 1));
             table2.addCell(createRelevetFootBodyCell("Mention", bf, false, 1, 2));
-           
+
             table2.addCell(createRelevetFootBodyCell("Rank", bf1, false, 1, 1));
             table2.addCell(createRelevetFootBodyCell("Total Credit", bf1, false, 1, 1));
             table2.addCell(createRelevetFootBodyCell("Average /20", bf1, false, 1, 1));
@@ -1325,9 +1319,38 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void produceRelevetFooter(Document doc){
-        
+
+    private void produceRelevetFooter(Document doc) {
+        try {
+            // Font frenchFont = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
+            
+            Font font1 = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
+            Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.ITALIC);
+            Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL);
+            Font font4 = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.ITALIC);
+            
+            float relativewidhts[] = new float[2];
+            relativewidhts[0] = 3;
+            relativewidhts[1] = 6;
+            PdfPTable date = new PdfPTable(relativewidhts);
+            PdfPCell cell1 = new PdfPCell();
+            cell1.addElement(new Phrase("En foi de quoi ce relevé de notes lui est délivré pour servir et valoir ce que de droit.", font3));
+            cell1.addElement(new Phrase("En foi de quoi ce relevé de notes lui est délivré pour servir et valoir ce que de droit.", font4));
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell1.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell1.setBorderColor(BaseColor.WHITE);
+            date.addCell(cell1);
+            
+            PdfPCell cell2 = new PdfPCell();
+            cell2.addElement(new Phrase("Maroua, le : ____________", font2));
+            cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            date.addCell(cell2);
+            doc.add(date);
+        } catch (DocumentException ex) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public List<UEnseignementCredit> getTrash1() {
