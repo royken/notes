@@ -39,13 +39,18 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -1001,7 +1006,10 @@ public class DocumentServiceImpl implements IDocumentService {
 
         try {
             Document doc = new Document();
-            PdfWriter.getInstance(doc, stream);
+            PdfWriter writer = PdfWriter.getInstance(doc, stream);
+            //PdfWriter.getInstance(doc, stream);
+            
+            writer.setPageEvent(new Watermark());
             doc.setPageSize(PageSize.A4);
             doc.open();
             Niveau n = niveauDao.findById(niveauId);
@@ -1033,6 +1041,17 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public class Watermark extends PdfPageEventHelper {
+ 
+        protected Phrase watermark = new Phrase("ORIGINAL", new Font(FontFamily.HELVETICA, 70, Font.BOLDITALIC, new BaseColor(254, 248, 108)));
+ 
+        @Override
+        public void onEndPage(PdfWriter writer, Document document) {
+            PdfContentByte canvas = writer.getDirectContentUnder();
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, watermark, 298, 421, 45);
         }
     }
 
