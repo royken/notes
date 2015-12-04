@@ -170,18 +170,22 @@ public class InscriptionServiceImpl implements IInscriptionService {
             
             Niveau niveau = niveauDao.findByCode(codeNiveau);
             if(niveau == null){
+                System.out.println("Toto le nivequ est null");
                 throw new ServiceException("Le niveau demandé est introuvable");
             }
             Option option = optionDao.findByCode(codeOption);
             if(option == null){
+                System.out.println("Toto l4option est null");
                 throw new ServiceException("L'option demandée est introuvable");
             }
             AnneeAcademique academique = academiqueDao.findById(anneeId);
             if(academique == null){
+                System.out.println("Toto l'annee est null");
                 throw new ServiceException("L'année académique demandée est introuvable");
             }
             Parcours parcours = parcoursDao.findByNiveauOption(niveau, option);
             if(parcours == null){
+                System.out.println("Toto le parcours est null");
                 throw new ServiceException("La ressource demandée est introuvable");
             }
             return  saveEtudiant(etudiant, academique, parcours);

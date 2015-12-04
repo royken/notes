@@ -8,6 +8,7 @@ import com.douwe.notes.entities.Option;
 import com.douwe.notes.entities.Session;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
+import com.douwe.notes.projection.NoteTransfer;
 import com.douwe.notes.resource.INoteResource;
 import com.douwe.notes.service.IAnneeAcademiqueService;
 import com.douwe.notes.service.ICoursService;
@@ -16,6 +17,7 @@ import com.douwe.notes.service.INiveauService;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.IOptionService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.DeliberationItem;
 import com.douwe.notes.service.util.ImportationResult;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -25,6 +27,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -59,7 +62,7 @@ public class NoteResource implements INoteResource {
 
     @EJB
     private IDocumentService documentService;
-   
+
     @EJB
     private INoteService noteService;
 
@@ -118,8 +121,6 @@ public class NoteResource implements INoteResource {
     public void setNoteService(INoteService noteService) {
         this.noteService = noteService;
     }
-    
-    
 
     @Override
     public Note createNote(Note note) {
@@ -183,28 +184,28 @@ public class NoteResource implements INoteResource {
             Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     @Override
-     public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
-     try {
-     Niveau n = niveauService.findNiveauById(niveauid);
-     Option o = optionService.findOptionById(optionid);
-     Cours c = coursService.findCoursById(coursid);
-     AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
-     Session s = Session.values()[ses];
-     List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
-     for (EtudiantNotes et : ets) {
-     System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
-     for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
-     System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
-     }
-     System.out.println(String.format("La moyenne : %.2f",et.getMoyenne()));
-     }
-     } catch (ServiceException ex) {
-     Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     return "Hello";
-     }
+
+    @Override
+    public String afficher(long niveauid, long optionid, long coursid, long anneeid, int ses) {
+        try {
+            Niveau n = niveauService.findNiveauById(niveauid);
+            Option o = optionService.findOptionById(optionid);
+            Cours c = coursService.findCoursById(coursid);
+            AnneeAcademique a = anneeAcademiqueService.findAnneeById(anneeid);
+            Session s = Session.values()[ses];
+            List<EtudiantNotes> ets = service.getAllNotesEtudiants(n, o, c, null, a, s);
+            for (EtudiantNotes et : ets) {
+                System.out.print(String.format("Matricule: %s \t Nom: %s\t", et.getMatricule(), et.getNom()));
+                for (Map.Entry<String, Double> e : et.getNote().entrySet()) {
+                    System.out.print(String.format("%s - %.2f\t", e.getKey(), e.getValue()));
+                }
+                System.out.println(String.format("La moyenne : %.2f", et.getMoyenne()));
+            }
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Hello";
+    }
 
     @Override
     public OutputStream produirePv() {
@@ -266,6 +267,40 @@ public class NoteResource implements INoteResource {
         return null;
     }
 
-    
+    @Override
+    public List<DeliberationItem> listeDeliberation(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean isInfInclusive, double borneSup, boolean isSupInclusive, double finale) {
+        try {
+            return noteService.listeDeliberation(niveauId, optionId, coursId, anneeId, session, borneInf, isInfInclusive, borneSup, isSupInclusive, finale);
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(400);
+        }
+    }
+
+    @Override
+    public String deliberer(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean isInfInclusive, double borneSup, boolean isSupInclusive, double finale) {
+        try {
+            return String.valueOf(noteService.delibererCours(niveauId, optionId, coursId, anneeId, session, borneInf, isInfInclusive, borneSup, isSupInclusive, finale));
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(400);
+        }
+    }
+
+    @Override
+    public List<NoteTransfer> getNoteEtudiantCours(String matricule, long coursId, long anneeId) {
+        List<NoteTransfer> result = new ArrayList<NoteTransfer>();
+        try {
+            List<Note> notes =  noteService.listeNoteEtudiant(matricule, coursId, anneeId);
+            for (Note note : notes) {
+                result.add(new NoteTransfer(note.getId(),note.getEvaluation().getCode(),
+                note.getSession().toString(), note.getValeur()));
+            }
+        } catch (ServiceException ex) {
+            Logger.getLogger(NoteResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(400);
+        }
+        return result;
+    }
 
 }

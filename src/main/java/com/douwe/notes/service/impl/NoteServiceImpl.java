@@ -27,6 +27,7 @@ import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
 import com.douwe.notes.service.INoteService;
 import com.douwe.notes.service.ServiceException;
+import com.douwe.notes.service.util.DeliberationItem;
 import com.douwe.notes.service.util.ImportationError;
 import com.douwe.notes.service.util.ImportationResult;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.ws.rs.WebApplicationException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -215,31 +217,37 @@ public class NoteServiceImpl implements INoteService {
 
     @Override
     public List<EtudiantNotes> getAllNotesEtudiants(Niveau niveau, Option option, Cours cours, UniteEnseignement ue, AnneeAcademique academique, Session session) throws ServiceException {
-        List<EtudiantNotes> result = new ArrayList<EtudiantNotes>();
+
         //boolean state = false;
         try {
-
-            Map<String, Integer> calc = getEvaluationDetails(cours);
-
-            // recuperer les listes des  étudiants du parcours
-            //List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
-            List<Etudiant> etudiants = etudiantDao.listeEtudiantAvecNotes(academique, niveau, option, cours, session);
-            System.out.println("Bravo j'ai trouve " + etudiants.size() + " etudiants");
-            for (Etudiant etudiant : etudiants) {
-                EtudiantNotes et = new EtudiantNotes();
-                et.setMatricule(etudiant.getMatricule());
-                et.setNom(etudiant.getNom());
-                Map<String, Double> notes = new HashMap<String, Double>();
-                List<Note> nn = noteDao.listeNoteCours(etudiant, cours, academique, session);
-                for (Note nn1 : nn) {
-                    notes.put(nn1.getEvaluation().getCode(), nn1.getValeur());
-                }
-                et.setNote(notes);
-                et.setDetails(calc);
-                result.add(et);
-            }
+            return listeNoteEtudiant(cours, academique, niveau, option, session);
         } catch (DataAccessException ex) {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(400);
+        }
+
+    }
+
+    private List<EtudiantNotes> listeNoteEtudiant(Cours cours, AnneeAcademique academique, Niveau niveau, Option option, Session session) throws DataAccessException {
+        List<EtudiantNotes> result = new ArrayList<EtudiantNotes>();
+        Map<String, Integer> calc = getEvaluationDetails(cours);
+
+        // recuperer les listes des  étudiants du parcours
+        //List<Etudiant> etudiants = etudiantDao.listeEtudiantParDepartementEtNiveau(null, academique, niveau, option);
+        List<Etudiant> etudiants = etudiantDao.listeEtudiantAvecNotes(academique, niveau, option, cours, session);
+        System.out.println("Bravo j'ai trouve " + etudiants.size() + " etudiants");
+        for (Etudiant etudiant : etudiants) {
+            EtudiantNotes et = new EtudiantNotes();
+            et.setMatricule(etudiant.getMatricule());
+            et.setNom(etudiant.getNom());
+            Map<String, Double> notes = new HashMap<String, Double>();
+            List<Note> nn = noteDao.listeNoteCours(etudiant, cours, academique, session);
+            for (Note nn1 : nn) {
+                notes.put(nn1.getEvaluation().getCode(), nn1.getValeur());
+            }
+            et.setNote(notes);
+            et.setDetails(calc);
+            result.add(et);
         }
         return result;
     }
@@ -270,7 +278,7 @@ public class NoteServiceImpl implements INoteService {
             String nom;
             while (row != null) {
                 Etudiant etudiant;
-                System.out.println("Index +++++++ "+index);
+                System.out.println("Index +++++++ " + index);
                 if (row.getCell(1) != null) {
                     matricule = row.getCell(1).getStringCellValue();
                     etudiant = etudiantDao.findByMatricule(matricule);
@@ -446,10 +454,11 @@ public class NoteServiceImpl implements INoteService {
             if (anneeId > 0) {
                 annee = academiqueDao.findById(anneeId);
             }
-             result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
-             List<CoursCredit> liste =coursDao.findCoursCreditByUe(ue, annee);             
-            for (CoursCredit cours :liste ) {
-                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);                
+            result = new MoyenneUniteEnseignement(ue.isHasOptionalChoices());
+            // TODO I need to find out a way note to issue this query for every studend
+            List<CoursCredit> liste = coursDao.findCoursCreditByUe(ue, annee);
+            for (CoursCredit cours : liste) {
+                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);
                 if (n != null) {
                     result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
                     result.getSessions().add(n.getSession());
@@ -470,6 +479,36 @@ public class NoteServiceImpl implements INoteService {
         return result;
     }
 
+//    private MoyenneUniteEnseignement getMoyenneUEEtudiant(String matricule, long anneeId, List<CoursCredit> courss, boolean isOptional) throws ServiceException {
+//        MoyenneUniteEnseignement result = null;
+//        try {
+//            
+//            AnneeAcademique annee = null;
+//            if (anneeId > 0) {
+//                annee = academiqueDao.findById(anneeId);
+//            }
+//            result = new MoyenneUniteEnseignement(isOptional);
+//            for (CoursCredit cours : courss) {
+//                EtudiantNotes n = getNoteEtudiant(matricule, cours.getCours().getId(), anneeId);
+//                if (n != null) {
+//                    result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
+//                    result.getSessions().add(n.getSession());
+//                    result.getNotes().put(cours.getCours().getIntitule(), n.getMoyenne());
+//                    result.getAnnees().add(n.getAnnee());
+//                } else {
+//                    result.getCredits().put(cours.getCours().getIntitule(), cours.getCredit());
+//                    result.getSessions().add(Session.normale);
+//                    result.getNotes().put(cours.getCours().getIntitule(), 0.0);
+//                    if (annee != null) {
+//                        result.getAnnees().add(annee);
+//                    }
+//                }
+//            }
+//        } catch (DataAccessException ex) {
+//            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return result;
+//    }
     @Override
     public Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long niveauId, long optionId, long semestreId, long anneeId) throws ServiceException {
         try {
@@ -488,6 +527,103 @@ public class NoteServiceImpl implements INoteService {
             Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long anneeId, List<UniteEnseignement> ues) throws ServiceException {
+        Map<String, MoyenneUniteEnseignement> result = new HashMap<String, MoyenneUniteEnseignement>();
+
+        for (UniteEnseignement liste1 : ues) {
+            MoyenneUniteEnseignement res = getMoyenneUEEtudiant(matricule, liste1.getId(), anneeId);
+            result.put(liste1.getCode(), res);
+        }
+        return result;
+    }
+
+    @Override
+    public List<DeliberationItem> listeDeliberation(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean infInclusive, double borneSup, boolean supInclusive, double finale) throws ServiceException {
+
+        try {
+            Cours c = coursDao.findById(coursId);
+            Niveau n = niveauDao.findById(niveauId);
+            Option p = optionDao.findById(optionId);
+            AnneeAcademique a = academiqueDao.findById(anneeId);
+            Session s = Session.values()[session];
+            return lesDeliberation(c, n, p, a, s, infInclusive, borneInf, supInclusive, borneSup, finale);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(400);
+        }
+
+    }
+
+    private List<DeliberationItem> lesDeliberation(Cours c, Niveau n, Option o, AnneeAcademique a, Session s, boolean infInclusive, double borneInf, boolean supInclusive, double borneSup, double finale) throws DataAccessException {
+        List<DeliberationItem> result = new ArrayList<DeliberationItem>();
+
+        
+        List<EtudiantNotes> toto = listeNoteEtudiant(c, a, n, o, s);
+        for (EtudiantNotes toto1 : toto) {
+            // I need to keep only those with values that belongs to the right interval
+            double moyenne = toto1.getMoyenne();
+            boolean test1 = infInclusive ? moyenne >= borneInf : moyenne > borneInf;
+            boolean test2 = supInclusive ? moyenne <= borneSup : moyenne < borneSup;
+            if (test1 && test2) {
+                // I add the corresponding student to the list
+                DeliberationItem item = new DeliberationItem();
+                item.setMatricule(toto1.getMatricule());
+                item.setNom(toto1.getNom());
+                item.setMoyenneAvant(moyenne);
+                // TODO Il fqut chercher un moyen pour recuperer le code de l'examen de la base de données
+                double noteAvant = toto1.getNote().get("EE");
+                double noteApres = ((finale - moyenne) * 100 / toto1.getDetails().get("EE")) + noteAvant;
+                noteApres = Math.ceil(noteApres * 4) / 4.0;
+                // TODO je dois surement eviter de faire ce genre de chose
+                toto1.getNote().put("EE", noteApres);
+                item.setMoyenneApres(toto1.getMoyenne());
+                item.setNoteAvant(noteAvant);
+                item.setNoteApres(noteApres);
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int delibererCours(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean infInclusive, double borneSup, boolean supInclusive, double finale) throws ServiceException {
+        int res = 0;
+        try {
+            Cours c = coursDao.findById(coursId);
+            Niveau n = niveauDao.findById(niveauId);
+            Option p = optionDao.findById(optionId);
+            AnneeAcademique a = academiqueDao.findById(anneeId);
+            Session s = Session.values()[session];
+            List<DeliberationItem> result = lesDeliberation(c, n, p, a, s, infInclusive, borneInf, supInclusive, borneSup, finale);
+            Evaluation evaluation = evaluationDao.findExamen();
+            for (DeliberationItem result1 : result) {
+                Etudiant e = etudiantDao.findByMatricule(result1.getMatricule());
+                Note note = noteDao.getNoteCours(e, evaluation, c, a, s);
+                note.setValeur(result1.getNoteApres());
+                noteDao.update(note);
+                res++;
+            }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+
+    }
+
+    @Override
+    public List<Note> listeNoteEtudiant(String matricule, long coursId, long anneeId) throws ServiceException {
+        try {
+            Etudiant etudiant = etudiantDao.findByMatricule(matricule);
+            Cours cours = coursDao.findById(coursId);
+            AnneeAcademique annee = academiqueDao.findById(anneeId);
+            return noteDao.getNoteCours(etudiant, cours, annee);
+        } catch (DataAccessException ex) {
+            Logger.getLogger(NoteServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServiceException(ex);
+        }
     }
 
 }

@@ -197,11 +197,13 @@ public class EtudiantServiceImpl implements IEtudiantService {
             Row row = sheet.getRow(index++);
             while (row != null) {
                 Etudiant etudiant = new Etudiant();
-                if(row.getCell(1)== null)
+                if (row.getCell(1) == null) {
                     throw new IllegalArgumentException("Le matricule est obligatoire");
+                }
                 etudiant.setMatricule(row.getCell(1).getStringCellValue());
-                if(row.getCell(2)== null)
+                if (row.getCell(2) == null) {
                     throw new IllegalArgumentException("Le nom est obligatoire");
+                }
                 etudiant.setNom(row.getCell(2).getStringCellValue());
                 if (row.getCell(3) != null) {
                     switch (row.getCell(3).getCellType()) {
@@ -234,7 +236,7 @@ public class EtudiantServiceImpl implements IEtudiantService {
                     etudiant.setGenre(Genre.valueOf(row.getCell(7).getStringCellValue().toLowerCase()));
                 } catch (IllegalArgumentException ex) {
 
-                }catch (NullPointerException ex) {
+                } catch (NullPointerException ex) {
 
                 }
 
@@ -242,11 +244,15 @@ public class EtudiantServiceImpl implements IEtudiantService {
                 String option = row.getCell(11).getStringCellValue();
                 etudiant.setActive(1);
                 try {
+                    System.out.println("****************************************************");
+                    System.out.println(String.format("%s - %s - %s ", etudiant.toString(),niveau, option));
+                    System.out.println("****************************************************");
                     inscriptionService.inscrireEtudiant(etudiant, niveau, option, idAnneeAcademique);
                     count++;
                 } catch (Exception ex) {
                     ImportationError err = new ImportationError(index, ex.getMessage());
                     erreurs.add(err);
+                    Logger.getLogger(EtudiantServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 row = sheet.getRow(index++);
             }
@@ -272,7 +278,7 @@ public class EtudiantServiceImpl implements IEtudiantService {
     public List<Etudiant> listeEtudiantInscritCours(long annee, long niveau, long option, long cours) throws ServiceException {
         // Je prends la liste de tous les etudiants qui ont été déjà inscrits dans le parcours
         // qui sont inscrits l'annee en cours et qui n'ont jamais validé le cours en question avant
-        
+
         return null;
     }
 

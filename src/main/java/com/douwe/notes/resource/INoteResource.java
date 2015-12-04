@@ -3,6 +3,8 @@ package com.douwe.notes.resource;
 import com.douwe.notes.entities.Note;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
+import com.douwe.notes.projection.NoteTransfer;
+import com.douwe.notes.service.util.DeliberationItem;
 import com.douwe.notes.service.util.ImportationResult;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,6 +56,35 @@ public interface INoteResource {
     @Path("import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ImportationResult importNotes(@FormDataParam("fichier") InputStream fichier, @FormDataParam("fichier") FormDataContentDisposition fileDisposition, @FormDataParam("courId") Long coursId, @FormDataParam("evaluationId") Long evaluationId, @FormDataParam("anneeId") Long anneeId, @DefaultValue("0") @FormDataParam("session") int session);
+    
+    @POST
+    @Path("deliberation")
+    @Produces(value = "application/json")
+    List<DeliberationItem> listeDeliberation(@FormDataParam("niveauId") long niveauId, 
+                                                @FormDataParam("optionId")long optionId, 
+                                                @FormDataParam("coursId")long coursId, 
+                                                @FormDataParam("anneeId")long anneeId, 
+                                                @FormDataParam("session")int session, 
+                                                @FormDataParam("borneInf")double borneInf, 
+                                                @DefaultValue("true") @FormDataParam("infInclusive")boolean isInfInclusive, 
+                                                @FormDataParam("borneSup")double borneSup, 
+                                                @DefaultValue("false") @FormDataParam("supInclusive")boolean isSupInclusive, 
+                                                @DefaultValue("10") @FormDataParam("moyenne")double finale);
+    
+    @PUT
+    @Path("deliberation")
+    @Produces(value = "application/json")
+    String deliberer(@FormDataParam("niveauId") long niveauId, 
+                                                @FormDataParam("optionId")long optionId, 
+                                                @FormDataParam("coursId")long coursId, 
+                                                @FormDataParam("anneeId")long anneeId, 
+                                                @FormDataParam("session")int session, 
+                                                @FormDataParam("borneInf")double borneInf, 
+                                                @DefaultValue("true") @FormDataParam("infInclusive")boolean isInfInclusive, 
+                                                @FormDataParam("borneSup")double borneSup, 
+                                                @DefaultValue("false") @FormDataParam("supInclusive")boolean isSupInclusive, 
+                                                @DefaultValue("10") @FormDataParam("moyenne")double finale);
+    
     // Debut mes tests. A supprimer a la fin bien sur
     @GET
     @Path(value = "{niveauid : \\d+}/{optionid : \\d+}/{coursid : \\d+}/{anneeid : \\d+}/{session : \\d+}")
@@ -69,6 +100,11 @@ public interface INoteResource {
     @Path(value = "/salut/{matricule}/{coursId: \\d+}/{anneeId: \\d+}")
     @Produces(value = "application/json")
     EtudiantNotes noteEtudiant(@PathParam(value = "matricule")String matricule, @PathParam(value = "coursId")long coursId, @PathParam(value = "anneeId")long anneeId);
+    
+    @GET
+    @Path(value = "/{matricule}/{coursId: \\d+}/{anneeId: \\d+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<NoteTransfer> getNoteEtudiantCours(@PathParam(value = "matricule")String matricule, @PathParam(value = "coursId")long coursId, @PathParam(value = "anneeId")long anneeId);
     
     @GET
     @Path(value = "/bonsoir/{matricule}/{ueId: \\d+}/{annee: \\d+}")

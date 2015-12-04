@@ -1,13 +1,5 @@
 package com.douwe.notes.service;
 
-import com.douwe.notes.entities.AnneeAcademique;
-import com.douwe.notes.entities.Cours;
-import com.douwe.notes.entities.Niveau;
-import com.douwe.notes.entities.Option;
-import com.douwe.notes.entities.Session;
-import com.douwe.notes.entities.UniteEnseignement;
-import com.itextpdf.text.Document;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 /**
@@ -20,6 +12,8 @@ public interface IDocumentService {
     
     public String produireSynthese(Long niveauId, Long optionId,Long academiqueId,Long semestreId, OutputStream stream) throws ServiceException;
     
+    
+    public void produireRelevet(Long niveauId, Long optionId, Long anneeId, OutputStream stream);
     
     
     

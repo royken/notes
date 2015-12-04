@@ -14,4 +14,6 @@ public interface IEvaluationDao extends IDao<Evaluation, Long>{
     List<Evaluation> evaluationForCourses(Cours cours) throws DataAccessException;
     
     public Evaluation findByCode(String code) throws DataAccessException;
+
+    public Evaluation findExamen()  throws DataAccessException;
 }

@@ -33,6 +33,7 @@ public class EvaluationDaoImpl extends GenericDao<Evaluation, Long> implements I
         cq.where(cb.and(cb.equal(typePath, coursRoot.get(Cours_.typeCours)),
                 cb.equal(coursRoot, cours)));
         cq.select(evaluationPath);
+        cq.orderBy(cb.asc(evaluationPath.get(Evaluation_.isExam)));
         return getManager().createQuery(cq).getResultList();
     }
 
@@ -42,6 +43,16 @@ public class EvaluationDaoImpl extends GenericDao<Evaluation, Long> implements I
         CriteriaQuery<Evaluation> cq = cb.createQuery(Evaluation.class);
         Root<Evaluation> evaluationRoot = cq.from(Evaluation.class);
         cq.where(cb.and(cb.like(evaluationRoot.get(Evaluation_.code), code),cb.equal(evaluationRoot.get(Evaluation_.active), 1)));
+        cq.select(evaluationRoot);
+        return getManager().createQuery(cq).getSingleResult();
+    }
+
+    @Override
+    public Evaluation findExamen() throws DataAccessException {
+        CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        CriteriaQuery<Evaluation> cq = cb.createQuery(Evaluation.class);
+        Root<Evaluation> evaluationRoot = cq.from(Evaluation.class);
+        cq.where(cb.isTrue(evaluationRoot.get(Evaluation_.isExam)));
         cq.select(evaluationRoot);
         return getManager().createQuery(cq).getSingleResult();
     }

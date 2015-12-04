@@ -9,6 +9,7 @@ import com.douwe.notes.entities.Session;
 import com.douwe.notes.entities.UniteEnseignement;
 import com.douwe.notes.projection.EtudiantNotes;
 import com.douwe.notes.projection.MoyenneUniteEnseignement;
+import com.douwe.notes.service.util.DeliberationItem;
 import com.douwe.notes.service.util.ImportationResult;
 import java.io.InputStream;
 import java.util.List;
@@ -40,6 +41,14 @@ public interface INoteService {
     
     MoyenneUniteEnseignement getMoyenneUEEtudiant(String matricule, long ueId, long anneeId) throws ServiceException;
 
+    @Deprecated
     Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long niveauId, long optionId, long semestreId, long anneeId) throws ServiceException;
+    Map<String, MoyenneUniteEnseignement> listeNoteUniteEnseignement(String matricule, long anneeId, List<UniteEnseignement> ues) throws ServiceException;
+
+    public List<DeliberationItem> listeDeliberation(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean infInclusive, double borneSup, boolean supInclusive, double finale)throws ServiceException;
+
+    public int delibererCours(long niveauId, long optionId, long coursId, long anneeId, int session, double borneInf, boolean infInclusive, double borneSup, boolean supInclusive, double finale) throws ServiceException;
+
+    public List<Note> listeNoteEtudiant(String matricule, long coursId, long anneeId) throws ServiceException;
 
 }

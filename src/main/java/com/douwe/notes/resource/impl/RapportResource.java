@@ -21,12 +21,11 @@ import javax.ws.rs.core.StreamingOutput;
  */
 @Path("/rapport")
 public class RapportResource implements IRapportResource {
-    
+
     @EJB
     private IDocumentService documentService;
-    
+
     String filename = new String();
-    
 
     public IDocumentService getDocumentService() {
         return documentService;
@@ -35,8 +34,6 @@ public class RapportResource implements IRapportResource {
     public void setDocumentService(IDocumentService documentService) {
         this.documentService = documentService;
     }
-    
-    
 
     @Override
     public Response test() throws Exception {
@@ -55,9 +52,9 @@ public class RapportResource implements IRapportResource {
         return Response.ok(stream).header("Content-Disposition",
                 "attachment; filename=toto.pdf").build();
     }
-    
+
     // Cette méthode pourrait bien etre dans une autre classe carrement
-    private void buildDocument(OutputStream out) throws Exception{
+    private void buildDocument(OutputStream out) throws Exception {
         Document doc = new Document(PageSize.A4);
         PdfWriter.getInstance(doc, out);
         doc.open();
@@ -70,14 +67,14 @@ public class RapportResource implements IRapportResource {
 
     @Override
     public Response produirePv(final long niveauid, final long optionid, final long coursid, final long anneeid, final int session) {
-        
+
         StreamingOutput stream = new StreamingOutput() {
             @Override
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
                     filename = documentService.produirePv(niveauid, optionid, coursid, anneeid, session, output);
-            
+
                     //fil
                 } catch (Exception e) {
                     throw new WebApplicationException(e);
@@ -85,29 +82,29 @@ public class RapportResource implements IRapportResource {
             }
         };
 
-        
         return Response.ok(stream).header("Content-Disposition",
-                "attachment; filename="+filename+"pv.pdf").build();
+                "attachment; filename=" + filename + "pv.pdf").build();
     }
 
     @Override
     public Response produireSyntheseSemestrielle(final long niveauid, final long optionid, final long anneeid, final long semestreId) {
         StreamingOutput stream = new StreamingOutput() {
+
             @Override
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
-                //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
+                    //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
                     filename = documentService.produireSynthese(niveauid, optionid, anneeid, semestreId, output);
-            
+
                     //fil
                 } catch (Exception e) {
                     throw new WebApplicationException(e);
                 }
             }
-        };      
+        };
         return Response.ok(stream).header("Content-Disposition",
-                "attachment; filename="+filename+"synthese.pdf").build();
+                "attachment; filename=" + filename + "synthese.pdf").build();
     }
 
     @Override
@@ -117,8 +114,8 @@ public class RapportResource implements IRapportResource {
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
-               //     filename = documentService.produireSyntheseAnnuelle(output, null, null, null) ;
-            
+                    //     filename = documentService.produireSyntheseAnnuelle(output, null, null, null) ;
+
                     //fil
                 } catch (Exception e) {
                     throw new WebApplicationException(e);
@@ -126,11 +123,9 @@ public class RapportResource implements IRapportResource {
             }
         };
 
-        
         return Response.ok(stream).header("Content-Disposition",
-                "attachment; filename="+filename+"synthese.pdf").build();
+                "attachment; filename=" + filename + "synthese.pdf").build();
     }
-
 
     @Override
     public Response produireSyntheseAnnuelle(final long niveauid, final long optionid, final long anneeid) {
@@ -139,17 +134,37 @@ public class RapportResource implements IRapportResource {
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 try {
                     //buildDocument(output);
-                //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
+                    //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
                     filename = documentService.produireSynthese(niveauid, optionid, anneeid, null, output);
-            
+
                     //fil
                 } catch (Exception e) {
                     throw new WebApplicationException(e);
                 }
             }
-        };      
+        };
         return Response.ok(stream).header("Content-Disposition",
-                "attachment; filename="+filename+"synthese.pdf").build();
+                "attachment; filename=" + filename + "synthese.pdf").build();
+    }
+
+    @Override
+    public Response produireRelevet(final long niveauid, final long optionid, final long anneeid) {
+        StreamingOutput stream = new StreamingOutput() {
+            @Override
+            public void write(OutputStream output) throws IOException, WebApplicationException {
+                try {
+                    //buildDocument(output);
+                    //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
+                    documentService.produireRelevet(niveauid, optionid, anneeid, output);
+
+                    //fil
+                } catch (Exception e) {
+                    throw new WebApplicationException(e);
+                }
+            }
+        };
+        return Response.ok(stream).header("Content-Disposition",
+                "attachment; filename=" + filename + "relevet.pdf").build();
     }
 
 }

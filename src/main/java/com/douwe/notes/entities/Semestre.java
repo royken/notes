@@ -41,6 +41,10 @@ public class Semestre implements Serializable {
     @Column(columnDefinition = "int default 1")
     private int active;
     
+    public Semestre(String intitule){
+        this.intitule = intitule;
+    } 
+     
     public Semestre(){
         
     }

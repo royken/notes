@@ -36,6 +36,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -244,44 +245,45 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
     public List<Etudiant> listeEtudiantAvecNotes(AnneeAcademique debutInscription, AnneeAcademique encours, Niveau niveau, Option option, Semestre semestre) throws DataAccessException {
         List<Etudiant> resultat = new ArrayList<Etudiant>();
         CriteriaBuilder cb = getManager().getCriteriaBuilder();
+        boolean toto = false;
         //CriteriaQuery<Etudiant> cq = cb.createQuery(Etudiant.class);
         CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
         Root<Note> noteRoot = cq.from(Note.class);
         Root<Cours> coursRoot = cq.from(Cours.class);
         Root<Inscription> inscriptionRoot = cq.from(Inscription.class);
         Root<Programme> programmeRoot = cq.from(Programme.class);
-        Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
+        Join<Inscription, Etudiant> etudiantInscrit = inscriptionRoot.join(Inscription_.etudiant);        
+        //Path<Evaluation> evaluationPath = noteRoot.get(Note_.evaluation);
         Path<UniteEnseignement> unitePath = programmeRoot.get(Programme_.uniteEnseignement);
         Expression<List<Cours>> coursPath = unitePath.get(UniteEnseignement_.cours);
-        Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
+        //Path<Etudiant> etudiantPath = noteRoot.get(Note_.etudiant);
         List<Predicate> predicates = new ArrayList<Predicate>();
+        predicates.add(cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique), encours));
+        predicates.add(cb.equal(noteRoot.get(Note_.etudiant), etudiantInscrit));
         if (encours.equals(debutInscription)) {
             // Inscrit au parcours pendant l'année academique encours
-            predicates.add(cb.and(cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.niveau), niveau),
-                    cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.option), option),
-                    cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique), encours),
-                    cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant))));
-            cq.multiselect(etudiantPath, cb.max(inscriptionRoot.get(Inscription_.anneeAcademique).get(AnneeAcademique_.numeroDebut)));
+            predicates.add(cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
+            predicates.add(cb.equal(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.option), option));
+            cq.multiselect(etudiantInscrit, cb.max(inscriptionRoot.get(Inscription_.anneeAcademique).get(AnneeAcademique_.numeroDebut)));
         } else {
-            predicates.add(cb.and(cb.equal(etudiantPath, inscriptionRoot.get(Inscription_.etudiant)),
-                    cb.equal(inscriptionRoot.get(Inscription_.anneeAcademique), encours),
-                    cb.notEqual(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.niveau), niveau)));
+            toto = true;
+            predicates.add(cb.notEqual(inscriptionRoot.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
             // j'ai eté inscrits au parcours concerné une année auparavent
             Root<Inscription> inscriptionRoot2 = cq.from(Inscription.class);
             Path<Integer> debutPath = inscriptionRoot2.get(Inscription_.anneeAcademique).get(AnneeAcademique_.numeroDebut);
-            predicates.add(cb.and(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau),
-                    cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.option), option),
-                    cb.lessThan(debutPath, encours.getNumeroDebut()),
-                    cb.equal(etudiantPath, inscriptionRoot2.get(Inscription_.etudiant))));
-            cq.multiselect(etudiantPath, cb.max(debutPath));
-            cq.having(cb.equal(cb.max(debutPath), debutInscription.getNumeroDebut()));
+            predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.niveau), niveau));
+            predicates.add(cb.equal(inscriptionRoot2.get(Inscription_.parcours).get(Parcours_.option), option));
+            predicates.add(cb.lessThan(debutPath, encours.getNumeroDebut()));
+            predicates.add(cb.equal(etudiantInscrit, inscriptionRoot2.get(Inscription_.etudiant)));
+            cq.multiselect(inscriptionRoot2.get(Inscription_.etudiant), cb.max(debutPath));
+            //cq.having(cb.equal(cb.max(debutPath), debutInscription.getNumeroDebut()));
         }
         // inscrit ailleurs pendant l'annee academique encours et la derniere inscription au parcours vaut debutInscription
         predicates.add(cb.equal(programmeRoot.get(Programme_.anneeAcademique), encours));
         predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.niveau), niveau));
         predicates.add(cb.equal(programmeRoot.get(Programme_.parcours).get(Parcours_.option), option));
         predicates.add(cb.isMember(coursRoot, coursPath));
-        predicates.add(cb.equal(noteRoot.get(Note_.evaluation), evaluationPath));
+        //predicates.add(cb.equal(noteRoot.get(Note_.evaluation), evaluationPath));
         if (semestre != null) {
             predicates.add(cb.equal(programmeRoot.get(Programme_.semestre), semestre));
         }
@@ -291,13 +293,14 @@ public class EtudiantDaoImpl extends GenericDao<Etudiant, Long> implements IEtud
             cq.where((predicates.size() == 1) ? predicates.get(0) : cb.and(predicates.toArray(new Predicate[0])));
         }
         cq.distinct(true);
-        cq.orderBy(cb.asc(etudiantPath.get(Etudiant_.nom)));
-        cq.groupBy(etudiantPath.get(Etudiant_.id));
+        cq.orderBy(cb.asc(etudiantInscrit.get(Etudiant_.nom)));
+        cq.groupBy(etudiantInscrit);
         //cq.having(cb.equal(cb.max(inscriptionRoot.get(Inscription_.anneeAcademique).get(AnneeAcademique_.numeroDebut)), debutInscription.getNumeroDebut()));
         //cq.select(etudiantPath);
-        
+
         List<Object[]> res = getManager().createQuery(cq).getResultList();
         for (Object[] re : res) {
+            if(!toto || ((Integer) re[1]).equals(debutInscription.getNumeroDebut()))
             resultat.add((Etudiant) re[0]);
         }
         return resultat;
