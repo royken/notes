@@ -167,4 +167,24 @@ public class RapportResource implements IRapportResource {
                 "attachment; filename=" + filename + "relevet.pdf").build();
     }
 
+//    @Override
+//    public Response produireRelevet(final long niveauid,final long optionid, final long anneeid) {
+//        StreamingOutput stream = new StreamingOutput() {
+//            @Override
+//            public void write(OutputStream output) throws IOException, WebApplicationException {
+//                try {
+//                    //buildDocument(output);
+//                //    filename = documentService.produireSyntheseSemestrielle(niveauid, optionid, anneeid, semestreId, output);
+//                     documentService.produireRelevet(niveauid, optionid, anneeid, output);
+//            
+//                    //fil
+//                } catch (Exception e) {
+//                    throw new WebApplicationException(e);
+//                }
+//            }
+//        };      
+//        return Response.ok(stream).header("Content-Disposition",
+//                "attachment; filename="+filename+"relevet.pdf").build();
+//    }
+
 }

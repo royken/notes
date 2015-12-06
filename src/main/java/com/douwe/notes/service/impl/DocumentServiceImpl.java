@@ -42,6 +42,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
@@ -52,6 +53,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -643,6 +645,23 @@ public class DocumentServiceImpl implements IDocumentService {
         return cell;
     }
 
+    private PdfPCell createRelevetFootBodyCell(String message, Font bf, boolean border, int rowspan, int colspan) {
+        PdfPCell cell = new PdfPCell(new Phrase(message, bf));
+        if (border) {
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+
+        }
+        cell.setRowspan(rowspan);
+        cell.setColspan(colspan);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setPaddingBottom(4f);
+        cell.setPaddingTop(5f);
+        cell.setBorderWidth(0.01f);
+        cell.setBorderColor(BaseColor.WHITE);
+        return cell;
+    }
+
     private PdfPCell createSyntheseDefaultBodyCell(String message, Font bf, boolean color, boolean isCentered) {
         PdfPCell cell = new PdfPCell(new Phrase(message, bf));
         if (color) {
@@ -1025,6 +1044,7 @@ public class DocumentServiceImpl implements IDocumentService {
         }
     }
 
+
     public void produceRelevetForm(Document doc, Niveau n, Option o, Etudiant e) {
 
     }
@@ -1103,6 +1123,16 @@ public class DocumentServiceImpl implements IDocumentService {
 //
 //    }
 
+//    S
+    private int computeTotalCredit(List<UEnseignementCredit> ues) {
+        int result = 0;
+        for (UEnseignementCredit ue : ues) {
+            result += ue.getCredit();
+        }
+        return result;
+    }
+  
+
     @Override
     public void produireRelevet(Long niveauId, Long optionId, Long anneeId, OutputStream stream) {
 
@@ -1117,7 +1147,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Niveau n = niveauDao.findById(niveauId);
             Option o = optionDao.findById(optionId);
             AnneeAcademique a = academiqueDao.findById(anneeId);
-            produceHeader(doc, null, n, o, a, null, null, null, true);
+            produceHeader(doc, null, n, o, a, null, null,null, true);
             Font font = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
             doc.add(new Phrase("\n"));
             StringBuilder str = new StringBuilder();
@@ -1145,17 +1175,10 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    private int computeTotalCredit(List<UEnseignementCredit> ues) {
-        int result = 0;
-        for (UEnseignementCredit ue : ues) {
-            result += ue.getCredit();
-        }
-        return result;
-    }
-    class Watermark extends PdfPageEventHelper {
+    
+    public class Watermark extends PdfPageEventHelper {
  
-        protected Phrase watermark = new Phrase("ORIGINAL", new Font(Font.FontFamily.HELVETICA, 70, Font.BOLDITALIC, new BaseColor(254, 248, 108)));
+        protected Phrase watermark = new Phrase("ORIGINAL", new Font(FontFamily.HELVETICA, 70, Font.BOLDITALIC, new BaseColor(254, 248, 108)));
  
         @Override
         public void onEndPage(PdfWriter writer, Document document) {
@@ -1451,23 +1474,25 @@ public class DocumentServiceImpl implements IDocumentService {
             Logger.getLogger(DocumentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private PdfPCell createRelevetFootBodyCell(String message, Font bf, boolean border, int rowspan, int colspan) {
-        PdfPCell cell = new PdfPCell(new Phrase(message, bf));
-        if (border) {
-            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 
-        }
-        cell.setRowspan(rowspan);
-        cell.setColspan(colspan);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setPaddingBottom(4f);
-        cell.setPaddingTop(5f);
-        cell.setBorderWidth(0.01f);
-        cell.setBorderColor(BaseColor.WHITE);
-        return cell;
-    }
+    
+//    private PdfPCell createRelevetFootBodyCell(String message, Font bf, boolean border, int rowspan, int colspan) {
+//        PdfPCell cell = new PdfPCell(new Phrase(message, bf));
+//        if (border) {
+//            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+//
+//        }
+//        cell.setRowspan(rowspan);
+//        cell.setColspan(colspan);
+//        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+//        cell.setPaddingBottom(4f);
+//        cell.setPaddingTop(5f);
+//        cell.setBorderWidth(0.01f);
+//        cell.setBorderColor(BaseColor.WHITE);
+//        return cell;
+//    }
+
 
     private void produceRelevetFooter(Document doc) {
         try {
@@ -1523,7 +1548,8 @@ public class DocumentServiceImpl implements IDocumentService {
 
     }
 
-    private List<UEnseignementCredit> getTrash1() {
+
+     private List<UEnseignementCredit> getTrash1() {
         List<UEnseignementCredit> result = new ArrayList<UEnseignementCredit>();
         result.add(new UEnseignementCredit("ITEL 110", "Mathematiques 1", 4));
         result.add(new UEnseignementCredit("ITEL 111", "Circuit Logique 1", 4));
@@ -1535,6 +1561,7 @@ public class DocumentServiceImpl implements IDocumentService {
         result.add(new UEnseignementCredit("ITEL 117", "Communication Technique 1", 4));
         return result;
     }
+
 
     private List<UEnseignementCredit> getTrash2() {
         List<UEnseignementCredit> result = new ArrayList<UEnseignementCredit>();
@@ -1550,7 +1577,9 @@ public class DocumentServiceImpl implements IDocumentService {
         return result;
     }
 
+
     private Map<String, MoyenneTrashData> getTrash3() {
+
         Map<String, MoyenneTrashData> result = new HashMap<String, MoyenneTrashData>();
         MoyenneTrashData data1 = new MoyenneTrashData(12.14, Session.normale, new Semestre("1"));
         result.put("ITEL 110", data1);
@@ -1588,6 +1617,7 @@ public class DocumentServiceImpl implements IDocumentService {
         result.put("ITEL 128", data17);
         return result;
     }
+
 
     private String sessionToString(Session session) {
         if (session == Session.normale) {

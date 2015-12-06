@@ -27,6 +27,9 @@ public class UEnseignementCredit {
         type = false;
     }
 
+  
+    
+
     public UEnseignementCredit(String codeUE, String intituleUE, int credit, int mCredit, boolean  type) {
         this.codeUE = codeUE;
         this.intituleUE = intituleUE;

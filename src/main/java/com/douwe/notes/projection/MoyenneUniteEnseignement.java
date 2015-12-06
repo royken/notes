@@ -140,6 +140,4 @@ public class MoyenneUniteEnseignement {
         return notes;
     }
     
-    
-
 }

@@ -1,5 +1,5 @@
 package com.douwe.notes.dao.impl;
-
+ 
 import com.douwe.generic.dao.DataAccessException;
 import com.douwe.generic.dao.impl.GenericDao;
 import com.douwe.notes.dao.IDepartementDao;
