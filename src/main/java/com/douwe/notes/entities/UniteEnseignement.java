@@ -2,18 +2,16 @@ package com.douwe.notes.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -34,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "UE.findAllActive", query = "select ue from UniteEnseignement ue where ue.active=1")
 
 })
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"INTITULE","PARCOURS_ID"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"INTITULE", "PARCOURS_ID"}))
 public class UniteEnseignement implements Serializable {
 
     @Id
@@ -51,16 +49,17 @@ public class UniteEnseignement implements Serializable {
     @Column(unique = true)
     private String code;
 
+    @OneToMany
+    @JoinColumn(name = "COURSUEANNEE_ID")
+    private CoursUEAnnee coursUEAnnee;
+
     @Column
     private boolean hasOptionalChoices;
-  
+
     @ManyToOne(optional = false)
     @XmlTransient
     @JoinColumn(name = "PARCOURS_ID")
     private Parcours parcours;
-    
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Cours> cours;
 
     @XmlTransient
     @Column(columnDefinition = "int default 1")
@@ -130,14 +129,14 @@ public class UniteEnseignement implements Serializable {
         this.parcours = parcours;
     }
 
-    public List<Cours> getCours() {
-        return cours;
+    public CoursUEAnnee getCoursUEAnnee() {
+        return coursUEAnnee;
     }
 
-    public void setCours(List<Cours> cours) {
-        this.cours = cours;
+    public void setCoursUEAnnee(CoursUEAnnee coursUEAnnee) {
+        this.coursUEAnnee = coursUEAnnee;
     }
-    
+
     @Override
     public String toString() {
         return "UniteEnseignement{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", code=" + code + ", active=" + active + '}';

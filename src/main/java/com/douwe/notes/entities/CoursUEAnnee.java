@@ -1,7 +1,6 @@
 package com.douwe.notes.entities;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,27 +15,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * I really think we don't need this class
+ *
  * @author Kenfack Valmy-Roi <roykenvalmy@gmail.com>
  */
 @Deprecated
 @Entity
 @XmlRootElement(name = "coursUeAnnee")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ANNEEACADEMIQUE_ID","UNITEENSEIGNEMENT_ID","COURS_ID"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"ANNEEACADEMIQUE_ID", "DEPARTEMENT_ID", "COURS_ID" , "TYPECOURS_ID"}))
 public class CoursUEAnnee implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @ManyToOne
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "COURS_ID")
     private Cours cours;
-    
-    @ManyToOne
-    @JoinColumn(name = "UNITEENSEIGNEMENT_ID")
-    private UniteEnseignement uniteEnseignement;
-    
-    @ManyToOne
+
+    @ManyToOne(optional = false)
+     @JoinColumn(name = "TYPECOURS_ID")  
+    private TypeCours typeCours;
+
+     @ManyToOne(optional = false)
+    @JoinColumn(name = "DEPARTEMENT_ID")
+    private Departement departement;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ANNEEACADEMIQUE_ID")
     private AnneeAcademique anneeAcademique;
 
@@ -56,15 +61,22 @@ public class CoursUEAnnee implements Serializable {
         this.cours = cours;
     }
 
-    public UniteEnseignement getUniteEnseignement() {
-        return uniteEnseignement;
+    public TypeCours getTypeCours() {
+        return typeCours;
     }
 
-    public void setUniteEnseignement(UniteEnseignement uniteEnseignements) {
-        this.uniteEnseignement = uniteEnseignements;
+    public void setTypeCours(TypeCours typeCours) {
+        this.typeCours = typeCours;
     }
 
-    
+    public Departement getDepartement() {
+        return departement;
+    }
+
+    public void setDepartement(Departement departement) {
+        this.departement = departement;
+    }
+
 
     public AnneeAcademique getAnneeAcademique() {
         return anneeAcademique;
@@ -73,4 +85,10 @@ public class CoursUEAnnee implements Serializable {
     public void setAnneeAcademique(AnneeAcademique anneeAcademique) {
         this.anneeAcademique = anneeAcademique;
     }
+
+    @Override
+    public String toString() {
+        return "CoursUEAnnee{" + "id=" + id + ", cours=" + cours + ", typeCours=" + typeCours + ", departement=" + departement + ", anneeAcademique=" + anneeAcademique + '}';
+    }
+    
 }

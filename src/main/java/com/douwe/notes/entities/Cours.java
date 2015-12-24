@@ -47,14 +47,7 @@ public class Cours implements Serializable {
     
     @Column(unique = true)
     private String intitule;
-    
-    @ManyToOne(optional = false)
-    private TypeCours typeCours;
-    
-    @XmlTransient
-    @ManyToMany(mappedBy = "cours")
-    private List<UniteEnseignement> uniteEnseignements;
-    
+       
     @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
@@ -79,13 +72,6 @@ public class Cours implements Serializable {
         this.intitule = intitule;
     }
 
-    public TypeCours getTypeCours() {
-        return typeCours;
-    }
-
-    public void setTypeCours(TypeCours typeCours) {
-        this.typeCours = typeCours;
-    }
 
     @JsonIgnore
     public int getVersion() {
@@ -105,20 +91,11 @@ public class Cours implements Serializable {
     @JsonIgnore
     public void setActive(int active) {
         this.active = active;
-    }  
+    }    
 
-    public List<UniteEnseignement> getUniteEnseignements() {
-        return uniteEnseignements;
-    }
-
-    public void setUniteEnseignements(List<UniteEnseignement> uniteEnseignements) {
-        this.uniteEnseignements = uniteEnseignements;
-    }
-    
     @Override
     public String toString() {
-        return "Cours{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", typeCours=" + typeCours + ", active=" + active + '}';
+        return "Cours{" + "id=" + id + ", version=" + version + ", intitule=" + intitule + ", active=" + active + '}';
     }
-    
     
 }
